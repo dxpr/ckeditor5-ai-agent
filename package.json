@@ -1,0 +1,97 @@
+{
+  "name": "@dxpr/ckeditor5-ai-assist",
+  "version": "0.0.1",
+  "description": "A plugin for CKEditor 5.",
+  "keywords": [
+    "ckeditor",
+    "ckeditor5",
+    "ckeditor 5",
+    "ckeditor5-feature",
+    "ckeditor5-plugin",
+    "ckeditor5-dll",
+    "ckeditor5-package-generator"
+  ],
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./dist/index.js": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+		"./*": "./dist/*",
+    "./browser/*": null,
+    "./build/*": "./build/*",
+		"./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=5.7.1"
+  },
+  "files": [
+    "dist",
+    "lang",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "theme",
+    "build",
+    "ckeditor5-metadata.json"
+  ],
+  "devDependencies": {
+    "@ckeditor/ckeditor5-dev-build-tools": "42.0.1",
+    "@ckeditor/ckeditor5-inspector": ">=4.1.0",
+    "@ckeditor/ckeditor5-package-tools": "^2.1.0",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@typescript-eslint/eslint-plugin": "~5.43.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "ckeditor5": "latest",
+    "eslint": "^7.32.0",
+    "eslint-config-ckeditor5": ">=6.0.0",
+    "http-server": "^14.1.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.6",
+    "stylelint": "^13.13.1",
+    "stylelint-config-ckeditor5": ">=6.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "5.0.4"
+  },
+  "peerDependencies": {
+    "ckeditor5": ">=42.0.0 || ^0.0.0-nightly"
+  },
+  "scripts": {
+    "build:dist": "node ./scripts/build-dist.mjs",
+    "ts:build": "tsc -p ./tsconfig.release.json",
+    "ts:clear": "npx rimraf \"src/**/*.@(js|d.ts)\"",
+    "dll:build": "ckeditor5-package-tools dll:build",
+    "dll:serve": "http-server ./ -o sample/dll.html",
+    "lint": "eslint \"**/*.{js,ts}\" --quiet",
+    "start": "ckeditor5-package-tools start",
+    "stylelint": "stylelint --quiet --allow-empty-input 'theme/**/*.css'",
+    "test": "ckeditor5-package-tools test",
+    "prepare": "yarn run dll:build && yarn run build:dist",
+    "prepublishOnly": "yarn run ts:build && ckeditor5-package-tools export-package-as-javascript",
+    "postpublish": "yarn run ts:clear && ckeditor5-package-tools export-package-as-typescript",
+    "translations:collect": "ckeditor5-package-tools translations:collect",
+    "translations:download": "ckeditor5-package-tools translations:download",
+    "translations:upload": "ckeditor5-package-tools translations:upload"
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "eslint --quiet"
+    ],
+    "**/*.css": [
+      "stylelint --quiet --allow-empty-input"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}

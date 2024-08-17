@@ -1,0 +1,10 @@
+build/
+coverage/
+dist/
+node_modules/
+tmp/
+sample/ckeditor.dist.js
+
+# Ignore compiled TypeScript files.
+src/**/*.js
+src/**/*.d.ts

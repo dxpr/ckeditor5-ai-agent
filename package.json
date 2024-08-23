@@ -22,10 +22,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-		"./*": "./dist/*",
+    "./*": "./dist/*",
     "./browser/*": null,
     "./build/*": "./build/*",
-		"./src/*": "./src/*",
+    "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
   "license": "MIT",
@@ -93,5 +93,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-utils": "^43.0.0"
   }
 }

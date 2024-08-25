@@ -5,6 +5,7 @@ import ckeditor5Icon from '../theme/icons/ckeditor.svg';
 import { add } from '@ckeditor/ckeditor5-utils/src/translation-service.js';
 import translations from '../lang/contexts.json';
 import '../theme/style.css';
+import type { Element } from 'ckeditor5';
 
 export default class AiAssist extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -32,7 +33,7 @@ export default class AiAssist extends Plugin {
 		this.initializeUIComponents();
 		// Attach event listeners for handling editor events and user interactions
 		this.attachListener();
-		//	Set displays content in the appropriate language.
+		// Set displays content in the appropriate language.
 		this.initializeUILanguage();
 	}
 
@@ -82,13 +83,19 @@ export default class AiAssist extends Plugin {
 		// Handle the 'enter' key press and simplify slash command detection
 		editor.keystrokes.set( 'enter', async ( _, cancel ) => {
 			const position = model.document.selection.getFirstPosition();
-			const block = position?.parent;
-			const textNode: any = block?.getChild( 0 );
-			const lastContentBeforeEnter = textNode?.data;
+			if ( position ) {
+				const paragraph = position.parent;
+				const textNode = paragraph.getChild( 0 );
+				let lastContentBeforeEnter: string | undefined;
 
-			// Check if the last content starts with '/'
-			if ( typeof lastContentBeforeEnter === 'string' && lastContentBeforeEnter.startsWith( '/' ) ) {
-				await this.handleSlashCommand( lastContentBeforeEnter, block, cancel );
+				if ( textNode?.is( 'model:$text' ) ) {
+					lastContentBeforeEnter = textNode.data;
+				}
+
+				// Check if the last content starts with '/'
+				if ( typeof lastContentBeforeEnter === 'string' && lastContentBeforeEnter.startsWith( '/' ) ) {
+					await this.handleSlashCommand( lastContentBeforeEnter, paragraph, cancel );
+				}
 			}
 		} );
 
@@ -200,7 +207,6 @@ export default class AiAssist extends Plugin {
 			// empty a prompt
 			this.editor.model.change( writer => {
 				while ( Array.isArray( parent?._children?._nodes ) && parent?._children?._nodes.length ) {
-					console.log( 'removing' );
 					writer.remove( parent?._children?._nodes[ 0 ] );
 				}
 				writer.insertText( `${ inputBeforePrompt }`, parent );
@@ -267,26 +273,29 @@ export default class AiAssist extends Plugin {
 	public generateGptPromptBasedOnUserPrompt( prompt: string ): string {
 		const editor = this.editor;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
-		const content = view?.innerText ?? '';
+		let context = view?.innerText ?? '';
+		context = context.replace( prompt, '@@@cursor@@@' );
 		const contentLanguageCode = editor.locale.contentLanguage;
 
-		let finalPrompt = `"${ content }"`;
-		finalPrompt += `\nConsider the above content as context. Proceed with the following request: "${ prompt }"`;
+		let finalPrompt = `"${ context }"`;
+		finalPrompt += '\nConsider the above content as context.';
+		finalPrompt += ` Replace '@@@cursor@@@' with the response for the following request: "${ prompt }"`;
 		finalPrompt += '\n\nInstructions:';
-		finalPrompt += `\n1. Generated response must follow the language code - ${ contentLanguageCode }`;
-		finalPrompt += '\n2. Respond in paragraph format. Avoid lists, tables, or similar structures unless explicitly requested.';
-		finalPrompt += '\n3. If the response includes a list, each list item must start on a new line.';
-		finalPrompt += '   Number the items starting from \'1\'.';
-		finalPrompt += '   For sub-lists, use letters starting from \'a\'.';
-		finalPrompt += '   Avoid additional bullet points or markdown formatting like "**".';
-		finalPrompt += '\n4. Ensure the content is free of grammar errors.';
-		finalPrompt += '\n5. The response should be formatted correctly to avoid parsing errors.';
-		finalPrompt += '\n6. Do not include any introductory phrases or context explanations.';
-		finalPrompt += '\n7. Maintain a seamless flow between the context and the response.';
-		finalPrompt += '   Ensure that the response directly follows from the provided context without any';
-		finalPrompt += '   awkward transitions or noticeable gaps.';
-		finalPrompt += '   The content should read as a unified piece, where the connection between';
-		finalPrompt += '   the context and the response is smooth and natural.';
+		finalPrompt += `\n1. The response must follow the language code - ${ contentLanguageCode }.`;
+		finalPrompt += '\n2. Insert the generated content at the precise location of the "@@@cursor@@@" placeholder.';
+		finalPrompt += ' The response should only contain the required text,';
+		finalPrompt += ' without any additional context or introductory phrases.';
+		finalPrompt += '\n3. Ensure the inserted content maintains a seamless connection with the surrounding text,';
+		finalPrompt += ' making the transition smooth and natural.';
+		finalPrompt += '\n4. If the response involves adding an item to a list,';
+		finalPrompt += '  only generate the item itself, matching the format of the existing items in the list.';
+		finalPrompt += '\n5. Respond in a format that aligns with the surrounding content. ';
+		finalPrompt += 'If the response includes a list, maintain the existing list structure.';
+		finalPrompt += '   For example, number the items starting from "1" and use letters for sub-lists.';
+		finalPrompt += '\n6. Avoid any introductory phrases or context explanations in the response.';
+		finalPrompt += '\n7. Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.';
+		finalPrompt += '\n8. The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.';
+		finalPrompt += '\n9. Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.';
 
 		return finalPrompt;
 	}
@@ -297,35 +306,29 @@ export default class AiAssist extends Plugin {
 	 * and hidden otherwise. The placeholder visibility is delayed to account for content changes.
 	 */
 	public applyPlaceholderToCurrentLine(): void {
-		// Get the anchor point of the current selection
 		const editor = this.editor;
-		const model = editor?.model;
-		const document = model?.document;
-		const anchor = document?.selection.anchor;
-		const root = anchor?.root;
+		const model = editor.model;
+		const modelSelection = model.document.selection;
 
-		// Get the current position and block element
-		const position = document?.selection.getFirstPosition();
-		const block: any = position?.parent;
+		let rect: DOMRect | null | undefined = null;
 
 		// Get index and text node of the current block
-		const index = root?.getChildIndex( block );
-		const textNode: any = block?.getChild( 0 );
+		const block = modelSelection.getFirstPosition()?.parent;
 
-		// Get the content of the current line
-		const contentOfLine = textNode?.data;
 		// Determine whether to show or hide placeholder text
-		if ( !contentOfLine && !this.isInteractingWithGpt ) {
+		if ( !!block && block.isEmpty && !this.isInteractingWithGpt ) {
 			// Hide the placeholder text immediately
 			this.hidePlaceHolder();
 
 			// Delay showing the placeholder text to allow for potential content changes
-			setTimeout( () => {
-				const rect = this.getBoundingClientRectForGivenIndexedElement( index );
-				if ( rect ) {
-					this.showPlaceHolder( rect );
+			setTimeout( async () => {
+				if ( block.is( 'element' ) ) {
+					rect = await this.getRectDomOfGivenModelElement( block );
+					if ( rect ) {
+						this.showPlaceHolder( rect );
+					}
 				}
-			}, 500 );
+			}, 100 );
 		} else {
 			// Hide the placeholder text if there's content or if interacting with GPT
 			this.hidePlaceHolder();
@@ -333,21 +336,28 @@ export default class AiAssist extends Plugin {
 	}
 
 	/**
-	 * Retrieves the bounding client rectangle of a DOM element at the specified index within the editor content.
-	 *
-	 * @param index - The index of the element within the editor's content. It should be a valid number or null/undefined.
-	 * @returns The DOMRect object providing the size of an element and its position relative to the viewport,
-	 * or null if the index is invalid.
-	 */
-	public getBoundingClientRectForGivenIndexedElement( index: number | null | undefined ): DOMRect | null {
+ * Retrieves the bounding rectangle of the DOM element that corresponds to the given model element.
+ *
+ * @param {Element} element - The model element for which to find the corresponding DOM element's bounding rectangle.
+ * @returns {Promise<DOMRect | null | undefined>} A promise that resolves to the bounding rectangle of the DOM element,
+ * or null/undefined if the corresponding DOM element is not found.
+ */
+	public async getRectDomOfGivenModelElement( element: Element ): Promise<DOMRect | null | undefined> {
+		let rect: DOMRect | null | undefined = null;
 		const editor = this.editor;
-		const view = editor?.editing?.view?.domRoots?.get( 'main' );
-		// Check if the index is a valid number and not -1
-		if ( typeof index === 'number' && index >= 0 && view && view.children[ index ] ) {
-			console.log( view.children[ index ].getBoundingClientRect(), view.children[ index ] );
-			return view.children[ index ].getBoundingClientRect();
+		const mapper = editor.editing.mapper;
+		const view = editor.editing.view;
+
+		const equivalentView = mapper.toViewElement( element );
+
+		if ( equivalentView ) {
+			const domElement = view.domConverter.mapViewToDom( equivalentView );
+			if ( domElement ) {
+				rect = domElement.getBoundingClientRect();
+			}
 		}
-		return null;
+
+		return rect;
 	}
 
 	/**

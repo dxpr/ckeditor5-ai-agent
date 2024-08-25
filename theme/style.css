@@ -4,13 +4,15 @@
 	z-index: 100;
 	opacity: 0;
 	color: hsl(0, 0%, 50%);
-	transition-duration: 1s;
+	transition-duration: 0.2s;
 	transition-property: opacity;
+	transition-timing-function: ease-in, ease-out;
 	margin: 0;
 }
 
 .show-place-holder {
 	opacity: 1;
+	transition-duration: 1s;
 }
 
 /* style for response loader */

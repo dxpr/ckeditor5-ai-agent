@@ -90,6 +90,10 @@ ClassicEditor
 				'tableRow',
 				'mergeTableCells'
 			]
+		},
+		aiAssist: {
+			model: 'gpt-4o',
+			temperature: 0.2
 		}
 	} )
 	.then( editor => {

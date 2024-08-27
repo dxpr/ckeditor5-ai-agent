@@ -5,12 +5,16 @@ import ckeditor5Icon from '../theme/icons/ckeditor.svg';
 import { add } from '@ckeditor/ckeditor5-utils/src/translation-service.js';
 import translations from '../lang/contexts.json';
 import '../theme/style.css';
-import type { Element } from 'ckeditor5';
+import type { Editor, Element } from 'ckeditor5';
+import type { AiModel } from './type-identifiers.js';
+import { TOKEN_LIMITS } from './const.js';
 
 export default class AiAssist extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
 	public GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
 	public GPT_RESPONSE_ERROR_ID = 'gpt-error';
+	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
+	public DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
 
 	// UI Texts
 	public ICON_TOOLTIP = 'Ai assist';
@@ -24,17 +28,74 @@ export default class AiAssist extends Plugin {
 
 	public isInteractingWithGpt: boolean = false;
 
+	// modal - configuration
+	public aiModal: AiModel;
+	public endpointUrl: string;
+	public temperature: number | undefined | null;
+	public timeOutDuration: number | undefined | null;
+	public maxTokens: number;
+	public retryAttempts: number;
+	public stopSequences: Array<string>;
+	public promptsOverride: Array<string>;
+
+	constructor( editor: Editor ) {
+		super( editor );
+
+		this.aiModal = editor.config.get( 'aiAssist.model' ) ?? this.DEFAULT_GPT_MODEL;
+		this.temperature = editor.config.get( 'aiAssist.temperature' );
+		this.timeOutDuration = editor.config.get( 'aiAssist.timeOutDuration' );
+		this.stopSequences = editor.config.get( 'aiAssist.stopSequences' ) ?? [];
+		this.promptsOverride = editor.config.get( 'aiAssist.prompt' ) ?? [];
+		this.endpointUrl = editor.config.get( 'aiAssist.endpointUrl' ) ?? '';
+		this.maxTokens = editor.config.get( 'aiAssist.maxTokens' ) ?? 0;
+		this.retryAttempts = editor.config.get( 'aiAssist.retryAttempts' ) ?? 1;
+		if ( !this.endpointUrl ) {
+			this.endpointUrl = this.DEFAULT_AI_END_POINT;
+		}
+		if ( !this.maxTokens ) {
+			this.maxTokens = TOKEN_LIMITS[ this.aiModal ].max;
+		}
+	}
+
 	public static get pluginName() {
 		return 'AiAssist' as const;
 	}
 
 	public init(): void {
-		// Initialize UI components like buttons, placeholders, loaders, etc.
-		this.initializeUIComponents();
-		// Attach event listeners for handling editor events and user interactions
-		this.attachListener();
-		// Set displays content in the appropriate language.
-		this.initializeUILanguage();
+		try {
+			// Initialize UI components like buttons, placeholders, loaders, etc.
+			this.initializeUIComponents();
+			// Set displays content in the appropriate language.
+			this.initializeUILanguage();
+
+			// Validate the configuration
+			this.validateAssistConfiguration();
+
+			// Attach event listeners for handling editor events and user interactions
+			this.attachListener();
+		} catch ( error: any ) {
+			console.error( error.message );
+		}
+	}
+
+	/**
+	 * Validates the AI Assist configuration parameters to ensure they fall within acceptable ranges.
+	 * This includes validating the temperature and max tokens based on the model's limits.
+	 *
+	 * @throws Will throw an error if the temperature is not between 0 and 2,
+	 *         or if maxTokens is outside the allowed range for the selected AI model.
+	 */
+	public validateAssistConfiguration(): void {
+		// Validate temperature
+		if ( this.temperature && ( this.temperature < 0 || this.temperature > 2 ) ) {
+			throw new Error( 'AiAssist: Temperature must be a number between 0 and 2.' );
+		}
+
+		// Validate maxTokens based on the model's token limits
+		const { min, max } = TOKEN_LIMITS[ this.aiModal ];
+		if ( this.maxTokens < min || this.maxTokens > max ) {
+			throw new Error( `AiAssist: maxTokens must be a number between ${ min } and ${ max }.` );
+		}
 	}
 
 	/**
@@ -156,7 +217,7 @@ export default class AiAssist extends Plugin {
 	 * @param parent - The parent editor node where the response will be inserted.
 	 * @returns A promise that resolves when the processing is complete.
 	 */
-	public async fetchAndProcessGptResponse( prompt: string, parent: any ): Promise<void> {
+	public async fetchAndProcessGptResponse( prompt: string, parent: any, maxRetries: number = this.retryAttempts ): Promise<void> {
 		try {
 			const filteredPrompt = prompt?.substring( prompt?.lastIndexOf( '/' ) + 1 );
 			const inputBeforePrompt = prompt?.substring( 0, prompt?.lastIndexOf( '/' ) );
@@ -169,7 +230,7 @@ export default class AiAssist extends Plugin {
 			this.isInteractingWithGpt = true;
 
 			// Make API call to OpenAI GPT
-			const response = await fetch( 'https://api.openai.com/v1/chat/completions', {
+			const response = await fetch( this.endpointUrl, {
 				method: 'POST',
 				headers: {
 					// eslint-disable-next-line max-len
@@ -177,16 +238,27 @@ export default class AiAssist extends Plugin {
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify( {
-					model: 'gpt-4o',
+					model: this.aiModal,
 					messages: [
 						{
 							role: 'user',
 							content: this.generateGptPromptBasedOnUserPrompt( filteredPrompt )
 						}
 					],
+					...( this.temperature != null && { temperature: this.temperature } ),
+					max_tokens: this.maxTokens,
+					stop: this.stopSequences,
 					stream: true
 				} )
 			} );
+
+			if ( !response.ok ) {
+				if ( maxRetries > 0 ) {
+					return this.fetchAndProcessGptResponse( prompt, parent, maxRetries - 1 );
+				} else {
+					throw new Error( 'AiAssist: Fetch failed' );
+				}
+			}
 
 			if ( !response.body ) {
 				this.showGptErrorToolTip( this.ERROR_READABLE_STREAM_NOT_SUPPORT );
@@ -281,21 +353,28 @@ export default class AiAssist extends Plugin {
 		finalPrompt += '\nConsider the above content as context.';
 		finalPrompt += ` Replace '@@@cursor@@@' with the response for the following request: "${ prompt }"`;
 		finalPrompt += '\n\nInstructions:';
-		finalPrompt += `\n1. The response must follow the language code - ${ contentLanguageCode }.`;
-		finalPrompt += '\n2. Insert the generated content at the precise location of the "@@@cursor@@@" placeholder.';
-		finalPrompt += ' The response should only contain the required text,';
-		finalPrompt += ' without any additional context or introductory phrases.';
-		finalPrompt += '\n3. Ensure the inserted content maintains a seamless connection with the surrounding text,';
-		finalPrompt += ' making the transition smooth and natural.';
-		finalPrompt += '\n4. If the response involves adding an item to a list,';
-		finalPrompt += '  only generate the item itself, matching the format of the existing items in the list.';
-		finalPrompt += '\n5. Respond in a format that aligns with the surrounding content. ';
-		finalPrompt += 'If the response includes a list, maintain the existing list structure.';
-		finalPrompt += '   For example, number the items starting from "1" and use letters for sub-lists.';
-		finalPrompt += '\n6. Avoid any introductory phrases or context explanations in the response.';
-		finalPrompt += '\n7. Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.';
-		finalPrompt += '\n8. The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.';
-		finalPrompt += '\n9. Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.';
+		finalPrompt += `\nThe response must follow the language code - ${ contentLanguageCode }.`;
+
+		if ( this.promptsOverride.length ) {
+			for ( const instruction of this.promptsOverride ) {
+				finalPrompt += `\n${ instruction }`;
+			}
+		} else {
+			finalPrompt += '\nInsert the generated content at the precise location of the "@@@cursor@@@" placeholder.';
+			finalPrompt += ' The response should only contain the required text,';
+			finalPrompt += ' without any additional context or introductory phrases.';
+			finalPrompt += '\nEnsure the inserted content maintains a seamless connection with the surrounding text,';
+			finalPrompt += ' making the transition smooth and natural.';
+			finalPrompt += '\nIf the response involves adding an item to a list,';
+			finalPrompt += '  only generate the item itself, matching the format of the existing items in the list.';
+			finalPrompt += '\nRespond in a format that aligns with the surrounding content. ';
+			finalPrompt += 'If the response includes a list, maintain the existing list structure.';
+			finalPrompt += '   For example, number the items starting from "1" and use letters for sub-lists.';
+			finalPrompt += '\nAvoid any introductory phrases or context explanations in the response.';
+			finalPrompt += '\nEnsure that the content is free of grammar errors and correctly formatted to avoid parsing errors.';
+			finalPrompt += '\nThe response should directly follow the context, avoiding any awkward transitions or noticeable gaps.';
+			finalPrompt += '\nDo not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.';
+		}
 
 		return finalPrompt;
 	}

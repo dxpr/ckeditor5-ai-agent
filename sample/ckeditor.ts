@@ -93,7 +93,8 @@ ClassicEditor
 		},
 		aiAssist: {
 			model: 'gpt-4o',
-			temperature: 0.2
+			temperature: 0.2,
+			contextSize: 1000
 		}
 	} )
 	.then( editor => {

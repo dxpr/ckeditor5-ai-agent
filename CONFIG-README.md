@@ -57,6 +57,7 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. |
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. |
 | `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. |
+| `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 50% of the GPT 4o token total limit. |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
 | `prompt` | `Array<string>` | An array of strings used to override or enhance the prompt sent to the AI model. |
 

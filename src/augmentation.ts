@@ -17,6 +17,7 @@ declare module '@ckeditor/ckeditor5-core' {
             maxTokens?: number; // Max Tokens
             stopSequences?: Array<string>; // Stop Sequences
             retryAttempts?: number; // Retry Attempts
+            contextSize?: number; // max content to includes as content
             timeOutDuration?: number; // Time-Out Duration in milliseconds
             endpointUrl?: string; // Endpoint URL
             prompt?: Array<string>;

@@ -35,6 +35,7 @@ export default class AiAssist extends Plugin {
 	public timeOutDuration: number | undefined | null;
 	public maxTokens: number;
 	public retryAttempts: number;
+	public contextSize: number;
 	public stopSequences: Array<string>;
 	public promptsOverride: Array<string>;
 
@@ -48,12 +49,16 @@ export default class AiAssist extends Plugin {
 		this.promptsOverride = editor.config.get( 'aiAssist.prompt' ) ?? [];
 		this.endpointUrl = editor.config.get( 'aiAssist.endpointUrl' ) ?? '';
 		this.maxTokens = editor.config.get( 'aiAssist.maxTokens' ) ?? 0;
+		this.contextSize = editor.config.get( 'aiAssist.contextSize' ) ?? 0;
 		this.retryAttempts = editor.config.get( 'aiAssist.retryAttempts' ) ?? 1;
 		if ( !this.endpointUrl ) {
 			this.endpointUrl = this.DEFAULT_AI_END_POINT;
 		}
 		if ( !this.maxTokens ) {
 			this.maxTokens = TOKEN_LIMITS[ this.aiModal ].max;
+		}
+		if ( !this.contextSize ) {
+			this.contextSize = TOKEN_LIMITS[ this.aiModal ].context / 2;
 		}
 	}
 
@@ -219,7 +224,6 @@ export default class AiAssist extends Plugin {
 	 */
 	public async fetchAndProcessGptResponse( prompt: string, parent: any, maxRetries: number = this.retryAttempts ): Promise<void> {
 		try {
-			const filteredPrompt = prompt?.substring( prompt?.lastIndexOf( '/' ) + 1 );
 			const inputBeforePrompt = prompt?.substring( 0, prompt?.lastIndexOf( '/' ) );
 			const domSelection = window.getSelection();
 			const domRange: any = domSelection?.getRangeAt( 0 );
@@ -242,7 +246,7 @@ export default class AiAssist extends Plugin {
 					messages: [
 						{
 							role: 'user',
-							content: this.generateGptPromptBasedOnUserPrompt( filteredPrompt )
+							content: this.generateGptPromptBasedOnUserPrompt( prompt )
 						}
 					],
 					...( this.temperature != null && { temperature: this.temperature } ),
@@ -344,14 +348,13 @@ export default class AiAssist extends Plugin {
 	 */
 	public generateGptPromptBasedOnUserPrompt( prompt: string ): string {
 		const editor = this.editor;
-		const view = editor?.editing?.view?.domRoots?.get( 'main' );
-		let context = view?.innerText ?? '';
-		context = context.replace( prompt, '@@@cursor@@@' );
+		const context = this.trimContext( prompt );
 		const contentLanguageCode = editor.locale.contentLanguage;
+		const request = prompt?.substring( prompt?.lastIndexOf( '/' ) + 1 );
 
 		let finalPrompt = `"${ context }"`;
 		finalPrompt += '\nConsider the above content as context.';
-		finalPrompt += ` Replace '@@@cursor@@@' with the response for the following request: "${ prompt }"`;
+		finalPrompt += ` Replace '@@@cursor@@@' with the response for the following request: "${ request }"`;
 		finalPrompt += '\n\nInstructions:';
 		finalPrompt += `\nThe response must follow the language code - ${ contentLanguageCode }.`;
 
@@ -377,6 +380,61 @@ export default class AiAssist extends Plugin {
 		}
 
 		return finalPrompt;
+	}
+
+	/**
+	 * Trims the context around a given prompt from the editor's content.
+	 *
+	 * This method extracts the content before and after the provided prompt within the editor.
+	 * It ensures that the surrounding context does not exceed a specified size (defined by `contextSize`).
+	 * The trimmed content is then formatted with a placeholder `@@@cursor@@@` to indicate the prompt's location.
+	 *
+	 * @param {string} prompt - The prompt around which the context needs to be trimmed.
+	 * @returns {string} The trimmed context with the prompt surrounded by relevant content.
+	 */
+	public trimContext( prompt: string ): string {
+		let contentBeforePrompt = '';
+		let contentAfterPrompt = '';
+
+		const editor = this.editor;
+		const view = editor?.editing?.view?.domRoots?.get( 'main' );
+		const context = view?.innerText ?? '';
+		const corpus = context.split( prompt.trim() );
+		let charCount = 0;
+
+		// Extract content before the prompt
+		if ( corpus[ 0 ] ) {
+			const lines = corpus[ 0 ].split( /\n/ ).map( line => line.trim() ).filter( line => line.length ).reverse();
+			for ( const line of lines ) {
+				charCount += line.length;
+				console.log( charCount );
+				if ( charCount / 4 <= this.contextSize ) {
+					contentBeforePrompt = line + '\n' + contentBeforePrompt;
+				} else {
+					break;
+				}
+			}
+		}
+
+		charCount = 0;
+
+		// Extract content after the prompt
+		if ( corpus[ 1 ] ) {
+			const lines = corpus[ 1 ].split( /\n/ ).map( line => line.trim() ).filter( line => line.length );
+			for ( const line of lines ) {
+				charCount += line.length;
+				if ( charCount / 4 <= this.contextSize ) {
+					contentAfterPrompt = contentAfterPrompt + '\n' + line;
+				} else {
+					break;
+				}
+			}
+		}
+
+		// Combine the trimmed context with the cursor placeholder
+		const trimmedContext = `${ contentBeforePrompt }\n"@@@cursor@@@"\n${ contentAfterPrompt }`;
+
+		return trimmedContext;
 	}
 
 	/**

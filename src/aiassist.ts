@@ -17,16 +17,6 @@ export default class AiAssist extends Plugin {
 	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
 	public DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
 
-	// UI Texts
-	public ICON_TOOLTIP = 'Ai assist';
-	public PLACEHOLDER_TEXT = 'Place holder';
-	public ERROR_UNSUPPORTED_LANGUAGE = 'Error unsupported language';
-	public ERROR_PROCESSING_COMMAND = 'Error processing command';
-	public ERROR_READABLE_STREAM_NOT_SUPPORT = 'Error readableStream not supported';
-	public ERROR_STREAM_LOCKED = 'Error stream locked';
-	public ERROR_PARSING_RESPONSE = 'Error parsing response';
-	public ERROR_FETCH_FAILED = 'Error fetch failed';
-
 	public isInteractingWithGpt: boolean = false;
 
 	// modal - configuration
@@ -121,7 +111,7 @@ export default class AiAssist extends Plugin {
 		editor.ui.componentFactory.add( 'aiAssistButton', locale => {
 			const view = new ButtonView( locale );
 			view.set( {
-				label: t( this.ICON_TOOLTIP ),
+				label: t( 'Ai assist' ),
 				icon: ckeditor5Icon,
 				tooltip: true
 			} );
@@ -185,11 +175,12 @@ export default class AiAssist extends Plugin {
 	 */
 	public initializeUILanguage(): void {
 		const editor = this.editor;
+		const t = editor.t;
 		const contentLanguageCode = editor.locale.contentLanguage;
 		if ( contentLanguageCode in translations ) {
-			add( contentLanguageCode, translations[ contentLanguageCode as keyof typeof translations ] );
+			// add( contentLanguageCode, translations[ contentLanguageCode as keyof typeof translations ] );
 		} else {
-			this.showGptErrorToolTip( this.ERROR_UNSUPPORTED_LANGUAGE );
+			this.showGptErrorToolTip( t( 'Error unsupported language' ) );
 			console.error( 'Unsupported language code' );
 		}
 	}
@@ -202,6 +193,8 @@ export default class AiAssist extends Plugin {
 	 * @param cancel - Function to cancel the current operation.
 	 */
 	public async handleSlashCommand( prompt: string, parent: any, cancel: any ): Promise<void> {
+		const editor = this.editor;
+		const t = editor.t;
 		try {
 			if ( !prompt || this.isInteractingWithGpt ) {
 				return;
@@ -210,7 +203,7 @@ export default class AiAssist extends Plugin {
 			cancel(); // cancel the bubbling
 			await this.fetchAndProcessGptResponse( prompt, parent );
 		} catch ( error ) {
-			this.showGptErrorToolTip( this.ERROR_PROCESSING_COMMAND );
+			this.showGptErrorToolTip( t( 'Error processing command' ) );
 			console.error( 'Error processing command', error );
 		}
 	}
@@ -224,6 +217,8 @@ export default class AiAssist extends Plugin {
 	 * @returns A promise that resolves when the processing is complete.
 	 */
 	public async fetchAndProcessGptResponse( prompt: string, parent: any, maxRetries: number = this.retryAttempts ): Promise<void> {
+		const editor = this.editor;
+		const t = editor.t;
 		try {
 			const domSelection = window.getSelection();
 			const domRange: any = domSelection?.getRangeAt( 0 );
@@ -265,13 +260,13 @@ export default class AiAssist extends Plugin {
 			}
 
 			if ( !response.body ) {
-				this.showGptErrorToolTip( this.ERROR_READABLE_STREAM_NOT_SUPPORT );
+				this.showGptErrorToolTip( t( 'Error readableStream not supported' ) );
 				return;
 			}
 
 			if ( response.body.locked ) {
 				console.error( 'Stream is already locked.' );
-				this.showGptErrorToolTip( this.ERROR_STREAM_LOCKED );
+				this.showGptErrorToolTip( t( 'Error stream locked' ) );
 				return;
 			}
 
@@ -322,13 +317,13 @@ export default class AiAssist extends Plugin {
 						}
 					} catch ( parseError ) {
 						console.error( 'Error while parsing line:', parsedLine, parseError );
-						this.showGptErrorToolTip( this.ERROR_PARSING_RESPONSE );
+						this.showGptErrorToolTip( t( 'Error parsing response' ) );
 					}
 				}
 			}
 		} catch ( error ) {
 			console.error( 'Error during GPT response fetch:', error );
-			this.showGptErrorToolTip( this.ERROR_FETCH_FAILED );
+			this.showGptErrorToolTip( t( 'Error fetch failed' ) );
 		} finally {
 			// safe side to not-to-show place holder as we are clearing the parentNode
 			await new Promise( resolve => setTimeout( resolve, 500 ) );
@@ -521,7 +516,7 @@ export default class AiAssist extends Plugin {
 		placeholder.classList.add( 'place-holder' );
 
 		// Set the text content of the placeholder
-		placeholder.textContent = t( 'Type / to request AI content' );
+		placeholder.textContent = t( 'Place holder' );
 
 		// Append the placeholder to the document body
 		document.body.appendChild( placeholder );
@@ -641,7 +636,6 @@ export default class AiAssist extends Plugin {
 	public showGptErrorToolTip( message: string ): void {
 		// Retrieve the editor's content area and the tooltip element
 		const editor = this.editor;
-		const t = editor.t;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
 		const tooltipElement = document.getElementById( this.GPT_RESPONSE_ERROR_ID );
 
@@ -650,7 +644,7 @@ export default class AiAssist extends Plugin {
 		if ( tooltipElement && editorRect ) {
 			// Set tooltip styles for positioning and visibility
 			tooltipElement.classList.add( 'show-response-error' );
-			tooltipElement.textContent = t( message ); // Set the tooltip text content
+			tooltipElement.textContent = message; // Set the tooltip text content
 			// Hide the tooltip after 2 seconds
 			setTimeout( () => {
 				this.hideGptErrorToolTip();

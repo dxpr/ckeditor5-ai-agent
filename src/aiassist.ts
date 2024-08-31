@@ -8,6 +8,7 @@ import '../theme/style.css';
 import type { Editor, Element } from 'ckeditor5';
 import type { AiModel } from './type-identifiers.js';
 import { TOKEN_LIMITS } from './const.js';
+import sbd from 'sbd';
 
 export default class AiAssist extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -224,7 +225,6 @@ export default class AiAssist extends Plugin {
 	 */
 	public async fetchAndProcessGptResponse( prompt: string, parent: any, maxRetries: number = this.retryAttempts ): Promise<void> {
 		try {
-			const inputBeforePrompt = prompt?.substring( 0, prompt?.lastIndexOf( '/' ) );
 			const domSelection = window.getSelection();
 			const domRange: any = domSelection?.getRangeAt( 0 );
 			const rect = domRange.getBoundingClientRect();
@@ -285,7 +285,6 @@ export default class AiAssist extends Plugin {
 				while ( Array.isArray( parent?._children?._nodes ) && parent?._children?._nodes.length ) {
 					writer.remove( parent?._children?._nodes[ 0 ] );
 				}
-				writer.insertText( `${ inputBeforePrompt }`, parent );
 			} );
 
 			for ( ; ; ) {
@@ -350,36 +349,34 @@ export default class AiAssist extends Plugin {
 		const editor = this.editor;
 		const context = this.trimContext( prompt );
 		const contentLanguageCode = editor.locale.contentLanguage;
-		const request = prompt?.substring( prompt?.lastIndexOf( '/' ) + 1 );
+		const request = prompt;
 
-		let finalPrompt = `"${ context }"`;
-		finalPrompt += '\nConsider the above content as context.';
-		finalPrompt += ` Replace '@@@cursor@@@' with the response for the following request: "${ request }"`;
-		finalPrompt += '\n\nInstructions:';
-		finalPrompt += `\nThe response must follow the language code - ${ contentLanguageCode }.`;
+		const finalPrompt = `Context:
+		""""
+		${ context }
+		"""
 
-		if ( this.promptsOverride.length ) {
-			for ( const instruction of this.promptsOverride ) {
-				finalPrompt += `\n${ instruction }`;
-			}
-		} else {
-			finalPrompt += '\nInsert the generated content at the precise location of the "@@@cursor@@@" placeholder.';
-			finalPrompt += ' The response should only contain the required text,';
-			finalPrompt += ' without any additional context or introductory phrases.';
-			finalPrompt += '\nEnsure the inserted content maintains a seamless connection with the surrounding text,';
-			finalPrompt += ' making the transition smooth and natural.';
-			finalPrompt += '\nIf the response involves adding an item to a list,';
-			finalPrompt += '  only generate the item itself, matching the format of the existing items in the list.';
-			finalPrompt += '\nRespond in a format that aligns with the surrounding content. ';
-			finalPrompt += 'If the response includes a list, maintain the existing list structure.';
-			finalPrompt += '   For example, number the items starting from "1" and use letters for sub-lists.';
-			finalPrompt += '\nAvoid any introductory phrases or context explanations in the response.';
-			finalPrompt += '\nEnsure that the content is free of grammar errors and correctly formatted to avoid parsing errors.';
-			finalPrompt += '\nThe response should directly follow the context, avoiding any awkward transitions or noticeable gaps.';
-			finalPrompt += '\nDo not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.';
-		}
+		Task:
+		"${ request }"
 
-		return finalPrompt;
+		Output:
+		Provide only the text for "@@@cursor@@@" that fits seamlessly with the context:
+		{insert generated text here}
+
+		Instruction:
+		The response must follow the language code - ${ contentLanguageCode }.
+		${ this.promptsOverride.length ? this.promptsOverride.join( '\n' ) :
+		`Ensure the inserted content maintains a seamless connection with the surrounding text, making the transition smooth and natural.
+				If the response involves adding an item to a list, only generate the item itself, 
+				matching the format of the existing items in the list.
+				Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.
+				The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.
+				Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.`
+}
+		
+		`;
+
+		return finalPrompt.trim();
 	}
 
 	/**
@@ -399,42 +396,51 @@ export default class AiAssist extends Plugin {
 		const editor = this.editor;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
 		const context = view?.innerText ?? '';
-		const corpus = context.split( prompt.trim() );
-		let charCount = 0;
+		const contextParts = context.split( prompt );
 
-		// Extract content before the prompt
-		if ( corpus[ 0 ] ) {
-			const lines = corpus[ 0 ].split( /\n/ ).map( line => line.trim() ).filter( line => line.length ).reverse();
-			for ( const line of lines ) {
-				charCount += line.length;
-				console.log( charCount );
-				if ( charCount / 4 <= this.contextSize ) {
-					contentBeforePrompt = line + '\n' + contentBeforePrompt;
-				} else {
-					break;
-				}
-			}
-		}
-
-		charCount = 0;
-
-		// Extract content after the prompt
-		if ( corpus[ 1 ] ) {
-			const lines = corpus[ 1 ].split( /\n/ ).map( line => line.trim() ).filter( line => line.length );
-			for ( const line of lines ) {
-				charCount += line.length;
-				if ( charCount / 4 <= this.contextSize ) {
-					contentAfterPrompt = contentAfterPrompt + '\n' + line;
-				} else {
-					break;
-				}
-			}
+		if ( contextParts.length > 1 ) {
+			contentBeforePrompt = this.extractContent( contextParts[ 0 ], this.contextSize );
+			contentAfterPrompt = this.extractContent( contextParts[ 1 ], this.contextSize, true );
 		}
 
 		// Combine the trimmed context with the cursor placeholder
 		const trimmedContext = `${ contentBeforePrompt }\n"@@@cursor@@@"\n${ contentAfterPrompt }`;
 
 		return trimmedContext;
+	}
+
+	/**
+	 * Efficiently extracts content after the prompt within a specified context size.
+	 *
+	 * @param contentAfterPrompt - The content after the prompt that needs to be trimmed.
+	 * @param contextSize - The maximum number of characters to include in the extracted context.
+	 * @param reverse - If true, it trims from the beginning to the end; otherwise, from the end to the beginning.
+	 * @returns The trimmed content that fits within the context size.
+	 */
+	public extractContent( contentAfterPrompt: string, contextSize: number, reverse: boolean = false ): string {
+		let trimmedContent = '';
+		let charCount = 0;
+
+		// Tokenize the content into sentences using the sbd library
+		const sentences = sbd.sentences( contentAfterPrompt, { preserve_whitespace: true } );
+
+		// Iterate over the sentences based on the direction
+		const iterator = reverse ? sentences : sentences.reverse();
+
+		for ( const sentence of iterator ) {
+			const sentenceLength = sentence.length;
+
+			// Check if adding this sentence would exceed the context size
+			if ( ( charCount + sentenceLength ) / 4 <= contextSize ) {
+				trimmedContent = reverse ? trimmedContent + sentence : sentence + trimmedContent;
+				charCount += sentenceLength;
+			} else {
+				break; // Stop if adding the next sentence would exceed the context size
+			}
+		}
+
+		// Trim to remove any trailing whitespace and return the final trimmed content
+		return trimmedContent.trim();
 	}
 
 	/**

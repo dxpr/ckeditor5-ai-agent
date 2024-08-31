@@ -48,6 +48,7 @@
     "@ckeditor/ckeditor5-package-tools": "^2.1.0",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
+    "@types/sbd": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "~5.43.0",
     "@typescript-eslint/parser": "^5.18.0",
     "ckeditor5": "latest",
@@ -71,8 +72,10 @@
     "dll:build": "ckeditor5-package-tools dll:build",
     "dll:serve": "http-server ./ -o sample/dll.html",
     "lint": "eslint \"**/*.{js,ts}\" --quiet",
+    "lint-fix": "eslint \"**/*.{js,ts}\" --fix",
     "start": "ckeditor5-package-tools start",
     "stylelint": "stylelint --quiet --allow-empty-input 'theme/**/*.css'",
+    "stylelint-fix": "stylelint --quiet --allow-empty-input --fix 'theme/**/*.css'",
     "test": "ckeditor5-package-tools test",
     "prepare": "yarn run dll:build && yarn run build:dist",
     "prepublishOnly": "yarn run ts:build && ckeditor5-package-tools export-package-as-javascript",
@@ -95,6 +98,7 @@
     }
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-utils": "^43.0.0"
+    "@ckeditor/ckeditor5-utils": "^43.0.0",
+    "sbd": "^1.0.19"
   }
 }

@@ -3,7 +3,6 @@ import { ButtonView } from 'ckeditor5/src/ui.js';
 import ckeditor5Icon from '../theme/icons/ckeditor.svg';
 // eslint-disable-next-line
 import { add } from '@ckeditor/ckeditor5-utils/src/translation-service.js';
-import translations from '../lang/contexts.json';
 import '../theme/style.css';
 import type { Editor, Element } from 'ckeditor5';
 import type { AiModel } from './type-identifiers.js';
@@ -18,6 +17,7 @@ export default class AiAssist extends Plugin {
 	public DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
 
 	public isInteractingWithGpt: boolean = false;
+	public readonly supportedLanguages = [ 'hi', 'en', 'es' ];
 
 	// modal - configuration
 	public aiModal: AiModel;
@@ -177,11 +177,8 @@ export default class AiAssist extends Plugin {
 		const editor = this.editor;
 		const t = editor.t;
 		const contentLanguageCode = editor.locale.contentLanguage;
-		if ( contentLanguageCode in translations ) {
-			// add( contentLanguageCode, translations[ contentLanguageCode as keyof typeof translations ] );
-		} else {
+		if ( !this.supportedLanguages.includes( contentLanguageCode ) ) {
 			this.showGptErrorToolTip( t( 'Error unsupported language' ) );
-			console.error( 'Unsupported language code' );
 		}
 	}
 

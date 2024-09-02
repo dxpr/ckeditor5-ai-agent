@@ -1,10 +1,10 @@
 {
-	"Ai assist": "Content for a tooltip is displayed when a user hovers the CKEditor 5 icon.",
-	"Place holder": "Type / to request AI content",
-	"Error processing command": "Oops! Something went wrong while processing your request.",
-	"Error readableStream not supported": "Your browser doesn't support this feature yet. Please try updating your browser or use a different one.",
-	"Error stream locked": "We're having trouble processing the response. Please try again in a moment.",
-	"Error parsing response": "An error occurred while handling the AI's response. Please try again.",
-	"Error fetch failed": "We couldn't connect to the AI. Please check your internet connection and try again.",
-	"Error unsupported language": "Unsupported language code"
+	"Ai assist": "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance.",
+	"Place holder": "Hint suggesting users utilize AI for documenting or content creation.",
+	"Error processing command": "Indicates a failure when processing the provided prompt.",
+	"Error readableStream not supported": "Appears when the browser does not support readable streams.",
+	"Error stream locked": "Appears when the returned stream is locked and cannot be accessed.",
+	"Error parsing response": "Indicates an error when unable to parse the AI response stream.",
+	"Error fetch failed": "Indicates a failure during a network call.",
+	"Error unsupported language": "Appears when an unsupported language code is provided."
 }

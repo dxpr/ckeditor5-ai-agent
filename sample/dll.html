@@ -90,6 +90,8 @@
 
 <!-- The "@dxpr/ckeditor5-ai-assist" package DLL build is served from the `build/` directory -->
 <script src="../build/ai-assist.js"></script>
+<script src="../build/translations/hi.js"></script>
+<script src="../build/translations/es.js"></script>
 
 <script>
 	console.log( 'Objects exported by the DLL build:', CKEditor5[ 'aiAssist' ] );
@@ -159,7 +161,8 @@
 					'tableRow',
 					'mergeTableCells'
 				]
-			}
+			},
+			language:'hi'
 		} )
 		.then( editor => {
 			window.editor = editor;

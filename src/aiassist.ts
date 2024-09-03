@@ -346,29 +346,27 @@ export default class AiAssist extends Plugin {
 		const request = prompt;
 
 		const finalPrompt = `Context:
-		""""
-		${ context }
-		"""
+"""
+${ context }
+"""
 
-		Task:
-		"${ request }"
+Task:
+"${ request }"
 
-		Output:
-		Provide only the text for "@@@cursor@@@" that fits seamlessly with the context:
-		{insert generated text here}
+Output:
+Provide only the text for "@@@cursor@@@" that fits seamlessly with the context:
+{insert generated text here}
 
-		Instruction:
-		The response must follow the language code - ${ contentLanguageCode }.
-		${ this.promptsOverride.length ? this.promptsOverride.join( '\n' ) :
+Instruction:
+The response must follow the language code - ${ contentLanguageCode }.
+${ this.promptsOverride.length ? this.promptsOverride.join( '\n' ) :
 		`Ensure the inserted content maintains a seamless connection with the surrounding text, making the transition smooth and natural.
-				If the response involves adding an item to a list, only generate the item itself, 
-				matching the format of the existing items in the list.
-				Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.
-				The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.
-				Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.`
-}
-		
-		`;
+If the response involves adding an item to a list, only generate the item itself, 
+matching the format of the existing items in the list.
+Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.
+The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.
+Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.`
+}`;
 
 		return finalPrompt.trim();
 	}

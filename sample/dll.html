@@ -95,6 +95,7 @@
 <script src="../build/ai-assist.js"></script>
 <script src="../build/translations/hi.js"></script>
 <script src="../build/translations/es.js"></script>
+<script src="../build/translations/nl.js"></script>
 
 <script>
 	console.log( 'Objects exported by the DLL build:', CKEditor5[ 'aiAssist' ] );
@@ -169,11 +170,11 @@
 				model: 'gpt-4o',
 				temperature: 0.2,
 				contextSize: 1000,
-				openAIKey: 'YOUR OPEN_AI_KEY'
+				openAIKey: 'YOUR_OPEN_AI_KEY'
 			},
 			language: {
-				content:'es',
-				ui:'es'
+				content:'nl',
+				ui:'nl'
 			}
 		} )
 		.then( editor => {

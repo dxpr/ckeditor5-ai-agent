@@ -16,7 +16,7 @@ export default class AiAssist extends Plugin {
 	public DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
 
 	public isInteractingWithGpt: boolean = false;
-	public readonly supportedLanguages = [ 'hi', 'en', 'es' ];
+	public readonly supportedLanguages = [ 'hi', 'en', 'es', 'nl' ];
 
 	// modal - configuration
 	public aiModal: AiModel;

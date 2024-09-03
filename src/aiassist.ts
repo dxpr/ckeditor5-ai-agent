@@ -2,7 +2,6 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import ckeditor5Icon from '../theme/icons/ckeditor.svg';
 // eslint-disable-next-line
-import { add } from '@ckeditor/ckeditor5-utils/src/translation-service.js';
 import '../theme/style.css';
 import type { Editor, Element } from 'ckeditor5';
 import type { AiModel } from './type-identifiers.js';
@@ -21,6 +20,7 @@ export default class AiAssist extends Plugin {
 
 	// modal - configuration
 	public aiModal: AiModel;
+	public openAIKey: string | undefined;
 	public endpointUrl: string;
 	public temperature: number | undefined | null;
 	public timeOutDuration: number | undefined | null;
@@ -34,6 +34,7 @@ export default class AiAssist extends Plugin {
 		super( editor );
 
 		this.aiModal = editor.config.get( 'aiAssist.model' ) ?? this.DEFAULT_GPT_MODEL;
+		this.openAIKey = editor.config.get( 'aiAssist.openAIKey' );
 		this.temperature = editor.config.get( 'aiAssist.temperature' );
 		this.timeOutDuration = editor.config.get( 'aiAssist.timeOutDuration' );
 		this.stopSequences = editor.config.get( 'aiAssist.stopSequences' ) ?? [];
@@ -216,6 +217,7 @@ export default class AiAssist extends Plugin {
 	public async fetchAndProcessGptResponse( prompt: string, parent: any, maxRetries: number = this.retryAttempts ): Promise<void> {
 		const editor = this.editor;
 		const t = editor.t;
+
 		try {
 			const domSelection = window.getSelection();
 			const domRange: any = domSelection?.getRangeAt( 0 );
@@ -230,7 +232,7 @@ export default class AiAssist extends Plugin {
 				method: 'POST',
 				headers: {
 					// eslint-disable-next-line max-len
-					'Authorization': 'Bearer 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',
+					'Authorization': `Bearer ${ this.openAIKey }`,
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify( {

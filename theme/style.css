@@ -61,6 +61,8 @@
 	transition-duration: 1s;
 	transition-property: opacity;
 	opacity: 0;
+	right: 10px;
+	top: 0;
 }
 
 .show-response-error {

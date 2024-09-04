@@ -28,7 +28,10 @@ export default class AiAssist extends Plugin {
 	public retryAttempts: number;
 	public contextSize: number;
 	public stopSequences: Array<string>;
-	public promptsOverride: Array<string>;
+	public responseOutputFormat: Array<string>;
+	public responseContextData: Array<string>;
+	public responseFilters: Array<string>;
+	public debugMode: boolean;
 
 	constructor( editor: Editor ) {
 		super( editor );
@@ -38,11 +41,15 @@ export default class AiAssist extends Plugin {
 		this.temperature = editor.config.get( 'aiAssist.temperature' );
 		this.timeOutDuration = editor.config.get( 'aiAssist.timeOutDuration' );
 		this.stopSequences = editor.config.get( 'aiAssist.stopSequences' ) ?? [];
-		this.promptsOverride = editor.config.get( 'aiAssist.prompt' ) ?? [];
+		this.responseOutputFormat = editor.config.get( 'aiAssist.promptSettings.outputFormat' ) ?? [];
+		this.responseContextData = editor.config.get( 'aiAssist.promptSettings.contextData' ) ?? [];
+		this.responseFilters = editor.config.get( 'aiAssist.promptSettings.filters' ) ?? [];
 		this.endpointUrl = editor.config.get( 'aiAssist.endpointUrl' ) ?? '';
 		this.maxTokens = editor.config.get( 'aiAssist.maxTokens' ) ?? 0;
 		this.contextSize = editor.config.get( 'aiAssist.contextSize' ) ?? 0;
 		this.retryAttempts = editor.config.get( 'aiAssist.retryAttempts' ) ?? 1;
+		const debugModeConfig = editor.config.get( 'aiAssist.debugMode' );
+		this.debugMode = typeof debugModeConfig === 'boolean' ? debugModeConfig : false;
 		if ( !this.endpointUrl ) {
 			this.endpointUrl = this.DEFAULT_AI_END_POINT;
 		}
@@ -218,6 +225,9 @@ export default class AiAssist extends Plugin {
 		const editor = this.editor;
 		const t = editor.t;
 
+		const controller = new AbortController();
+		const timeoutId = setTimeout( () => controller.abort(), this.timeOutDuration ?? 20000 );
+
 		try {
 			const domSelection = window.getSelection();
 			const domRange: any = domSelection?.getRangeAt( 0 );
@@ -247,26 +257,18 @@ export default class AiAssist extends Plugin {
 					max_tokens: this.maxTokens,
 					stop: this.stopSequences,
 					stream: true
-				} )
+				} ),
+				signal: controller.signal
 			} );
 
+			clearTimeout( timeoutId );
+
 			if ( !response.ok ) {
-				if ( maxRetries > 0 ) {
-					return this.fetchAndProcessGptResponse( prompt, parent, maxRetries - 1 );
-				} else {
-					throw new Error( 'AiAssist: Fetch failed' );
-				}
+				throw new Error( 'AiAssist: Fetch failed' );
 			}
 
 			if ( !response.body ) {
-				this.showGptErrorToolTip( t( 'Error readableStream not supported' ) );
-				return;
-			}
-
-			if ( response.body.locked ) {
-				console.error( 'Stream is already locked.' );
-				this.showGptErrorToolTip( t( 'Error stream locked' ) );
-				return;
+				throw new Error( 'ReadableStream not supported' );
 			}
 
 			const reader = response.body.getReader();
@@ -320,9 +322,33 @@ export default class AiAssist extends Plugin {
 					}
 				}
 			}
-		} catch ( error ) {
-			console.error( 'Error during GPT response fetch:', error );
-			this.showGptErrorToolTip( t( 'Error fetch failed' ) );
+		} catch ( error: any ) {
+			const errorIdentifier = ( error?.message || '' ).trim() || ( error?.name || '' ).trim();
+			const isRetryableError = [
+				'AbortError',
+				'ReadableStream not supported',
+				'AiAssist: Fetch failed'
+			].includes( errorIdentifier );
+
+			if ( isRetryableError && maxRetries > 0 ) {
+				console.warn( `Retrying due to error: ${ error?.name || error?.message }` );
+				clearTimeout( timeoutId );
+				return this.fetchAndProcessGptResponse( prompt, parent, maxRetries - 1 );
+			}
+
+			let errorMessage: string;
+			switch ( error?.name || error?.message?.trim() ) {
+				case 'ReadableStream not supported':
+					errorMessage = t( 'Error stream locked' );
+					break;
+				case 'AiAssist: Fetch failed':
+					errorMessage = t( 'Error fetch failed' );
+					break;
+				default:
+					errorMessage = t( 'Error fetch failed' );
+			}
+
+			this.showGptErrorToolTip( errorMessage );
 		} finally {
 			// safe side to not-to-show place holder as we are clearing the parentNode
 			await new Promise( resolve => setTimeout( resolve, 500 ) );
@@ -351,22 +377,35 @@ ${ context }
 """
 
 Task:
-"${ request }"
+"""
+${ request }
+"""
 
 Output:
-Provide only the text for "@@@cursor@@@" that fits seamlessly with the context:
-{insert generated text here}
+Provide only the new text content that should replace "@@@cursor@@@" based on the context above. 
+Do not include any part of the context in the output at any cost.
 
 Instruction:
 The response must follow the language code - ${ contentLanguageCode }.
-${ this.promptsOverride.length ? this.promptsOverride.join( '\n' ) :
+${ this.responseOutputFormat.length ? this.responseOutputFormat.join( '\n' ) : '' }
+${ this.responseFilters.length ? this.responseFilters.join( '\n' ) :
 		`Ensure the inserted content maintains a seamless connection with the surrounding text, making the transition smooth and natural.
 If the response involves adding an item to a list, only generate the item itself, 
 matching the format of the existing items in the list.
 Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.
-The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.
-Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.`
+The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.`
+}
+${ this.responseContextData.length ? this.responseContextData.join( '\n' ) :
+		'Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.'
 }`;
+
+		if ( this.debugMode ) {
+			console.group( 'AiAssist Prompt Debug' );
+			console.log( 'User Prompt:', prompt );
+			console.log( 'Generated GPT Prompt:' );
+			console.log( finalPrompt );
+			console.groupEnd();
+		}
 
 		return finalPrompt.trim();
 	}
@@ -391,13 +430,18 @@ Do not modify the original text except to replace the "@@@cursor@@@" placeholder
 		const contextParts = context.split( prompt );
 
 		if ( contextParts.length > 1 ) {
-			contentBeforePrompt = this.extractContent( contextParts[ 0 ], this.contextSize );
-			contentAfterPrompt = this.extractContent( contextParts[ 1 ], this.contextSize, true );
+			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
+				contentBeforePrompt = this.extractContent( contextParts[ 0 ], this.contextSize / 2, true );
+				contentAfterPrompt = this.extractContent( contextParts[ 1 ], this.contextSize - contentBeforePrompt.length / 4 );
+			} else {
+				contentAfterPrompt = this.extractContent( contextParts[ 1 ], this.contextSize / 2 );
+				contentBeforePrompt = this.extractContent( contextParts[ 0 ], this.contextSize - contentAfterPrompt.length / 4, true );
+			}
 		}
 
 		// Combine the trimmed context with the cursor placeholder
 		const trimmedContext = `${ contentBeforePrompt }\n"@@@cursor@@@"\n${ contentAfterPrompt }`;
-
+		console.log( trimmedContext );
 		return trimmedContext;
 	}
 
@@ -412,19 +456,17 @@ Do not modify the original text except to replace the "@@@cursor@@@" placeholder
 	public extractContent( contentAfterPrompt: string, contextSize: number, reverse: boolean = false ): string {
 		let trimmedContent = '';
 		let charCount = 0;
-
 		// Tokenize the content into sentences using the sbd library
 		const sentences = sbd.sentences( contentAfterPrompt, { preserve_whitespace: true } );
 
 		// Iterate over the sentences based on the direction
-		const iterator = reverse ? sentences : sentences.reverse();
+		const iterator = reverse ? sentences.reverse() : sentences;
 
 		for ( const sentence of iterator ) {
 			const sentenceLength = sentence.length;
-
 			// Check if adding this sentence would exceed the context size
 			if ( ( charCount + sentenceLength ) / 4 <= contextSize ) {
-				trimmedContent = reverse ? trimmedContent + sentence : sentence + trimmedContent;
+				trimmedContent = reverse ? sentence + trimmedContent : trimmedContent + sentence;
 				charCount += sentenceLength;
 			} else {
 				break; // Stop if adding the next sentence would exceed the context size

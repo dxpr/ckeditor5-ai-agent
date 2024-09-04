@@ -21,7 +21,12 @@ declare module '@ckeditor/ckeditor5-core' {
             contextSize?: number; // max content to includes as content
             timeOutDuration?: number; // Time-Out Duration in milliseconds
             endpointUrl?: string; // Endpoint URL
-            prompt?: Array<string>;
+            promptSettings?: {
+                outputFormat?: Array<string>;
+                contextData?: Array<string>;
+                filters?: Array<string>;
+            };
+            debugMode?: boolean;
         };
     }
 }

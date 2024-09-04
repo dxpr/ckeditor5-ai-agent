@@ -53,18 +53,24 @@ ClassicEditor
 
 The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
+## Configuration Options
+
+The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
+
 | Option | Type | Description |
 | :-------- | :------- | :-------------------------------- |
-| `model` | `AiModel` | The AI model to use (e.g., gpt-4o). |
+| `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
 | `openAIKey` | `string` | Your Open_AI key for authenticate. |
-| `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. |
-| `maxTokens` | `number` | The maximum number of tokens to generate. Should be within the model's token limits. |
-| `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. |
-| `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. |
-| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. |
+| `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
+| `maxTokens` | `number` | The maximum number of tokens to generate. Should be within the model's token limits. (optional)|
+| `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
+| `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
+| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 20s (optional)|
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 50% of the GPT 4o token total limit. |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `prompt` | `Array<string>` | An array of strings used to override or enhance the prompt sent to the AI model. |
+| `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
+| `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
+| `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
 
 ## Error Handling
 

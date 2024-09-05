@@ -283,24 +283,34 @@ export default class AiAssist extends Plugin {
 				}
 			} );
 
+			let buffer = '';
+			let hasReceivedValidData = false;
+
 			for ( ; ; ) {
 				const { done, value } = await reader.read();
 				if ( done ) {
 					break;
 				}
 				const chunk = decoder.decode( value );
-				const lines = chunk?.split( '\n' );
-				const parsedLines = lines.map( line => line.replace( /^data: /, '' ).trim() )
-					.filter( line => line !== '' && line !== 'DONE' && line !== '[DONE]' );
-				for ( const parsedLine of parsedLines ) {
+				buffer += chunk;
+				const lines = buffer.split( '\n' );
+				buffer = lines.pop() || ''; // Keep the last incomplete line in the buffer
+
+				for ( const line of lines ) {
+					const trimmedLine = line.replace( /^data: /, '' ).trim();
+					if ( trimmedLine === '' || trimmedLine === 'DONE' || trimmedLine === '[DONE]' ) {
+						continue;
+					}
 					try {
-						const { choices } = JSON.parse( parsedLine );
+						const { choices } = JSON.parse( trimmedLine );
 						const { delta, finish_reason: finishReason } = choices[ 0 ];
 						const { content } = delta ?? null;
 
 						if ( `${ finishReason }`.trim() == 'stop' ) {
 							continue;
 						}
+
+						hasReceivedValidData = true;
 
 						// Handle newlines and insert content into the editor
 						if ( content.includes( '\n' ) ) {
@@ -317,10 +327,21 @@ export default class AiAssist extends Plugin {
 							} );
 						}
 					} catch ( parseError ) {
-						console.error( 'Error while parsing line:', parsedLine, parseError );
+						console.warn( 'Error parsing line, buffering for next chunk:', trimmedLine );
 						this.showGptErrorToolTip( t( 'Error parsing response' ) );
 					}
 				}
+			}
+
+			// Process any remaining buffer content
+			if ( buffer.trim() ) {
+				console.warn( 'Unprocessed buffer content:', buffer );
+			}
+
+			// Check if we've received any valid data after processing all chunks
+			if ( !hasReceivedValidData ) {
+				this.showGptErrorToolTip( t( 'Error processing command' ) );
+				console.error( 'No valid data received in the entire response' );
 			}
 		} catch ( error: any ) {
 			const errorIdentifier = ( error?.message || '' ).trim() || ( error?.name || '' ).trim();

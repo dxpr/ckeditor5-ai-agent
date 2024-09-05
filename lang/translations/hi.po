@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ckeditor 5-ai-assist\n"
+"PO-Revision-Date: 2024-09-05 11:18+0530\n"
+"Last-Translator: Meet Shiroya <meetshiroya@meets-macbook-air.local>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt ""
+"Tooltip displayed when hovering over the CKEditor 5 icon, providing "
+"information about AI assistance."
+msgid "Ai assist"
+msgstr "Ai सहायक"
+
+msgctxt "Hint suggesting users utilize AI for documenting or content creation."
+msgid "Type / to request AI content"
+msgstr "एआई सामग्री के लिए अनुरोध करने हेतु / टाइप करें"
+
+msgctxt "Appears when the Browser does not support readable streams."
+msgid "Browser does not support readable streams"
+msgstr "ब्राउज़र पठनीय स्ट्रीम्स का समर्थन नहीं करता"
+
+msgctxt "Indicates a failure when processing the provided prompt."
+msgid "Oops! Something went wrong while processing your request"
+msgstr "ओह! आपकी अनुरोध को संसाधित करते समय कुछ गलत हुआ"
+
+msgctxt "Indicates an error when unable to parse the AI response stream."
+msgid "An error occurred while handling the AI's response"
+msgstr "एआई की प्रतिक्रिया को संभालते समय एक त्रुटि हुई"
+
+msgctxt "Indicates a failure during a network call."
+msgid "We couldn't connect to the AI. Please check your internet"
+msgstr "हम एआई से कनेक्ट नहीं हो सके। कृपया अपनी इंटरनेट कनेक्शन की जाँच करें"
+
+msgctxt "Appears when an unsupported language code is provided."
+msgid "Unsupported language code"
+msgstr "असमर्थित भाषा कोड"

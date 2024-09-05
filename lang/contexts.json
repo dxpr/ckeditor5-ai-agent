@@ -1,3 +1,9 @@
 {
-  "Ai assist": "Content for a tooltip is displayed when a user hovers the CKEditor 5 icon."
+	"Ai assist": "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance.",
+	"Type / to request AI content": "Hint suggesting users utilize AI for documenting or content creation.",
+	"Browser does not support readable streams": "Appears when the Browser does not support readable streams.",
+	"Oops! Something went wrong while processing your request": "Indicates a failure when processing the provided prompt.",
+	"An error occurred while handling the AI's response": "Indicates an error when unable to parse the AI response stream.",
+	"We couldn't connect to the AI. Please check your internet": "Indicates a failure during a network call.",
+	"Unsupported language code": "Appears when an unsupported language code is provided."
 }

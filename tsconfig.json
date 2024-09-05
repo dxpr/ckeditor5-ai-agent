@@ -21,6 +21,8 @@
     "target": "es2019",
     "sourceMap": true,
     "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,  
 	"moduleDetection": "force",
 	"moduleResolution": "NodeNext",
 	"module": "NodeNext",

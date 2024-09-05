@@ -1,0 +1,70 @@
+/* style for placeholder */
+.place-holder {
+	position: fixed;
+	z-index: 100;
+	opacity: 0;
+	color: hsl(0, 0%, 50%);
+	transition-duration: 0.2s;
+	transition-property: opacity;
+	transition-timing-function: ease-in, ease-out;
+	margin: 0;
+}
+
+.show-place-holder {
+	opacity: 1;
+	transition-duration: 1s;
+}
+
+/* style for response loader */
+.gpt-loader {
+	position: fixed;
+	width: 5px;
+	height: 5px;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background: hsl(0, 0%, 0%);
+	box-shadow: 0 0 0 0 hsla(224, 100%, 3%, 0.377);
+	animation: l2 1.5s infinite linear;
+	opacity: 0;
+}
+
+.show-gpt-loader {
+	opacity: 1;
+}
+
+.gpt-loader:before,
+.gpt-loader:after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	box-shadow: 0 0 0 0 hsla(224, 100%, 3%, 0.377);
+	animation: inherit;
+	animation-delay: -0.5s;
+}
+.gpt-loader:after {
+	animation-delay: -1s;
+}
+@keyframes l2 {
+	100% {box-shadow: 0 0 0 40px hsla(224, 100%, 3%, 0)}
+}
+/* style for response error */
+
+.response-error {
+	position: fixed;
+	z-index: 100;
+	color: hsl(0, 0%, 100%);
+	background: hsl(0, 39%, 60%);
+	width: auto;
+	padding: 5px 10px;
+	border-radius: 5px;
+	transition-duration: 1s;
+	transition-property: opacity;
+	opacity: 0;
+	right: 10px;
+	top: 0;
+}
+
+.show-response-error {
+	opacity: 1;
+}

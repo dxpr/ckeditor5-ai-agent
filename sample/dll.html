@@ -87,9 +87,15 @@
 <script src="../node_modules/@ckeditor/ckeditor5-media-embed/build/media-embed.js"></script>
 <script src="../node_modules/@ckeditor/ckeditor5-list/build/list.js"></script>
 <script src="../node_modules/@ckeditor/ckeditor5-table/build/table.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-table/build/translations/es.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-table/build/translations/hi.js"></script>
+
 
 <!-- The "@dxpr/ckeditor5-ai-assist" package DLL build is served from the `build/` directory -->
 <script src="../build/ai-assist.js"></script>
+<script src="../build/translations/hi.js"></script>
+<script src="../build/translations/es.js"></script>
+<script src="../build/translations/nl.js"></script>
 
 <script>
 	console.log( 'Objects exported by the DLL build:', CKEditor5[ 'aiAssist' ] );
@@ -159,6 +165,16 @@
 					'tableRow',
 					'mergeTableCells'
 				]
+			},
+			aiAssist: {
+				model: 'gpt-4o',
+				temperature: 0.2,
+				contextSize: 1000,
+				openAIKey: 'YOUR_OPEN_AI_KEY'
+			},
+			language: {
+				content:'en',
+				ui:'es'
 			}
 		} )
 		.then( editor => {

@@ -387,11 +387,9 @@ export default class AiAssist extends Plugin {
 	 *          grammar, and continuity rules.
 	 */
 	public generateGptPromptBasedOnUserPrompt( prompt: string ): string {
-		const editor = this.editor;
 		const context = this.trimContext( prompt );
-		const contentLanguageCode = editor.locale.contentLanguage;
 		const request = prompt;
-
+		const isEditorEmpty = context === '"@@@cursor@@@"';
 		const finalPrompt = `Context:
 """
 ${ context }
@@ -407,18 +405,7 @@ Provide only the new text content that should replace "@@@cursor@@@" based on th
 Do not include any part of the context in the output at any cost.
 
 Instruction:
-The response must follow the language code - ${ contentLanguageCode }.
-${ this.responseOutputFormat.length ? this.responseOutputFormat.join( '\n' ) : '' }
-${ this.responseFilters.length ? this.responseFilters.join( '\n' ) :
-		`Ensure the inserted content maintains a seamless connection with the surrounding text, making the transition smooth and natural.
-If the response involves adding an item to a list, only generate the item itself, 
-matching the format of the existing items in the list.
-Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.
-The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.`
-}
-${ this.responseContextData.length ? this.responseContextData.join( '\n' ) :
-		'Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.'
-}`;
+${ this.getResponseInstructions( isEditorEmpty ) }`;
 
 		if ( this.debugMode ) {
 			console.group( 'AiAssist Prompt Debug' );
@@ -429,6 +416,52 @@ ${ this.responseContextData.length ? this.responseContextData.join( '\n' ) :
 		}
 
 		return finalPrompt.trim();
+	}
+
+	/**
+	 * Generates response instructions based on the editor's state and configuration.
+	 *
+	 * @param isEditorEmpty - A boolean indicating whether the editor content is empty.
+	 * @returns A string containing the formatted response instructions for the AI.
+	 */
+	public getResponseInstructions( isEditorEmpty: boolean ): string {
+		const editor = this.editor;
+		const contentLanguageCode = editor.locale.contentLanguage;
+		const instructions = [];
+
+		// Add the language code instruction.
+		instructions.push( `The response must follow the language code - ${ contentLanguageCode }.` );
+
+		// Add response output format instructions if available.
+		if ( this.responseOutputFormat.length ) {
+			instructions.push( ...this.responseOutputFormat );
+		}
+
+		// Add response filters or default instructions if filters are not available.
+		if ( this.responseFilters.length ) {
+			instructions.push( ...this.responseFilters );
+		} else {
+			const defaultInstructions = [
+				'If the response involves adding an item to a list, only generate the item itself,',
+				'matching the format of the existing items in the list.',
+				'Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.',
+				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
+			];
+			instructions.push( ...defaultInstructions );
+		}
+
+		// Add context-specific instructions if the editor is not empty.
+		if ( !isEditorEmpty ) {
+			const defaultContextInstructions = [
+				'Ensure the inserted content maintains a seamless connection with the surrounding text,',
+				'making the transition smooth and natural.',
+				'Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.'
+			];
+			instructions.push( ...defaultContextInstructions );
+		}
+
+		// Join all instructions into a single formatted string.
+		return instructions.join( '\n' );
 	}
 
 	/**
@@ -462,8 +495,7 @@ ${ this.responseContextData.length ? this.responseContextData.join( '\n' ) :
 
 		// Combine the trimmed context with the cursor placeholder
 		const trimmedContext = `${ contentBeforePrompt }\n"@@@cursor@@@"\n${ contentAfterPrompt }`;
-		console.log( trimmedContext );
-		return trimmedContext;
+		return trimmedContext.trim();
 	}
 
 	/**

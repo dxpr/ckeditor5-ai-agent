@@ -71,6 +71,7 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
 | `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
 | `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
+| `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
 
 ## Error Handling
 

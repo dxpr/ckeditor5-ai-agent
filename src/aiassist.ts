@@ -31,6 +31,7 @@ export default class AiAssist extends Plugin {
 	public responseOutputFormat: Array<string>;
 	public responseContextData: Array<string>;
 	public responseFilters: Array<string>;
+	public debugMode: boolean;
 
 	constructor( editor: Editor ) {
 		super( editor );
@@ -47,6 +48,8 @@ export default class AiAssist extends Plugin {
 		this.maxTokens = editor.config.get( 'aiAssist.maxTokens' ) ?? 0;
 		this.contextSize = editor.config.get( 'aiAssist.contextSize' ) ?? 0;
 		this.retryAttempts = editor.config.get( 'aiAssist.retryAttempts' ) ?? 1;
+		const debugModeConfig = editor.config.get( 'aiAssist.debugMode' );
+		this.debugMode = typeof debugModeConfig === 'boolean' ? debugModeConfig : false;
 		if ( !this.endpointUrl ) {
 			this.endpointUrl = this.DEFAULT_AI_END_POINT;
 		}
@@ -395,6 +398,14 @@ The response should directly follow the context, avoiding any awkward transition
 ${ this.responseContextData.length ? this.responseContextData.join( '\n' ) :
 		'Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.'
 }`;
+
+		if ( this.debugMode ) {
+			console.group( 'AiAssist Prompt Debug' );
+			console.log( 'User Prompt:', prompt );
+			console.log( 'Generated GPT Prompt:' );
+			console.log( finalPrompt );
+			console.groupEnd();
+		}
 
 		return finalPrompt.trim();
 	}

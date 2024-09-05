@@ -388,7 +388,9 @@ export default class AiAssist extends Plugin {
 	 */
 	public generateGptPromptBasedOnUserPrompt( prompt: string ): string {
 		const context = this.trimContext( prompt );
-		const request = prompt;
+		// cut off the leading slash, we need to improve this once
+		// we start supporting start tokens than slash
+		const request = prompt.slice( 1 );
 		const isEditorEmpty = context === '"@@@cursor@@@"';
 		const finalPrompt = `Context:
 """

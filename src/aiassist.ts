@@ -441,13 +441,13 @@ ${ this.getResponseInstructions( isEditorEmpty ) }`;
 		if ( this.responseFilters.length ) {
 			instructions.push( ...this.responseFilters );
 		} else {
-			const defaultInstructions = [
+			const defaultFilterInstructions = [
 				'If the response involves adding an item to a list, only generate the item itself,',
 				'matching the format of the existing items in the list.',
 				'Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
 			];
-			instructions.push( ...defaultInstructions );
+			instructions.push( ...defaultFilterInstructions );
 		}
 
 		// Add context-specific instructions if the editor is not empty.

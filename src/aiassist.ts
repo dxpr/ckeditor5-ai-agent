@@ -183,7 +183,7 @@ export default class AiAssist extends Plugin {
 		const t = editor.t;
 		const contentLanguageCode = editor.locale.contentLanguage;
 		if ( !this.supportedLanguages.includes( contentLanguageCode ) ) {
-			this.showGptErrorToolTip( t( 'Error unsupported language' ) );
+			this.showGptErrorToolTip( t( 'Unsupported language code' ) );
 		}
 	}
 
@@ -205,7 +205,7 @@ export default class AiAssist extends Plugin {
 			cancel(); // cancel the bubbling
 			await this.fetchAndProcessGptResponse( prompt, parent );
 		} catch ( error ) {
-			this.showGptErrorToolTip( t( 'Error processing command' ) );
+			this.showGptErrorToolTip( t( 'Oops! Something went wrong while processing your request' ) );
 			console.error( 'Error processing command', error );
 		}
 	}
@@ -336,13 +336,13 @@ export default class AiAssist extends Plugin {
 			let errorMessage: string;
 			switch ( error?.name || error?.message?.trim() ) {
 				case 'ReadableStream not supported':
-					errorMessage = t( 'Error stream locked' );
+					errorMessage = t( 'Browser does not support readable streams' );
 					break;
 				case 'AiAssist: Fetch failed':
-					errorMessage = t( 'Error fetch failed' );
+					errorMessage = t( 'We couldn\'t connect to the AI. Please check your internet' );
 					break;
 				default:
-					errorMessage = t( 'Error fetch failed' );
+					errorMessage = t( 'We couldn\'t connect to the AI. Please check your internet' );
 			}
 
 			this.showGptErrorToolTip( errorMessage );
@@ -544,7 +544,7 @@ ${ this.responseContextData.length ? this.responseContextData.join( '\n' ) :
 		placeholder.classList.add( 'place-holder' );
 
 		// Set the text content of the placeholder
-		placeholder.textContent = t( 'Place holder' );
+		placeholder.textContent = t( 'Type / to request AI content' );
 
 		// Append the placeholder to the document body
 		document.body.appendChild( placeholder );

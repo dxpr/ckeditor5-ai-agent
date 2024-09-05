@@ -328,7 +328,7 @@ export default class AiAssist extends Plugin {
 						}
 					} catch ( parseError ) {
 						console.warn( 'Error parsing line, buffering for next chunk:', trimmedLine );
-						this.showGptErrorToolTip( t( 'Error parsing response' ) );
+						this.showGptErrorToolTip( t( 'An error occurred while handling the AI\'s response' ) );
 					}
 				}
 			}
@@ -340,7 +340,7 @@ export default class AiAssist extends Plugin {
 
 			// Check if we've received any valid data after processing all chunks
 			if ( !hasReceivedValidData ) {
-				this.showGptErrorToolTip( t( 'Error processing command' ) );
+				this.showGptErrorToolTip( t( 'Oops! Something went wrong while processing your request' ) );
 				console.error( 'No valid data received in the entire response' );
 			}
 		} catch ( error: any ) {

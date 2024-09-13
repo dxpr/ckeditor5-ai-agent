@@ -4,7 +4,7 @@ import ckeditor5Icon from '../theme/icons/ckeditor.svg';
 // eslint-disable-next-line
 import '../theme/style.css';
 import type { Editor, Element } from 'ckeditor5';
-import type { AiModel } from './type-identifiers.js';
+import type { AiModel, MarkdownContent } from './type-identifiers.js';
 import { TOKEN_LIMITS } from './const.js';
 import sbd from 'sbd';
 
@@ -147,15 +147,20 @@ export default class AiAssist extends Plugin {
 
 		// Handle the 'enter' key press and simplify slash command detection
 		editor.keystrokes.set( 'enter', async ( _, cancel ) => {
+			const editor = this.editor;
+			const mapper = editor.editing.mapper;
+			const view = editor.editing.view;
+
 			const position = model.document.selection.getFirstPosition();
 			if ( position ) {
-				const paragraph = position.parent;
-				const textNode = paragraph.getChild( 0 );
-				let lastContentBeforeEnter: string | undefined;
-
-				if ( textNode?.is( 'model:$text' ) ) {
-					lastContentBeforeEnter = textNode.data;
+				const paragraph = position.parent as Element;
+				const equivalentView = mapper.toViewElement( paragraph );
+				let equivalentDomElement;
+				if ( equivalentView ) {
+					equivalentDomElement = view.domConverter.mapViewToDom( equivalentView );
 				}
+
+				const lastContentBeforeEnter = equivalentDomElement?.innerText;
 
 				// Check if the last content starts with '/'
 				if ( typeof lastContentBeforeEnter === 'string' && lastContentBeforeEnter.startsWith( '/' ) ) {
@@ -250,7 +255,7 @@ export default class AiAssist extends Plugin {
 					messages: [
 						{
 							role: 'user',
-							content: this.generateGptPromptBasedOnUserPrompt( prompt )
+							content: await this.generateGptPromptBasedOnUserPrompt( prompt )
 						}
 					],
 					...( this.temperature != null && { temperature: this.temperature } ),
@@ -386,28 +391,31 @@ export default class AiAssist extends Plugin {
 	 *          and specific instructions to ensure the generated content follows proper formatting,
 	 *          grammar, and continuity rules.
 	 */
-	public generateGptPromptBasedOnUserPrompt( prompt: string ): string {
+	public async generateGptPromptBasedOnUserPrompt( prompt: string ): Promise<string> {
 		const context = this.trimContext( prompt );
-		// cut off the leading slash, we need to improve this once
-		// we start supporting start tokens than slash
-		const request = prompt.slice( 1 );
+		let request = '';
+		let markDownContents: Array<MarkdownContent> = [];
+
+		// check is prompt is having urls formate
+		if ( prompt.includes( ':' ) && prompt.includes( 'https' ) ) {
+			request = prompt.substring( 1, prompt.indexOf( ':' ) );
+			const urlArrString = prompt.substring( prompt.indexOf( ':' ) + 1 );
+			const urls = urlArrString.replace( /\n/g, '' ).split( ',' ).map( url => url.trim() ).filter( url => url );
+			console.log( urls );
+			markDownContents = await this.generateMarkDownForUrls( urls );
+			console.log( markDownContents );
+		} else {
+			request = prompt.slice( 1 );
+		}
 		const isEditorEmpty = context === '"@@@cursor@@@"';
-		const finalPrompt = `Context:
-"""
-${ context }
-"""
-
-Task:
-"""
-${ request }
-"""
-
+		const finalPrompt = `
+${ this.getRequestCorpus( request, context, markDownContents ) }
 Output:
 Provide only the new text content that should replace "@@@cursor@@@" based on the context above. 
 Do not include any part of the context in the output at any cost.
 
 Instruction:
-${ this.getResponseInstructions( isEditorEmpty ) }`;
+${ this.getResponseInstructions( isEditorEmpty, markDownContents ) }`;
 
 		if ( this.debugMode ) {
 			console.group( 'AiAssist Prompt Debug' );
@@ -421,12 +429,91 @@ ${ this.getResponseInstructions( isEditorEmpty ) }`;
 	}
 
 	/**
+	 * Generates markdown content for an array of URLs.
+	 *
+	 * @param urls - An array of URLs to fetch content from.
+	 * @returns A promise that resolves to an array of MarkdownContent objects.
+	 */
+	public async generateMarkDownForUrls( urls: Array<string> ): Promise<Array<MarkdownContent>> {
+		const markDownContents = await Promise.all(
+			urls.map( async url => {
+				const content = await this.fetchUrlContent( url );
+				return content ? { content, url } : null;
+			} )
+		);
+
+		return markDownContents.filter( ( content ): content is MarkdownContent => content !== null );
+	}
+
+	/**
+	 * Fetches the content of a given URL.
+	 *
+	 * @param url - The URL to fetch content from.
+	 * @returns A promise that resolves to the fetched content as a string.
+	 * @throws Will throw an error if the URL is invalid.
+	 */
+	public async fetchUrlContent( url: string ): Promise<string> {
+		const editor = this.editor;
+		const t = editor.t;
+		let errorMsg: string | undefined;
+		const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+		if ( !urlRegex.test( url.trim() ) ) {
+			throw new Error( 'Invalid URL' );
+		}
+
+		try {
+			const response = await fetch( `https://r.jina.ai/${ url }` );
+			if ( !response.ok ) {
+				throw new Error( `HTTP error! status: ${ response.status }` );
+			}
+			return await response.text();
+		} catch ( error ) {
+			errorMsg = t( 'Failed to fetch content of : %0', url );
+			console.error( `Failed to fetch content: ${ url }`, error );
+			return '';
+		} finally {
+			if ( errorMsg ) {
+				this.showGptErrorToolTip( errorMsg );
+			}
+		}
+	}
+
+	/**
+	 * Generates a corpus for the AI request based on the given context, request, and fetched content.
+	 *
+	 * @param request - The user's request or task description.
+	 * @param context - The context in which the request is made.
+	 * @param fetchedContent - An array of MarkdownContent objects containing additional information.
+	 * @returns A formatted string containing the request corpus.
+	 */
+	public getRequestCorpus( request: string, context: string, fetchedContent: Array<MarkdownContent> ): string {
+		const corpus = [];
+		corpus.push( `"""\n${ context }\n"""\n\n` );
+		corpus.push( '\nTask:\n' );
+		corpus.push( `"""\n${ request }\n"""\n\n` );
+
+		if ( fetchedContent.length ) {
+			corpus.push(
+				'Refer to following markdown content as a source of information, but generate new text that fits the given context & task.'
+			);
+			fetchedContent.forEach( ( markdown, index ) => {
+				corpus.push( `\n\n------------ stating markdown content of ${ index + 1 } ------------\n\n` );
+				corpus.push( markdown.content );
+				corpus.push( `\n\n------------ ending markdown content of ${ index + 1 } ------------\n\n` );
+			} );
+		}
+
+		// Join all corpus into a single formatted string.
+		return corpus.join( '\n' );
+	}
+
+	/**
 	 * Generates response instructions based on the editor's state and configuration.
 	 *
 	 * @param isEditorEmpty - A boolean indicating whether the editor content is empty.
 	 * @returns A string containing the formatted response instructions for the AI.
 	 */
-	public getResponseInstructions( isEditorEmpty: boolean ): string {
+	public getResponseInstructions( isEditorEmpty: boolean, fetchedContent: Array<MarkdownContent> ): string {
 		const editor = this.editor;
 		const contentLanguageCode = editor.locale.contentLanguage;
 		const instructions = [];
@@ -439,11 +526,22 @@ ${ this.getResponseInstructions( isEditorEmpty ) }`;
 			instructions.push( ...this.responseOutputFormat );
 		}
 
+		if ( fetchedContent.length ) {
+			instructions.push( 'Use information from provided markdown content to generate new text, but do not copy it verbatim.' );
+			instructions.push( 'Ensure the new text flows naturally with the existing context and integrates smoothly.' );
+			instructions.push( 'Do not use markdown formatting in your response.' );
+			fetchedContent.forEach( markdown => {
+				instructions.push( `- Response must include exactly 600 tokens of the content from the source: ${ markdown.url }` );
+			} );
+			instructions.push( 'consider whole markdown of single source as content and then generate % content requested' );
+		}
+
 		// Add response filters or default instructions if filters are not available.
 		if ( this.responseFilters.length ) {
 			instructions.push( ...this.responseFilters );
 		} else {
 			const defaultFilterInstructions = [
+				'All content should be in plain text without markdown formatting unless explicitly requested.',
 				'If the response involves adding an item to a list, only generate the item itself,',
 				'matching the format of the existing items in the list.',
 				'Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.',
@@ -568,12 +666,12 @@ ${ this.getResponseInstructions( isEditorEmpty ) }`;
 	}
 
 	/**
- * Retrieves the bounding rectangle of the DOM element that corresponds to the given model element.
- *
- * @param {Element} element - The model element for which to find the corresponding DOM element's bounding rectangle.
- * @returns {Promise<DOMRect | null | undefined>} A promise that resolves to the bounding rectangle of the DOM element,
- * or null/undefined if the corresponding DOM element is not found.
- */
+	 * Retrieves the bounding rectangle of the DOM element that corresponds to the given model element.
+	 *
+	 * @param {Element} element - The model element for which to find the corresponding DOM element's bounding rectangle.
+	 * @returns {Promise<DOMRect | null | undefined>} A promise that resolves to the bounding rectangle of the DOM element,
+	 * or null/undefined if the corresponding DOM element is not found.
+	 */
 	public async getRectDomOfGivenModelElement( element: Element ): Promise<DOMRect | null | undefined> {
 		let rect: DOMRect | null | undefined = null;
 		const editor = this.editor;

@@ -6,3 +6,8 @@ export type AiModel =
     'gpt-4-turbo' |
     'gpt-4o' |
     'gpt-4o-mini';
+
+export interface MarkdownContent {
+    content: string;
+    url: string;
+}

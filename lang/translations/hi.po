@@ -39,3 +39,7 @@ msgstr "हम एआई से कनेक्ट नहीं हो सके
 msgctxt "Appears when an unsupported language code is provided."
 msgid "Unsupported language code"
 msgstr "असमर्थित भाषा कोड"
+
+msgctxt "Appears when jina reader fails to fetch url content"
+msgid "Failed to fetch content of : %0"
+msgstr "सामग्री को प्राप्त करने में विफल हुआ: %0"

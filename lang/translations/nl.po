@@ -39,3 +39,7 @@ msgstr "We konden geen verbinding maken met de AI. Controleer je internetverbind
 msgctxt "Appears when an unsupported language code is provided."
 msgid "Unsupported language code"
 msgstr "Niet-ondersteunde taalcode"
+
+msgctxt "Appears when jina reader fails to fetch url content"
+msgid "Failed to fetch content of : %0"
+msgstr "Het is niet gelukt om de inhoud van : %0"

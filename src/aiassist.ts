@@ -535,7 +535,7 @@ ${ this.getResponseInstructions( isEditorEmpty, markDownContents ) }`;
 			fetchedContent.forEach( markdown => {
 				const allowedToken = markdown.tokenInResponse;
 				const contentUrl = markdown.url;
-				instructions.push( `- Response at least include ${ allowedToken } tokens of the content from the source: ${ contentUrl }` );
+				instructions.push( `- Response must include ${ allowedToken } tokens of the content from the source: ${ contentUrl }` );
 			} );
 			instructions.push( 'consider whole markdown of single source as content and then generate % content requested' );
 		}

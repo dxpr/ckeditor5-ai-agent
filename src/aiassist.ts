@@ -401,8 +401,8 @@ export default class AiAssist extends Plugin {
 			request = prompt.substring( 1, prompt.indexOf( ':' ) );
 			const urlArrString = prompt.substring( prompt.indexOf( ':' ) + 1 );
 			const urls = urlArrString.replace( /\n/g, '' ).split( ',' ).map( url => url.trim() ).filter( url => url );
-			console.log( urls );
 			markDownContents = await this.generateMarkDownForUrls( urls );
+			markDownContents = this.allocateTokensToFetchedContent( prompt, markDownContents );
 			console.log( markDownContents );
 		} else {
 			request = prompt.slice( 1 );
@@ -441,7 +441,6 @@ ${ this.getResponseInstructions( isEditorEmpty, markDownContents ) }`;
 				return content ? { content, url } : null;
 			} )
 		);
-
 		return markDownContents.filter( ( content ): content is MarkdownContent => content !== null );
 	}
 
@@ -462,7 +461,10 @@ ${ this.getResponseInstructions( isEditorEmpty, markDownContents ) }`;
 		}
 
 		try {
-			const response = await fetch( `https://r.jina.ai/${ url }` );
+			// Use a regular expression to remove hidden characters
+			const cleanedUrl = url.replace( /[^\x20-\x7E]/g, '' );
+			const requestURL = `https://r.jina.ai/${ cleanedUrl.trim() }`;
+			const response = await fetch( requestURL.trim() );
 			if ( !response.ok ) {
 				throw new Error( `HTTP error! status: ${ response.status }` );
 			}
@@ -531,7 +533,9 @@ ${ this.getResponseInstructions( isEditorEmpty, markDownContents ) }`;
 			instructions.push( 'Ensure the new text flows naturally with the existing context and integrates smoothly.' );
 			instructions.push( 'Do not use markdown formatting in your response.' );
 			fetchedContent.forEach( markdown => {
-				instructions.push( `- Response must include exactly 600 tokens of the content from the source: ${ markdown.url }` );
+				const allowedToken = markdown.tokenInResponse;
+				const contentUrl = markdown.url;
+				instructions.push( `- Response at least include ${ allowedToken } tokens of the content from the source: ${ contentUrl }` );
 			} );
 			instructions.push( 'consider whole markdown of single source as content and then generate % content requested' );
 		}
@@ -628,6 +632,62 @@ ${ this.getResponseInstructions( isEditorEmpty, markDownContents ) }`;
 
 		// Trim to remove any trailing whitespace and return the final trimmed content
 		return trimmedContent.trim();
+	}
+
+	/**
+	 * Calculates the number of tokens to be used from each fetched content based on available limit.
+	 *
+	 * @param prompt - The user's prompt string.
+	 * @param fetchedContent - An array of MarkdownContent objects containing fetched content.
+	 * @returns An array of MarkdownContent objects with calculated tokenInResponse values.
+	 */
+	public allocateTokensToFetchedContent( prompt: string, fetchedContent: Array<MarkdownContent> ): Array<MarkdownContent> {
+		const editorContent = this.editor?.editing?.view?.domRoots?.get( 'main' )?.innerText ?? '';
+		const editorToken = this.countTokens( editorContent ) - this.countTokens( prompt );
+		let availableLimit = 4000 - editorToken;
+
+		fetchedContent = fetchedContent.map( content => ( {
+			...content,
+			availableToken: this.countTokens( content.content )
+		} ) ).sort( ( a, b ) => ( a.availableToken ?? 0 ) - ( b.availableToken ?? 0 ) );
+
+		let maxTokenFromEachURL = availableLimit / fetchedContent.length;
+
+		return fetchedContent.map( ( content, index ) => {
+			if ( content.availableToken && content.availableToken <= maxTokenFromEachURL ) {
+				content.tokenInResponse = content.availableToken;
+				availableLimit -= content.availableToken;
+			} else if ( content.availableToken ) {
+				content.tokenInResponse = maxTokenFromEachURL;
+				availableLimit -= maxTokenFromEachURL;
+			}
+			maxTokenFromEachURL = availableLimit / ( fetchedContent.length - ( index + 1 ) );
+			return content;
+		} );
+	}
+
+	/**
+	 * Counts the number of tokens in the given content.
+	 * Tokens are defined as words separated by whitespace or punctuation.
+	 *
+	 * @param content - The content to tokenize.
+	 * @returns The number of tokens in the content.
+	 */
+	public countTokens( content: string ): number {
+		if ( !content || typeof content !== 'string' ) {
+			return 0;
+		}
+
+		// Normalize the content to handle different types of whitespace uniformly.
+		const normalizedContent = content
+			.trim() // Remove leading and trailing whitespace.
+			.replace( /\s+/g, ' ' ); // Replace multiple whitespace characters with a single space.
+
+		// Use a regex to match words and punctuation marks as tokens.
+		const tokens = normalizedContent.match( /[\w'-]+|[.,!?;:(){}[\]]/g );
+
+		// Return the count of tokens or 0 if there are none.
+		return tokens ? tokens.length : 0;
 	}
 
 	/**

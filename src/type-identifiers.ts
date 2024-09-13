@@ -10,4 +10,6 @@ export type AiModel =
 export interface MarkdownContent {
     content: string;
     url: string;
+    tokenInResponse?: number;
+    availableToken?: number;
 }

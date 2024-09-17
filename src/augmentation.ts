@@ -1,10 +1,19 @@
+import type AiAssistCommand from './aiassistcommand.js';
+import type AiAssistEditing from './aiassistediting.js';
+import type AiAssistUI from './aiassistui.js';
 import type { AiAssist } from './index.js';
 import type { AiModel } from './type-identifiers.js';
 
 declare module '@ckeditor/ckeditor5-core' {
-	interface PluginsMap {
-		[ AiAssist.pluginName ]: AiAssist;
-	}
+	interface CommandsMap {
+        aiAssist: AiAssistCommand;
+    }
+
+    interface PluginsMap {
+        AiAssist: AiAssist;
+        AiAssistUI: AiAssistUI;
+        AiAssistEditing: AiAssistEditing;
+    }
 
 	interface Plugins {
         AiAssist: AiAssist;

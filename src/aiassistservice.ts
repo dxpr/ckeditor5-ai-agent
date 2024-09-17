@@ -284,6 +284,8 @@ export default class AiAssistService {
 				.map( url => url.trim() )
 				.filter( Boolean );
 			markDownContents = await this.generateMarkDownForUrls( urls );
+			markDownContents = this.allocateTokensToFetchedContent( request, markDownContents );
+			console.log( markDownContents, 'Meet' );
 		}
 
 		const isEditorEmpty = context === '"@@@cursor@@@"';
@@ -313,50 +315,72 @@ export default class AiAssistService {
 		const editor = this.editor;
 		const contentLanguageCode = editor.locale.contentLanguage;
 		const corpus = [];
+
+		// Context and Task
 		corpus.push( 'CONTEXT:' );
 		corpus.push( `\n"""\n${ context }\n"""\n` );
 		corpus.push( '\n\nTASK:\n\n' );
 		corpus.push( `"""\n${ request }\n"""\n` );
 
+		// Markdown Content
 		if ( markDownContents.length ) {
 			corpus.push(
 				'Refer to following markdown content as a source of information, but generate new text that fits the given context & task.'
 			);
 			markDownContents.forEach( ( markdown, index ) => {
 				corpus.push(
-					`\n\n------------ stating markdown content - ${
-						index + 1
-					} ------------\n\n`
+					`\n\n------------ Stating Markdown Content ${ index + 1 } ------------\n\n`
 				);
 				corpus.push( markdown.content );
 				corpus.push(
-					`\n\n------------ ending markdown content - ${
-						index + 1
-					} ------------\n\n`
+					`\n\n------------ Ending Markdown Content ${ index + 1 } ------------\n\n`
 				);
 			} );
 		}
 
+		// Output Instructions
 		corpus.push( '\n\nOUTPUT:\n\n' );
 		corpus.push(
-			'Provide only the new text content that should replace "@@@cursor@@@" based on the context above.'
+			'Provide only the new text content that should replace "@@@cursor@@@" based on the context above, ' +
+			'ensuring that the response is primarily based on the request.'
 		);
 		corpus.push(
-			'Do not include any part of the context in the output at any cost.'
+			'Avoid including any part of the context in the output at any cost, ' +
+			'except for necessary glimpses that enhance the response.'
 		);
+		corpus.push(
+			'Ensure response adheres to the specified tone or style, such as ' +
+			'formal, informal, or technical, as appropriate for the context.'
+		);
+		corpus.push( 'Do not use any markdown formatting in your response. (i.e **, ##, ###)' );
 
+		if ( markDownContents.length ) {
+			corpus.push(
+				'The response should synthesize information from both the editor content ' +
+				'and the fetched sources, maintaining a balance between them.'
+			);
+			corpus.push(
+				'Highlight key points from the fetched sources while ensuring that ' +
+				'the context from the editor is acknowledged and integrated where relevant.'
+			);
+			corpus.push(
+				'Clearly differentiate between the information derived from the editor ' +
+				'content and that from the fetched sources to avoid confusion.'
+			);
+		}
+
+		// Instructions
 		corpus.push( '\n\nINSTRUCTIONS:\n\n' );
-
-		// Add the language code instruction.
 		corpus.push(
 			`The response must follow the language code - ${ contentLanguageCode }.`
 		);
 
-		// Add response output format instructions if available.
+		// Response Output Format
 		if ( this.responseOutputFormat.length ) {
 			corpus.push( ...this.responseOutputFormat );
 		}
 
+		// Markdown Content Usage
 		if ( markDownContents.length ) {
 			corpus.push(
 				'Use information from provided markdown content to generate new text, but do not copy it verbatim.'
@@ -365,11 +389,10 @@ export default class AiAssistService {
 				'Ensure the new text flows naturally with the existing context and integrates smoothly.'
 			);
 			corpus.push( 'Do not use markdown formatting in your response.' );
-			markDownContents.forEach( markdown => {
+			markDownContents.forEach( ( markdown, index ) => {
 				const allowedToken = markdown.tokenInResponse;
-				const contentUrl = markdown.url;
 				corpus.push(
-					`- Response must include ${ allowedToken } tokens of the content from the source: ${ contentUrl }`
+					`- Response must include ${ allowedToken } tokens of the content from "Markdown Content ${ index + 1 }"`
 				);
 			} );
 			corpus.push(
@@ -377,13 +400,13 @@ export default class AiAssistService {
 			);
 		}
 
-		// Add response filters or default instructions if filters are not available.
+		// Response Filters
 		if ( this.responseFilters.length ) {
 			corpus.push( ...this.responseFilters );
 		} else {
 			const defaultFilterInstructions = [
 				'All content should be in plain text without markdown formatting unless explicitly requested.',
-				'If the response involves adding an item to a list, only generate the item itself,',
+				'If the response involves adding an item to a list, only generate the item itself, ' +
 				'matching the format of the existing items in the list.',
 				'Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
@@ -391,7 +414,7 @@ export default class AiAssistService {
 			corpus.push( ...defaultFilterInstructions );
 		}
 
-		// Add context-specific instructions if the editor is not empty.
+		// Context-Specific Instructions
 		if ( !isEditorEmpty ) {
 			const defaultContextInstructions = [
 				'Ensure the inserted content maintains a seamless connection with the surrounding text,',
@@ -400,7 +423,11 @@ export default class AiAssistService {
 			];
 			corpus.push( ...defaultContextInstructions );
 		}
+		if ( this.responseContextData.length ) {
+			corpus.push( ...this.responseContextData );
+		}
 
+		// Debugging Information
 		if ( this.debugMode ) {
 			console.group( 'AiAssist Prompt Debug' );
 			console.log( 'User Prompt:', prompt );

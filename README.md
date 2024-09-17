@@ -10,6 +10,7 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Configuration Options](#configuration-options)
+- [Usage Examples](#usage-examples)
 - [Error Handling](#error-handling)
 - [License](#license)
 
@@ -53,10 +54,6 @@ ClassicEditor
 
 The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
-## Configuration Options
-
-The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
-
 | Option | Type | Description |
 | :-------- | :------- | :-------------------------------- |
 | `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
@@ -72,6 +69,32 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
 | `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
+
+## Usage Examples
+
+Here are some examples of how to use the SlashCommandPlugin:
+
+1. **Basic Command**
+   ```
+   /write about India
+   ```
+
+2. **Compile Command with URLs**
+   ```
+   /Compile <description of the task>: <comma-separated list of URLs>
+   ```
+
+   **Example:**
+   ```
+   /Compile benefits of cloud computing: 
+   https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-computing/, 
+   https://aws.amazon.com/what-is-cloud-computing/
+   ```
+
+In the first example, the command prompts the AI to write about India. In the second example, it shows the format for fetching content from specified URLs related to the task.
+
+
+```
 
 ## Error Handling
 

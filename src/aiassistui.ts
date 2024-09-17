@@ -80,11 +80,15 @@ export default class AiAssistUI extends Plugin {
 		const model = editor.model;
 
 		model.document.on( 'change:data', () => {
-			this.applyPlaceholderToCurrentLine();
+			setTimeout( () => {
+				this.applyPlaceholderToCurrentLine();
+			}, 10 );
 		} );
 
 		model.document.selection.on( 'change:range', () => {
-			this.applyPlaceholderToCurrentLine();
+			setTimeout( () => {
+				this.applyPlaceholderToCurrentLine();
+			}, 10 );
 		} );
 
 		editor.editing.view.document.on( 'scroll', () => {

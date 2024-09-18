@@ -20,6 +20,9 @@ export default class AiAssistService {
 	private responseFilters: Array<string>;
 	private debugMode: boolean;
 
+	private buffer = '';
+	private openTags: Array<string> = [];
+
 	/**
 	 * Initializes the AiAssistService with the provided editor and configuration settings.
 	 *
@@ -99,6 +102,7 @@ export default class AiAssistService {
 		parent: Element,
 		retries: number = this.retryAttempts
 	): Promise<void> {
+		console.log( 'Starting fetchAndProcessGptResponse' );
 		const editor = this.editor;
 		const t = editor.t;
 		const controller = new AbortController();
@@ -106,6 +110,9 @@ export default class AiAssistService {
 			() => controller.abort(),
 			this.timeOutDuration
 		);
+
+		let buffer = '';
+		let contentBuffer = '';
 
 		try {
 			const response = await fetch( this.endpointUrl, {
@@ -141,76 +148,52 @@ export default class AiAssistService {
 
 			this.clearParentContent( parent );
 
-			let buffer = '';
-			let hasReceivedValidData = false;
-			for ( ; ; ) {
+			console.log( 'Starting to process response' );
+			for ( ;; ) {
 				const { done, value } = await reader.read();
 				if ( done ) {
+					console.log( 'Finished reading response' );
 					break;
 				}
 
-				buffer += decoder.decode( value, { stream: true } );
-				const lines = buffer.split( '\n' );
-				buffer = lines.pop() || '';
+				const chunk = decoder.decode( value, { stream: true } );
+				buffer += chunk;
 
-				for ( const line of lines ) {
-					const trimmedLine = line.replace( /^data: /, '' ).trim();
-					if (
-						trimmedLine === '' ||
-						trimmedLine === 'DONE' ||
-						trimmedLine === '[DONE]'
-					) {
-						continue;
-					}
+				let newlineIndex;
+				while ( ( newlineIndex = buffer.indexOf( '\n' ) ) !== -1 ) {
+					const line = buffer.slice( 0, newlineIndex ).trim();
+					buffer = buffer.slice( newlineIndex + 1 );
 
-					hasReceivedValidData = true;
-
-					try {
-						const { choices } = JSON.parse( trimmedLine );
-						const { delta, finish_reason: finishReason } =
-							choices[ 0 ];
-						const { content } = delta ?? null;
-						if ( `${ finishReason }`.trim() == 'stop' ) {
-							continue;
+					if ( line.startsWith( 'data: ' ) ) {
+						const jsonStr = line.slice( 5 ).trim();
+						if ( jsonStr === '[DONE]' ) {
+							console.log( 'Received [DONE] signal' );
+							break;
 						}
 
-						// Handle newlines and insert content into the editor
-						if ( content.includes( '\n' ) ) {
-							const contentToWrite = ( content as string )
-								.replace( /(\n)+/g, '\n' )
-								.split( '\n' );
-							for ( const info of contentToWrite ) {
-								this.editor.model.change( writer => {
-									writer.insertText( info, parent, 'end' );
-								} );
-								this.editor.execute( 'shiftEnter' );
+						try {
+							const data = JSON.parse( jsonStr );
+							const content = data.choices[ 0 ]?.delta?.content;
+							if ( content ) {
+								contentBuffer += content;
+								if ( this.isCompleteHtmlChunk( contentBuffer ) ) {
+									this.processContent( contentBuffer, parent );
+									contentBuffer = '';
+								}
 							}
-						} else {
-							this.editor.model.change( writer => {
-								writer.insertText( content, parent, 'end' );
-							} );
+						} catch ( parseError ) {
+							console.warn( 'Error parsing JSON:', parseError );
 						}
-					} catch ( parseError ) {
-						console.warn( 'Error parsing line:', trimmedLine );
 					}
 				}
 			}
 
-			// Process any remaining buffer content
-			if ( buffer.trim() ) {
-				console.warn( 'Unprocessed buffer content:', buffer );
-			}
-
-			// Check if we've received any valid data after processing all chunks
-			if ( !hasReceivedValidData ) {
-				aiAssistContext.showError(
-					t(
-						'Oops! Something went wrong while processing your request'
-					)
-				);
-				console.error( 'No valid data received in the entire response' );
+			// Process any remaining content in the buffer
+			if ( contentBuffer.trim() ) {
+				this.processContent( contentBuffer.trim(), parent );
 			}
 		} catch ( error: any ) {
+			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			const errorIdentifier =
 				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
 			const isRetryableError = [
@@ -246,6 +229,78 @@ export default class AiAssistService {
 
 			aiAssistContext.showError( errorMessage );
 		}
+	}
+
+	private isCompleteHtmlChunk( content: string ): boolean {
+		const openTags = content.match( /<[^/][^>]*>/g ) || [];
+		const closeTags = content.match( /<\/[^>]+>/g ) || [];
+		return openTags.length === closeTags.length && content.trim().endsWith( '>' );
+	}
+
+	private processContent( content: string, parent: Element ): void {
+		console.log( 'Processing content:', content );
+
+		// Determine if content is HTML or plain text
+		const isHTML = content.trim().startsWith( '<' ) && content.trim().endsWith( '>' );
+		console.log( 'Content type:', isHTML ? 'HTML' : 'Plain text' );
+
+		// Log raw content before processing
+		console.log( 'Raw content before processing:', content );
+
+		this.editor.model.change( writer => {
+			if ( isHTML ) {
+				// Create a temporary element to parse the HTML
+				const tempDiv = document.createElement( 'div' );
+				tempDiv.innerHTML = content;
+
+				// Convert the HTML to CKEditor elements
+				for ( const child of Array.from( tempDiv.childNodes ) ) {
+					if ( child.nodeType === Node.ELEMENT_NODE ) {
+						const processedContent = this.htmlToCKEditorElement( child as HTMLElement );
+						console.log( 'Processed content:', processedContent );
+						const position = writer.createPositionAt( parent, 'end' );
+						writer.insert( processedContent, position );
+					} else if ( child.nodeType === Node.TEXT_NODE ) {
+						console.log( 'Processed content (text node):', child.textContent );
+						writer.insertText( child.textContent || '', parent, 'end' );
+					}
+				}
+			} else {
+				// Log processed content (which is just the original content for plain text)
+				console.log( 'Processed content:', content );
+				writer.insertText( content, parent, 'end' );
+			}
+		} );
+
+		console.log( 'Content inserted into editor' );
+	}
+
+	private htmlToCKEditorElement( htmlElement: HTMLElement ): Element {
+		let element: Element;
+
+		this.editor.model.change( writer => {
+			const elementName = htmlElement.tagName.toLowerCase();
+			const attributes: Record<string, string> = {};
+
+			// Convert HTML attributes to CKEditor attributes
+			for ( const attr of htmlElement.attributes ) {
+				attributes[ attr.name ] = attr.value;
+			}
+
+			element = writer.createElement( elementName, attributes );
+
+			// Process child nodes
+			for ( const childNode of htmlElement.childNodes ) {
+				if ( childNode.nodeType === Node.ELEMENT_NODE ) {
+					const childElement = this.htmlToCKEditorElement( childNode as HTMLElement );
+					writer.append( childElement, element );
+				} else if ( childNode.nodeType === Node.TEXT_NODE ) {
+					writer.appendText( childNode.textContent || '', element );
+				}
+			}
+		} );
+
+		return element!;
 	}
 
 	/**
@@ -784,5 +839,81 @@ export default class AiAssistService {
 				aiAssistContext.showError( errorMsg );
 			}
 		}
+	}
+
+	private processChunk( chunk: string ) {
+		console.log( 'Processing chunk:', chunk );
+		this.buffer += chunk;
+
+		// Try to process complete elements
+		while ( this.buffer.length > 0 ) {
+			if ( this.buffer.startsWith( '<' ) ) {
+				const closingIndex = this.buffer.indexOf( '>' );
+				if ( closingIndex === -1 ) {
+					// Incomplete tag, wait for more data
+					break;
+				}
+
+				const tag = this.buffer.substring( 1, closingIndex );
+				const isClosingTag = tag.startsWith( '/' );
+
+				if ( isClosingTag ) {
+					const openTag = this.openTags.pop();
+					if ( openTag === tag.substring( 1 ) ) {
+						// Closing tag matches the last opened tag
+						this.insertElement( openTag, this.buffer.substring( 0, closingIndex + 1 ) );
+						this.buffer = this.buffer.substring( closingIndex + 1 );
+					} else {
+						// Mismatched closing tag, insert as plain text
+						this.insertPlainText( this.buffer.substring( 0, closingIndex + 1 ) );
+						this.buffer = this.buffer.substring( closingIndex + 1 );
+					}
+				} else {
+					// Opening tag
+					const spaceIndex = tag.indexOf( ' ' );
+					const tagName = spaceIndex === -1 ? tag : tag.substring( 0, spaceIndex );
+					this.openTags.push( tagName );
+
+					if ( tag.endsWith( '/' ) || [ 'br', 'hr', 'img' ].includes( tagName ) ) {
+						// Self-closing tag
+						this.insertElement( tagName, this.buffer.substring( 0, closingIndex + 1 ) );
+						this.buffer = this.buffer.substring( closingIndex + 1 );
+						this.openTags.pop(); // Remove self-closing tag from stack
+					} else {
+						// Wait for closing tag
+						break;
+					}
+				}
+			} else {
+				// Plain text
+				const nextTagIndex = this.buffer.indexOf( '<' );
+				if ( nextTagIndex === -1 ) {
+					this.insertPlainText( this.buffer );
+					this.buffer = '';
+				} else {
+					this.insertPlainText( this.buffer.substring( 0, nextTagIndex ) );
+					this.buffer = this.buffer.substring( nextTagIndex );
+				}
+			}
+		}
+	}
+
+	private insertElement( tagName: string, htmlContent: string ) {
+		console.log( 'Inserting element:', tagName, htmlContent );
+		this.editor.model.change( writer => {
+			const element = writer.createElement( tagName );
+			if ( htmlContent.includes( '>' ) ) {
+				const innerContent = htmlContent.substring( htmlContent.indexOf( '>' ) + 1, htmlContent.lastIndexOf( '<' ) );
+				writer.insertText( innerContent, element );
+			}
+			this.editor.execute( 'insertContent', element );
+		} );
+	}
+
+	private insertPlainText( text: string ) {
+		console.log( 'Inserting plain text:', text );
+		this.editor.model.change( writer => {
+			writer.insertText( text );
+		} );
 	}
 }

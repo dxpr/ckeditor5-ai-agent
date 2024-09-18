@@ -1,5 +1,5 @@
 import type { Editor } from 'ckeditor5/src/core.js';
-import type { Element } from 'ckeditor5';
+import type { Element, Position, Writer } from 'ckeditor5/src/engine.js';
 import type { AiModel, MarkdownContent } from './type-identifiers.js';
 import { aiAssistContext } from './aiassistcontext.js';
 import sbd from 'sbd';
@@ -19,6 +19,9 @@ export default class AiAssistService {
 	private responseContextData: Array<string>;
 	private responseFilters: Array<string>;
 	private debugMode: boolean;
+
+	private buffer = '';
+	private openTags: Array<string> = [];
 
 	/**
 	 * Initializes the AiAssistService with the provided editor and configuration settings.
@@ -99,6 +102,7 @@ export default class AiAssistService {
 		parent: Element,
 		retries: number = this.retryAttempts
 	): Promise<void> {
+		console.log( 'Starting fetchAndProcessGptResponse' );
 		const editor = this.editor;
 		const t = editor.t;
 		const controller = new AbortController();
@@ -106,6 +110,9 @@ export default class AiAssistService {
 			() => controller.abort(),
 			this.timeOutDuration
 		);
+
+		let buffer = '';
+		let contentBuffer = '';
 
 		try {
 			const response = await fetch( this.endpointUrl, {
@@ -141,76 +148,52 @@ export default class AiAssistService {
 
 			this.clearParentContent( parent );
 
-			let buffer = '';
-			let hasReceivedValidData = false;
-			for ( ; ; ) {
+			console.log( 'Starting to process response' );
+			for ( ;; ) {
 				const { done, value } = await reader.read();
 				if ( done ) {
+					console.log( 'Finished reading response' );
 					break;
 				}
 
-				buffer += decoder.decode( value, { stream: true } );
-				const lines = buffer.split( '\n' );
-				buffer = lines.pop() || '';
+				const chunk = decoder.decode( value, { stream: true } );
+				buffer += chunk;
 
-				for ( const line of lines ) {
-					const trimmedLine = line.replace( /^data: /, '' ).trim();
-					if (
-						trimmedLine === '' ||
-						trimmedLine === 'DONE' ||
-						trimmedLine === '[DONE]'
-					) {
-						continue;
-					}
+				let newlineIndex;
+				while ( ( newlineIndex = buffer.indexOf( '\n' ) ) !== -1 ) {
+					const line = buffer.slice( 0, newlineIndex ).trim();
+					buffer = buffer.slice( newlineIndex + 1 );
 
-					hasReceivedValidData = true;
-
-					try {
-						const { choices } = JSON.parse( trimmedLine );
-						const { delta, finish_reason: finishReason } =
-							choices[ 0 ];
-						const { content } = delta ?? null;
-						if ( `${ finishReason }`.trim() == 'stop' ) {
-							continue;
+					if ( line.startsWith( 'data: ' ) ) {
+						const jsonStr = line.slice( 5 ).trim();
+						if ( jsonStr === '[DONE]' ) {
+							console.log( 'Received [DONE] signal' );
+							break;
 						}
 
-						// Handle newlines and insert content into the editor
-						if ( content.includes( '\n' ) ) {
-							const contentToWrite = ( content as string )
-								.replace( /(\n)+/g, '\n' )
-								.split( '\n' );
-							for ( const info of contentToWrite ) {
-								this.editor.model.change( writer => {
-									writer.insertText( info, parent, 'end' );
-								} );
-								this.editor.execute( 'shiftEnter' );
+						try {
+							const data = JSON.parse( jsonStr );
+							const content = data.choices[ 0 ]?.delta?.content;
+							if ( content ) {
+								contentBuffer += content;
+								if ( this.isCompleteHtmlChunk( contentBuffer ) ) {
+									this.processContent( contentBuffer, parent );
+									contentBuffer = '';
+								}
 							}
-						} else {
-							this.editor.model.change( writer => {
-								writer.insertText( content, parent, 'end' );
-							} );
+						} catch ( parseError ) {
+							console.warn( 'Error parsing JSON:', parseError );
 						}
-					} catch ( parseError ) {
-						console.warn( 'Error parsing line:', trimmedLine );
 					}
 				}
 			}
 
-			// Process any remaining buffer content
-			if ( buffer.trim() ) {
-				console.warn( 'Unprocessed buffer content:', buffer );
-			}
-
-			// Check if we've received any valid data after processing all chunks
-			if ( !hasReceivedValidData ) {
-				aiAssistContext.showError(
-					t(
-						'Oops! Something went wrong while processing your request'
-					)
-				);
-				console.error( 'No valid data received in the entire response' );
+			// Process any remaining content in the buffer
+			if ( contentBuffer.trim() ) {
+				this.processContent( contentBuffer.trim(), parent );
 			}
 		} catch ( error: any ) {
+			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			const errorIdentifier =
 				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
 			const isRetryableError = [
@@ -246,6 +229,122 @@ export default class AiAssistService {
 
 			aiAssistContext.showError( errorMessage );
 		}
+	}
+
+	private isCompleteHtmlChunk( content: string ): boolean {
+		const openTags = content.match( /<[^/][^>]*>/g ) || [];
+		const closeTags = content.match( /<\/[^>]+>/g ) || [];
+		return openTags.length === closeTags.length && content.trim().endsWith( '>' );
+	}
+
+	private processContent( content: string, parent: Element ): void {
+		console.log( '--- Start of processContent ---' );
+		console.log( 'Processing content:', content );
+
+		// Hardcoded feature flag
+		const useSimpleHtmlInsertion = true;
+
+		if ( useSimpleHtmlInsertion ) {
+			// Use the simple HTML insertion method
+			this.insertSimpleHtml( content );
+		} else {
+			// Existing complex content processing logic
+			console.log( 'Parent element:', parent.name );
+
+			const isHTML = content.trim().startsWith( '<' ) && content.trim().endsWith( '>' );
+			console.log( 'Content type:', isHTML ? 'HTML' : 'Plain text' );
+
+			this.editor.model.change( writer => {
+				console.log( 'Starting model change' );
+
+				if ( isHTML ) {
+					const tempDiv = document.createElement( 'div' );
+					tempDiv.innerHTML = content;
+
+					for ( const child of Array.from( tempDiv.childNodes ) ) {
+						if ( child.nodeType === Node.ELEMENT_NODE ) {
+							const element = child as HTMLElement;
+							const elementName = element.tagName.toLowerCase();
+
+							console.log( `Attempting to insert element: ${ elementName }` );
+
+							if ( elementName === 'ul' || elementName === 'ol' ) {
+								// Unwrap the paragraph if we're inserting a list
+								if ( parent.name === 'paragraph' ) {
+									const position = writer.createPositionAt( parent, 'before' );
+									writer.remove( parent );
+									this.insertList( element, position, writer );
+								} else {
+									this.insertList( element, writer.createPositionAt( parent, 'end' ), writer );
+								}
+							} else {
+								try {
+									if ( this.editor.model.schema.checkChild( parent, elementName ) ) {
+										const newElement = writer.createElement( elementName );
+										writer.insert( newElement, writer.createPositionAt( parent, 'end' ) );
+
+										if ( element.childNodes.length > 0 ) {
+											this.processChildNodes( element.childNodes, newElement, writer );
+										}
+
+										console.log( `Successfully inserted element: ${ elementName }` );
+									} else {
+										console.warn( `Element ${ elementName } is not allowed in ${ parent.name }. Schema check failed.` );
+										this.insertAsText( element, writer.createPositionAt( parent, 'end' ), writer );
+									}
+								} catch ( error ) {
+									console.error( `Error inserting ${ elementName }:`, error );
+									this.insertAsText( element, writer.createPositionAt( parent, 'end' ), writer );
+								}
+							}
+						} else if ( child.nodeType === Node.TEXT_NODE ) {
+							writer.insertText( child.textContent || '', writer.createPositionAt( parent, 'end' ) );
+							console.log( 'Inserted text node' );
+						}
+					}
+				} else {
+					writer.insertText( content, writer.createPositionAt( parent, 'end' ) );
+					console.log( 'Inserted plain text' );
+				}
+			} );
+		}
+
+		console.log( '--- End of processContent ---' );
+	}
+
+	private insertSimpleHtml( html: string ): void {
+		console.log( 'Attempting to insert simple HTML:', html );
+
+		this.editor.model.change( writer => {
+			const viewFragment = this.editor.data.processor.toView( html );
+			const modelFragment = this.editor.data.toModel( viewFragment );
+
+			const selection = this.editor.model.document.selection;
+			const insertPosition = selection.getFirstPosition();
+
+			if ( insertPosition ) {
+				writer.insert( modelFragment, insertPosition );
+				console.log( 'HTML inserted successfully' );
+			} else {
+				console.warn( 'No valid insertion position found' );
+			}
+		} );
+	}
+
+	private insertList( listElement: HTMLElement, position: Position, writer: Writer ): void {
+		const listType = listElement.tagName.toLowerCase();
+		const list = writer.createElement( listType );
+		writer.insert( list, position );
+
+		for ( const item of Array.from( listElement.children ) ) {
+			if ( item.tagName.toLowerCase() === 'li' ) {
+				const listItem = writer.createElement( 'listItem' );
+				writer.append( listItem, list );
+				writer.insertText( item.textContent || '', listItem );
+			}
+		}
+
+		console.log( `Inserted ${ listType } with ${ listElement.children.length } items` );
 	}
 
 	/**
@@ -318,7 +417,7 @@ export default class AiAssistService {
 		);
 		corpus.push(
 			'If there is an article with """Stating Markdown Content""", your task is to ' +
-			'use that provided information solely to respond to the user request in the TASK section.' // changes*
+			'use that provided information solely to respond to the user request in the TASK section.'
 		);
 		corpus.push( 'Follow these step-by-step instructions to respond to user inputs:' );
 		corpus.push(
@@ -359,7 +458,7 @@ export default class AiAssistService {
 			'7. Add in personal anecdotes or emotional reactions to make it sound like a genuine conversation.'
 		);
 		corpus.push(
-			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.' // changes*
+			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.'
 		);
 		corpus.push( 'Above are the rules apply every time, but below will only be applied if markdown content is present' );
 		corpus.push(
@@ -378,8 +477,97 @@ export default class AiAssistService {
 			'content and that from the fetched sources to avoid confusion.'
 		);
 
+		corpus.push( 'When generating content, adhere to the following HTML-specific rules:' );
+		corpus.push( '1. Generate an HTML snippet, not a full HTML document.' );
+		corpus.push( '2. Use only the following allowed HTML tags:' );
+		corpus.push( `   ${ this.getAllowedHtmlTags().join( ', ' ) }` );
+		corpus.push( '3. Ensure all HTML tags are properly closed and nested.' );
+		corpus.push( '4. Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( '5. Avoid using inline styles or class attributes unless specifically requested.' );
+
 		// Join all instructions into a single formatted string.
-		return corpus.join( '\n' );
+		const systemPrompt = corpus.join( '\n' );
+
+		// Log the system prompt if debug mode is enabled
+		if ( this.debugMode ) {
+			console.group( 'AiAssist System Prompt Debug' );
+			console.log( 'System Prompt:' );
+			console.log( systemPrompt );
+			console.groupEnd();
+		}
+
+		return systemPrompt;
+	}
+
+	/**
+	 * Retrieves the allowed HTML tags based on the CKEditor schema.
+	 *
+	 * @returns An array of allowed HTML tags.
+	 */
+	private getAllowedHtmlTags(): Array<string> {
+		const editor = this.editor;
+		const schema = editor.model.schema;
+		const definitions = schema.getDefinitions();
+		const schemaNodes = Object.keys( definitions ).sort();
+
+		// Map of CKEditor nodes to HTML tags
+		const nodeToHtmlMap: Record<string, string> = {
+			blockQuote: 'blockquote',
+			caption: 'figcaption',
+			codeBlock: 'pre',
+			heading1: 'h1',
+			heading2: 'h2',
+			heading3: 'h3',
+			imageBlock: 'img',
+			imageInline: 'img',
+			paragraph: 'p',
+			table: 'table',
+			tableCell: 'td',
+			tableRow: 'tr',
+			$listItem: 'li',
+			horizontalLine: 'hr'
+		};
+
+		// Map text attributes to HTML tags
+		const textAttributeToHtmlMap: Record<string, string> = {
+			bold: 'strong',
+			italic: 'em',
+			code: 'code',
+			strikethrough: 's',
+			subscript: 'sub',
+			superscript: 'sup',
+			underline: 'u',
+			linkHref: 'a'
+		};
+
+		// Collect allowed tags
+		const allowedTags = new Set<string>();
+
+		// Add tags from node mappings
+		schemaNodes.forEach( node => {
+			if ( node in nodeToHtmlMap ) {
+				allowedTags.add( nodeToHtmlMap[ node ] );
+			}
+		} );
+
+		// Add tags from text attributes
+		const textDefinition = definitions.$text;
+		if ( textDefinition && textDefinition.allowAttributes ) {
+			textDefinition.allowAttributes.forEach( attr => {
+				if ( attr in textAttributeToHtmlMap ) {
+					allowedTags.add( textAttributeToHtmlMap[ attr ] );
+				}
+			} );
+		}
+
+		// If listItem is present, add ul and ol
+		if ( allowedTags.has( 'li' ) ) {
+			allowedTags.add( 'ul' );
+			allowedTags.add( 'ol' );
+		}
+
+		// Sort and return the unique allowed tags
+		return Array.from( allowedTags ).sort();
 	}
 
 	/**
@@ -425,9 +613,11 @@ export default class AiAssistService {
 
 		// Instructions
 		corpus.push( '\n\nINSTRUCTIONS:\n\n' );
-		corpus.push(
-			`The response must follow the language code - ${ contentLanguageCode }.`
-		);
+		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
+		corpus.push( 'Generate the response as an HTML snippet using only the allowed HTML tags.' );
+		corpus.push( 'Ensure all HTML tags are properly closed and nested.' );
+		corpus.push( 'Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( 'Use appropriate HTML tags to structure the content (e.g., <ul> for lists, <h1> for main headings).' );
 
 		// Response Output Format
 		if ( this.responseOutputFormat.length ) {
@@ -441,10 +631,6 @@ export default class AiAssistService {
 			);
 			corpus.push(
 				'Ensure the new text flows naturally with the existing context and integrates smoothly.'
-			);
-			corpus.push(
-				'Do not use any markdown formatting in your response. ' +
-				'specially for title and list item like """**Performance**""" is not acceptable where as """performance""" is.'
 			);
 			markDownContents.forEach( ( markdown, index ) => {
 				const allowedToken = markdown.tokenInResponse;
@@ -462,9 +648,6 @@ export default class AiAssistService {
 			corpus.push( ...this.responseFilters );
 		} else {
 			const defaultFilterInstructions = [
-				'All content should be in plain text without markdown formatting unless explicitly requested.',
-				'If the response involves adding an item to a list, only generate the item itself, ' +
-				'matching the format of the existing items in the list.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
 			];
 			corpus.push( ...defaultFilterInstructions );
@@ -486,7 +669,7 @@ export default class AiAssistService {
 		// Debugging Information
 		if ( this.debugMode ) {
 			console.group( 'AiAssist Prompt Debug' );
-			console.log( 'User Prompt:', prompt );
+			console.log( 'User Prompt:', request );
 			console.log( 'Generated GPT Prompt:' );
 			console.log( corpus.join( '\n' ) );
 			console.groupEnd();
@@ -700,5 +883,32 @@ export default class AiAssistService {
 				aiAssistContext.showError( errorMsg );
 			}
 		}
+	}
+
+	private processChildNodes( childNodes: NodeList, parent: Element, writer: Writer ): void {
+		for ( const child of Array.from( childNodes ) ) {
+			if ( child.nodeType === Node.ELEMENT_NODE ) {
+				const element = child as HTMLElement;
+				const elementName = element.tagName.toLowerCase();
+
+				if ( this.editor.model.schema.checkChild( parent, elementName ) ) {
+					const newElement = writer.createElement( elementName );
+					writer.append( newElement, parent );
+
+					if ( element.childNodes.length > 0 ) {
+						this.processChildNodes( element.childNodes, newElement, writer );
+					}
+				} else {
+					this.insertAsText( element, parent, writer );
+				}
+			} else if ( child.nodeType === Node.TEXT_NODE ) {
+				writer.insertText( child.textContent || '', parent );
+			}
+		}
+	}
+
+	private insertAsText( element: HTMLElement, parentOrPosition: Element | Position, writer: Writer ): void {
+		console.warn( `Inserting ${ element.tagName.toLowerCase() } as text` );
+		writer.insertText( element.textContent || '', parentOrPosition );
 	}
 }

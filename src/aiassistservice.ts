@@ -1,5 +1,5 @@
 import type { Editor } from 'ckeditor5/src/core.js';
-import type { Element } from 'ckeditor5';
+import type { Element, Position, Writer } from 'ckeditor5/src/engine.js';
 import type { AiModel, MarkdownContent } from './type-identifiers.js';
 import { aiAssistContext } from './aiassistcontext.js';
 import sbd from 'sbd';
@@ -238,69 +238,113 @@ export default class AiAssistService {
 	}
 
 	private processContent( content: string, parent: Element ): void {
+		console.log( '--- Start of processContent ---' );
 		console.log( 'Processing content:', content );
 
-		// Determine if content is HTML or plain text
-		const isHTML = content.trim().startsWith( '<' ) && content.trim().endsWith( '>' );
-		console.log( 'Content type:', isHTML ? 'HTML' : 'Plain text' );
+		// Hardcoded feature flag
+		const useSimpleHtmlInsertion = true;
 
-		// Log raw content before processing
-		console.log( 'Raw content before processing:', content );
+		if ( useSimpleHtmlInsertion ) {
+			// Use the simple HTML insertion method
+			this.insertSimpleHtml( content );
+		} else {
+			// Existing complex content processing logic
+			console.log( 'Parent element:', parent.name );
 
-		this.editor.model.change( writer => {
-			if ( isHTML ) {
-				// Create a temporary element to parse the HTML
-				const tempDiv = document.createElement( 'div' );
-				tempDiv.innerHTML = content;
+			const isHTML = content.trim().startsWith( '<' ) && content.trim().endsWith( '>' );
+			console.log( 'Content type:', isHTML ? 'HTML' : 'Plain text' );
 
-				// Convert the HTML to CKEditor elements
-				for ( const child of Array.from( tempDiv.childNodes ) ) {
-					if ( child.nodeType === Node.ELEMENT_NODE ) {
-						const processedContent = this.htmlToCKEditorElement( child as HTMLElement );
-						console.log( 'Processed content:', processedContent );
-						const position = writer.createPositionAt( parent, 'end' );
-						writer.insert( processedContent, position );
-					} else if ( child.nodeType === Node.TEXT_NODE ) {
-						console.log( 'Processed content (text node):', child.textContent );
-						writer.insertText( child.textContent || '', parent, 'end' );
+			this.editor.model.change( writer => {
+				console.log( 'Starting model change' );
+
+				if ( isHTML ) {
+					const tempDiv = document.createElement( 'div' );
+					tempDiv.innerHTML = content;
+
+					for ( const child of Array.from( tempDiv.childNodes ) ) {
+						if ( child.nodeType === Node.ELEMENT_NODE ) {
+							const element = child as HTMLElement;
+							const elementName = element.tagName.toLowerCase();
+
+							console.log( `Attempting to insert element: ${ elementName }` );
+
+							if ( elementName === 'ul' || elementName === 'ol' ) {
+								// Unwrap the paragraph if we're inserting a list
+								if ( parent.name === 'paragraph' ) {
+									const position = writer.createPositionAt( parent, 'before' );
+									writer.remove( parent );
+									this.insertList( element, position, writer );
+								} else {
+									this.insertList( element, writer.createPositionAt( parent, 'end' ), writer );
+								}
+							} else {
+								try {
+									if ( this.editor.model.schema.checkChild( parent, elementName ) ) {
+										const newElement = writer.createElement( elementName );
+										writer.insert( newElement, writer.createPositionAt( parent, 'end' ) );
+
+										if ( element.childNodes.length > 0 ) {
+											this.processChildNodes( element.childNodes, newElement, writer );
+										}
+
+										console.log( `Successfully inserted element: ${ elementName }` );
+									} else {
+										console.warn( `Element ${ elementName } is not allowed in ${ parent.name }. Schema check failed.` );
+										this.insertAsText( element, writer.createPositionAt( parent, 'end' ), writer );
+									}
+								} catch ( error ) {
+									console.error( `Error inserting ${ elementName }:`, error );
+									this.insertAsText( element, writer.createPositionAt( parent, 'end' ), writer );
+								}
+							}
+						} else if ( child.nodeType === Node.TEXT_NODE ) {
+							writer.insertText( child.textContent || '', writer.createPositionAt( parent, 'end' ) );
+							console.log( 'Inserted text node' );
+						}
 					}
+				} else {
+					writer.insertText( content, writer.createPositionAt( parent, 'end' ) );
+					console.log( 'Inserted plain text' );
 				}
-			} else {
-				// Log processed content (which is just the original content for plain text)
-				console.log( 'Processed content:', content );
-				writer.insertText( content, parent, 'end' );
-			}
-		} );
+			} );
+		}
 
-		console.log( 'Content inserted into editor' );
+		console.log( '--- End of processContent ---' );
 	}
 
-	private htmlToCKEditorElement( htmlElement: HTMLElement ): Element {
-		let element: Element;
+	private insertSimpleHtml( html: string ): void {
+		console.log( 'Attempting to insert simple HTML:', html );
 
 		this.editor.model.change( writer => {
-			const elementName = htmlElement.tagName.toLowerCase();
-			const attributes: Record<string, string> = {};
+			const viewFragment = this.editor.data.processor.toView( html );
+			const modelFragment = this.editor.data.toModel( viewFragment );
 
-			// Convert HTML attributes to CKEditor attributes
-			for ( const attr of htmlElement.attributes ) {
-				attributes[ attr.name ] = attr.value;
-			}
+			const selection = this.editor.model.document.selection;
+			const insertPosition = selection.getFirstPosition();
 
-			element = writer.createElement( elementName, attributes );
-
-			// Process child nodes
-			for ( const childNode of htmlElement.childNodes ) {
-				if ( childNode.nodeType === Node.ELEMENT_NODE ) {
-					const childElement = this.htmlToCKEditorElement( childNode as HTMLElement );
-					writer.append( childElement, element );
-				} else if ( childNode.nodeType === Node.TEXT_NODE ) {
-					writer.appendText( childNode.textContent || '', element );
-				}
+			if ( insertPosition ) {
+				writer.insert( modelFragment, insertPosition );
+				console.log( 'HTML inserted successfully' );
+			} else {
+				console.warn( 'No valid insertion position found' );
 			}
 		} );
+	}
 
-		return element!;
+	private insertList( listElement: HTMLElement, position: Position, writer: Writer ): void {
+		const listType = listElement.tagName.toLowerCase();
+		const list = writer.createElement( listType );
+		writer.insert( list, position );
+
+		for ( const item of Array.from( listElement.children ) ) {
+			if ( item.tagName.toLowerCase() === 'li' ) {
+				const listItem = writer.createElement( 'listItem' );
+				writer.append( listItem, list );
+				writer.insertText( item.textContent || '', listItem );
+			}
+		}
+
+		console.log( `Inserted ${ listType } with ${ listElement.children.length } items` );
 	}
 
 	/**
@@ -841,79 +885,30 @@ export default class AiAssistService {
 		}
 	}
 
-	private processChunk( chunk: string ) {
-		console.log( 'Processing chunk:', chunk );
-		this.buffer += chunk;
+	private processChildNodes( childNodes: NodeList, parent: Element, writer: Writer ): void {
+		for ( const child of Array.from( childNodes ) ) {
+			if ( child.nodeType === Node.ELEMENT_NODE ) {
+				const element = child as HTMLElement;
+				const elementName = element.tagName.toLowerCase();
 
-		// Try to process complete elements
-		while ( this.buffer.length > 0 ) {
-			if ( this.buffer.startsWith( '<' ) ) {
-				const closingIndex = this.buffer.indexOf( '>' );
-				if ( closingIndex === -1 ) {
-					// Incomplete tag, wait for more data
-					break;
-				}
+				if ( this.editor.model.schema.checkChild( parent, elementName ) ) {
+					const newElement = writer.createElement( elementName );
+					writer.append( newElement, parent );
 
-				const tag = this.buffer.substring( 1, closingIndex );
-				const isClosingTag = tag.startsWith( '/' );
-
-				if ( isClosingTag ) {
-					const openTag = this.openTags.pop();
-					if ( openTag === tag.substring( 1 ) ) {
-						// Closing tag matches the last opened tag
-						this.insertElement( openTag, this.buffer.substring( 0, closingIndex + 1 ) );
-						this.buffer = this.buffer.substring( closingIndex + 1 );
-					} else {
-						// Mismatched closing tag, insert as plain text
-						this.insertPlainText( this.buffer.substring( 0, closingIndex + 1 ) );
-						this.buffer = this.buffer.substring( closingIndex + 1 );
+					if ( element.childNodes.length > 0 ) {
+						this.processChildNodes( element.childNodes, newElement, writer );
 					}
 				} else {
-					// Opening tag
-					const spaceIndex = tag.indexOf( ' ' );
-					const tagName = spaceIndex === -1 ? tag : tag.substring( 0, spaceIndex );
-					this.openTags.push( tagName );
-
-					if ( tag.endsWith( '/' ) || [ 'br', 'hr', 'img' ].includes( tagName ) ) {
-						// Self-closing tag
-						this.insertElement( tagName, this.buffer.substring( 0, closingIndex + 1 ) );
-						this.buffer = this.buffer.substring( closingIndex + 1 );
-						this.openTags.pop(); // Remove self-closing tag from stack
-					} else {
-						// Wait for closing tag
-						break;
-					}
+					this.insertAsText( element, parent, writer );
 				}
-			} else {
-				// Plain text
-				const nextTagIndex = this.buffer.indexOf( '<' );
-				if ( nextTagIndex === -1 ) {
-					this.insertPlainText( this.buffer );
-					this.buffer = '';
-				} else {
-					this.insertPlainText( this.buffer.substring( 0, nextTagIndex ) );
-					this.buffer = this.buffer.substring( nextTagIndex );
-				}
+			} else if ( child.nodeType === Node.TEXT_NODE ) {
+				writer.insertText( child.textContent || '', parent );
 			}
 		}
 	}
 
-	private insertElement( tagName: string, htmlContent: string ) {
-		console.log( 'Inserting element:', tagName, htmlContent );
-		this.editor.model.change( writer => {
-			const element = writer.createElement( tagName );
-			if ( htmlContent.includes( '>' ) ) {
-				const innerContent = htmlContent.substring( htmlContent.indexOf( '>' ) + 1, htmlContent.lastIndexOf( '<' ) );
-				writer.insertText( innerContent, element );
-			}
-			this.editor.execute( 'insertContent', element );
-		} );
-	}
-
-	private insertPlainText( text: string ) {
-		console.log( 'Inserting plain text:', text );
-		this.editor.model.change( writer => {
-			writer.insertText( text );
-		} );
+	private insertAsText( element: HTMLElement, parentOrPosition: Element | Position, writer: Writer ): void {
+		console.warn( `Inserting ${ element.tagName.toLowerCase() } as text` );
+		writer.insertText( element.textContent || '', parentOrPosition );
 	}
 }

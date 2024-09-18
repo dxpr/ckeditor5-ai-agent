@@ -83,18 +83,19 @@ Here are some examples of how to use the SlashCommandPlugin:
    ```
    /Compile <description of the task>: <comma-separated list of URLs>
    ```
+   ***Notes: All urls should be a working url, non-working url will be discarded while generating the response.***
 
    **Example:**
    ```
    /Compile benefits of cloud computing: 
-   https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-computing/, 
+   https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-computing/,
+   ...other "," separated links,
    https://aws.amazon.com/what-is-cloud-computing/
    ```
 
 In the first example, the command prompts the AI to write about India. In the second example, it shows the format for fetching content from specified URLs related to the task.
 
 
-```
 
 ## Error Handling
 

@@ -116,7 +116,10 @@ export default class AiAssistService {
 				},
 				body: JSON.stringify( {
 					model: this.aiModel,
-					messages: [ { role: 'user', content: prompt } ],
+					messages: [
+						{ role: 'system', content: this.getSystemPrompt() },
+						{ role: 'user', content: prompt }
+					],
 					temperature: this.temperature,
 					max_tokens: this.maxTokens,
 					stop: this.stopSequences,
@@ -285,7 +288,6 @@ export default class AiAssistService {
 				.filter( Boolean );
 			markDownContents = await this.generateMarkDownForUrls( urls );
 			markDownContents = this.allocateTokensToFetchedContent( request, markDownContents );
-			console.log( markDownContents, 'Meet' );
 		}
 
 		const isEditorEmpty = context === '"@@@cursor@@@"';
@@ -295,6 +297,89 @@ export default class AiAssistService {
 			markDownContents,
 			isEditorEmpty
 		);
+	}
+
+	/**
+	 * Generates the system prompt to guide the AI in generating responses.
+	 *
+	 * This method constructs a set of instructions and context that the AI will use
+	 * to generate responses based on user input and provided content.
+	 *
+	 * @returns A string containing the formatted system prompt for the AI.
+	 */
+	private getSystemPrompt(): string {
+		const corpus: Array<string> = [];
+		corpus.push(
+			'You will be provided partially written article with """@@@cursor@@@""" in between somewhere ' +
+			'under a section of CONTEXT, user input under a TASK section, and sometimes there will be articles ' +
+			'(delimited with marked-up language) separated by Stating Markdown Content ${ number } and ' +
+			'Ending Markdown Content ${ index + 1 } with certain instruction to follow while generating response ' +
+			'under a INSTRUCTION section'
+		);
+		corpus.push(
+			'If there is an article with """Stating Markdown Content""", your task is to ' +
+			'use that provided information solely to respond to the user request in the TASK section.' // changes*
+		);
+		corpus.push( 'Follow these step-by-step instructions to respond to user inputs:' );
+		corpus.push(
+			'Step 1 - Summarized information under a CONTEXT section, set a tone to article, and ' +
+			'later used that summarized information to generate response'
+		);
+		corpus.push(
+			'Step 2: If there is an article with """Stating Markdown Content""", ' +
+			'break it into derived sections and eliminate unnecessary information ' +
+			'that does not relate to the context and user prompt.'
+		);
+		corpus.push(
+			'Final Step - used all summarized information to response to user input under a TASK section'
+		);
+		corpus.push( 'While generating the response, adhere to the following rules:' );
+		corpus.push(
+			'1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, ' +
+			'ensuring that the response is primarily based on the request.'
+		);
+		corpus.push(
+			'2. Avoid including any part of the context in the output at any cost, ' +
+			'except for necessary glimpses that enhance the response.'
+		);
+		corpus.push(
+			'3. Ensure response adheres to the specified tone or style, such as ' +
+			'formal, informal, or technical, as appropriate for the context.'
+		);
+		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###).' );
+		corpus.push(
+			'5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. ' +
+			'Feel free to include spontaneous thoughts, offhand comments, or quirky observations.'
+		);
+		corpus.push(
+			'6. Vary sentence lengths and styles—include fragments, casual interjections, ' +
+			'and minor grammar slips, but avoid spelling mistakes.'
+		);
+		corpus.push(
+			'7. Add in personal anecdotes or emotional reactions to make it sound like a genuine conversation.'
+		);
+		corpus.push(
+			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.' // changes*
+		);
+		corpus.push( 'Above are the rules apply every time, but below will only be applied if markdown content is present' );
+		corpus.push(
+			'1. Extract each content as plain text without any special formatting, emphasis, or markdown'
+		);
+		corpus.push(
+			'2. The response should synthesize information from both the editor content ' +
+			'and the fetched sources, maintaining a balance between them.'
+		);
+		corpus.push(
+			'3. Highlight key points from the fetched sources while ensuring that ' +
+			'the context from the editor is acknowledged and integrated where relevant.'
+		);
+		corpus.push(
+			'4. Clearly differentiate between the information derived from the editor ' +
+			'content and that from the fetched sources to avoid confusion.'
+		);
+
+		// Join all instructions into a single formatted string.
+		return corpus.join( '\n' );
 	}
 
 	/**
@@ -338,37 +423,6 @@ export default class AiAssistService {
 			} );
 		}
 
-		// Output Instructions
-		corpus.push( '\n\nOUTPUT:\n\n' );
-		corpus.push(
-			'Provide only the new text content that should replace "@@@cursor@@@" based on the context above, ' +
-			'ensuring that the response is primarily based on the request.'
-		);
-		corpus.push(
-			'Avoid including any part of the context in the output at any cost, ' +
-			'except for necessary glimpses that enhance the response.'
-		);
-		corpus.push(
-			'Ensure response adheres to the specified tone or style, such as ' +
-			'formal, informal, or technical, as appropriate for the context.'
-		);
-		corpus.push( 'Do not use any markdown formatting in your response. (i.e **, ##, ###)' );
-
-		if ( markDownContents.length ) {
-			corpus.push(
-				'The response should synthesize information from both the editor content ' +
-				'and the fetched sources, maintaining a balance between them.'
-			);
-			corpus.push(
-				'Highlight key points from the fetched sources while ensuring that ' +
-				'the context from the editor is acknowledged and integrated where relevant.'
-			);
-			corpus.push(
-				'Clearly differentiate between the information derived from the editor ' +
-				'content and that from the fetched sources to avoid confusion.'
-			);
-		}
-
 		// Instructions
 		corpus.push( '\n\nINSTRUCTIONS:\n\n' );
 		corpus.push(
@@ -388,7 +442,10 @@ export default class AiAssistService {
 			corpus.push(
 				'Ensure the new text flows naturally with the existing context and integrates smoothly.'
 			);
-			corpus.push( 'Do not use markdown formatting in your response.' );
+			corpus.push(
+				'Do not use any markdown formatting in your response. ' +
+				'specially for title and list item like """**Performance**""" is not acceptable where as """performance""" is.'
+			);
 			markDownContents.forEach( ( markdown, index ) => {
 				const allowedToken = markdown.tokenInResponse;
 				corpus.push(
@@ -408,7 +465,6 @@ export default class AiAssistService {
 				'All content should be in plain text without markdown formatting unless explicitly requested.',
 				'If the response involves adding an item to a list, only generate the item itself, ' +
 				'matching the format of the existing items in the list.',
-				'Ensure that the content is free of grammar errors and correctly formatted to avoid parsing errors.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
 			];
 			corpus.push( ...defaultFilterInstructions );

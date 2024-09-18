@@ -318,7 +318,7 @@ export default class AiAssistService {
 		);
 		corpus.push(
 			'If there is an article with """Stating Markdown Content""", your task is to ' +
-			'use that provided information solely to respond to the user request in the TASK section.' // changes*
+			'use that provided information solely to respond to the user request in the TASK section.'
 		);
 		corpus.push( 'Follow these step-by-step instructions to respond to user inputs:' );
 		corpus.push(
@@ -359,7 +359,7 @@ export default class AiAssistService {
 			'7. Add in personal anecdotes or emotional reactions to make it sound like a genuine conversation.'
 		);
 		corpus.push(
-			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.' // changes*
+			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.'
 		);
 		corpus.push( 'Above are the rules apply every time, but below will only be applied if markdown content is present' );
 		corpus.push(
@@ -378,8 +378,97 @@ export default class AiAssistService {
 			'content and that from the fetched sources to avoid confusion.'
 		);
 
+		corpus.push( 'When generating content, adhere to the following HTML-specific rules:' );
+		corpus.push( '1. Generate an HTML snippet, not a full HTML document.' );
+		corpus.push( '2. Use only the following allowed HTML tags:' );
+		corpus.push( `   ${ this.getAllowedHtmlTags().join( ', ' ) }` );
+		corpus.push( '3. Ensure all HTML tags are properly closed and nested.' );
+		corpus.push( '4. Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( '5. Avoid using inline styles or class attributes unless specifically requested.' );
+
 		// Join all instructions into a single formatted string.
-		return corpus.join( '\n' );
+		const systemPrompt = corpus.join( '\n' );
+
+		// Log the system prompt if debug mode is enabled
+		if ( this.debugMode ) {
+			console.group( 'AiAssist System Prompt Debug' );
+			console.log( 'System Prompt:' );
+			console.log( systemPrompt );
+			console.groupEnd();
+		}
+
+		return systemPrompt;
+	}
+
+	/**
+	 * Retrieves the allowed HTML tags based on the CKEditor schema.
+	 *
+	 * @returns An array of allowed HTML tags.
+	 */
+	private getAllowedHtmlTags(): Array<string> {
+		const editor = this.editor;
+		const schema = editor.model.schema;
+		const definitions = schema.getDefinitions();
+		const schemaNodes = Object.keys( definitions ).sort();
+
+		// Map of CKEditor nodes to HTML tags
+		const nodeToHtmlMap: Record<string, string> = {
+			blockQuote: 'blockquote',
+			caption: 'figcaption',
+			codeBlock: 'pre',
+			heading1: 'h1',
+			heading2: 'h2',
+			heading3: 'h3',
+			imageBlock: 'img',
+			imageInline: 'img',
+			paragraph: 'p',
+			table: 'table',
+			tableCell: 'td',
+			tableRow: 'tr',
+			$listItem: 'li',
+			horizontalLine: 'hr'
+		};
+
+		// Map text attributes to HTML tags
+		const textAttributeToHtmlMap: Record<string, string> = {
+			bold: 'strong',
+			italic: 'em',
+			code: 'code',
+			strikethrough: 's',
+			subscript: 'sub',
+			superscript: 'sup',
+			underline: 'u',
+			linkHref: 'a'
+		};
+
+		// Collect allowed tags
+		const allowedTags = new Set<string>();
+
+		// Add tags from node mappings
+		schemaNodes.forEach( node => {
+			if ( node in nodeToHtmlMap ) {
+				allowedTags.add( nodeToHtmlMap[ node ] );
+			}
+		} );
+
+		// Add tags from text attributes
+		const textDefinition = definitions.$text;
+		if ( textDefinition && textDefinition.allowAttributes ) {
+			textDefinition.allowAttributes.forEach( attr => {
+				if ( attr in textAttributeToHtmlMap ) {
+					allowedTags.add( textAttributeToHtmlMap[ attr ] );
+				}
+			} );
+		}
+
+		// If listItem is present, add ul and ol
+		if ( allowedTags.has( 'li' ) ) {
+			allowedTags.add( 'ul' );
+			allowedTags.add( 'ol' );
+		}
+
+		// Sort and return the unique allowed tags
+		return Array.from( allowedTags ).sort();
 	}
 
 	/**
@@ -425,9 +514,11 @@ export default class AiAssistService {
 
 		// Instructions
 		corpus.push( '\n\nINSTRUCTIONS:\n\n' );
-		corpus.push(
-			`The response must follow the language code - ${ contentLanguageCode }.`
-		);
+		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
+		corpus.push( 'Generate the response as an HTML snippet using only the allowed HTML tags.' );
+		corpus.push( 'Ensure all HTML tags are properly closed and nested.' );
+		corpus.push( 'Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( 'Use appropriate HTML tags to structure the content (e.g., <ul> for lists, <h1> for main headings).' );
 
 		// Response Output Format
 		if ( this.responseOutputFormat.length ) {
@@ -441,10 +532,6 @@ export default class AiAssistService {
 			);
 			corpus.push(
 				'Ensure the new text flows naturally with the existing context and integrates smoothly.'
-			);
-			corpus.push(
-				'Do not use any markdown formatting in your response. ' +
-				'specially for title and list item like """**Performance**""" is not acceptable where as """performance""" is.'
 			);
 			markDownContents.forEach( ( markdown, index ) => {
 				const allowedToken = markdown.tokenInResponse;
@@ -462,9 +549,6 @@ export default class AiAssistService {
 			corpus.push( ...this.responseFilters );
 		} else {
 			const defaultFilterInstructions = [
-				'All content should be in plain text without markdown formatting unless explicitly requested.',
-				'If the response involves adding an item to a list, only generate the item itself, ' +
-				'matching the format of the existing items in the list.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
 			];
 			corpus.push( ...defaultFilterInstructions );
@@ -486,7 +570,7 @@ export default class AiAssistService {
 		// Debugging Information
 		if ( this.debugMode ) {
 			console.group( 'AiAssist Prompt Debug' );
-			console.log( 'User Prompt:', prompt );
+			console.log( 'User Prompt:', request );
 			console.log( 'Generated GPT Prompt:' );
 			console.log( corpus.join( '\n' ) );
 			console.groupEnd();

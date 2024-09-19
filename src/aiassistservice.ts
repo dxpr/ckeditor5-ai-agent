@@ -284,7 +284,6 @@ export default class AiAssistService {
 					return url.replace( /[,.]$/, '' );
 				} );
 				markDownContents = await this.generateMarkDownForUrls( formattedUrl );
-				markDownContents = this.allocateTokensToFetchedContent( request, markDownContents );
 			}
 
 			const isEditorEmpty = context === '"@@@cursor@@@"';
@@ -699,18 +698,45 @@ export default class AiAssistService {
 			// Use a regular expression to remove hidden characters
 			const cleanedUrl = trimmedUrl.replace( /[^\x20-\x7E]/g, '' );
 			const requestURL = `https://r.jina.ai/${ cleanedUrl.trim() }`;
-			const response = await fetch( requestURL.trim() );
+			const response = await fetch( requestURL.trim(), {
+				headers: {
+					'X-With-Images-Summary': 'true',
+					'X-With-Links-Summary': 'true',
+					'X-With-Generated-Alt': 'true'
+				}
+			} );
 			if ( !response.ok ) {
 				throw new Error( `HTTP error! status: ${ response.status }` );
 			}
-			const content = await response.text();
-			const errorMatch = content.match( /error\s*(400|404|502)/i );
+			let content = await response.text();
+			const errorMatch = content.match( /error\s*(400|404|502|500)/i );
 
 			// Handle the case where the error is present
 			if ( errorMatch ) {
 				throw new Error( 'Invalid URL' );
 			}
-			return content;
+
+			// Pattern for extracting and removing "Links/Buttons:" and "Images:" sections
+			const patternCleanup = ( pattern: RegExp ): void => {
+				const matches = content.match( pattern );
+				content = content.replace( pattern, '' );
+
+				if ( Array.isArray( matches ) && matches[ 0 ] ) {
+					const references = matches[ 0 ]
+						.split( '\n' )
+						.map( str => str.substring( str.lastIndexOf( '(' ), str.length ) );
+
+					references.forEach( ref => {
+						content = content.replace( ref, '' );
+					} );
+				}
+			};
+
+			// Clean links and images sections
+			patternCleanup( /Links\/Buttons:([\s\S]*?)(?=\n[A-Z][^\n]*|$)/ );
+			patternCleanup( /Images:([\s\S]*?)(?=\n[A-Z][^\n]*|$)/ );
+
+			return content.replace( /^\s*$/gm, '' ).trim();
 		} catch ( error ) {
 			console.error( `Failed to fetch content: ${ url }`, error );
 			return '';

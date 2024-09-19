@@ -22,7 +22,7 @@ export default class AiAssist extends Plugin {
 			timeOutDuration: 20000, // Default timeout duration
 			maxTokens: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].max, // Default max tokens
 			retryAttempts: 1, // Default retry attempts
-			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].context / 2, // Default context size
+			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].context * 0.75, // Default context size
 			stopSequences: [], // Default stop sequences
 			promptSettings: {
 				outputFormat: [], // Default output format

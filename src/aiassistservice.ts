@@ -75,7 +75,7 @@ export default class AiAssistService {
 			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
 				content ?? ''
 			);
-			if ( parent ) {
+			if ( parent && gptPrompt ) {
 				await this.fetchAndProcessGptResponse( gptPrompt, parent );
 			}
 		} catch ( error ) {
@@ -272,31 +272,32 @@ export default class AiAssistService {
 	 */
 	private async generateGptPromptBasedOnUserPrompt(
 		prompt: string
-	): Promise<string> {
-		const context = this.trimContext( prompt );
-		let request = prompt.slice( 1 ); // Remove the leading slash
-		let markDownContents: Array<MarkdownContent> = [];
-		if ( prompt.includes( ':' ) && prompt.includes( 'https' ) ) {
-			const [ cmd, urlString ] = [
-				prompt.substring( 0, prompt.indexOf( ':' ) ),
-				prompt.substring( prompt.indexOf( ':' ) + 1 )
-			];
-			request = cmd.slice( 1 ); // Remove the leading slash
-			const urls = urlString
-				.split( ',' )
-				.map( url => url.trim() )
-				.filter( Boolean );
-			markDownContents = await this.generateMarkDownForUrls( urls );
-			markDownContents = this.allocateTokensToFetchedContent( request, markDownContents );
-		}
+	): Promise<string | null> {
+		try {
+			const context = this.trimContext( prompt );
+			const request = prompt.slice( 1 ); // Remove the leading slash
+			let markDownContents: Array<MarkdownContent> = [];
+			const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
+			const urls = prompt.match( urlRegex );
+			if ( Array.isArray( urls ) && urls.length ) {
+				const formattedUrl = urls.map( url => {
+					return url.replace( /[,.]$/, '' );
+				} );
+				markDownContents = await this.generateMarkDownForUrls( formattedUrl );
+				markDownContents = this.allocateTokensToFetchedContent( request, markDownContents );
+			}
 
-		const isEditorEmpty = context === '"@@@cursor@@@"';
-		return this.formatFinalPrompt(
-			request,
-			context,
-			markDownContents,
-			isEditorEmpty
-		);
+			const isEditorEmpty = context === '"@@@cursor@@@"';
+			return this.formatFinalPrompt(
+				request,
+				context,
+				markDownContents,
+				isEditorEmpty
+			);
+		} catch ( error ) {
+			console.error( error );
+			return null;
+		}
 	}
 
 	/**
@@ -310,50 +311,50 @@ export default class AiAssistService {
 	private getSystemPrompt(): string {
 		const corpus: Array<string> = [];
 		corpus.push(
-			'You will be provided partially written article with """@@@cursor@@@""" in between somewhere ' +
-			'under a section of CONTEXT, user input under a TASK section, and sometimes there will be articles ' +
-			'(delimited with marked-up language) separated by Stating Markdown Content ${ number } and ' +
-			'Ending Markdown Content ${ index + 1 } with certain instruction to follow while generating response ' +
-			'under a INSTRUCTION section'
+			`You will be provided partially written article with """@@@cursor@@@""" in between somewhere 
+			under a section of CONTEXT, user input under a TASK section, and sometimes there will be articles 
+			(delimited with marked-up language) separated by Stating Markdown Content \${ number } and 
+			Ending Markdown Content \${ index } with certain instruction to follow while generating response 
+			under a INSTRUCTION section`
 		);
 		corpus.push(
-			'If there is an article with """Stating Markdown Content""", your task is to ' +
-			'use that provided information solely to respond to the user request in the TASK section.' // changes*
+			`If there is an article with """Stating Markdown Content""", your task is to 
+			use that provided information solely to respond to the user request in the TASK section.`
 		);
 		corpus.push( 'Follow these step-by-step instructions to respond to user inputs:' );
 		corpus.push(
-			'Step 1 - Summarized information under a CONTEXT section, set a tone to article, and ' +
-			'later used that summarized information to generate response'
+			`Step 1 - Summarized information under a CONTEXT section, set a tone to article, and 
+			later used that summarized information to generate response`
 		);
 		corpus.push(
-			'Step 2: If there is an article with """Stating Markdown Content""", ' +
-			'break it into derived sections and eliminate unnecessary information ' +
-			'that does not relate to the context and user prompt.'
+			`Step 2: If there is an article with """Stating Markdown Content""", 
+			break it into derived sections and eliminate unnecessary information 
+			that does not relate to the context and user prompt.`
 		);
 		corpus.push(
 			'Final Step - used all summarized information to response to user input under a TASK section'
 		);
 		corpus.push( 'While generating the response, adhere to the following rules:' );
 		corpus.push(
-			'1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, ' +
-			'ensuring that the response is primarily based on the request.'
+			`1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, 
+			ensuring that the response is primarily based on the request.`
 		);
 		corpus.push(
-			'2. Avoid including any part of the context in the output at any cost, ' +
-			'except for necessary glimpses that enhance the response.'
+			`2. Avoid including any part of the context in the output at any cost, 
+			except for necessary glimpses that enhance the response.`
 		);
 		corpus.push(
-			'3. Ensure response adheres to the specified tone or style, such as ' +
-			'formal, informal, or technical, as appropriate for the context.'
+			`3. Ensure response adheres to the specified tone or style, such as 
+			formal, informal, or technical, as appropriate for the context.`
 		);
 		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###).' );
 		corpus.push(
-			'5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. ' +
-			'Feel free to include spontaneous thoughts, offhand comments, or quirky observations.'
+			`5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. 
+			Feel free to include spontaneous thoughts, offhand comments, or quirky observations.`
 		);
 		corpus.push(
-			'6. Vary sentence lengths and styles—include fragments, casual interjections, ' +
-			'and minor grammar slips, but avoid spelling mistakes.'
+			`6. Vary sentence lengths and styles—include fragments, casual interjections, 
+			and minor grammar slips, but avoid spelling mistakes.`
 		);
 		corpus.push(
 			'7. Add in personal anecdotes or emotional reactions to make it sound like a genuine conversation.'
@@ -366,16 +367,16 @@ export default class AiAssistService {
 			'1. Extract each content as plain text without any special formatting, emphasis, or markdown'
 		);
 		corpus.push(
-			'2. The response should synthesize information from both the editor content ' +
-			'and the fetched sources, maintaining a balance between them.'
+			`2. The response should synthesize information from both the editor content 
+			and the fetched sources, maintaining a balance between them.`
 		);
 		corpus.push(
-			'3. Highlight key points from the fetched sources while ensuring that ' +
-			'the context from the editor is acknowledged and integrated where relevant.'
+			`3. Highlight key points from the fetched sources while ensuring that 
+			the context from the editor is acknowledged and integrated where relevant.`
 		);
 		corpus.push(
-			'4. Clearly differentiate between the information derived from the editor ' +
-			'content and that from the fetched sources to avoid confusion.'
+			`4. Clearly differentiate between the information derived from the editor 
+			content and that from the fetched sources to avoid confusion.`
 		);
 
 		// Join all instructions into a single formatted string.
@@ -655,12 +656,25 @@ export default class AiAssistService {
 	public async generateMarkDownForUrls(
 		urls: Array<string>
 	): Promise<Array<MarkdownContent>> {
+		const editor = this.editor;
+		const t = editor.t;
+		let errorMsg: string | undefined;
 		const markDownContents = await Promise.all(
 			urls.map( async url => {
 				const content = await this.fetchUrlContent( url );
-				return content ? { content, url } : null;
+				return { content, url };
 			} )
 		);
+
+		const emptyContent = markDownContents.filter(
+			( content ): content is MarkdownContent => !content?.content
+		);
+		if ( emptyContent.length ) {
+			const urlStr = emptyContent?.map( content => content?.url ).join( ',' );
+			errorMsg = t( 'Failed to fetch content of : %0', urlStr );
+			aiAssistContext.showError( errorMsg );
+			throw new Error( 'Unable to fetch content for few urls' );
+		}
 		return markDownContents.filter(
 			( content ): content is MarkdownContent => content !== null
 		);
@@ -674,31 +688,32 @@ export default class AiAssistService {
 	 * @throws Will throw an error if the URL is invalid or if the fetch fails.
 	 */
 	public async fetchUrlContent( url: string ): Promise<string> {
-		const editor = this.editor;
-		const t = editor.t;
-		let errorMsg: string | undefined;
 		const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-		if ( !urlRegex.test( url.trim() ) ) {
+		const trimmedUrl = url.trim();
+
+		if ( !urlRegex.test( trimmedUrl ) ) {
 			throw new Error( 'Invalid URL' );
 		}
 
 		try {
 			// Use a regular expression to remove hidden characters
-			const cleanedUrl = url.replace( /[^\x20-\x7E]/g, '' );
+			const cleanedUrl = trimmedUrl.replace( /[^\x20-\x7E]/g, '' );
 			const requestURL = `https://r.jina.ai/${ cleanedUrl.trim() }`;
 			const response = await fetch( requestURL.trim() );
 			if ( !response.ok ) {
 				throw new Error( `HTTP error! status: ${ response.status }` );
 			}
-			return await response.text();
+			const content = await response.text();
+			const errorMatch = content.match( /error\s*(400|404|502)/i );
+
+			// Handle the case where the error is present
+			if ( errorMatch ) {
+				throw new Error( 'Invalid URL' );
+			}
+			return content;
 		} catch ( error ) {
-			errorMsg = t( 'Failed to fetch content of : %0', url );
 			console.error( `Failed to fetch content: ${ url }`, error );
 			return '';
-		} finally {
-			if ( errorMsg ) {
-				aiAssistContext.showError( errorMsg );
-			}
 		}
 	}
 }

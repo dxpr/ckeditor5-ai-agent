@@ -76,21 +76,35 @@ Here are some examples of how to use the SlashCommandPlugin:
 
 1. **Basic Command**
    ```
-   /write about India
+   /write about SuperHero
    ```
 
 2. **Compile Command with URLs**
    ```
-   /Compile <description of the task>: <comma-separated list of URLs>
+   /Benefits of mindfulness in 500 words: 
+   https://www.mindful.org/how-to-practice-mindfulness/
+   https://www.webmd.com/balance/guide/what-is-mindfulness
    ```
-   ***Notes: All urls should be a working url, non-working url will be discarded while generating the response.***
-
-   **Example:**
+    ```
+   /Write a blog post on top cities for digital nomads: 
+   https://nomadlist.com/
+   https://www.thediscoveriesof.com/best-digital-nomad-cities/
    ```
-   /Compile benefits of cloud computing: 
-   https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-computing/,
-   ...other "," separated links,
-   https://aws.amazon.com/what-is-cloud-computing/
+    ```
+   /Find me everything on the benefits of mindfulness from these pages:
+   https://www.mindful.org/how-to-practice-mindfulness/
+   https://www.webmd.com/balance/guide/what-is-mindfulness. Can you summarize the key points too?
+   ```
+    ```
+   /Please get the top 5 cities for digital nomads from these links and rank them:
+   https://nomadlist.com/ https://www.thediscoveriesof.com/best-digital-nomad-cities/.
+   Include cost of living?
+   ```
+    ```
+   /Compare the pros and cons of electric cars, using this article for pros:
+   https://www.tesla.com/electric-cars, and for cons, pull from here:
+   https://www.carmagazine.co.uk/electric-car-disadvantages/. Also, check this for general trends:
+   https://www.autotrader.com/electric.
    ```
 
 In the first example, the command prompts the AI to write about India. In the second example, it shows the format for fetching content from specified URLs related to the task.

@@ -284,6 +284,7 @@ export default class AiAssistService {
 					return url.replace( /[,.]$/, '' );
 				} );
 				markDownContents = await this.generateMarkDownForUrls( formattedUrl );
+				markDownContents = this.allocateTokensToFetchedContent( prompt, markDownContents );
 			}
 
 			const isEditorEmpty = context === '"@@@cursor@@@"';
@@ -495,7 +496,7 @@ export default class AiAssistService {
 	 *
 	 * @param prompt - The user's prompt string.
 	 * @param fetchedContent - An array of MarkdownContent objects containing fetched content.
-	 * @returns An array of MarkdownContent objects with calculated tokenInResponse values.
+	 * @returns An array of MarkdownContent objects with calculated tokenToRequest values.
 	 */
 	public allocateTokensToFetchedContent(
 		prompt: string,
@@ -503,9 +504,8 @@ export default class AiAssistService {
 	): Array<MarkdownContent> {
 		const editorContent =
 			this.editor?.editing?.view?.domRoots?.get( 'main' )?.innerText ?? '';
-		const editorToken =
-			this.countTokens( editorContent ) - this.countTokens( prompt );
-		let availableLimit = 4000 - editorToken;
+		const editorToken = Math.min( Math.floor( this.contextSize * 0.3 ), this.countTokens( editorContent ) );
+		let availableLimit = this.contextSize - editorToken;
 
 		fetchedContent = fetchedContent
 			.map( content => ( {
@@ -521,14 +521,17 @@ export default class AiAssistService {
 				content.availableToken &&
 				content.availableToken <= maxTokenFromEachURL
 			) {
-				content.tokenInResponse = content.availableToken;
+				content.tokenToRequest = content.availableToken;
 				availableLimit -= content.availableToken;
 			} else if ( content.availableToken ) {
-				content.tokenInResponse = maxTokenFromEachURL;
+				content.tokenToRequest = maxTokenFromEachURL;
 				availableLimit -= maxTokenFromEachURL;
 			}
 			maxTokenFromEachURL =
 				availableLimit / ( fetchedContent.length - ( index + 1 ) );
+			if ( content.tokenToRequest ) {
+				content.content = this.trimLLMContentByTokens( content.content, content.tokenToRequest );
+			}
 			return content;
 		} );
 	}
@@ -543,17 +546,26 @@ export default class AiAssistService {
 		if ( !content || typeof content !== 'string' ) {
 			return 0;
 		}
-
-		// Normalize the content to handle different types of whitespace uniformly.
+		// Normalize the content by trimming and reducing multiple whitespaces.
 		const normalizedContent = content
-			.trim() // Remove leading and trailing whitespace.
-			.replace( /\s+/g, ' ' ); // Replace multiple whitespace characters with a single space.
+			.trim()
+			.replace( /\s+/g, ' ' );
+		// Approximate tokens by breaking words, contractions, and common punctuation marks.
+		const tokens = normalizedContent.match( /\b\w+('\w+)?\b|[.,!?;:"(){}[\]]/g ) || [];
 
-		// Use a regex to match words and punctuation marks as tokens.
-		const tokens = normalizedContent.match( /[\w'-]+|[.,!?;:(){}[\]]/g );
+		// Heuristic: Long words (over 10 characters) are likely to be split into multiple tokens.
+		// GPT often breaks down long words into smaller subword chunks.
+		let approxTokenCount = 0;
+		tokens.forEach( token => {
+			// Break long words into chunks to approximate GPT subword tokenization.
+			if ( token.length > 10 ) {
+				approxTokenCount += Math.ceil( token.length / 4 ); // Approximation: 4 characters per token.
+			} else {
+				approxTokenCount += 1;
+			}
+		} );
 
-		// Return the count of tokens or 0 if there are none.
-		return tokens ? tokens.length : 0;
+		return approxTokenCount;
 	}
 
 	/**
@@ -570,26 +582,26 @@ export default class AiAssistService {
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
 		const context = view?.innerText ?? '';
 		const contextParts = context.split( prompt );
-
+		const allocatedEditorContextToken = Math.floor( this.contextSize * 0.3 );
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
-				contentBeforePrompt = this.extractContent(
+				contentBeforePrompt = this.extractEditorContent(
 					contextParts[ 0 ],
-					this.contextSize / 2,
+					allocatedEditorContextToken / 2,
 					true
 				);
-				contentAfterPrompt = this.extractContent(
+				contentAfterPrompt = this.extractEditorContent(
 					contextParts[ 1 ],
-					this.contextSize - contentBeforePrompt.length / 4
+					allocatedEditorContextToken - contentBeforePrompt.length / 4
 				);
 			} else {
-				contentAfterPrompt = this.extractContent(
+				contentAfterPrompt = this.extractEditorContent(
 					contextParts[ 1 ],
-					this.contextSize / 2
+					allocatedEditorContextToken / 2
 				);
-				contentBeforePrompt = this.extractContent(
+				contentBeforePrompt = this.extractEditorContent(
 					contextParts[ 0 ],
-					this.contextSize - contentAfterPrompt.length / 4,
+					allocatedEditorContextToken - contentAfterPrompt.length / 4,
 					true
 				);
 			}
@@ -601,6 +613,32 @@ export default class AiAssistService {
 	}
 
 	/**
+	 * Trims the LLM content by tokens while ensuring that sentences or other structures (e.g., bullet points, paragraphs)
+	 * are not clipped mid-way.
+	 *
+	 * @param content - The LLM-generated content string to trim.
+	 * @param maxTokens - The maximum number of tokens allowed.
+	 * @returns The trimmed content string.
+	 */
+	public trimLLMContentByTokens( content: string, maxTokens: number ): string {
+		const elements = content.split( '\n' );
+		let accumulatedTokens = 0;
+		let trimmedContent = '';
+
+		for ( const element of elements ) {
+			const elementTokenCount = this.countTokens( element );
+			if ( accumulatedTokens + elementTokenCount > maxTokens ) {
+				break; // Stop if adding this element would exceed the token limit.
+			}
+			accumulatedTokens += elementTokenCount;
+			trimmedContent += element + '\n'; // Add the whole structural element.
+			console.log( accumulatedTokens, maxTokens );
+		}
+
+		return trimmedContent;
+	}
+
+	/**
 	 * Extracts a portion of content based on the specified context size and direction.
 	 *
 	 * @param contentAfterPrompt - The content string to extract from.
@@ -608,7 +646,7 @@ export default class AiAssistService {
 	 * @param reverse - A boolean indicating whether to extract in reverse order (default is false).
 	 * @returns The extracted content string.
 	 */
-	public extractContent(
+	public extractEditorContent(
 		contentAfterPrompt: string,
 		contextSize: number,
 		reverse: boolean = false
@@ -694,15 +732,13 @@ export default class AiAssistService {
 			const requestURL = `https://r.jina.ai/${ cleanedUrl.trim() }`;
 			const response = await fetch( requestURL.trim(), {
 				headers: {
-					'X-With-Images-Summary': 'true',
-					'X-With-Links-Summary': 'true',
 					'X-With-Generated-Alt': 'true'
 				}
 			} );
 			if ( !response.ok ) {
 				throw new Error( `HTTP error! status: ${ response.status }` );
 			}
-			let content = await response.text();
+			const content = await response.text();
 			const errorMatch = content.match( /(?:error|log\s*in\s*(?:to\s*continue|required))\s*(4\d{2}|5\d{2})?/i );
 
 			// Handle the case where the error is present
@@ -710,30 +746,7 @@ export default class AiAssistService {
 				throw new Error( 'Invalid URL' );
 			}
 
-			// Pattern for extracting and removing "Links/Buttons:" and "Images:" sections
-			const patternCleanup = ( pattern: RegExp ): void => {
-				const matches = content.match( pattern );
-				content = content.replace( pattern, '' );
-
-				if ( Array.isArray( matches ) && matches[ 0 ] ) {
-					const references = matches[ 0 ]
-						.split( '\n' )
-						.map( str => {
-							const matchingUrl = str.match( /https?:\/\/[^\s)]+/ );
-							return Array.isArray( matchingUrl ) && matchingUrl[ 0 ] ? matchingUrl[ 0 ] : '';
-						} ).filter( url => !!url );
-
-					references.forEach( ref => {
-						content = content.replace( `(${ ref })`, '' );
-					} );
-				}
-			};
-
-			// Clean links and images sections
-			patternCleanup( /Links\/Buttons:([\s\S]*?)(?=\n[A-Z][^\n]*|$)/ );
-			patternCleanup( /Images:([\s\S]*?)(?=\n[A-Z][^\n]*|$)/ );
-
-			return content.replace( /^\s*$/gm, '' ).trim();
+			return content.replace( /\(https?:\/\/[^\s]+\)/g, '' ).replace( /^\s*$/gm, '' ).trim();
 		} catch ( error ) {
 			console.error( `Failed to fetch content: ${ url }`, error );
 			return '';

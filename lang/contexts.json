@@ -5,5 +5,6 @@
 	"Oops! Something went wrong while processing your request": "Indicates a failure when processing the provided prompt.",
 	"An error occurred while handling the AI's response": "Indicates an error when unable to parse the AI response stream.",
 	"We couldn't connect to the AI. Please check your internet": "Indicates a failure during a network call.",
-	"Unsupported language code": "Appears when an unsupported language code is provided."
+	"Unsupported language code": "Appears when an unsupported language code is provided.",
+	"Failed to fetch content of : %0": "Appears when jina reader fails to fetch url content"
 }

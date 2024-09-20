@@ -10,6 +10,7 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Configuration Options](#configuration-options)
+- [Usage Examples](#usage-examples)
 - [Error Handling](#error-handling)
 - [License](#license)
 
@@ -53,10 +54,6 @@ ClassicEditor
 
 The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
-## Configuration Options
-
-The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
-
 | Option | Type | Description |
 | :-------- | :------- | :-------------------------------- |
 | `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
@@ -66,12 +63,53 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
 | `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 20s (optional)|
-| `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 50% of the GPT 4o token total limit. |
+| `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
 | `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
 | `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
 | `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
+
+## Usage Examples
+
+Here are some examples of how to use the SlashCommandPlugin:
+
+1. **Basic Command**
+   ```
+   /write about SuperHero
+   ```
+
+2. **Compile Command with URLs**
+   ```
+   /Benefits of mindfulness in 500 words: 
+   https://www.mindful.org/how-to-practice-mindfulness/
+   https://www.webmd.com/balance/guide/what-is-mindfulness
+   ```
+    ```
+   /Write a blog post on top cities for digital nomads: 
+   https://nomadlist.com/
+   https://www.thediscoveriesof.com/best-digital-nomad-cities/
+   ```
+    ```
+   /Find me everything on the benefits of mindfulness from these pages:
+   https://www.mindful.org/how-to-practice-mindfulness/
+   https://www.webmd.com/balance/guide/what-is-mindfulness. Can you summarize the key points too?
+   ```
+    ```
+   /Please get the top 5 cities for digital nomads from these links and rank them:
+   https://nomadlist.com/ https://www.thediscoveriesof.com/best-digital-nomad-cities/.
+   Include cost of living?
+   ```
+    ```
+   /Compare the pros and cons of electric cars, using this article for pros:
+   https://www.tesla.com/electric-cars, and for cons, pull from here:
+   https://www.carmagazine.co.uk/electric-car-disadvantages/. Also, check this for general trends:
+   https://www.autotrader.com/electric.
+   ```
+
+In the first example, the command prompts the AI to write about India. In the second example, it shows the format for fetching content from specified URLs related to the task.
+
+
 
 ## Error Handling
 

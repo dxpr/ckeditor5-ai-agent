@@ -39,3 +39,7 @@ msgstr "No pudimos conectarnos a la AI. Por favor, verifica tu conexión a inter
 msgctxt "Appears when an unsupported language code is provided."
 msgid "Unsupported language code"
 msgstr "Código de idioma no soportado"
+
+msgctxt "Appears when jina reader fails to fetch url content"
+msgid "Failed to fetch content of : %0"
+msgstr "No se pudo obtener el contenido de : %0"

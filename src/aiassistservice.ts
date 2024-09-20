@@ -346,7 +346,7 @@ export default class AiAssistService {
 			`3. Ensure response adheres to the specified tone or style, such as 
 			formal, informal, or technical, as appropriate for the context.`
 		);
-		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###).' );
+		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###, ---, ===, ____).' );
 		corpus.push(
 			`5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. 
 			Feel free to include spontaneous thoughts, offhand comments, or quirky observations.`
@@ -446,12 +446,6 @@ export default class AiAssistService {
 				'Do not use any markdown formatting in your response. ' +
 				'specially for title and list item like """**Performance**""" is not acceptable where as """performance""" is.'
 			);
-			markDownContents.forEach( ( markdown, index ) => {
-				const allowedToken = markdown.tokenInResponse;
-				corpus.push(
-					`- Response must include ${ allowedToken } tokens of the content from "Markdown Content ${ index + 1 }"`
-				);
-			} );
 			corpus.push(
 				'consider whole markdown of single source as content and then generate % content requested'
 			);
@@ -709,7 +703,7 @@ export default class AiAssistService {
 				throw new Error( `HTTP error! status: ${ response.status }` );
 			}
 			let content = await response.text();
-			const errorMatch = content.match( /error\s*(400|404|502|500)/i );
+			const errorMatch = content.match( /(?:error|log\s*in\s*(?:to\s*continue|required))\s*(4\d{2}|5\d{2})?/i );
 
 			// Handle the case where the error is present
 			if ( errorMatch ) {
@@ -724,10 +718,13 @@ export default class AiAssistService {
 				if ( Array.isArray( matches ) && matches[ 0 ] ) {
 					const references = matches[ 0 ]
 						.split( '\n' )
-						.map( str => str.substring( str.lastIndexOf( '(' ), str.length ) );
+						.map( str => {
+							const matchingUrl = str.match( /https?:\/\/[^\s)]+/ );
+							return Array.isArray( matchingUrl ) && matchingUrl[ 0 ] ? matchingUrl[ 0 ] : '';
+						} ).filter( url => !!url );
 
 					references.forEach( ref => {
-						content = content.replace( ref, '' );
+						content = content.replace( `(${ ref })`, '' );
 					} );
 				}
 			};

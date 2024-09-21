@@ -78,7 +78,7 @@ export default class AiAssistService {
 			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
 				content ?? ''
 			);
-			if ( parent ) {
+			if ( parent && gptPrompt ) {
 				await this.fetchAndProcessGptResponse( gptPrompt, parent );
 			}
 		} catch ( error ) {
@@ -188,12 +188,11 @@ export default class AiAssistService {
 				}
 			}
 
-			// Process any remaining content in the buffer
+			// Process any remaining buffer content
 			if ( contentBuffer.trim() ) {
 				this.processContent( contentBuffer.trim(), parent );
 			}
 		} catch ( error: any ) {
-			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			const errorIdentifier =
 				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
 			const isRetryableError = [
@@ -371,31 +370,32 @@ export default class AiAssistService {
 	 */
 	private async generateGptPromptBasedOnUserPrompt(
 		prompt: string
-	): Promise<string> {
-		const context = this.trimContext( prompt );
-		let request = prompt.slice( 1 ); // Remove the leading slash
-		let markDownContents: Array<MarkdownContent> = [];
-		if ( prompt.includes( ':' ) && prompt.includes( 'https' ) ) {
-			const [ cmd, urlString ] = [
-				prompt.substring( 0, prompt.indexOf( ':' ) ),
-				prompt.substring( prompt.indexOf( ':' ) + 1 )
-			];
-			request = cmd.slice( 1 ); // Remove the leading slash
-			const urls = urlString
-				.split( ',' )
-				.map( url => url.trim() )
-				.filter( Boolean );
-			markDownContents = await this.generateMarkDownForUrls( urls );
-			markDownContents = this.allocateTokensToFetchedContent( request, markDownContents );
-		}
+	): Promise<string | null> {
+		try {
+			const context = this.trimContext( prompt );
+			const request = prompt.slice( 1 ); // Remove the leading slash
+			let markDownContents: Array<MarkdownContent> = [];
+			const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
+			const urls = prompt.match( urlRegex );
+			if ( Array.isArray( urls ) && urls.length ) {
+				const formattedUrl = urls.map( url => {
+					return url.replace( /[,.]$/, '' );
+				} );
+				markDownContents = await this.generateMarkDownForUrls( formattedUrl );
+				markDownContents = this.allocateTokensToFetchedContent( prompt, markDownContents );
+			}
 
-		const isEditorEmpty = context === '"@@@cursor@@@"';
-		return this.formatFinalPrompt(
-			request,
-			context,
-			markDownContents,
-			isEditorEmpty
-		);
+			const isEditorEmpty = context === '"@@@cursor@@@"';
+			return this.formatFinalPrompt(
+				request,
+				context,
+				markDownContents,
+				isEditorEmpty
+			);
+		} catch ( error ) {
+			console.error( error );
+			return null;
+		}
 	}
 
 	/**
@@ -409,50 +409,50 @@ export default class AiAssistService {
 	private getSystemPrompt(): string {
 		const corpus: Array<string> = [];
 		corpus.push(
-			'You will be provided partially written article with """@@@cursor@@@""" in between somewhere ' +
-			'under a section of CONTEXT, user input under a TASK section, and sometimes there will be articles ' +
-			'(delimited with marked-up language) separated by Stating Markdown Content ${ number } and ' +
-			'Ending Markdown Content ${ index + 1 } with certain instruction to follow while generating response ' +
-			'under a INSTRUCTION section'
+			`You will be provided partially written article with """@@@cursor@@@""" in between somewhere 
+			under a section of CONTEXT, user input under a TASK section, and sometimes there will be articles 
+			(delimited with marked-up language) separated by Stating Markdown Content \${ number } and 
+			Ending Markdown Content \${ index } with certain instruction to follow while generating response 
+			under a INSTRUCTION section`
 		);
 		corpus.push(
-			'If there is an article with """Stating Markdown Content""", your task is to ' +
-			'use that provided information solely to respond to the user request in the TASK section.'
+			`If there is an article with """Stating Markdown Content""", your task is to 
+			use that provided information solely to respond to the user request in the TASK section.`
 		);
 		corpus.push( 'Follow these step-by-step instructions to respond to user inputs:' );
 		corpus.push(
-			'Step 1 - Summarized information under a CONTEXT section, set a tone to article, and ' +
-			'later used that summarized information to generate response'
+			`Step 1 - Summarized information under a CONTEXT section, set a tone to article, and 
+			later used that summarized information to generate response`
 		);
 		corpus.push(
-			'Step 2: If there is an article with """Stating Markdown Content""", ' +
-			'break it into derived sections and eliminate unnecessary information ' +
-			'that does not relate to the context and user prompt.'
+			`Step 2: If there is an article with """Stating Markdown Content""", 
+			break it into derived sections and eliminate unnecessary information 
+			that does not relate to the context and user prompt.`
 		);
 		corpus.push(
 			'Final Step - used all summarized information to response to user input under a TASK section'
 		);
 		corpus.push( 'While generating the response, adhere to the following rules:' );
 		corpus.push(
-			'1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, ' +
-			'ensuring that the response is primarily based on the request.'
+			`1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, 
+			ensuring that the response is primarily based on the request.`
 		);
 		corpus.push(
-			'2. Avoid including any part of the context in the output at any cost, ' +
-			'except for necessary glimpses that enhance the response.'
+			`2. Avoid including any part of the context in the output at any cost, 
+			except for necessary glimpses that enhance the response.`
 		);
 		corpus.push(
-			'3. Ensure response adheres to the specified tone or style, such as ' +
-			'formal, informal, or technical, as appropriate for the context.'
+			`3. Ensure response adheres to the specified tone or style, such as 
+			formal, informal, or technical, as appropriate for the context.`
 		);
-		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###).' );
+		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###, ---, ===, ____).' );
 		corpus.push(
-			'5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. ' +
-			'Feel free to include spontaneous thoughts, offhand comments, or quirky observations.'
+			`5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. 
+			Feel free to include spontaneous thoughts, offhand comments, or quirky observations.`
 		);
 		corpus.push(
-			'6. Vary sentence lengths and styles—include fragments, casual interjections, ' +
-			'and minor grammar slips, but avoid spelling mistakes.'
+			`6. Vary sentence lengths and styles—include fragments, casual interjections, 
+			and minor grammar slips, but avoid spelling mistakes.`
 		);
 		corpus.push(
 			'7. Add in personal anecdotes or emotional reactions to make it sound like a genuine conversation.'
@@ -632,12 +632,10 @@ export default class AiAssistService {
 			corpus.push(
 				'Ensure the new text flows naturally with the existing context and integrates smoothly.'
 			);
-			markDownContents.forEach( ( markdown, index ) => {
-				const allowedToken = markdown.tokenInResponse;
-				corpus.push(
-					`- Response must include ${ allowedToken } tokens of the content from "Markdown Content ${ index + 1 }"`
-				);
-			} );
+			corpus.push(
+				'Do not use any markdown formatting in your response. ' +
+				'specially for title and list item like """**Performance**""" is not acceptable where as """performance""" is.'
+			);
 			corpus.push(
 				'consider whole markdown of single source as content and then generate % content requested'
 			);
@@ -648,6 +646,9 @@ export default class AiAssistService {
 			corpus.push( ...this.responseFilters );
 		} else {
 			const defaultFilterInstructions = [
+				'All content should be in plain text without markdown formatting unless explicitly requested.',
+				'If the response involves adding an item to a list, only generate the item itself, ' +
+				'matching the format of the existing items in the list.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
 			];
 			corpus.push( ...defaultFilterInstructions );
@@ -684,7 +685,7 @@ export default class AiAssistService {
 	 *
 	 * @param prompt - The user's prompt string.
 	 * @param fetchedContent - An array of MarkdownContent objects containing fetched content.
-	 * @returns An array of MarkdownContent objects with calculated tokenInResponse values.
+	 * @returns An array of MarkdownContent objects with calculated tokenToRequest values.
 	 */
 	public allocateTokensToFetchedContent(
 		prompt: string,
@@ -692,9 +693,8 @@ export default class AiAssistService {
 	): Array<MarkdownContent> {
 		const editorContent =
 			this.editor?.editing?.view?.domRoots?.get( 'main' )?.innerText ?? '';
-		const editorToken =
-			this.countTokens( editorContent ) - this.countTokens( prompt );
-		let availableLimit = 4000 - editorToken;
+		const editorToken = Math.min( Math.floor( this.contextSize * 0.3 ), this.countTokens( editorContent ) );
+		let availableLimit = this.contextSize - editorToken;
 
 		fetchedContent = fetchedContent
 			.map( content => ( {
@@ -710,14 +710,17 @@ export default class AiAssistService {
 				content.availableToken &&
 				content.availableToken <= maxTokenFromEachURL
 			) {
-				content.tokenInResponse = content.availableToken;
+				content.tokenToRequest = content.availableToken;
 				availableLimit -= content.availableToken;
 			} else if ( content.availableToken ) {
-				content.tokenInResponse = maxTokenFromEachURL;
+				content.tokenToRequest = maxTokenFromEachURL;
 				availableLimit -= maxTokenFromEachURL;
 			}
 			maxTokenFromEachURL =
 				availableLimit / ( fetchedContent.length - ( index + 1 ) );
+			if ( content.tokenToRequest ) {
+				content.content = this.trimLLMContentByTokens( content.content, content.tokenToRequest );
+			}
 			return content;
 		} );
 	}
@@ -732,17 +735,26 @@ export default class AiAssistService {
 		if ( !content || typeof content !== 'string' ) {
 			return 0;
 		}
-
-		// Normalize the content to handle different types of whitespace uniformly.
+		// Normalize the content by trimming and reducing multiple whitespaces.
 		const normalizedContent = content
-			.trim() // Remove leading and trailing whitespace.
-			.replace( /\s+/g, ' ' ); // Replace multiple whitespace characters with a single space.
+			.trim()
+			.replace( /\s+/g, ' ' );
+		// Approximate tokens by breaking words, contractions, and common punctuation marks.
+		const tokens = normalizedContent.match( /\b\w+('\w+)?\b|[.,!?;:"(){}[\]]/g ) || [];
 
-		// Use a regex to match words and punctuation marks as tokens.
-		const tokens = normalizedContent.match( /[\w'-]+|[.,!?;:(){}[\]]/g );
+		// Heuristic: Long words (over 10 characters) are likely to be split into multiple tokens.
+		// GPT often breaks down long words into smaller subword chunks.
+		let approxTokenCount = 0;
+		tokens.forEach( token => {
+			// Break long words into chunks to approximate GPT subword tokenization.
+			if ( token.length > 10 ) {
+				approxTokenCount += Math.ceil( token.length / 4 ); // Approximation: 4 characters per token.
+			} else {
+				approxTokenCount += 1;
+			}
+		} );
 
-		// Return the count of tokens or 0 if there are none.
-		return tokens ? tokens.length : 0;
+		return approxTokenCount;
 	}
 
 	/**
@@ -759,26 +771,26 @@ export default class AiAssistService {
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
 		const context = view?.innerText ?? '';
 		const contextParts = context.split( prompt );
-
+		const allocatedEditorContextToken = Math.floor( this.contextSize * 0.3 );
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
-				contentBeforePrompt = this.extractContent(
+				contentBeforePrompt = this.extractEditorContent(
 					contextParts[ 0 ],
-					this.contextSize / 2,
+					allocatedEditorContextToken / 2,
 					true
 				);
-				contentAfterPrompt = this.extractContent(
+				contentAfterPrompt = this.extractEditorContent(
 					contextParts[ 1 ],
-					this.contextSize - contentBeforePrompt.length / 4
+					allocatedEditorContextToken - contentBeforePrompt.length / 4
 				);
 			} else {
-				contentAfterPrompt = this.extractContent(
+				contentAfterPrompt = this.extractEditorContent(
 					contextParts[ 1 ],
-					this.contextSize / 2
+					allocatedEditorContextToken / 2
 				);
-				contentBeforePrompt = this.extractContent(
+				contentBeforePrompt = this.extractEditorContent(
 					contextParts[ 0 ],
-					this.contextSize - contentAfterPrompt.length / 4,
+					allocatedEditorContextToken - contentAfterPrompt.length / 4,
 					true
 				);
 			}
@@ -790,6 +802,32 @@ export default class AiAssistService {
 	}
 
 	/**
+	 * Trims the LLM content by tokens while ensuring that sentences or other structures (e.g., bullet points, paragraphs)
+	 * are not clipped mid-way.
+	 *
+	 * @param content - The LLM-generated content string to trim.
+	 * @param maxTokens - The maximum number of tokens allowed.
+	 * @returns The trimmed content string.
+	 */
+	public trimLLMContentByTokens( content: string, maxTokens: number ): string {
+		const elements = content.split( '\n' );
+		let accumulatedTokens = 0;
+		let trimmedContent = '';
+
+		for ( const element of elements ) {
+			const elementTokenCount = this.countTokens( element );
+			if ( accumulatedTokens + elementTokenCount > maxTokens ) {
+				break; // Stop if adding this element would exceed the token limit.
+			}
+			accumulatedTokens += elementTokenCount;
+			trimmedContent += element + '\n'; // Add the whole structural element.
+			console.log( accumulatedTokens, maxTokens );
+		}
+
+		return trimmedContent;
+	}
+
+	/**
 	 * Extracts a portion of content based on the specified context size and direction.
 	 *
 	 * @param contentAfterPrompt - The content string to extract from.
@@ -797,7 +835,7 @@ export default class AiAssistService {
 	 * @param reverse - A boolean indicating whether to extract in reverse order (default is false).
 	 * @returns The extracted content string.
 	 */
-	public extractContent(
+	public extractEditorContent(
 		contentAfterPrompt: string,
 		contextSize: number,
 		reverse: boolean = false
@@ -838,12 +876,25 @@ export default class AiAssistService {
 	public async generateMarkDownForUrls(
 		urls: Array<string>
 	): Promise<Array<MarkdownContent>> {
+		const editor = this.editor;
+		const t = editor.t;
+		let errorMsg: string | undefined;
 		const markDownContents = await Promise.all(
 			urls.map( async url => {
 				const content = await this.fetchUrlContent( url );
-				return content ? { content, url } : null;
+				return { content, url };
 			} )
 		);
+
+		const emptyContent = markDownContents.filter(
+			( content ): content is MarkdownContent => !content?.content
+		);
+		if ( emptyContent.length ) {
+			const urlStr = emptyContent?.map( content => content?.url ).join( ',' );
+			errorMsg = t( 'Failed to fetch content of : %0', urlStr );
+			aiAssistContext.showError( errorMsg );
+			throw new Error( 'Unable to fetch content for few urls' );
+		}
 		return markDownContents.filter(
 			( content ): content is MarkdownContent => content !== null
 		);
@@ -857,31 +908,40 @@ export default class AiAssistService {
 	 * @throws Will throw an error if the URL is invalid or if the fetch fails.
 	 */
 	public async fetchUrlContent( url: string ): Promise<string> {
-		const editor = this.editor;
-		const t = editor.t;
-		let errorMsg: string | undefined;
 		const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-		if ( !urlRegex.test( url.trim() ) ) {
+		const trimmedUrl = url.trim();
+
+		if ( !urlRegex.test( trimmedUrl ) ) {
 			throw new Error( 'Invalid URL' );
 		}
 
 		try {
 			// Use a regular expression to remove hidden characters
-			const cleanedUrl = url.replace( /[^\x20-\x7E]/g, '' );
+			const cleanedUrl = trimmedUrl.replace( /[^\x20-\x7E]/g, '' );
 			const requestURL = `https://r.jina.ai/${ cleanedUrl.trim() }`;
-			const response = await fetch( requestURL.trim() );
+			const response = await fetch( requestURL.trim(), {
+				headers: {
+					'X-With-Generated-Alt': 'true'
+				}
+			} );
 			if ( !response.ok ) {
 				throw new Error( `HTTP error! status: ${ response.status }` );
 			}
-			return await response.text();
+			const content = await response.text();
+
+			// Updated error matching
+			if ( content.includes( 'Warning: Target URL returned error' ) ) {
+				throw new Error( `Target URL (${ trimmedUrl }) returned an error` );
+			}
+
+			if ( content.trim().length === 0 ) {
+				throw new Error( 'Empty content received' );
+			}
+
+			return content.replace( /\(https?:\/\/[^\s]+\)/g, '' ).replace( /^\s*$/gm, '' ).trim();
 		} catch ( error ) {
-			errorMsg = t( 'Failed to fetch content of : %0', url );
 			console.error( `Failed to fetch content: ${ url }`, error );
 			return '';
-		} finally {
-			if ( errorMsg ) {
-				aiAssistContext.showError( errorMsg );
-			}
 		}
 	}
 

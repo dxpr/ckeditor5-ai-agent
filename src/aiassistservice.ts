@@ -188,11 +188,12 @@ export default class AiAssistService {
 				}
 			}
 
-			// Process any remaining buffer content
+			// Process any remaining content in the buffer
 			if ( contentBuffer.trim() ) {
 				this.processContent( contentBuffer.trim(), parent );
 			}
 		} catch ( error: any ) {
+			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			const errorIdentifier =
 				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
 			const isRetryableError = [
@@ -646,9 +647,6 @@ export default class AiAssistService {
 			corpus.push( ...this.responseFilters );
 		} else {
 			const defaultFilterInstructions = [
-				'All content should be in plain text without markdown formatting unless explicitly requested.',
-				'If the response involves adding an item to a list, only generate the item itself, ' +
-				'matching the format of the existing items in the list.',
 				'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
 			];
 			corpus.push( ...defaultFilterInstructions );

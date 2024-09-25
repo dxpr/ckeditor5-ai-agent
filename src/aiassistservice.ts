@@ -19,6 +19,7 @@ export default class AiAssistService {
 	private responseContextData: Array<string>;
 	private responseFilters: Array<string>;
 	private debugMode: boolean;
+	private aiAssistFeatureLockId = Symbol( 'ai-assist-feature' );
 
 	private buffer = '';
 	private openTags: Array<string> = [];
@@ -147,6 +148,7 @@ export default class AiAssistService {
 			const decoder = new TextDecoder( 'utf-8' );
 
 			this.clearParentContent( parent );
+			this.editor.enableReadOnlyMode( this.aiAssistFeatureLockId );
 
 			console.log( 'Starting to process response' );
 			for ( ;; ) {
@@ -177,7 +179,7 @@ export default class AiAssistService {
 							if ( content ) {
 								contentBuffer += content;
 								if ( this.isCompleteHtmlChunk( contentBuffer ) ) {
-									this.processContent( contentBuffer, parent );
+									await this.processContent( contentBuffer, parent );
 									contentBuffer = '';
 								}
 							}
@@ -228,6 +230,8 @@ export default class AiAssistService {
 			}
 
 			aiAssistContext.showError( errorMessage );
+		} finally {
+			this.editor.disableReadOnlyMode( this.aiAssistFeatureLockId );
 		}
 	}
 
@@ -237,7 +241,7 @@ export default class AiAssistService {
 		return openTags.length === closeTags.length && content.trim().endsWith( '>' );
 	}
 
-	private processContent( content: string, parent: Element ): void {
+	private async processContent( content: string, parent: Element ): Promise<void> {
 		console.log( '--- Start of processContent ---' );
 		console.log( 'Processing content:', content );
 
@@ -246,7 +250,7 @@ export default class AiAssistService {
 
 		if ( useSimpleHtmlInsertion ) {
 			// Use the simple HTML insertion method
-			this.insertSimpleHtml( content );
+			await this.insertSimpleHtml( content );
 		} else {
 			// Existing complex content processing logic
 			console.log( 'Parent element:', parent.name );
@@ -312,23 +316,39 @@ export default class AiAssistService {
 		console.log( '--- End of processContent ---' );
 	}
 
-	private insertSimpleHtml( html: string ): void {
+	private async insertSimpleHtml( html: string ): Promise<void> {
 		console.log( 'Attempting to insert simple HTML:', html );
 
 		this.editor.model.change( writer => {
+			const model = this.editor.model;
 			const viewFragment = this.editor.data.processor.toView( html );
 			const modelFragment = this.editor.data.toModel( viewFragment );
+			const selection = model.document.selection;
+			const root = model.document.getRoot();
+			let insertionPosition = selection.getLastPosition();
 
-			const selection = this.editor.model.document.selection;
-			const insertPosition = selection.getFirstPosition();
+			const currentChildIndex = selection.getFirstPosition()?.path[ 0 ];
+			const lastInsertedElementParent = selection.getLastPosition()?.parent;
+			const lastUpdatedElementInRoot = root?.getChild( currentChildIndex ?? 0 );
 
-			if ( insertPosition ) {
-				writer.insert( modelFragment, insertPosition );
+			if ( lastInsertedElementParent?.is( 'rootElement' ) && lastUpdatedElementInRoot ) {
+				const position = model.createPositionAfter( lastUpdatedElementInRoot );
+				writer.setSelection( position );
+			} else if ( lastInsertedElementParent?.is( 'element' ) ) {
+				const position = model.createPositionAfter( lastInsertedElementParent );
+				writer.setSelection( position );
+				insertionPosition = position;
+			}
+
+			if ( insertionPosition ) {
+				writer.insert( modelFragment, insertionPosition );
 				console.log( 'HTML inserted successfully' );
 			} else {
 				console.warn( 'No valid insertion position found' );
 			}
 		} );
+		// intensional delay to set the cursor position accurately
+		await new Promise( resolve => setTimeout( resolve, 100 ) );
 	}
 
 	private insertList( listElement: HTMLElement, position: Position, writer: Writer ): void {
@@ -360,6 +380,7 @@ export default class AiAssistService {
 					writer.remove( child );
 				}
 			}
+			writer.remove( parent );
 		} );
 	}
 
@@ -819,7 +840,6 @@ export default class AiAssistService {
 			}
 			accumulatedTokens += elementTokenCount;
 			trimmedContent += element + '\n'; // Add the whole structural element.
-			console.log( accumulatedTokens, maxTokens );
 		}
 
 		return trimmedContent;

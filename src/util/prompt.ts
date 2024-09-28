@@ -107,6 +107,7 @@ export class PromptHelper {
 		corpus.push( '3. Ensure all HTML tags are properly closed and nested.' );
 		corpus.push( '4. Do not include any HTML, HEAD, or BODY tags.' );
 		corpus.push( '5. Avoid using inline styles or class attributes unless specifically requested.' );
+		corpus.push( '6. All text content must be wrapped in <p> tags.' );
 
 		// Join all instructions into a single formatted string.
 		const systemPrompt = corpus.join( '\n' );

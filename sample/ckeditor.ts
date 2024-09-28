@@ -95,7 +95,7 @@ ClassicEditor
 			model: 'gpt-4o',
 			temperature: 0.2,
 			contextSize: 1000,
-			openAIKey: 'YOUR OPEN_AI_KEY'
+			openAIKey: 'YOUR_OPEN_AI_KEY'
 		},
 		language: {
 			content: 'hi',

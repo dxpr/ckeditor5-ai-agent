@@ -243,7 +243,7 @@ export default class AiAssistService {
 		console.log( 'Processing content:', content );
 
 		// Hardcoded feature flag
-		const useSimpleHtmlInsertion = true;
+		const useSimpleHtmlInsertion = false;
 
 		if ( useSimpleHtmlInsertion ) {
 			// Use the simple HTML insertion method
@@ -291,6 +291,12 @@ export default class AiAssistService {
 						elementType = 'heading2';
 					} else if ( element.tagName == 'H3' ) {
 						elementType = 'heading3';
+					} else if ( element.tagName == 'H4' ) {
+						elementType = 'heading4';
+					} else if ( element.tagName == 'H5' ) {
+						elementType = 'heading5';
+					} else if ( element.tagName == 'H6' ) {
+						elementType = 'heading6';
 					}
 					await this.htmlParser.insertAsText( element || '', elementType, true );
 				}

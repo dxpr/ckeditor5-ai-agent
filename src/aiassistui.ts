@@ -176,7 +176,8 @@ export default class AiAssistUI extends Plugin {
 	 */
 	private showPlaceHolder( rect?: DOMRect ): void {
 		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
-		if ( ele && rect ) {
+		const isReadOnlyMode = this.editor.isReadOnly;
+		if ( ele && rect && !isReadOnlyMode ) {
 			ele.classList.add( 'show-place-holder' );
 			ele.style.left = `${ rect.left }px`;
 			ele.style.top = `${ rect.top }px`;

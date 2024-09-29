@@ -310,6 +310,7 @@ export default class AiAssistService {
 	 * @param parent - The parent element whose content will be cleared.
 	 */
 	private clearParentContent( parent: Element ): void {
+		console.log( 'clearing parent content', parent );
 		this.editor.model.change( writer => {
 			while ( parent.childCount > 0 ) {
 				const child = parent.getChild( 0 );

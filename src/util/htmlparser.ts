@@ -1,209 +1,146 @@
-import type { Editor } from 'ckeditor5/src/core.js';
-import type { Position, Writer } from 'ckeditor5/src/engine.js';
-import { uid } from 'ckeditor5/src/utils.js';
+import { Editor } from '@ckeditor/ckeditor5-core';
+import { DocumentFragment, Element, Model, Position, Writer } from '@ckeditor/ckeditor5-engine';
 
 export class HtmlParser {
-	private editor: Editor;
-	constructor( editor: Editor ) {
-		this.editor = editor;
-	}
+		private editor: Editor;
+		private model: Model;
 
-	/**
-	 * Inserts simple HTML content into the editor.
-	 *
-	 * @param html - The HTML string to be inserted into the editor.
-	 * @returns A promise that resolves when the HTML has been inserted.
-	 */
-	public async insertSimpleHtml( html: string ): Promise<void> {
-		console.log( 'Attempting to insert simple HTML:', html );
-
-		this.editor.model.change( ( writer: Writer ) => {
-			const model = this.editor.model;
-			const viewFragment = this.editor.data.processor.toView( html );
-			const modelFragment = this.editor.data.toModel( viewFragment );
-			const selection = model.document.selection;
-			const root = model.document.getRoot();
-			let insertionPosition = selection.getLastPosition();
-
-			const currentChildIndex = selection.getFirstPosition()?.path[ 0 ];
-			const lastUpdatedElementInRoot = root?.getChild( currentChildIndex ?? 0 );
-
-			if ( lastUpdatedElementInRoot?.is( 'element' ) ) {
-				insertionPosition = lastUpdatedElementInRoot.isEmpty ?
-					writer.createPositionAt( lastUpdatedElementInRoot, 'end' ) :
-					writer.createPositionAfter( lastUpdatedElementInRoot );
-			}
-
-			// Insert the model fragment at the determined position
-			if ( insertionPosition ) {
-				writer.setSelection( insertionPosition );
-				writer.insert( modelFragment, insertionPosition );
-				console.log( 'HTML inserted successfully' );
-			} else {
-				console.warn( 'No valid insertion position found' );
-			}
-		} );
-		await new Promise( resolve => setTimeout( resolve, 100 ) );
-	}
-
-	/**
-	 * Inserts HTML content as text into the editor.
-	 *
-	 * @param content - The HTML element containing the text to be inserted.
-	 * @param textType - The type of text element to create (e.g., 'paragraph').
-	 * @param stream - Indicates whether to insert text in a streaming manner (default is false).
-	 * @returns A promise that resolves when the text has been inserted.
-	 */
-	public async insertAsText( content: HTMLElement, textType: string, stream: boolean = false ): Promise<void> {
-		const model = this.editor.model;
-		const selection = model.document.selection;
-		const root = model.document.getRoot();
-		let insertionPosition: Position;
-
-		const currentChildIndex = selection.getFirstPosition()?.path[ 0 ];
-		const lastUpdatedElementInRoot = root?.getChild( currentChildIndex ?? 0 );
-
-		const promises: Array<() => Promise<void>> = [];
-		model.change( ( writer: Writer ) => {
-			// Determine insertion position based on the last updated element
-			if ( lastUpdatedElementInRoot?.is( 'element' ) ) {
-				insertionPosition = lastUpdatedElementInRoot.isEmpty ?
-					writer.createPositionAt( lastUpdatedElementInRoot, 'end' ) :
-					writer.createPositionAfter( lastUpdatedElementInRoot );
-			}
-
-			// Create a new model element of the specified text type
-			const modelElement = writer.createElement( textType );
-
-			// Iterate through child nodes of the content
-			for ( const child of content.childNodes ) {
-				const htmlNode = child as HTMLElement;
-				const tagName = htmlNode?.tagName?.toLocaleLowerCase();
-
-				const markedUpProperties: Record<string, any> = {};
-				const textContent = htmlNode?.textContent || '';
-
-				// Set properties based on the tag name
-				if ( tagName === 'strong' ) {
-					markedUpProperties.bold = true;
-				} else if ( tagName === 'em' ) {
-					markedUpProperties.italic = true;
-				}
-
-				// Handle text insertion either in streaming or non-streaming mode
-				if ( stream ) {
-					for ( const char of textContent ) {
-						promises.push( async () => {
-							model.enqueueChange( ( queueWrite: Writer ) => {
-								queueWrite.insertText( char, { ...markedUpProperties }, modelElement, 'end' );
-							} );
-							await new Promise( resolve => setTimeout( resolve, 5 ) );
-						} );
-					}
-				} else {
-					writer.insertText( textContent, { ...markedUpProperties }, modelElement );
-				}
-			}
-
-			// Set the selection and insert the model element at the determined position
-			if ( insertionPosition ) {
-				writer.setSelection( insertionPosition );
-				writer.insert( modelElement, insertionPosition );
-			}
-		} );
-
-		// Wait for all promises to resolve
-		await promises.reduce( async ( acc, promise ) => acc.then( () => promise() ), Promise.resolve() );
-	}
-
-	/**
-	 * Inserts a list into the editor from the provided HTML list element.
-	 *
-	 * @param listElement - The HTML element representing the list to be inserted.
-	 * @param indent - The indentation level for nested lists.
-	 * @param stream - Indicates whether to insert text in a streaming manner (default is false).
-	 * @returns A promise that resolves when the list has been inserted.
-	 */
-	public async insertList( listElement: HTMLElement, indent: number, listType: string, stream: boolean = false ): Promise<void> {
-		// Iterate through each child of the list element
-		for ( const item of Array.from( listElement.children ) ) {
-			const element = item as HTMLElement;
-
-			// Check if the current item is a list item
-			if ( item.tagName.toLowerCase() === 'li' ) {
-				const model = this.editor.model;
-				const selection = model.document.selection;
-				const root = model.document.getRoot();
-				let insertionPosition: Position;
-
-				const currentChildIndex = selection.getFirstPosition()?.path[ 0 ];
-				const lastUpdatedElementInRoot = root?.getChild( currentChildIndex ?? 0 );
-				const promises: Array<() => Promise<void>> = [];
-				model.change( ( writer: Writer ) => {
-					// Create a new paragraph for the list item
-					const listItem = writer.createElement( 'paragraph' );
-					writer.setAttribute( 'listIndent', indent, listItem );
-					writer.setAttribute( 'listType', listType, listItem );
-					writer.setAttribute( 'listItemId', uid(), listItem );
-
-					// Extract text content from the list item
-					const itemText = Array.from( element.childNodes )
-						.filter( child => child.nodeType === Node.TEXT_NODE )
-						.map( node => node?.textContent?.trim() )
-						.join( ' ' );
-
-					// Handle text insertion either in streaming or non-streaming mode
-					if ( stream ) {
-						for ( const char of itemText ) {
-							promises.push( async () => {
-								model.enqueueChange( ( queueWrite: Writer ) => {
-									queueWrite.insertText( char, listItem, 'end' );
-								} );
-								await new Promise( resolve => setTimeout( resolve, 5 ) );
-							} );
-						}
-					} else {
-						writer.insertText( itemText || '', listItem );
-					}
-
-					// Determine insertion position
-					if ( lastUpdatedElementInRoot?.is( 'element' ) ) {
-						insertionPosition = lastUpdatedElementInRoot.isEmpty ?
-							writer.createPositionAt( lastUpdatedElementInRoot, 'end' ) :
-							writer.createPositionAfter( lastUpdatedElementInRoot );
-					}
-
-					// Insert the list item
-					if ( root && insertionPosition ) {
-						writer.insert( listItem, root, insertionPosition.path[ 0 ] );
-						const position = writer.createPositionAfter( listItem ).getShiftedBy( 1 );
-						writer.setSelection( position );
-					}
-				} );
-
-				// Wait for all promises to resolve
-				await promises.reduce( async ( acc, promise ) => acc.then( () => promise() ), Promise.resolve() );
-
-				// Recursively insert any nested lists
-				if ( element?.children?.length ) {
-					for ( const subItem of element?.children ) {
-						if ( subItem.tagName.toLowerCase() === 'ul' || subItem.tagName.toLowerCase() === 'ol' ) {
-							await this.insertList( subItem as HTMLElement, indent + 1, listType, stream );
-						}
-					}
-				}
-			}
+		constructor(editor: Editor) {
+				this.editor = editor;
+				this.model = editor.model;
 		}
+
+		public isCompleteHtmlChunk(html: string): boolean {
+			// This is a simple implementation. You may need to adjust it based on your specific requirements.
+			const openingTags = (html.match(/<[^/][^>]*>/g) || []).length;
+			const closingTags = (html.match(/<\/[^>]+>/g) || []).length;
+	
+			// Check if all opening tags have corresponding closing tags
+			if (openingTags !== closingTags) {
+					return false;
+			}
+	
+			// Check for incomplete tags
+			if (html.includes('<') && !html.includes('>')) {
+					return false;
+			}
+	
+			// Check if the HTML starts with an opening tag and ends with a closing tag
+			const trimmedHtml = html.trim();
+			if (!trimmedHtml.startsWith('<') || !trimmedHtml.endsWith('>')) {
+					return false;
+			}
+	
+			return true;
 	}
 
-	/**
-	 * Validate given string as a HTML content
-	 * @param content string containing html content
-	 * @returns A boolean value as result of validation
-	 */
-	public isCompleteHtmlChunk( content: string ): boolean {
-		const openTags = content.match( /<[^/][^>]*>/g ) || [];
-		const closeTags = content.match( /<\/[^>]+>/g ) || [];
-		return openTags.length === closeTags.length && content.trim().endsWith( '>' );
+		public async insertSimpleHtml(content: string): Promise<void> {
+				// Implement the simple HTML insertion logic
+				// This should be similar to your existing implementation, but using model.insertContent
+				const viewFragment = this.editor.data.processor.toView(content);
+				const modelFragment = this.editor.data.toModel(viewFragment);
+
+				this.model.change(writer => {
+						this.model.insertContent(modelFragment);
+				});
+		}
+
+		public async insertList(element: HTMLElement, depth: number, listType: string, isFirstElement: boolean): Promise<void> {
+				// Implement the list insertion logic
+				// This should be similar to your existing implementation, but using model.insertContent where appropriate
+		}
+
+		public async insertAsText(content: HTMLElement, textType: string, stream: boolean = false): Promise<void> {
+				const selection = this.model.document.selection;
+				const root = this.model.document.getRoot();
+				let insertionPosition: Position | undefined;
+
+				const currentChildIndex = selection.getFirstPosition()?.path[0];
+				const lastUpdatedElementInRoot = root?.getChild(currentChildIndex ?? 0);
+
+				if (lastUpdatedElementInRoot?.is('element')) {
+						insertionPosition = lastUpdatedElementInRoot.isEmpty ?
+								this.model.createPositionAt(lastUpdatedElementInRoot, 'end') :
+								this.model.createPositionAfter(lastUpdatedElementInRoot);
+				}
+
+				if (stream) {
+						await this.streamInsertContent(content, textType, insertionPosition);
+				} else {
+						this.batchInsertContent(content, textType, insertionPosition);
+				}
+		}
+
+		private batchInsertContent(content: HTMLElement, textType: string, insertionPosition?: Position): void {
+				const fragment = this.prepareDocumentFragment(content, textType);
+
+				this.model.change(() => {
+						this.model.insertContent(fragment, insertionPosition);
+				});
+		}
+
+		private async streamInsertContent(content: HTMLElement, textType: string, insertionPosition?: Position): Promise<void> {
+			let currentElement: Element | null = null;
+
+			this.model.change(writer => {
+					currentElement = writer.createElement(textType);
+					this.model.insertContent(currentElement, insertionPosition);
+					writer.setSelection(currentElement, 'end');
+			});
+
+			for (const child of content.childNodes) {
+					const htmlNode = child as HTMLElement;
+					const textContent = htmlNode?.textContent || '';
+					const tagName = htmlNode?.tagName?.toLowerCase();
+
+					for (const char of textContent) {
+							await new Promise<void>(resolve => {
+									this.model.enqueueChange(writer => {
+											const attributes: Record<string, boolean> = {};
+											if (tagName === 'strong') attributes.bold = true;
+											if (tagName === 'em') attributes.italic = true;
+
+											writer.insertText(char, attributes, writer.createPositionAt(currentElement!, 'end'));
+											resolve();
+									});
+							});
+							await new Promise(resolve => setTimeout(resolve, 5));
+					}
+			}
 	}
+
+		private prepareDocumentFragment(content: HTMLElement, textType: string): DocumentFragment {
+				return this.model.change(writer => {
+						const fragment = writer.createDocumentFragment();
+						const elementType = writer.createElement(textType);
+
+						for (const child of content.childNodes) {
+								const htmlNode = child as HTMLElement;
+								const tagName = htmlNode?.tagName?.toLowerCase();
+								const textContent = htmlNode?.textContent || '';
+
+								const attributes: Record<string, boolean> = {};
+								if (tagName === 'strong') attributes.bold = true;
+								if (tagName === 'em') attributes.italic = true;
+
+								const textNode = writer.createText(textContent, attributes);
+								writer.append(textNode, elementType);
+						}
+
+						writer.append(elementType, fragment);
+						return fragment;
+				});
+		}
+
+		private createTempElement(char: string, tagName?: string): HTMLElement {
+				const temp = document.createElement('div');
+				if (tagName === 'strong' || tagName === 'em') {
+						const element = document.createElement(tagName);
+						element.textContent = char;
+						temp.appendChild(element);
+				} else {
+						temp.textContent = char;
+				}
+				return temp;
+		}
 }

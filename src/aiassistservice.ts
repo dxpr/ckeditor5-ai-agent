@@ -243,7 +243,7 @@ export default class AiAssistService {
 		console.log( 'Processing content:', content );
 
 		// Hardcoded feature flag
-		const useSimpleHtmlInsertion = false;
+		const useSimpleHtmlInsertion = true;
 
 		if ( useSimpleHtmlInsertion ) {
 			// Use the simple HTML insertion method
@@ -276,29 +276,14 @@ export default class AiAssistService {
 			const element = child as HTMLElement;
 			if ( element.nodeType === Node.ELEMENT_NODE ) {
 				const elementName = element.tagName.toLowerCase();
-				if ( elementName === 'ul' || elementName === 'ol' ) {
-					const listType = elementName == 'ul' ? 'bulleted' : 'numbered';
-					await this.htmlParser.insertList( element, 0, listType, true );
-				}
-				else if ( elementName === 'table' ) {
+				if ( elementName === 'table' ) {
 					await this.htmlParser.insertSimpleHtml( element.outerHTML );
 				}
+				else if ( elementName === 'ul' || elementName === 'ol' ) {
+					await this.htmlParser.insertAsText( element || '', true, true );
+				}
 				else {
-					let elementType = 'paragraph';
-					if ( element.tagName == 'H1' ) {
-						elementType = 'heading1';
-					} else if ( element.tagName == 'H2' ) {
-						elementType = 'heading2';
-					} else if ( element.tagName == 'H3' ) {
-						elementType = 'heading3';
-					} else if ( element.tagName == 'H4' ) {
-						elementType = 'heading4';
-					} else if ( element.tagName == 'H5' ) {
-						elementType = 'heading5';
-					} else if ( element.tagName == 'H6' ) {
-						elementType = 'heading6';
-					}
-					await this.htmlParser.insertAsText( element || '', elementType, true );
+					await this.htmlParser.insertAsText( element || '', true );
 				}
 			}
 		}

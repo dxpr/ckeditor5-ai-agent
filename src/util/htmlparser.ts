@@ -169,7 +169,6 @@ export class HtmlParser {
 			if ( text.is( '$text' ) ) {
 				const attributes = Array.from( text.getAttributes() );
 				const str = text._data;
-
 				// Stream content character by character
 				for ( const char of str ) {
 					await new Promise( resolve => {

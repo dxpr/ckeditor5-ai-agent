@@ -14,6 +14,7 @@ export default class AiAssistService {
 	private timeOutDuration: number;
 	private maxTokens: number;
 	private retryAttempts: number;
+	private streamingEnabled: boolean;
 	private stopSequences: Array<string>;
 	private aiAssistFeatureLockId = Symbol( 'ai-assist-feature' );
 	private promptHelper: PromptHelper;
@@ -41,6 +42,7 @@ export default class AiAssistService {
 		this.maxTokens = config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
+		this.streamingEnabled = config.streamingEnabled ?? false;
 	}
 
 	/**
@@ -242,20 +244,12 @@ export default class AiAssistService {
 		console.log( '--- Start of processContent ---' );
 		console.log( 'Processing content:', content );
 
-		// Hardcoded feature flag
-		const useSimpleHtmlInsertion = true;
-
-		if ( useSimpleHtmlInsertion ) {
+		if ( this.streamingEnabled ) {
+			// Existing complex content processing logic
+			await this.proceedHtmlResponse( content );
+		} else {
 			// Use the simple HTML insertion method
 			await this.htmlParser.insertSimpleHtml( content );
-		} else {
-			// Existing complex content processing logic
-			console.log( 'Parent element:', parent.name );
-			const isHTML = content.trim().startsWith( '<' ) && content.trim().endsWith( '>' );
-			console.log( 'Content type:', isHTML ? 'HTML' : 'Plain text' );
-			if ( isHTML ) {
-				await this.proceedHtmlResponse( content );
-			}
 		}
 
 		console.log( '--- End of processContent ---' );
@@ -276,7 +270,13 @@ export default class AiAssistService {
 			const element = child as HTMLElement;
 			if ( element.nodeType === Node.ELEMENT_NODE ) {
 				const elementName = element.tagName.toLowerCase();
-				if ( elementName === 'table' ) {
+				let isStreamingNotAllow = elementName === 'table';
+				isStreamingNotAllow = isStreamingNotAllow || elementName === 'blockquote';
+				isStreamingNotAllow = isStreamingNotAllow || elementName === 'pre';
+				isStreamingNotAllow = isStreamingNotAllow || elementName === 'img';
+				isStreamingNotAllow = isStreamingNotAllow || elementName === 'form';
+				isStreamingNotAllow = isStreamingNotAllow || elementName === 'figure';
+				if ( isStreamingNotAllow ) {
 					await this.htmlParser.insertSimpleHtml( element.outerHTML );
 				}
 				else if ( elementName === 'ul' || elementName === 'ol' ) {
@@ -285,6 +285,10 @@ export default class AiAssistService {
 				else {
 					await this.htmlParser.insertAsText( element || '', true );
 				}
+			} else if ( element.nodeType === Node.TEXT_NODE ) {
+				const tempParagraph: HTMLElement = document.createElement( 'p' );
+				tempParagraph.innerHTML = html;
+				await this.htmlParser.insertAsText( tempParagraph || '', true );
 			}
 		}
 	}

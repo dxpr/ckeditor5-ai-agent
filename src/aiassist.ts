@@ -29,7 +29,8 @@ export default class AiAssist extends Plugin {
 				contextData: [], // Default context data
 				filters: [] // Default filters
 			},
-			debugMode: false // Default debug mode
+			debugMode: false, // Default debug mode
+			streamingEnabled: false // Default streaming mode
 		};
 
 		const updatedConfig = { ...defaultConfig, ...config };

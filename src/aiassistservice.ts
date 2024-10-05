@@ -14,7 +14,7 @@ export default class AiAssistService {
 	private timeOutDuration: number;
 	private maxTokens: number;
 	private retryAttempts: number;
-	private streamingEnabled: boolean;
+	private streamContent: boolean;
 	private stopSequences: Array<string>;
 	private aiAssistFeatureLockId = Symbol( 'ai-assist-feature' );
 	private promptHelper: PromptHelper;
@@ -42,7 +42,7 @@ export default class AiAssistService {
 		this.maxTokens = config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
-		this.streamingEnabled = config.streamingEnabled ?? false;
+		this.streamContent = config.streamContent ?? false;
 	}
 
 	/**
@@ -244,7 +244,7 @@ export default class AiAssistService {
 		console.log( '--- Start of processContent ---' );
 		console.log( 'Processing content:', content );
 
-		if ( this.streamingEnabled ) {
+		if ( this.streamContent ) {
 			// Existing complex content processing logic
 			await this.proceedHtmlResponse( content );
 		} else {

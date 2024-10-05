@@ -30,7 +30,7 @@ export default class AiAssist extends Plugin {
 				filters: [] // Default filters
 			},
 			debugMode: false, // Default debug mode
-			streamingEnabled: false // Default streaming mode
+			streamContent: false // Default streaming mode
 		};
 
 		const updatedConfig = { ...defaultConfig, ...config };

@@ -286,9 +286,9 @@ export default class AiAssistService {
 					await this.htmlParser.insertAsText( element || '', true );
 				}
 			} else if ( element.nodeType === Node.TEXT_NODE ) {
-				const tempParagraph: HTMLElement = document.createElement( 'p' );
+				const tempParagraph: HTMLElement = document.createElement( 'div' );
 				tempParagraph.innerHTML = html;
-				await this.htmlParser.insertAsText( tempParagraph || '', true );
+				await this.htmlParser.insertAsText( tempParagraph || '', true, true );
 			}
 		}
 	}

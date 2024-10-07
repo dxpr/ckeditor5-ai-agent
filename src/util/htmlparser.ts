@@ -44,7 +44,10 @@ export class HtmlParser {
 
 				// Check if it required to add break to current context of list etc.
 				// More to will be added during testing any edge case
-				const isBreakElementReq = lastInsertedChild?.getAttribute( 'listItemId' );
+				let isBreakElementReq = lastInsertedChild?.getAttribute( 'listItemId' );
+				if ( lastInsertedChild?.is( 'element' ) ) {
+					isBreakElementReq = isBreakElementReq || lastInsertedChild.name === 'table';
+				}
 				if ( isBreakElementReq && lastInsertedChild ) {
 					const paragraph = writer.createElement( 'paragraph' );
 					writer.insert( paragraph, writer.createPositionAfter( lastInsertedChild ) );

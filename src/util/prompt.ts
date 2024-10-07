@@ -102,12 +102,15 @@ export class PromptHelper {
 
 		corpus.push( 'When generating content, adhere to the following HTML-specific rules:' );
 		corpus.push( '1. Generate an HTML snippet, not a full HTML document.' );
-		corpus.push( '2. Use only the following allowed HTML tags:' );
+		corpus.push( '2. You are an HTML generator. When providing HTML code, ensure it follows standard HTML norms and best practices.' );
+		corpus.push( '4. Block-level elements (e.g., <p>, <div>, <section>) should not contain other block-level elements improperly."' );
+		corpus.push( '5. Ensure valid nesting of elements.' );
+		corpus.push( '6. Use only the following allowed HTML tags:' );
 		corpus.push( `${ this.getAllowedHtmlTags().join( ', ' ) }` );
-		corpus.push( '3. Ensure all HTML tags are properly closed and nested.' );
-		corpus.push( '4. Do not include any HTML, HEAD, or BODY tags.' );
-		corpus.push( '5. Avoid using inline styles or class attributes unless specifically requested.' );
-		corpus.push( '6. All text content must be wrapped in <p> tags.' );
+		corpus.push( '7. Ensure all HTML tags are properly closed and nested.' );
+		corpus.push( '8. Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( '9. Avoid using inline styles or class attributes unless specifically requested.' );
+		corpus.push( '10. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.' );
 
 		// Join all instructions into a single formatted string.
 		const systemPrompt = corpus.join( '\n' );

@@ -111,6 +111,7 @@ export class PromptHelper {
 		corpus.push( '8. Do not include any HTML, HEAD, or BODY tags.' );
 		corpus.push( '9. Avoid using inline styles or class attributes unless specifically requested.' );
 		corpus.push( '10. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.' );
+		corpus.push( '11. Beginning word of response must be a valid html tag' );
 
 		// Join all instructions into a single formatted string.
 		const systemPrompt = corpus.join( '\n' );

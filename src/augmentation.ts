@@ -35,6 +35,7 @@ declare module '@ckeditor/ckeditor5-core' {
                 contextData?: Array<string>;
                 filters?: Array<string>;
             };
+            streamContent?: boolean;
             debugMode?: boolean;
         };
     }

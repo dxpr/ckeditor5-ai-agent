@@ -93,10 +93,9 @@ ClassicEditor
 			]
 		},
 		aiAssist: {
-			model: 'gpt-4o',
-			temperature: 0.7,
-			contextSize: 1000,
-			openAIKey: 'YOUR_OPEN_AI_KEY'
+			apiKey: 'YOUR_API_KEY',
+			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
+			temperature: 0.7
 		},
 		language: {
 			content: 'en',
@@ -154,10 +153,9 @@ ClassicEditor
 			]
 		},
 		aiAssist: {
-			model: 'gpt-4o',
-			temperature: 0.7,
-			contextSize: 1000,
-			openAIKey: 'YOUR_OPEN_AI_KEY'
+			apiKey: 'YOUR_API_KEY',
+			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
+			temperature: 0.7
 		},
 		language: {
 			content: 'en',

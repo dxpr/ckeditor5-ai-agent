@@ -16,7 +16,7 @@ export default class AiAssist extends Plugin {
 		// Set default values and merge with provided config
 		const defaultConfig = {
 			model: this.DEFAULT_GPT_MODEL, // Default AI model
-			openAIKey: '', // Default OpenAI key
+			apiKey: '', // Default OpenAI key
 			endpointUrl: this.DEFAULT_AI_END_POINT, // Default endpoint URL
 			temperature: undefined, // Default temperature
 			timeOutDuration: 20000, // Default timeout duration
@@ -51,8 +51,8 @@ export default class AiAssist extends Plugin {
 	}
 
 	private validateConfiguration( config: any ): void {
-		if ( !config.openAIKey ) {
-			throw new Error( 'AiAssist: openAIKey is required.' );
+		if ( !config.apiKey ) {
+			throw new Error( 'AiAssist: apiKey is required.' );
 		}
 
 		if ( config.temperature && ( config.temperature < 0 || config.temperature > 2 ) ) {

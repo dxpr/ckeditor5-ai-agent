@@ -36,7 +36,7 @@ ClassicEditor
         toolbar: [ 'AiAssist', ... ],
         aiAssist: {
             model: 'gpt-4o',
-            openAIKey: 'OPEN_AI_API_KEY // required
+            apiKey: 'OPEN_AI_API_KEY // required
             temperature: 0.7,
             maxTokens: 500,
             stopSequences: [ '\n' ],
@@ -57,7 +57,7 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | Option | Type | Description |
 | :-------- | :------- | :-------------------------------- |
 | `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
-| `openAIKey` | `string` | Your Open_AI key for authenticate. |
+| `apiKey` | `string` | Your Open_AI key for authenticate. |
 | `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
 | `maxTokens` | `number` | The maximum number of tokens to generate. Should be within the model's token limits. (optional)|
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
@@ -236,7 +236,7 @@ CKEditor5.editorClassic.ClassicEditor
         ... // other configurations
         aiAssist: {
             model: 'gpt-4o',
-            openAIKey: 'OPEN_AI_API_KEY // required
+            apiKey: 'OPEN_AI_API_KEY // required
         },
         language: {
 			content:'es',

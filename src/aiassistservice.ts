@@ -38,7 +38,7 @@ export default class AiAssistService {
 		this.apiKey = config.apiKey;
 		this.endpointUrl = config.endpointUrl!;
 		this.temperature = config.temperature;
-		this.timeOutDuration = config.timeOutDuration ?? 20000;
+		this.timeOutDuration = config.timeOutDuration ?? 45000;
 		this.maxTokens = config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;

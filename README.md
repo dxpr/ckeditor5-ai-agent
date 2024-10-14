@@ -41,7 +41,7 @@ ClassicEditor
             maxTokens: 500,
             stopSequences: [ '\n' ],
             retryAttempts: 3,
-            timeOutDuration: 30000,
+            timeOutDuration: 45000,
             endpointUrl: 'https://api.openai.com/v1/chat/completions',
             prompt: []
         }
@@ -62,7 +62,7 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | `maxTokens` | `number` | The maximum number of tokens to generate. Should be within the model's token limits. (optional)|
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
-| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 20s (optional)|
+| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
 | `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |

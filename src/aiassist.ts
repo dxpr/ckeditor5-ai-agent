@@ -19,7 +19,7 @@ export default class AiAssist extends Plugin {
 			apiKey: '', // Default OpenAI key
 			endpointUrl: this.DEFAULT_AI_END_POINT, // Default endpoint URL
 			temperature: undefined, // Default temperature
-			timeOutDuration: 20000, // Default timeout duration
+			timeOutDuration: 45000, // Default timeout duration
 			maxTokens: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].max, // Default max tokens
 			retryAttempts: 1, // Default retry attempts
 			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].context * 0.75, // Default context size

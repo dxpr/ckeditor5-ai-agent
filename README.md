@@ -36,7 +36,7 @@ ClassicEditor
         toolbar: [ 'AiAssist', ... ],
         aiAssist: {
             model: 'gpt-4o',
-            apiKey: 'OPEN_AI_API_KEY // required
+            apiKey: 'YOUR_API_KEY // required
             temperature: 0.7,
             maxTokens: 500,
             stopSequences: [ '\n' ],
@@ -236,7 +236,7 @@ CKEditor5.editorClassic.ClassicEditor
         ... // other configurations
         aiAssist: {
             model: 'gpt-4o',
-            apiKey: 'OPEN_AI_API_KEY // required
+            apiKey: 'YOUR_API_KEY // required
         },
         language: {
 			content:'es',

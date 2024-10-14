@@ -42,7 +42,7 @@ export default class AiAssistService {
 		this.maxTokens = config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
-		this.streamContent = config.streamContent ?? false;
+		this.streamContent = config.streamContent ?? true;
 	}
 
 	/**

@@ -32,11 +32,11 @@ export class PromptHelper {
 	public getSystemPrompt(): string {
 		const corpus: Array<string> = [];
 		corpus.push(
-			`You will be provided partially written article with """@@@cursor@@@""" in between somewhere 
-			under a section of CONTEXT, user input under a TASK section, and sometimes there will be articles 
-			(delimited with marked-up language) separated by Stating Markdown Content \${ number } and 
-			Ending Markdown Content \${ index } with certain instruction to follow while generating response 
-			under a INSTRUCTION section`
+			`You will be provided with a partially written article with """@@@cursor@@@""" somewhere 
+			under a CONTEXT section, user input under a TASK section, and sometimes there will be articles 
+			(delimited with marked-up language) separated by Starting Markdown Content \${ number } and 
+			Ending Markdown Content \${ index } with certain instructions to follow while generating a response 
+			under an INSTRUCTION section`
 		);
 		corpus.push(
 			`If there is an article with """Stating Markdown Content""", your task is to 
@@ -44,8 +44,8 @@ export class PromptHelper {
 		);
 		corpus.push( 'Follow these step-by-step instructions to respond to user inputs:' );
 		corpus.push(
-			`Step 1 - Summarized information under a CONTEXT section, set a tone to article, and 
-			later used that summarized information to generate response`
+			`Step 1 - Summarize information under the CONTEXT section, set a tone for the article, and 
+			later use that summarized information to generate a response`
 		);
 		corpus.push(
 			`Step 2: If there is an article with """Stating Markdown Content""", 
@@ -53,7 +53,7 @@ export class PromptHelper {
 			that does not relate to the context and user prompt.`
 		);
 		corpus.push(
-			'Final Step - used all summarized information to response to user input under a TASK section'
+			'Final Step - use all summarized information to respond to user input under the TASK section'
 		);
 		corpus.push( 'While generating the response, adhere to the following rules:' );
 		corpus.push(
@@ -70,7 +70,7 @@ export class PromptHelper {
 		);
 		corpus.push( '4. Do not use any markdown formatting in your response. (e.g., **, ##, ###, ---, ===, ____).' );
 		corpus.push(
-			`5. Use a relaxed, formal and informal tone based on the summary to set of context with lots of personal touches. 
+			`5. Use a relaxed, formal or informal tone based on the summary of context with lots of personal touches. 
 			Feel free to include spontaneous thoughts, offhand comments, or quirky observations.`
 		);
 		corpus.push(
@@ -83,7 +83,7 @@ export class PromptHelper {
 		corpus.push(
 			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.'
 		);
-		corpus.push( 'Above are the rules apply every time, but below will only be applied if markdown content is present' );
+		corpus.push( 'Above are the rules that apply every time, but below will only be applied if markdown content is present' );
 		corpus.push(
 			'1. Extract each content as plain text without any special formatting, emphasis, or markdown'
 		);
@@ -103,15 +103,15 @@ export class PromptHelper {
 		corpus.push( 'When generating content, adhere to the following HTML-specific rules:' );
 		corpus.push( '1. Generate an HTML snippet, not a full HTML document.' );
 		corpus.push( '2. You are an HTML generator. When providing HTML code, ensure it follows standard HTML norms and best practices.' );
-		corpus.push( '4. Block-level elements (e.g., <p>, <div>, <section>) should not contain other block-level elements improperly."' );
+		corpus.push( '4. Block-level elements (e.g., <p>, <div>, <section>) must not contain other block-level elements.' );
 		corpus.push( '5. Ensure valid nesting of elements.' );
-		corpus.push( '6. Use only the following allowed HTML tags:' );
+		corpus.push( '6. Use the following allowed HTML tags:' );
 		corpus.push( `${ this.getAllowedHtmlTags().join( ', ' ) }` );
 		corpus.push( '7. Ensure all HTML tags are properly closed and nested.' );
 		corpus.push( '8. Do not include any HTML, HEAD, or BODY tags.' );
-		corpus.push( '9. Avoid using inline styles or class attributes unless specifically requested.' );
-		corpus.push( '10. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.' );
-		corpus.push( '11. Beginning word of response must be a valid html tag' );
+		corpus.push( '9. Do not use inline styles or class attributes unless specifically requested.' );
+		corpus.push( '10. Provide clean, valid HTML.' );
+		corpus.push( '11. The beginning word of the response must be a valid HTML tag' );
 
 		// Join all instructions into a single formatted string.
 		const systemPrompt = corpus.join( '\n' );

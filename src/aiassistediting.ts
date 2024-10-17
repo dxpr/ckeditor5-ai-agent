@@ -36,6 +36,7 @@ export default class AiAssistEditing extends Plugin {
 			const position = model.document.selection.getFirstPosition();
 			if ( position ) {
 				const paragraph = position.parent as Element;
+				const inlineSlash = Array.from( paragraph.getChildren() ).find( ( child: any ) => child.name === 'inline-slash' );
 				const equivalentView = mapper.toViewElement( paragraph );
 				let content;
 				if ( equivalentView ) {
@@ -44,7 +45,7 @@ export default class AiAssistEditing extends Plugin {
 							equivalentView
 						)?.innerText;
 				}
-				if ( typeof content === 'string' && content.startsWith( '/' ) ) {
+				if ( ( typeof content === 'string' && content.startsWith( '/' ) ) || inlineSlash ) {
 					cancel();
 					await editor.execute( 'aiAssist' );
 				}

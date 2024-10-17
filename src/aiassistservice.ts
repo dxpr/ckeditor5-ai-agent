@@ -8,7 +8,7 @@ import { HtmlParser } from './util/htmlparser.js';
 export default class AiAssistService {
 	private editor: Editor;
 	private aiModel: AiModel;
-	private openAIKey: string | undefined;
+	private apiKey: string | undefined;
 	private endpointUrl: string;
 	private temperature: number | undefined;
 	private timeOutDuration: number;
@@ -36,14 +36,14 @@ export default class AiAssistService {
 		const config = editor.config.get( 'aiAssist' )!;
 
 		this.aiModel = config.model!;
-		this.openAIKey = config.openAIKey;
+		this.apiKey = config.apiKey;
 		this.endpointUrl = config.endpointUrl!;
 		this.temperature = config.temperature;
-		this.timeOutDuration = config.timeOutDuration ?? 20000;
+		this.timeOutDuration = config.timeOutDuration ?? 45000;
 		this.maxTokens = config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
-		this.streamContent = config.streamContent ?? false;
+		this.streamContent = config.streamContent ?? true;
 	}
 
 	/**
@@ -139,7 +139,7 @@ export default class AiAssistService {
 			const response = await fetch( this.endpointUrl, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${ this.openAIKey }`,
+					Authorization: `Bearer ${ this.apiKey }`,
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify( {

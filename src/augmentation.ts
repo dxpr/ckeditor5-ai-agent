@@ -22,7 +22,7 @@ declare module '@ckeditor/ckeditor5-core' {
 	interface EditorConfig {
         aiAssist?: {
             model?: AiModel; // AI Model Selection
-            openAIKey: string; // OPEN AI Key
+            apiKey: string; // OPEN AI Key
             temperature?: number; // Temperature Setting
             maxTokens?: number; // Max Tokens
             stopSequences?: Array<string>; // Stop Sequences

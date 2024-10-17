@@ -36,12 +36,12 @@ ClassicEditor
         toolbar: [ 'AiAssist', ... ],
         aiAssist: {
             model: 'gpt-4o',
-            openAIKey: 'OPEN_AI_API_KEY // required
+            apiKey: 'YOUR_API_KEY // required
             temperature: 0.7,
             maxTokens: 500,
             stopSequences: [ '\n' ],
             retryAttempts: 3,
-            timeOutDuration: 30000,
+            timeOutDuration: 45000,
             endpointUrl: 'https://api.openai.com/v1/chat/completions',
             prompt: []
         }
@@ -57,19 +57,19 @@ The AiAssist plugin can be configured through the EditorConfig interface. Here a
 | Option | Type | Description |
 | :-------- | :------- | :-------------------------------- |
 | `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
-| `openAIKey` | `string` | Your Open_AI key for authenticate. |
+| `apiKey` | `string` | Your Open_AI key for authenticate. |
 | `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
 | `maxTokens` | `number` | The maximum number of tokens to generate. Should be within the model's token limits. (optional)|
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
-| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 20s (optional)|
+| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
 | `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
 | `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
 | `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
-| `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is false (optional) |
+| `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
 
 ## Usage Examples
 
@@ -236,7 +236,7 @@ CKEditor5.editorClassic.ClassicEditor
         ... // other configurations
         aiAssist: {
             model: 'gpt-4o',
-            openAIKey: 'OPEN_AI_API_KEY // required
+            apiKey: 'YOUR_API_KEY // required
         },
         language: {
 			content:'es',

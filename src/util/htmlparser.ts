@@ -65,32 +65,43 @@ export class HtmlParser {
 	/**
 	 * Inserts HTML content as text into the editor.
 	 *
-	 * @param htmlElement - The HTML element containing the text to be inserted.
-	 * @param isStreaming - Indicates whether to insert text in a streaming manner (default is false).
+	 * @param content - The HTML element containing the text to be inserted.
+	 * @param position - The position at which to insert the text (optional).
+	 * @param stream - Indicates whether to insert text in a streaming manner (default is false).
 	 * @param shouldAddBreakAtEnd - Indicates whether to add a paragraph break at the end of the inserted content (default is false).
 	 * @returns A promise that resolves when the text has been inserted.
-	 */
-	public async insertAsText( content: HTMLElement, stream: boolean = false, shouldAddBreakAtEnd: boolean = false ): Promise<void> {
-		console.log( 'Attempting to insert simple HTML:', content, 'Meet' );
+	 *
+	 * This method processes the provided HTML element, converting it to a model fragment,
+	 * and inserts it into the editor at the specified position. If streaming is enabled,
+	 * elements are inserted one at a time, allowing for a more dynamic insertion experience.
+	 * An optional paragraph break can be added at the end of the inserted content.
+	*/
+	public async insertAsText(
+		content: HTMLElement,
+		position?: Position,
+		stream: boolean = false,
+		shouldAddBreakAtEnd: boolean = false
+	): Promise<void> {
 		const viewFragment = this.editor.data.processor.toView( content.outerHTML );
 		const modelFragment = this.editor.data.toModel( viewFragment, '$root' );
 		const childrenToInsert = Array.from( modelFragment.getChildren() );
 		const root = this.model.document.getRoot();
 
-		for ( const element of childrenToInsert ) {
+		for ( const [ index, element ] of childrenToInsert.entries() ) {
 			if ( element.is( 'element' ) ) {
-				console.log( 'inserting element', element );
+				const insertPosition = index === 0 ? position : undefined; // Determine position for insertion
 				if ( stream ) {
-					await this.insertElementAsStream( element );
+					await this.insertElementAsStream( element, insertPosition );
 				} else {
-					await this.batchInsertOfElement( element );
+					await this.batchInsertOfElement( element, insertPosition );
 				}
 			}
 		}
 
 		if ( shouldAddBreakAtEnd ) {
 			this.model.change( writer => {
-				const currentChildIndex = this.model.document.selection.getLastPosition()?.path[ 0 ];
+				const lastPosition = this.model.document.selection.getLastPosition();
+				const currentChildIndex = lastPosition?.path[ 0 ];
 				if ( root && currentChildIndex != undefined ) {
 					const paragraph = writer.createElement( 'paragraph' );
 					writer.insert( paragraph, root, currentChildIndex + 1 );
@@ -108,7 +119,7 @@ export class HtmlParser {
 	 * If not provided, the element will be inserted at the current selection position.
 	 * @returns A promise that resolves when the element has been inserted.
 	 */
-	private async batchInsertOfElement( element: Element, position?: Position ): Promise<void> {
+	public async batchInsertOfElement( element: Element, position?: Position ): Promise<void> {
 		const selection = this.model.document.selection;
 		const root = this.model.document.getRoot();
 
@@ -142,52 +153,70 @@ export class HtmlParser {
 	private async insertElementAsStream( element: Element, position?: Position ): Promise<void> {
 		const selection = this.model.document.selection;
 		const root = this.model.document.getRoot();
+		const lastRecognizedPosition = selection.getLastPosition();
 
 		let insertionPosition: Position | undefined = position;
+		let targetElement: Element;
 
+		// Determine insertion position
 		if ( !position ) {
-			const currentChildIndex = selection.getFirstPosition()?.path[ 0 ];
-			const lastUpdatedElementInRoot = root?.getChild( currentChildIndex ?? 0 );
+			const currentChildIndex = lastRecognizedPosition?.path[ 0 ];
+			const lastUpdatedElement = root?.getChild( currentChildIndex ?? 0 );
 
-			if ( lastUpdatedElementInRoot?.is( 'element' ) ) {
-				insertionPosition = lastUpdatedElementInRoot.isEmpty ?
-					this.model.createPositionAt( lastUpdatedElementInRoot, 'end' ) :
-					this.model.createPositionAfter( lastUpdatedElementInRoot );
+			if ( lastUpdatedElement?.is( 'element' ) ) {
+				insertionPosition = lastUpdatedElement.isEmpty ?
+					this.model.createPositionAt( lastUpdatedElement, 'end' ) :
+					this.model.createPositionAfter( lastUpdatedElement );
+			}
+
+			this.model.change( writer => {
+				targetElement = writer.createElement( element.name );
+				// Set attributes in a more concise way
+				for ( const [ key, value ] of element.getAttributes() ) {
+					targetElement._setAttribute( key, value );
+				}
+				this.model.insertContent( targetElement, insertionPosition );
+				if ( insertionPosition ) {
+					writer.setSelection( insertionPosition );
+				}
+			} );
+		} else {
+			// current element from the offset
+			const currentElement = lastRecognizedPosition?.parent;
+			if ( currentElement?.is( 'element' ) ) {
+				targetElement = currentElement;
 			}
 		}
 
-		const texts = Array.from( element.getChildren() );
-		let insertingElement: Element;
-		this.model.change( writer => {
-			insertingElement = writer.createElement( element.name );
-			// Set attributes in a more concise way
-			for ( const [ key, value ] of element.getAttributes() ) {
-				insertingElement._setAttribute( key, value );
-			}
-			this.model.insertContent( insertingElement, insertionPosition );
-			writer.setSelection( insertingElement, 'end' );
-		} );
+		const textChildren = Array.from( element.getChildren() ).filter( child => child.is( '$text' ) );
 
-		for ( const text of texts ) {
-			if ( text.is( '$text' ) ) {
-				const attributes = Array.from( text.getAttributes() );
-				const str = text._data;
-				// Stream content character by character
-				for ( const char of str ) {
-					await new Promise( resolve => {
-						this.model.change( writer => {
-							writer.insertText( char, attributes, insertingElement, 'end' );
-						} );
-						setTimeout( resolve, 5 ); // Maintain the streaming effect
+		for ( const textNode of textChildren ) {
+			if ( !textNode.is( '$text' ) ) {
+				continue;
+			}
+			const textAttributes = Array.from( textNode.getAttributes() );
+			const textContent = textNode._data;
+
+			for ( const char of textContent ) {
+				await new Promise( resolve => {
+					this.model.change( writer => {
+						const currentPosition = this.editor.model.document.selection.getLastPosition();
+						const newPosition = currentPosition!.getShiftedBy( 1 );
+						const shouldAppendAtEnd = newPosition.offset === currentPosition?.parent.maxOffset;
+						writer.insertText( char, textAttributes, targetElement, shouldAppendAtEnd ? 'end' : currentPosition?.offset );
+						writer.setSelection( this.editor.model.document.selection.getLastPosition() );
 					} );
-				}
+					setTimeout( resolve, 5 ); // Maintain the streaming effect
+				} );
 			}
 		}
 
 		// Set selection
-		this.model.change( writer => {
-			writer.setSelection( insertingElement, 'end' );
-		} );
+		if ( !position ) {
+			this.model.change( writer => {
+				writer.setSelection( targetElement, 'end' );
+			} );
+		}
 	}
 
 	/**

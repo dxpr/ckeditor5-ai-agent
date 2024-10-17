@@ -22,6 +22,7 @@ export default class AiAssistService {
 
 	private buffer = '';
 	private openTags: Array<string> = [];
+	private isInlineInsertion: boolean = false;
 
 	/**
 	 * Initializes the AiAssistService with the provided editor and configuration settings.
@@ -55,15 +56,35 @@ export default class AiAssistService {
 		const model = editor.model;
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
+		const root = model.document.getRoot();
+
 		let content: string | undefined;
+		let parentEquivalentHTML: HTMLElement | undefined;
 		let parent: Element | undefined;
-		const position = model.document.selection.getFirstPosition();
-		if ( position ) {
+		const position = model.document.selection.getLastPosition();
+
+		if ( position && root ) {
 			parent = position.parent as Element;
+			const inlineSlash = Array.from( parent.getChildren() ).find( ( child: any ) => child.name === 'inline-slash' ) as Element;
 			const equivalentView = mapper.toViewElement( parent );
-			if ( equivalentView ) {
-				content =
-					view.domConverter.mapViewToDom( equivalentView )?.innerText;
+			parentEquivalentHTML = equivalentView ? view.domConverter.mapViewToDom( equivalentView ) : undefined;
+
+			if ( inlineSlash ) {
+				this.isInlineInsertion = true;
+				const startingPath = inlineSlash.getPath();
+				const endingPath = position?.path;
+				const startPosition = model.createPositionFromPath( root, startingPath ); // Example path
+				const endPosition = model.createPositionFromPath( root, endingPath ); // Example path
+				const range = model.createRange( startPosition, endPosition );
+				content = '';
+
+				for ( const item of range.getItems() ) {
+					if ( item.is( '$textProxy' ) ) {
+						content += item.data.trim(); // Add text data
+					}
+				}
+			} else if ( parentEquivalentHTML ) {
+				content = parentEquivalentHTML?.innerText;
 			}
 		}
 
@@ -74,7 +95,8 @@ export default class AiAssistService {
 
 			aiAssistContext.showLoader( rect );
 			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
-				content ?? ''
+				content ?? '',
+				parentEquivalentHTML?.innerText
 			);
 			if ( parent && gptPrompt ) {
 				await this.fetchAndProcessGptResponse( gptPrompt, parent );
@@ -83,6 +105,7 @@ export default class AiAssistService {
 			console.error( 'Error handling slash command:', error );
 			throw error;
 		} finally {
+			this.isInlineInsertion = false;
 			aiAssistContext.hideLoader();
 		}
 	}
@@ -189,7 +212,7 @@ export default class AiAssistService {
 
 			// Process any remaining content in the buffer
 			if ( contentBuffer.trim() ) {
-				this.processContent( contentBuffer.trim(), parent );
+				await this.processContent( contentBuffer.trim(), parent );
 			}
 		} catch ( error: any ) {
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
@@ -202,7 +225,7 @@ export default class AiAssistService {
 			].includes( errorIdentifier );
 			if ( retries > 0 && isRetryableError ) {
 				console.warn( `Retrying... (${ retries } attempts left)` );
-				return this.fetchAndProcessGptResponse(
+				return await this.fetchAndProcessGptResponse(
 					prompt,
 					parent,
 					retries - 1
@@ -241,18 +264,28 @@ export default class AiAssistService {
 	 * @param parent - The parent element in the editor where the content will be inserted.
 	 */
 	private async processContent( content: string, parent: Element ): Promise<void> {
-		console.log( '--- Start of processContent ---' );
-		console.log( 'Processing content:', content );
+		try {
+			console.log( '--- Start of processContent ---' );
+			console.log( 'Processing content:', content, this.isInlineInsertion );
+			if ( this.isInlineInsertion ) {
+				const position = this.editor.model.document.selection.getLastPosition();
+				const tempParagraph: HTMLElement = document.createElement( 'div' );
+				tempParagraph.innerHTML = content;
+				await this.htmlParser.insertAsText( tempParagraph || '', position ?? undefined, this.streamContent );
+			} else {
+				if ( this.streamContent ) {
+					// Existing complex content processing logic
+					await this.proceedHtmlResponse( content );
+				} else {
+					// Use the simple HTML insertion method
+					await this.htmlParser.insertSimpleHtml( content );
+				}
+			}
 
-		if ( this.streamContent ) {
-			// Existing complex content processing logic
-			await this.proceedHtmlResponse( content );
-		} else {
-			// Use the simple HTML insertion method
-			await this.htmlParser.insertSimpleHtml( content );
+			console.log( '--- End of processContent ---' );
+		} catch ( error ) {
+			console.error( error );
 		}
-
-		console.log( '--- End of processContent ---' );
 	}
 
 	/**
@@ -270,25 +303,23 @@ export default class AiAssistService {
 			const element = child as HTMLElement;
 			if ( element.nodeType === Node.ELEMENT_NODE ) {
 				const elementName = element.tagName.toLowerCase();
-				let isStreamingNotAllow = elementName === 'table';
-				isStreamingNotAllow = isStreamingNotAllow || elementName === 'blockquote';
-				isStreamingNotAllow = isStreamingNotAllow || elementName === 'pre';
-				isStreamingNotAllow = isStreamingNotAllow || elementName === 'img';
-				isStreamingNotAllow = isStreamingNotAllow || elementName === 'form';
-				isStreamingNotAllow = isStreamingNotAllow || elementName === 'figure';
+				const isStreamingNotAllow = [
+					'table', 'blockquote', 'pre', 'img', 'form', 'figure'
+				].includes( elementName );
+
 				if ( isStreamingNotAllow ) {
 					await this.htmlParser.insertSimpleHtml( element.outerHTML );
 				}
 				else if ( elementName === 'ul' || elementName === 'ol' ) {
-					await this.htmlParser.insertAsText( element || '', true, true );
+					await this.htmlParser.insertAsText( element, undefined, true, true );
 				}
 				else {
-					await this.htmlParser.insertAsText( element || '', true );
+					await this.htmlParser.insertAsText( element, undefined, true );
 				}
 			} else if ( element.nodeType === Node.TEXT_NODE && element.textContent ) {
 				const tempParagraph: HTMLElement = document.createElement( 'div' );
 				tempParagraph.innerText = element.textContent;
-				await this.htmlParser.insertAsText( tempParagraph || '', true, true );
+				await this.htmlParser.insertAsText( tempParagraph, undefined, true );
 			}
 		}
 	}
@@ -299,27 +330,39 @@ export default class AiAssistService {
 	 * @param parent - The parent element whose content will be cleared.
 	 */
 	private clearParentContent( parent: Element ): void {
-		this.editor.model.change( writer => {
-			while ( parent.childCount > 0 ) {
-				const child = parent.getChild( 0 );
-				if ( child ) {
-					writer.remove( child );
-				}
-			}
-		} );
+		const editor = this.editor;
+		const model = editor.model;
+		const root = model.document.getRoot();
+		const position = model.document.selection.getLastPosition();
+		const inlineSlash = Array.from( parent.getChildren() ).find( ( child: any ) => child.name === 'inline-slash' ) as Element;
+
+		if ( root && position ) {
+			editor.model.change( writer => {
+				const startingPath = inlineSlash?.getPath() || parent.getPath();
+				const range = model.createRange(
+					model.createPositionFromPath( root, startingPath ),
+					model.createPositionFromPath( root, position.path )
+				);
+				writer.remove( range );
+			} );
+		}
 	}
 
 	/**
 	 * Generates a GPT prompt based on the user's input and the current context in the editor.
+	 * This method processes the input prompt, extracts any URLs, and formats the final prompt
+	 * to be sent to the GPT model. It also handles the case where the editor is empty.
 	 *
-	 * @param prompt - The user's input prompt.
-	 * @returns A promise that resolves to the generated GPT prompt string.
-	 */
+	 * @param prompt - The user's input prompt, typically starting with a slash.
+	 * @param promptContainerText - Optional text from the container that may provide additional context.
+	 * @returns A promise that resolves to the generated GPT prompt string or null if an error occurs.
+	*/
 	private async generateGptPromptBasedOnUserPrompt(
-		prompt: string
+		prompt: string,
+		promptContainerText?: string
 	): Promise<string | null> {
 		try {
-			const context = this.promptHelper.trimContext( prompt );
+			const context = this.promptHelper.trimContext( prompt, promptContainerText );
 			const request = prompt.slice( 1 ); // Remove the leading slash
 			let markDownContents: Array<MarkdownContent> = [];
 			const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;

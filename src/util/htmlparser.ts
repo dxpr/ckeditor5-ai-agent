@@ -177,7 +177,7 @@ export class HtmlParser {
 				}
 				this.model.insertContent( targetElement, insertionPosition );
 				if ( insertionPosition ) {
-					writer.setSelection( insertionPosition );
+					writer.setSelection( targetElement, 'end' );
 				}
 			} );
 		} else {

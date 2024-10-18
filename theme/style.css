@@ -78,14 +78,14 @@
 	font-size: 18px;
 	opacity: 0;
 	animation: fadeInAndPulse 750ms ease-out forwards;
-	color: hsl(9, 72%, 100%);
+	background: hsla(60, 88%, 87%, 1);
+	padding: 0px 5px;
 	text-shadow:
 		0 0 10px hsla(0, 0%, 0%, 100%),
 		0 0 20px hsla(0, 0%, 0%, 90%),
 		0 0 30px hsla(0, 0%, 0%, 80%),
 		0 0 40px hsla(0, 0%, 0%, 70%);
 	display: inline-block;
-	border-radius: 50%;
 }
 
 @keyframes fadeInAndPulse {

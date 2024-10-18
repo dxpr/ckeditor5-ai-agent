@@ -65,7 +65,7 @@ export default class AiAssistService {
 
 		if ( position && root ) {
 			parent = position.parent as Element;
-			const inlineSlash = Array.from( parent.getChildren() ).find( ( child: any ) => child.name === 'inline-slash' ) as Element;
+			const inlineSlash = parent.name === 'inline-slash' ? parent : undefined;
 			const equivalentView = mapper.toViewElement( parent );
 			parentEquivalentHTML = equivalentView ? view.domConverter.mapViewToDom( equivalentView ) : undefined;
 
@@ -76,6 +76,9 @@ export default class AiAssistService {
 				const startPosition = model.createPositionFromPath( root, startingPath ); // Example path
 				const endPosition = model.createPositionFromPath( root, endingPath ); // Example path
 				const range = model.createRange( startPosition, endPosition );
+				parentEquivalentHTML = equivalentView?.parent ?
+					view.domConverter.mapViewToDom( equivalentView.parent ) as HTMLElement :
+					undefined;
 				content = '';
 
 				for ( const item of range.getItems() ) {
@@ -344,6 +347,7 @@ export default class AiAssistService {
 					model.createPositionFromPath( root, position.path )
 				);
 				writer.remove( range );
+				writer.setSelection( model.createPositionFromPath( root, startingPath ) );
 			} );
 		}
 	}

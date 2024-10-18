@@ -45,7 +45,13 @@ export default class AiAssistUI extends Plugin {
 			inheritAllFrom: '$block',
 			isInline: true,
 			isObject: true,
+			allowWhere: '$text',
 			allowAttributes: [ 'class' ]
+		} );
+
+		// Allow the inline-slash element to have text inside it
+		editor.model.schema.extend( '$text', {
+			allowIn: 'inline-slash'
 		} );
 
 		// Set up upcast conversion for inline-slash
@@ -94,9 +100,8 @@ export default class AiAssistUI extends Plugin {
 						const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'slash' } );
 						writer.insertText( '/', inlineSlashContainer );
 						writer.insert( inlineSlashContainer, position );
-						const newPosition = writer.createPositionAfter( inlineSlashContainer );
-						writer.insertText( ' ', newPosition );
-						writer.setSelection( position.getShiftedBy( 2 ) );
+						const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
+						writer.setSelection( newPosition );
 					}
 				} );
 

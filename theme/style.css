@@ -74,21 +74,22 @@
 	opacity: 1;
 }
 
-.slash {
+/* style for slash animation */
+.ck-slash {
 	font-size: 18px;
 	opacity: 0;
-	animation: fadeInAndPulse 750ms ease-out forwards;
+	animation: ck-fade-in-pulse 750ms ease-out forwards;
 	background: hsla(60, 88%, 87%, 1);
 	padding: 0px 5px;
 	text-shadow:
-		0 0 10px hsla(0, 0%, 0%, 100%),
-		0 0 20px hsla(0, 0%, 0%, 90%),
-		0 0 30px hsla(0, 0%, 0%, 80%),
-		0 0 40px hsla(0, 0%, 0%, 70%);
+		0 0 10px var(--ck-color-widget-hover-border),
+		0 0 20px var(--ck-color-widget-hover-border),
+		0 0 30px var(--ck-color-widget-hover-border),
+		0 0 40px var(--ck-color-widget-hover-border);
 	display: inline-block;
 }
 
-@keyframes fadeInAndPulse {
+@keyframes ck-fade-in-pulse {
 	0% {
 		opacity: 0;
 		transform: scale(1);
@@ -100,10 +101,10 @@
 		transform: scale(1.1);
 		color: hsl(0, 0%, 100%);
 		text-shadow:
-			0 0 10px hsla(0, 0%, 0%, 100%),
-			0 0 20px hsla(0, 0%, 0%, 90%),
-			0 0 30px hsla(0, 0%, 0%, 80%),
-			0 0 40px hsla(0, 0%, 0%, 70%);
+			0 0 10px var(--ck-color-widget-hover-border),
+			0 0 20px var(--ck-color-widget-hover-border),
+			0 0 30px var(--ck-color-widget-hover-border),
+			0 0 40px var(--ck-color-widget-hover-border);
 	}
 
 	100% {
@@ -115,7 +116,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.slash {
+	.ck-slash {
 		animation: none;
 		opacity: 1;
 		text-shadow: none;

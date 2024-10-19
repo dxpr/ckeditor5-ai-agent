@@ -1,6 +1,6 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import { ButtonView } from 'ckeditor5/src/ui.js';
-import ckeditor5Icon from '../theme/icons/ckeditor.svg';
+import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
+import aiAssistIcon from '../theme/icons/ai-assist.svg';
 import { aiAssistContext } from './aiassistcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
 
@@ -40,19 +40,72 @@ export default class AiAssistUI extends Plugin {
 		const editor = this.editor;
 		const t = editor.t;
 
+		// Register the inline-slash schema
+		editor.model.schema.register( 'inline-slash', {
+			inheritAllFrom: '$block',
+			isInline: true,
+			isObject: true,
+			allowWhere: '$text',
+			allowAttributes: [ 'class' ]
+		} );
+
+		// Allow the inline-slash element to have text inside it
+		editor.model.schema.extend( '$text', {
+			allowIn: 'inline-slash'
+		} );
+
+		// Set up upcast conversion for inline-slash
+		editor.conversion.for( 'upcast' ).elementToElement( {
+			view: {
+				name: 'inline-slash',
+				attributes: [ 'class' ]
+			},
+			model: ( viewElement, { writer } ) => {
+				return writer.createElement( 'inline-slash', {
+					class: viewElement.getAttribute( 'class' )
+				} );
+			},
+			converterPriority: 'high'
+		} );
+
+		editor.conversion.for( 'downcast' ).elementToElement( {
+			model: {
+				name: 'inline-slash',
+				attributes: [ 'class' ]
+			},
+			view: ( modelElement, { writer } ) => {
+				return writer.createContainerElement( 'inline-slash', {
+					class: modelElement.getAttribute( 'class' )
+				} );
+			}
+		} );
+
 		this.addPlaceholder();
 		this.addLoader();
 		this.addGptErrorToolTip();
 
 		editor.ui.componentFactory.add( 'aiAssistButton', locale => {
+			const dropdownView = createDropdown( locale, SplitButtonView );
 			const view = new ButtonView( locale );
+			// const view =  dropdownView.buttonView;
 			view.set( {
 				label: t( 'Ai assist' ),
-				icon: ckeditor5Icon,
+				icon: aiAssistIcon,
 				tooltip: true
 			} );
 			view.on( 'execute', () => {
-				editor.execute( 'aiAssist' );
+				this.editor.model.change( writer => {
+					const position = this.editor.model.document.selection.getLastPosition();
+					if ( position ) {
+						const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
+						writer.insertText( '/', inlineSlashContainer );
+						writer.insert( inlineSlashContainer, position );
+						const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
+						writer.setSelection( newPosition );
+					}
+				} );
+
+				editor.editing.view.focus();
 			} );
 			return view;
 		} );
@@ -89,6 +142,23 @@ export default class AiAssistUI extends Plugin {
 			setTimeout( () => {
 				this.applyPlaceholderToCurrentLine();
 			}, 10 );
+			const modelRoot = editor.model.document.getRoot();
+			if ( modelRoot ) {
+				const modelRange = editor.model.createRangeIn( modelRoot );
+				const itemsToRemove: Array<any> = [];
+				for ( const item of modelRange.getItems() ) {
+					if ( item.is( 'element', 'inline-slash' ) && item.isEmpty ) {
+						itemsToRemove.push( item ); // Collect empty items
+					}
+				}
+
+				// Remove collected empty inline-slash elements
+				editor.model.change( writer => {
+					for ( const item of itemsToRemove ) {
+						writer.remove( item );
+					}
+				} );
+			}
 		} );
 
 		editor.editing.view.document.on( 'scroll', () => {

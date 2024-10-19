@@ -22,14 +22,16 @@ export class PromptHelper {
 	}
 
 	/**
-	 * Generates the system prompt to guide the AI in generating responses.
+	 * Constructs the system prompt that guides the AI in generating responses.
 	 *
-	 * This method constructs a set of instructions and context that the AI will use
-	 * to generate responses based on user input and provided content.
+	 * This method assembles a comprehensive set of instructions and context
+	 * that the AI will utilize to formulate responses based on user input
+	 * and the provided content, ensuring adherence to specified rules and formats.
 	 *
+	 * @param isInlineResponse - A boolean indicating whether the response should be inline.
 	 * @returns A string containing the formatted system prompt for the AI.
-	 */
-	public getSystemPrompt(): string {
+	*/
+	public getSystemPrompt( isInlineResponse: boolean = false ): string {
 		const corpus: Array<string> = [];
 		corpus.push(
 			`You will be provided with a partially written article with """@@@cursor@@@""" somewhere 
@@ -58,7 +60,7 @@ export class PromptHelper {
 		corpus.push( 'While generating the response, adhere to the following rules:' );
 		corpus.push(
 			`1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, 
-			ensuring that the response is primarily based on the request.`
+			ensuring that the response must primarily based on the request.`
 		);
 		corpus.push(
 			`2. Avoid including any part of the context in the output at any cost, 
@@ -83,7 +85,19 @@ export class PromptHelper {
 		corpus.push(
 			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.'
 		);
-		corpus.push( 'Above are the rules that apply every time, but below will only be applied if markdown content is present' );
+		if ( isInlineResponse ) {
+			corpus.push(
+				`9: Determine from the context, task, and the position of the @@@cursor@@@ whether the request 
+				involves list items, table cells, or inline content.
+				- List items: Format each item as <li> within an <ol> or <ul> as appropriate.
+				- Table cells: Present each item in plain text, wrapping it within <p> tags.
+				- Inline content: Wrap entire response in a single <p> tag, ensuring it fits seamlessly within the existing paragraph or 
+				sentence structure where the @@@cursor@@@ is located.
+				Strictly adherence to these rules is mandatory to avoid errors, based on where the @@@cursor@@@ is placed within content.`
+			);
+		}
+
+		corpus.push( 'Above are the rules apply every time, but below will only be applied if markdown content is present' );
 		corpus.push(
 			'1. Extract each content as plain text without any special formatting, emphasis, or markdown'
 		);
@@ -107,11 +121,12 @@ export class PromptHelper {
 		corpus.push( '5. Ensure valid nesting of elements.' );
 		corpus.push( '6. Use the following allowed HTML tags:' );
 		corpus.push( `${ this.getAllowedHtmlTags().join( ', ' ) }` );
-		corpus.push( '7. Ensure all HTML tags are properly closed and nested.' );
-		corpus.push( '8. Do not include any HTML, HEAD, or BODY tags.' );
-		corpus.push( '9. Do not use inline styles or class attributes unless specifically requested.' );
-		corpus.push( '10. Provide clean, valid HTML.' );
-		corpus.push( '11. The beginning word of the response must be a valid HTML tag' );
+		corpus.push( '7. Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( '8. Ensure all HTML tags are properly closed and nested.' );
+		corpus.push( '9. Do not include any HTML, HEAD, or BODY tags.' );
+		corpus.push( '10. Avoid using inline styles or class attributes unless specifically requested.' );
+		corpus.push( '11. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.' );
+		corpus.push( '12. Beginning word of response must be a valid html tag' );
 
 		// Join all instructions into a single formatted string.
 		const systemPrompt = corpus.join( '\n' );
@@ -171,10 +186,6 @@ export class PromptHelper {
 		// Instructions
 		corpus.push( '\n\nINSTRUCTIONS:\n\n' );
 		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
-		corpus.push( 'Generate the response as an HTML snippet using only the allowed HTML tags.' );
-		corpus.push( 'Ensure all HTML tags are properly closed and nested.' );
-		corpus.push( 'Do not include any HTML, HEAD, or BODY tags.' );
-		corpus.push( 'Use appropriate HTML tags to structure the content (e.g., <ul> for lists, <h1> for main headings).' );
 
 		// Response Output Format
 		if ( this.responseOutputFormat.length ) {
@@ -236,18 +247,28 @@ export class PromptHelper {
 
 	/**
 	 * Trims the context around the user's prompt to create a suitable context for the AI model.
+	 * This method identifies the position of the user's prompt within the provided text and extracts
+	 * the surrounding context, placing a cursor placeholder where the prompt is located.
 	 *
-	 * @param prompt - The user's prompt string.
-	 * @returns The trimmed context string with a cursor placeholder.
-	 */
-	public trimContext( prompt: string ): string {
+	 * @param prompt - The user's prompt string to locate within the context.
+	 * @param promptContainerText - The text container in which the prompt is located (optional).
+	 * @returns The trimmed context string with a cursor placeholder indicating the prompt's position.
+	*/
+	public trimContext( prompt: string, promptContainerText: string = '' ): string {
 		let contentBeforePrompt = '';
 		let contentAfterPrompt = '';
-
+		const splitText = promptContainerText ?? prompt;
 		const editor = this.editor;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
 		const context = view?.innerText ?? '';
-		const contextParts = context.split( prompt );
+
+		const matchIndex = context.indexOf( splitText );
+		const nextEnterIndex = context.indexOf( '\n', matchIndex );
+		const firstNewlineIndex = nextEnterIndex !== -1 ? nextEnterIndex : matchIndex + splitText.length;
+		const beforeNewline = context.substring( 0, firstNewlineIndex );
+		const afterNewline = context.substring( firstNewlineIndex + 1 );
+		const contextParts = [ beforeNewline, afterNewline ];
+
 		const allocatedEditorContextToken = Math.floor( this.contextSize * 0.3 );
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
@@ -274,7 +295,9 @@ export class PromptHelper {
 		}
 
 		// Combine the trimmed context with the cursor placeholder
-		const trimmedContext = `${ contentBeforePrompt }\n"@@@cursor@@@"\n${ contentAfterPrompt }`;
+		const escapedPrompt = prompt.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ); // Escapes special characters
+		contentBeforePrompt = contentBeforePrompt.trim().replace( new RegExp( escapedPrompt.slice( 1 ) ), '@@@cursor@@@' );
+		const trimmedContext = `${ contentBeforePrompt }\n${ contentAfterPrompt }`;
 		return trimmedContext.trim();
 	}
 
@@ -548,7 +571,9 @@ export class PromptHelper {
 		let charCount = 0;
 		// Tokenize the content into sentences using the sbd library
 		const sentences = sbd.sentences( contentAfterPrompt, {
-			preserve_whitespace: true
+			preserve_whitespace: true,
+			html_boundaries: true,
+			allowed_tags: [ 'blockquote', 'figcaption', 'pre', 'h2', 'h1', 'h3', 'img', 'p', 'table', 'td', 'tr', 'li', 'hr', 'br' ]
 		} );
 
 		// Iterate over the sentences based on the direction

@@ -42,12 +42,17 @@
 	animation: inherit;
 	animation-delay: -0.5s;
 }
+
 .gpt-loader:after {
 	animation-delay: -1s;
 }
+
 @keyframes l2 {
-	100% {box-shadow: 0 0 0 40px hsla(224, 100%, 3%, 0)}
+	100% {
+		box-shadow: 0 0 0 40px hsla(224, 100%, 3%, 0)
+	}
 }
+
 /* style for response error */
 
 .response-error {
@@ -67,4 +72,53 @@
 
 .show-response-error {
 	opacity: 1;
+}
+
+/* style for slash animation */
+.ck-slash {
+	font-size: 18px;
+	opacity: 0;
+	animation: ck-fade-in-pulse 750ms ease-out forwards;
+	background: hsla(60, 88%, 87%, 1);
+	padding: 0px 5px;
+	text-shadow:
+		0 0 10px var(--ck-color-widget-hover-border),
+		0 0 20px var(--ck-color-widget-hover-border),
+		0 0 30px var(--ck-color-widget-hover-border),
+		0 0 40px var(--ck-color-widget-hover-border);
+	display: inline-block;
+}
+
+@keyframes ck-fade-in-pulse {
+	0% {
+		opacity: 0;
+		transform: scale(1);
+		color: hsl(9, 72%, 100%);
+	}
+
+	50% {
+		opacity: 1;
+		transform: scale(1.1);
+		color: hsl(0, 0%, 100%);
+		text-shadow:
+			0 0 10px var(--ck-color-widget-hover-border),
+			0 0 20px var(--ck-color-widget-hover-border),
+			0 0 30px var(--ck-color-widget-hover-border),
+			0 0 40px var(--ck-color-widget-hover-border);
+	}
+
+	100% {
+		opacity: 1;
+		transform: scale(1);
+		color: inherit;
+		text-shadow: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ck-slash {
+		animation: none;
+		opacity: 1;
+		text-shadow: none;
+	}
 }

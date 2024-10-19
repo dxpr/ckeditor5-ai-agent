@@ -22,14 +22,16 @@ export class PromptHelper {
 	}
 
 	/**
-	 * Generates the system prompt to guide the AI in generating responses.
+	 * Constructs the system prompt that guides the AI in generating responses.
 	 *
-	 * This method constructs a set of instructions and context that the AI will use
-	 * to generate responses based on user input and provided content.
+	 * This method assembles a comprehensive set of instructions and context
+	 * that the AI will utilize to formulate responses based on user input
+	 * and the provided content, ensuring adherence to specified rules and formats.
 	 *
+	 * @param isInlineResponse - A boolean indicating whether the response should be inline.
 	 * @returns A string containing the formatted system prompt for the AI.
-	 */
-	public getSystemPrompt(): string {
+	*/
+	public getSystemPrompt( isInlineResponse: boolean = false ): string {
 		const corpus: Array<string> = [];
 		corpus.push(
 			`You will be provided with a partially written article with """@@@cursor@@@""" somewhere 
@@ -83,15 +85,18 @@ export class PromptHelper {
 		corpus.push(
 			'8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.'
 		);
-		corpus.push(
-			`9: Determine from the context, task, and the position of the @@@cursor@@@ whether the request 
-			involves list items, table cells, or inline content.
-			- list items: Format each item as <li> within an <ol> or <ul> as appropriate.
-			- table cells: Present each item in plain text, wrapping it within <p> tags.
-			- inline content: Wrap the entire response in a single <p> tag, ensuring it fits seamlessly within the existing paragraph or 
-			sentence structure where the @@@cursor@@@ is located.
-			Strictly adherence to these rules is mandatory to avoid errors, based on where the @@@cursor@@@ is placed within the content.`
-		);
+		if ( isInlineResponse ) {
+			corpus.push(
+				`9: Determine from the context, task, and the position of the @@@cursor@@@ whether the request 
+				involves list items, table cells, or inline content.
+				- List items: Format each item as <li> within an <ol> or <ul> as appropriate.
+				- Table cells: Present each item in plain text, wrapping it within <p> tags.
+				- Inline content: Wrap entire response in a single <p> tag, ensuring it fits seamlessly within the existing paragraph or 
+				sentence structure where the @@@cursor@@@ is located.
+				Strictly adherence to these rules is mandatory to avoid errors, based on where the @@@cursor@@@ is placed within content.`
+			);
+		}
+
 		corpus.push( 'Above are the rules apply every time, but below will only be applied if markdown content is present' );
 		corpus.push(
 			'1. Extract each content as plain text without any special formatting, emphasis, or markdown'

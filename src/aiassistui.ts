@@ -97,7 +97,7 @@ export default class AiAssistUI extends Plugin {
 				this.editor.model.change( writer => {
 					const position = this.editor.model.document.selection.getLastPosition();
 					if ( position ) {
-						const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'slash' } );
+						const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
 						writer.insertText( '/', inlineSlashContainer );
 						writer.insert( inlineSlashContainer, position );
 						const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );

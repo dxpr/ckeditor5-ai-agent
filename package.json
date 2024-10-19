@@ -12,7 +12,7 @@
     "ckeditor5-package-generator"
   ],
   "type": "module",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
@@ -74,8 +74,8 @@
     "lint": "eslint \"**/*.{js,ts}\" --quiet",
     "lint-fix": "eslint \"**/*.{js,ts}\" --fix",
     "start": "ckeditor5-package-tools start",
-    "stylelint": "stylelint --quiet --allow-empty-input 'theme/**/*.css'",
-    "stylelint-fix": "stylelint --quiet --allow-empty-input --fix 'theme/**/*.css'",
+    "stylelint": "stylelint --quiet --allow-empty-input 'theme/**/*.css' --ignore-path .stylelintignore",
+    "stylelint-fix": "stylelint --quiet --allow-empty-input --fix 'theme/**/*.css' --ignore-path .stylelintignore",
     "test": "ckeditor5-package-tools test",
     "prepare": "yarn run dll:build && yarn run build:dist",
     "prepublishOnly": "yarn run ts:build && ckeditor5-package-tools export-package-as-javascript",

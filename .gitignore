@@ -1,15 +1,8 @@
-yarn.lock
-package-lock.json
-build/
+.nyc_output/
 coverage/
-dist/
 node_modules/
-tmp/
-sample/ckeditor.dist.js
-
-# Ignore compiled TypeScript files.
-src/**/*.js
-src/**/*.d.ts
+.idea
+/release/
 
 .DS_Store
 .env

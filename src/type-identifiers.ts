@@ -5,7 +5,8 @@ export type AiModel =
     'gpt-4' |
     'gpt-4-turbo' |
     'gpt-4o' |
-    'gpt-4o-mini';
+    'gpt-4o-mini' |
+    'kavya-m1';
 
 export interface MarkdownContent {
     content: string;

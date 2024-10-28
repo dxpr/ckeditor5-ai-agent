@@ -3,6 +3,7 @@ import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js
 import aiAssistIcon from '../theme/icons/ai-assist.svg';
 import { aiAssistContext } from './aiassistcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
+import { env } from 'ckeditor5/src/utils.js';
 
 export default class AiAssistUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -109,6 +110,40 @@ export default class AiAssistUI extends Plugin {
 			} );
 			return view;
 		} );
+
+		editor.ui.componentFactory.add( 'customPositionButton', locale => {
+			const buttonView = new ButtonView( locale );
+			const cmd = '\u2318'; // Unicode for the Command key (⌘)
+			const ctrl = '\u2303'; // Unicode for the Control key (⌃)
+			const keystroke = env.isMac ? `${ cmd }\u232B` : `${ ctrl }\u232B`;
+			buttonView.set( {
+				withKeystroke: true,
+				label: `${ keystroke } Cancel Generation`,
+				labelStyle: 'font-weight: 100; font-size:0.85em; color: gray',
+				withText: true, // Show button text
+				class: 'ck-cancel-request'
+			} );
+
+			// Execute action when button is clicked
+			buttonView.on( 'execute', () => {
+				// this.editor.fire(`CancelGeneration`);
+			} );
+
+			// Return the button view
+			return buttonView;
+		} );
+
+		const buttonContainer = document.createElement( 'div' );
+		buttonContainer.id = 'customButtonContainer';
+		buttonContainer.style.position = 'fixed';
+		buttonContainer.style.top = '50px'; // Change top and left to your desired position
+		buttonContainer.style.left = '20px';
+
+		const button = editor.ui.componentFactory.create( 'customPositionButton' );
+		button.render(); // Render the button
+
+		buttonContainer.appendChild( button.element! );
+		document.body.appendChild( buttonContainer );
 	}
 
 	/**
@@ -339,6 +374,18 @@ export default class AiAssistUI extends Plugin {
 	 * Hides the error tooltip element from the document.
 	 */
 	private hideGptErrorToolTip(): void {
+		const tooltipElement = document.getElementById(
+			this.GPT_RESPONSE_ERROR_ID
+		);
+		if ( tooltipElement ) {
+			tooltipElement.classList.remove( 'show-response-error' );
+		}
+	}
+
+	/**
+	 * Hides the error tooltip element from the document.
+	 */
+	private add(): void {
 		const tooltipElement = document.getElementById(
 			this.GPT_RESPONSE_ERROR_ID
 		);

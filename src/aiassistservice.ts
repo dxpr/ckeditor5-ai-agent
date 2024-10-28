@@ -23,6 +23,7 @@ export default class AiAssistService {
 	private buffer = '';
 	private openTags: Array<string> = [];
 	private isInlineInsertion: boolean = false;
+	private abortController?: AbortController;
 
 	/**
 	 * Initializes the AiAssistService with the provided editor and configuration settings.
@@ -129,9 +130,10 @@ export default class AiAssistService {
 		console.log( 'Starting fetchAndProcessGptResponse' );
 		const editor = this.editor;
 		const t = editor.t;
-		const controller = new AbortController();
+		this.abortController = new AbortController();
+		console.log( this.abortController );
 		const timeoutId = setTimeout(
-			() => controller.abort(),
+			() => this.abortController?.abort(),
 			this.timeOutDuration
 		);
 
@@ -156,7 +158,7 @@ export default class AiAssistService {
 					stop: this.stopSequences,
 					stream: true
 				} ),
-				signal: controller.signal
+				signal: this.abortController.signal
 			} );
 
 			clearTimeout( timeoutId );
@@ -390,5 +392,9 @@ export default class AiAssistService {
 			console.error( error );
 			return null;
 		}
+	}
+
+	public async cancelResponseGeneration(): Promise<void> {
+		console.log( this.abortController?.signal );
 	}
 }

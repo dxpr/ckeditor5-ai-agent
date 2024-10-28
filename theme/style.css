@@ -122,3 +122,17 @@
 		text-shadow: none;
 	}
 }
+
+.ck-cancel-request {
+	border: 1px solid hsla(0, 0%, 86%, 1) !important;
+	padding: 5px 10px !important;
+	min-height: 1.7em !important;
+	max-height: 1.7em !important;
+	border-radius: 0.25em !important;
+	cursor: pointer !important;
+	background-color: hsla(0, 0%, 97%, 1) !important;
+}
+
+.ck-cancel-request-label {
+	font-weight: 200 !important;
+}

@@ -3,6 +3,7 @@ import type AiAssistService from './aiassistservice.js';
 import type { Editor } from 'ckeditor5';
 export default class AiAssistCommand extends Command {
 	private aiAssistService: AiAssistService;
+	private abortController?: AbortController;
 
 	/**
 	 * Creates an instance of the AiAssistCommand.
@@ -13,6 +14,12 @@ export default class AiAssistCommand extends Command {
 	constructor( editor: Editor, aiAssistService: AiAssistService ) {
 		super( editor );
 		this.aiAssistService = aiAssistService;
+
+		// Listen for the custom event from Command A
+		this.listenTo( editor, 'CancelGeneration', ( evt, data ) => {
+			console.log( this.abortController );
+			this.aiAssistService.cancelResponseGeneration();
+		} );
 	}
 
 	/**
@@ -31,6 +38,7 @@ export default class AiAssistCommand extends Command {
 	 * @param options - An optional parameter for additional execution options.
 	 */
 	public override async execute(): Promise<void> {
+		this.abortController = new AbortController();
 		await this.aiAssistService.handleSlashCommand();
 	}
 }

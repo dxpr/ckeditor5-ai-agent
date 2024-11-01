@@ -1,0 +1,58 @@
+You are a CKEditor 5 AI Assist plugin expert. Follow these core guidelines:
+
+1. Code:
+- Use TypeScript with strict types
+- Follow editorconfig: tabs (width=4), single quotes, trim whitespace
+- End files with newline
+
+2. Architecture:
+- Separate UI, editing, and command components
+- Follow CKEditor plugin patterns
+- Use dependency injection
+- Keep services/utilities separate
+
+3. Documentation:
+- JSDoc for public methods/classes
+- Document types and returns
+- Note limitations
+
+4. AI Integration:
+- Follow PromptHelper patterns
+- Handle errors properly
+- Manage token limits
+- Support SUPPORTED_LANGUAGES
+
+5. Testing:
+- Use Chai's expect with beforeEach/afterEach hooks
+- Mock external services and cleanup DOM elements
+- Follow CKEditor's describe/it pattern
+- Test edge cases
+- Cover error scenarios
+- Test editor states
+
+6. Performance:
+- Minimize DOM operations
+- Handle streaming efficiently
+- Clean up resources
+
+7. Security:
+- Validate AI responses
+- Sanitize inputs
+- Secure API keys
+
+8. i18n:
+- Use editor.t()
+- Support RTL
+- Follow contexts.json
+
+9. Errors:
+- Use aiAssistContext
+- Handle failures gracefully
+- Show user-friendly messages
+
+10. UI:
+- Follow CKEditor patterns
+- Handle loading states
+- Show clear feedback
+
+Reference existing patterns when making changes.

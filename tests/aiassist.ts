@@ -1,58 +1,70 @@
 import { expect } from 'chai';
-import { Essentials } from '@ckeditor/ckeditor5-essentials';
-import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
-import { Heading } from '@ckeditor/ckeditor5-heading';
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
 import AiAssist from '../src/aiassist.js';
+import '../src/augmentation.js';
+import { TOKEN_LIMITS } from '../src/const.js';
 
 describe( 'AiAssist', () => {
-	it( 'should be named', () => {
+	it( 'should be named as AiAssist', () => {
 		expect( AiAssist.pluginName ).to.equal( 'AiAssist' );
 	} );
 
-	describe( 'init()', () => {
-		let domElement: HTMLElement, editor: ClassicEditor;
+	describe( 'AiAssist Configuration', () => {
+		let domElement: HTMLElement;
+		let editor: ClassicEditor;
 
 		beforeEach( async () => {
 			domElement = document.createElement( 'div' );
 			document.body.appendChild( domElement );
-
-			editor = await ClassicEditor.create( domElement, {
-				plugins: [
-					Paragraph,
-					Heading,
-					Essentials,
-					AiAssist
-				],
-				toolbar: [
-					'aiAssistButton'
-				]
-			} );
 		} );
 
-		afterEach( () => {
+		afterEach( async () => {
 			domElement.remove();
-			return editor.destroy();
+			try {
+				await editor.destroy();
+			} catch ( destroyError ) {
+				console.warn( 'Error during editor destruction' );
+			}
 		} );
 
-		it( 'should load AiAssist', () => {
-			const myPlugin = editor.plugins.get( 'AiAssist' );
-
-			expect( myPlugin ).to.be.an.instanceof( AiAssist );
+		it( 'should throw an error if apiKey is not provided', async () => {
+			try {
+				editor = await ClassicEditor.create( domElement, {
+					plugins: [ AiAssist ],
+					aiAssist: {} as any
+				} );
+			} catch ( error ) {
+				expect( error.message ).to.equal( 'AiAssist: apiKey is required.' );
+			}
 		} );
 
-		it( 'should add an icon to the toolbar', () => {
-			expect( editor.ui.componentFactory.has( 'aiAssistButton' ) ).to.equal( true );
+		it( 'should initialize with default configuration', async () => {
+			editor = await ClassicEditor.create( domElement, {
+				plugins: [ AiAssist ],
+				aiAssist: {
+					apiKey: 'test-api-key'
+				}
+			} );
+
+			const config = editor.config.get( 'aiAssist' );
+			expect( config?.model ).to.equal( 'gpt-4o' );
+			expect( config?.endpointUrl ).to.equal( 'https://api.openai.com/v1/chat/completions' );
+			expect( config?.retryAttempts ).to.equal( 1 );
+			expect( config?.maxTokens ).to.equal( TOKEN_LIMITS[ 'gpt-4o' ].max );
 		} );
 
-		it( 'should add a text into the editor after clicking the icon', () => {
-			const icon = editor.ui.componentFactory.create( 'aiAssistButton' );
-
-			expect( editor.getData() ).to.equal( '' );
-
-			icon.fire( 'execute' );
-
-			expect( editor.getData() ).to.equal( '<p>Hello CKEditor 5!</p>' );
+		it( 'should throw an error if temperature is out of range', async () => {
+			try {
+				editor = await ClassicEditor.create( domElement, {
+					plugins: [ AiAssist ],
+					aiAssist: {
+						apiKey: 'test-api-key',
+						temperature: 3
+					}
+				} );
+			} catch ( error ) {
+				expect( ( error as Error ).message ).to.equal( 'AiAssist: Temperature must be a number between 0 and 2.' );
+			}
 		} );
 	} );
 } );

@@ -18,15 +18,6 @@ describe( 'AiAssist', () => {
 			document.body.appendChild( domElement );
 		} );
 
-		afterEach( async () => {
-			domElement.remove();
-			try {
-				await editor.destroy();
-			} catch ( destroyError ) {
-				console.warn( 'Error during editor destruction' );
-			}
-		} );
-
 		it( 'should throw an error if apiKey is not provided', async () => {
 			try {
 				editor = await ClassicEditor.create( domElement, {
@@ -51,6 +42,8 @@ describe( 'AiAssist', () => {
 			expect( config?.endpointUrl ).to.equal( 'https://api.openai.com/v1/chat/completions' );
 			expect( config?.retryAttempts ).to.equal( 1 );
 			expect( config?.maxTokens ).to.equal( TOKEN_LIMITS[ 'gpt-4o' ].max );
+
+			editor?.destroy();
 		} );
 
 		it( 'should throw an error if temperature is out of range', async () => {

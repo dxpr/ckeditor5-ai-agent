@@ -91,7 +91,6 @@ describe( 'HtmlParser', () => {
 			writer.insertText( 'Streamed text', element );
 		} );
 
-		await new Promise( resolve => setTimeout( resolve, 100 ) );
 		const spy = sinon.spy( editor.model, 'change' );
 
 		await htmlParser.insertElementAsStream( element );

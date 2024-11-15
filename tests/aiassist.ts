@@ -157,5 +157,21 @@ describe( 'AiAssist', () => {
 				}
 			}
 		} );
+
+		it( 'should throw an error if maxTokens is out of range', async () => {
+			try {
+				editor = await ClassicEditor.create( domElement, {
+					plugins: [ AiAssist ],
+					aiAssist: {
+						apiKey: 'test-api-key',
+						model: 'gpt-4o',
+						maxTokens: 10000
+					}
+				} );
+			} catch ( error ) {
+				const { min, max } = TOKEN_LIMITS[ 'gpt-4o' ];
+				expect( ( error as Error ).message ).to.equal( `AiAssist: maxTokens must be a number between ${ min } and ${ max }.` );
+			}
+		} );
 	} );
 } );

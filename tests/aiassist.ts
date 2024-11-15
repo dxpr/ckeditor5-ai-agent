@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import '../src/augmentation.js';
 import { TOKEN_LIMITS } from '../src/const.js';
 import AiAssist from '../src/aiassist.js';
-import { ClassicEditor, Paragraph } from 'ckeditor5/src/index.js';
+import { ClassicEditor, Paragraph, Heading } from 'ckeditor5/src/index.js';
 
 describe( 'AiAssist', () => {
 	it( 'should be named AiAssist', () => {
@@ -66,7 +66,6 @@ describe( 'AiAssist', () => {
 				plugins: [
 					Paragraph,
 					Heading,
-					Essentials,
 					AiAssist
 				],
 				toolbar: [
@@ -136,6 +135,9 @@ describe( 'AiAssist', () => {
 				} );
 			} catch ( error ) {
 				expect( error.message ).to.equal( 'AiAssist: apiKey is required.' );
+				if ( editor ) {
+					editor.destroy();
+				}
 			}
 		} );
 
@@ -150,6 +152,9 @@ describe( 'AiAssist', () => {
 				} );
 			} catch ( error ) {
 				expect( ( error as Error ).message ).to.equal( 'AiAssist: Temperature must be a number between 0 and 2.' );
+				if ( editor ) {
+					editor.destroy();
+				}
 			}
 		} );
 	} );

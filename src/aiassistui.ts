@@ -1,5 +1,5 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
+import { ButtonView } from 'ckeditor5/src/ui.js';
 import aiAssistIcon from '../theme/icons/ai-assist.svg';
 import { aiAssistContext } from './aiassistcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
@@ -36,7 +36,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Initializes UI components such as placeholders, loaders, and buttons for the editor.
 	 */
-	private initializeUIComponents(): void {
+	public initializeUIComponents(): void {
 		const editor = this.editor;
 		const t = editor.t;
 
@@ -85,7 +85,7 @@ export default class AiAssistUI extends Plugin {
 		this.addGptErrorToolTip();
 
 		editor.ui.componentFactory.add( 'aiAssistButton', locale => {
-			const dropdownView = createDropdown( locale, SplitButtonView );
+			// const dropdownView = createDropdown( locale, SplitButtonView );
 			const view = new ButtonView( locale );
 			// const view =  dropdownView.buttonView;
 			view.set( {
@@ -115,7 +115,7 @@ export default class AiAssistUI extends Plugin {
 	 * Initializes the UI language settings based on the editor's locale.
 	 * Displays an error tooltip if the current language is unsupported.
 	 */
-	private initializeUILanguage(): void {
+	public initializeUILanguage(): void {
 		const editor = this.editor;
 		const t = editor.t;
 		const contentLanguageCode = editor.locale.contentLanguage;
@@ -128,7 +128,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Attaches event listeners to the editor for handling user interactions and content changes.
 	 */
-	private attachListener(): void {
+	public attachListener(): void {
 		const editor = this.editor;
 		const model = editor.model;
 
@@ -204,7 +204,7 @@ export default class AiAssistUI extends Plugin {
 	 * @param element - The model element for which to get the DOM rectangle.
 	 * @returns A promise that resolves to the DOMRect of the element, or null if not found.
 	 */
-	private async getRectDomOfGivenModelElement(
+	public async getRectDomOfGivenModelElement(
 		element: any
 	): Promise<DOMRect | null | undefined> {
 		const editor = this.editor;
@@ -226,7 +226,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Adds a placeholder element to the document body for user interaction.
 	 */
-	private addPlaceholder(): void {
+	public addPlaceholder(): void {
 		const editor = this.editor;
 		const t = editor.t;
 		const placeholder = document.createElement( 'p' );
@@ -244,7 +244,7 @@ export default class AiAssistUI extends Plugin {
 	 *
 	 * @param rect - The DOMRect object defining the position to show the placeholder.
 	 */
-	private showPlaceHolder( rect?: DOMRect ): void {
+	public showPlaceHolder( rect?: DOMRect ): void {
 		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
 		const isReadOnlyMode = this.editor.isReadOnly;
 		if ( ele && rect && !isReadOnlyMode ) {
@@ -259,7 +259,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Hides the placeholder element from the document.
 	 */
-	private hidePlaceHolder(): void {
+	public hidePlaceHolder(): void {
 		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
 		if ( ele ) {
 			ele.classList.remove( 'show-place-holder' );
@@ -269,7 +269,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Adds a loader element to the document body for indicating processing.
 	 */
-	private addLoader(): void {
+	public addLoader(): void {
 		const loaderElement = document.createElement( 'div' );
 		loaderElement.id = this.GPT_RESPONSE_LOADER_ID;
 		loaderElement.classList.add( 'gpt-loader' );
@@ -305,7 +305,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Adds an error tooltip element to the document body for displaying error messages.
 	 */
-	private addGptErrorToolTip(): void {
+	public addGptErrorToolTip(): void {
 		const tooltipElement = document.createElement( 'p' );
 		tooltipElement.id = this.GPT_RESPONSE_ERROR_ID;
 		tooltipElement.classList.add( 'response-error' );
@@ -338,7 +338,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Hides the error tooltip element from the document.
 	 */
-	private hideGptErrorToolTip(): void {
+	public hideGptErrorToolTip(): void {
 		const tooltipElement = document.getElementById(
 			this.GPT_RESPONSE_ERROR_ID
 		);

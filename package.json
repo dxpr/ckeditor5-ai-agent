@@ -57,6 +57,7 @@
     "http-server": "^14.1.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.6",
+    "sinon": "^19.0.2",
     "stylelint": "^13.13.1",
     "stylelint-config-ckeditor5": ">=6.0.0",
     "ts-node": "^10.9.1",

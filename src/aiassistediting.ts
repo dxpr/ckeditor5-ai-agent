@@ -2,7 +2,6 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import AiAssistCommand from './aiassistcommand.js';
 import type { Element } from 'ckeditor5';
 import AiAssistService from './aiassistservice.js';
-
 export default class AiAssistEditing extends Plugin {
 	public static get pluginName() {
 		return 'AiAssistEditing' as const;
@@ -43,11 +42,11 @@ export default class AiAssistEditing extends Plugin {
 					content =
 						view.domConverter.mapViewToDom(
 							equivalentView
-						)?.innerText;
+						)?.innerText?.trim();
 				}
 				if ( ( typeof content === 'string' && content.startsWith( '/' ) ) || inlineSlash ) {
-					cancel();
 					await editor.execute( 'aiAssist' );
+					cancel();
 				}
 			}
 		} );

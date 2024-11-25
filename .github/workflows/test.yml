@@ -25,11 +25,17 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Install Playwright
-        run: |
-          yarn add --dev @playwright/test
-          npx playwright install
-          npx playwright install chromium
+      # Install Xvfb
+      - name: Install Xvfb
+        run: sudo apt-get install -y xvfb
+
+      # Start Xvfb
+      - name: Start Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 &
+
+      # Set DISPLAY environment variable
+      - name: Set DISPLAY
+        run: echo "DISPLAY=:99" >> $GITHUB_ENV
 
       # Run tests
       - name: Run tests

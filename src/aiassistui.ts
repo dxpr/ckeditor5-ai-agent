@@ -244,7 +244,7 @@ export default class AiAssistUI extends Plugin {
 	 *
 	 * @param rect - The DOMRect object defining the position to show the placeholder.
 	 */
-	private showPlaceHolder( rect?: DOMRect ): void {
+	public showPlaceHolder( rect?: DOMRect ): void {
 		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
 		const isReadOnlyMode = this.editor.isReadOnly;
 		if ( ele && rect && !isReadOnlyMode ) {
@@ -259,7 +259,7 @@ export default class AiAssistUI extends Plugin {
 	/**
 	 * Hides the placeholder element from the document.
 	 */
-	private hidePlaceHolder(): void {
+	public hidePlaceHolder(): void {
 		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
 		if ( ele ) {
 			ele.classList.remove( 'show-place-holder' );

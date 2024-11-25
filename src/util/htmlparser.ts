@@ -150,7 +150,7 @@ export class HtmlParser {
 	 * If not provided, the element will be inserted at the current selection position.
 	 * @returns A promise that resolves when the element has been inserted and all text has been streamed in.
 	 */
-	private async insertElementAsStream( element: Element, position?: Position ): Promise<void> {
+	public async insertElementAsStream( element: Element, position?: Position ): Promise<void> {
 		const selection = this.model.document.selection;
 		const root = this.model.document.getRoot();
 		const lastRecognizedPosition = selection.getLastPosition();

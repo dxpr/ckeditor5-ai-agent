@@ -50,6 +50,7 @@
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
     "@types/sbd": "^1.0.5",
+    "@types/sinon": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "~5.43.0",
     "@typescript-eslint/parser": "^5.18.0",
     "ckeditor5": "latest",
@@ -100,6 +101,7 @@
     }
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-core": "^43.3.1",
     "@ckeditor/ckeditor5-utils": "^43.0.0",
     "sbd": "^1.0.19"
   }

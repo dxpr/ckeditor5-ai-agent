@@ -81,6 +81,17 @@ export class PromptHelper {
         corpus.push('10. Avoid using inline styles or class attributes unless specifically requested.');
         corpus.push('11. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.');
         corpus.push('12. Beginning word of response must be a valid html tag');
+        if (this.getAllowedHtmlTags().includes('img')) {
+            corpus.push('13. For image elements, follow these strict formatting rules:');
+            corpus.push('    a. Every <img> tag MUST include both src and alt attributes');
+            corpus.push('    b. Format the src URL exactly as: https://placehold.co/600x400?text=[alt_text]');
+            corpus.push('    c. The [alt_text] in the src URL must:');
+            corpus.push('       - Be identical to the alt attribute value');
+            corpus.push('       - Replace spaces with + characters');
+            corpus.push('       - Exclude any special characters');
+            corpus.push('    d. Example:');
+            corpus.push('       <img src="https://placehold.co/600x400?text=Beautiful+Sunset" alt="Beautiful Sunset">');
+        }
         // Join all instructions into a single formatted string.
         const systemPrompt = corpus.join('\n');
         // Log the system prompt if debug mode is enabled

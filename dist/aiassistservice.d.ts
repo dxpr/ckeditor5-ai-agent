@@ -37,6 +37,7 @@ export default class AiAssistService {
      * @returns A promise that resolves when the response has been processed.
      */
     private fetchAndProcessGptResponse;
+    private updateContent;
     /**
      * Processes the provided content and inserts it into the specified parent element.
      * Depending on the feature flag, it either uses a simple HTML insertion method

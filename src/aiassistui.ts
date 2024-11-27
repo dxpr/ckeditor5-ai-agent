@@ -1,8 +1,10 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
+// import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
+import { ButtonView } from 'ckeditor5/src/ui.js';
 import aiAssistIcon from '../theme/icons/ai-assist.svg';
 import { aiAssistContext } from './aiassistcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
+import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 
 export default class AiAssistUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -11,6 +13,10 @@ export default class AiAssistUI extends Plugin {
 
 	public static get pluginName() {
 		return 'AiAssistUI' as const;
+	}
+
+	public static get requires() {
+		return [ Widget ] as const;
 	}
 
 	/**
@@ -85,7 +91,7 @@ export default class AiAssistUI extends Plugin {
 		this.addGptErrorToolTip();
 
 		editor.ui.componentFactory.add( 'aiAssistButton', locale => {
-			const dropdownView = createDropdown( locale, SplitButtonView );
+			// const dropdownView = createDropdown( locale, SplitButtonView );
 			const view = new ButtonView( locale );
 			// const view =  dropdownView.buttonView;
 			view.set( {
@@ -108,6 +114,54 @@ export default class AiAssistUI extends Plugin {
 				editor.editing.view.focus();
 			} );
 			return view;
+		} );
+
+		editor.model.schema.register( 'ai-tag', {
+			inheritAllFrom: '$block',
+			isInline: true,
+			isObject: true,
+			allowWhere: '$block',
+			allowAttributes: [ 'id' ]
+		} );
+
+		editor.model.schema.extend( '$block', { allowIn: 'ai-tag' } );
+
+		this.addCustomTagConversions();
+	}
+
+	private addCustomTagConversions(): void {
+		const editor = this.editor;
+
+		editor.conversion.for( 'upcast' ).elementToElement( {
+			view: {
+				name: 'ai-tag',
+				attributes: [ 'id' ]
+			},
+			model: ( viewElement, { writer } ) => {
+				return writer.createElement( 'ai-tag', {
+					id: viewElement.getAttribute( 'id' )
+				} );
+			}
+		} );
+
+		editor.conversion.for( 'dataDowncast' ).elementToElement( {
+			model: 'ai-tag',
+			view: ( modelElement, { writer } ) => {
+				return writer.createContainerElement( 'ai-tag', {
+					id: modelElement.getAttribute( 'id' )
+				} );
+			}
+		} );
+
+		editor.conversion.for( 'editingDowncast' ).elementToElement( {
+			model: 'ai-tag',
+			view: ( modelElement, { writer } ) => {
+				const customTag = writer.createContainerElement( 'ai-tag', {
+					id: modelElement.getAttribute( 'id' )
+				} );
+
+				return toWidget( customTag, writer );
+			}
 		} );
 	}
 

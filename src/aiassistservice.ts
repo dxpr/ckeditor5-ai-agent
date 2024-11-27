@@ -137,6 +137,7 @@ export default class AiAssistService {
 
 		let buffer = '';
 		let contentBuffer = '';
+		const blockID = `ai-${ new Date().getTime() }`;
 
 		try {
 			const response = await fetch( this.endpointUrl, {
@@ -173,6 +174,39 @@ export default class AiAssistService {
 			this.clearParentContent( parent );
 			this.editor.enableReadOnlyMode( this.aiAssistFeatureLockId );
 
+			let insertParent = true;
+
+			editor.model.change( writer => {
+				const position = editor.model.document.selection.getLastPosition();
+				if ( position ) {
+					const aiTag = writer.createElement( 'ai-tag', {
+						id: blockID
+					} );
+					const parent = position.parent as Element;
+					if ( parent ) {
+						if ( parent.parent?.name === 'tableCell' ) {
+							insertParent = false;
+						} else if ( parent.getAttribute( 'listType' ) === 'bulleted' ) {
+							insertParent = false;
+						}
+					}
+
+					let parentContent = '';
+					for ( const child of parent.getChildren() ) {
+						if ( child.is( '$text' ) ) {
+							parentContent += child.data;
+						}
+					}
+
+					const parentPosition = parentContent ? writer.createPositionAfter( parent ) : writer.createPositionBefore( parent );
+
+					writer.insert( aiTag, insertParent ? parentPosition : position );
+
+					const newPosition = writer.createPositionAt( aiTag, 'end' );
+					writer.setSelection( newPosition );
+				}
+			} );
+
 			console.log( 'Starting to process response' );
 			for ( ;; ) {
 				const { done, value } = await reader.read();
@@ -199,13 +233,10 @@ export default class AiAssistService {
 						try {
 							const data = JSON.parse( jsonStr );
 							const content = data.choices[ 0 ]?.delta?.content;
-							if ( content ) {
+							if ( content !== null && content !== undefined ) {
 								contentBuffer += content;
-								if ( this.htmlParser.isCompleteHtmlChunk( contentBuffer ) ) {
-									await this.processContent( contentBuffer, parent );
-									contentBuffer = '';
-								}
 							}
+							await this.updateContent( contentBuffer, blockID, insertParent );
 						} catch ( parseError ) {
 							console.warn( 'Error parsing JSON:', parseError );
 						}
@@ -213,10 +244,10 @@ export default class AiAssistService {
 				}
 			}
 
-			// Process any remaining content in the buffer
-			if ( contentBuffer.trim() ) {
-				await this.processContent( contentBuffer.trim(), parent );
-			}
+			const editorData = editor.getData();
+			let editorContent = editorData.replace( `<ai-tag id="${ blockID }">`, '' );
+			editorContent = editorContent.replace( '</ai-tag>', '' );
+			editor.setData( editorContent );
 		} catch ( error: any ) {
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			const errorIdentifier =
@@ -258,6 +289,43 @@ export default class AiAssistService {
 		}
 	}
 
+	private async updateContent( newHtml: string, blockID: string, insertParent: boolean ): Promise<void> {
+		const editor = this.editor;
+		editor.model.change( writer => {
+			const root = editor.model.document.getRoot();
+			let targetElement = null;
+			if ( root ) {
+				for ( const child of root.getChildren() ) {
+					const childElement = child as Element;
+					if ( insertParent ) {
+						if ( childElement.is( 'element', 'ai-tag' ) && childElement.getAttribute( 'id' ) === blockID ) {
+							targetElement = childElement;
+							break;
+						}
+					} else {
+						for ( const innerChild of childElement.getChildren() ) {
+							if ( innerChild.is( 'element', 'ai-tag' ) && innerChild.getAttribute( 'id' ) === blockID ) {
+								targetElement = innerChild;
+								break;
+							}
+						}
+					}
+				}
+
+				if ( targetElement ) {
+					const range = editor.model.createRangeIn( targetElement );
+					writer.remove( range );
+
+					const viewFragment = editor.data.processor.toView( newHtml );
+					const modelFragment = editor.data.toModel( viewFragment );
+
+					writer.insert( modelFragment, targetElement, 'end' );
+				}
+			}
+		} );
+		await new Promise( resolve => setTimeout( resolve ) );
+	}
+
 	/**
 	 * Processes the provided content and inserts it into the specified parent element.
 	 * Depending on the feature flag, it either uses a simple HTML insertion method
@@ -266,7 +334,7 @@ export default class AiAssistService {
 	 * @param content - The content to be processed and inserted.
 	 * @param parent - The parent element in the editor where the content will be inserted.
 	 */
-	private async processContent( content: string, parent: Element ): Promise<void> {
+	private async processContent( content: string ): Promise<void> {
 		try {
 			console.log( '--- Start of processContent ---' );
 			console.log( 'Processing content:', content, this.isInlineInsertion );

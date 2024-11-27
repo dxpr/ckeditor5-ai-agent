@@ -3,6 +3,7 @@ import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js
 import aiAssistIcon from '../theme/icons/ai-assist.svg';
 import { aiAssistContext } from './aiassistcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
+import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 export default class AiAssistUI extends Plugin {
     constructor() {
         super(...arguments);
@@ -12,6 +13,9 @@ export default class AiAssistUI extends Plugin {
     }
     static get pluginName() {
         return 'AiAssistUI';
+    }
+    static get requires() {
+        return [Widget];
     }
     /**
      * Initializes the AI Assist UI plugin, setting up UI components and event listeners.
@@ -99,6 +103,46 @@ export default class AiAssistUI extends Plugin {
                 editor.editing.view.focus();
             });
             return view;
+        });
+        editor.model.schema.register('ai-tag', {
+            inheritAllFrom: '$block',
+            isInline: true,
+            isObject: true,
+            allowWhere: '$block',
+            allowAttributes: ['id']
+        });
+        editor.model.schema.extend('$block', { allowIn: 'ai-tag' });
+        this.addCustomTagConversions();
+    }
+    addCustomTagConversions() {
+        const editor = this.editor;
+        editor.conversion.for('upcast').elementToElement({
+            view: {
+                name: 'ai-tag',
+                attributes: ['id']
+            },
+            model: (viewElement, { writer }) => {
+                return writer.createElement('ai-tag', {
+                    id: viewElement.getAttribute('id')
+                });
+            }
+        });
+        editor.conversion.for('dataDowncast').elementToElement({
+            model: 'ai-tag',
+            view: (modelElement, { writer }) => {
+                return writer.createContainerElement('ai-tag', {
+                    id: modelElement.getAttribute('id')
+                });
+            }
+        });
+        editor.conversion.for('editingDowncast').elementToElement({
+            model: 'ai-tag',
+            view: (modelElement, { writer }) => {
+                const customTag = writer.createContainerElement('ai-tag', {
+                    id: modelElement.getAttribute('id')
+                });
+                return toWidget(customTag, writer);
+            }
         });
     }
     /**

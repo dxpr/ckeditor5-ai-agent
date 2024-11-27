@@ -1,9 +1,11 @@
 import { Plugin } from 'ckeditor5/src/core.js';
+import { Widget } from 'ckeditor5/src/widget.js';
 export default class AiAssistUI extends Plugin {
     PLACEHOLDER_TEXT_ID: string;
     GPT_RESPONSE_LOADER_ID: string;
     GPT_RESPONSE_ERROR_ID: string;
     static get pluginName(): "AiAssistUI";
+    static get requires(): readonly [typeof Widget];
     /**
      * Initializes the AI Assist UI plugin, setting up UI components and event listeners.
      * This method is called when the plugin is loaded.
@@ -13,6 +15,7 @@ export default class AiAssistUI extends Plugin {
      * Initializes UI components such as placeholders, loaders, and buttons for the editor.
      */
     private initializeUIComponents;
+    private addCustomTagConversions;
     /**
      * Initializes the UI language settings based on the editor's locale.
      * Displays an error tooltip if the current language is unsupported.

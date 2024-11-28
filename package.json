@@ -88,10 +88,10 @@
   },
   "lint-staged": {
     "**/*.{js,ts}": [
-      "eslint --quiet"
+      "eslint --fix --quiet"
     ],
     "**/*.css": [
-      "stylelint --quiet --allow-empty-input"
+      "stylelint --fix --quiet --allow-empty-input"
     ]
   },
   "husky": {

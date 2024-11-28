@@ -1,5 +1,5 @@
 {
-  "name": "@dxpr/ckeditor5-ai-assist",
+  "name": "@dxpr/ckeditor5-ai-agent",
   "version": "0.0.1",
   "description": "A plugin for CKEditor 5.",
   "keywords": [

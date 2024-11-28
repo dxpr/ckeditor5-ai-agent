@@ -1,9 +1,9 @@
-@dxpr/ckeditor5-ai-assist
+@dxpr/ckeditor5-ai-agent
 =========================
 
-# AiAssist CKEditor Plugin
+# AiAgent CKEditor Plugin
 
-`AiAssist` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4 and many more to generate, modify, or enhance content directly within the editor.
+`AiAgent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4 and many more to generate, modify, or enhance content directly within the editor.
 
 ## Table of Contents
 
@@ -16,25 +16,25 @@
 
 ## Installation
 
-To install the `AiAssist` plugin in your CKEditor 5 setup, follow these steps:
+To install the `AiAgent` plugin in your CKEditor 5 setup, follow these steps:
 
 1. Install the plugin via npm:
 
    ```bash
-   npm install ai-assist-ckeditor-plugin
+   npm install ai-agent-ckeditor-plugin
 
 ## Configuration
 
-The AiAssist plugin can be configured through the EditorConfig interface. The configuration allows you to define how the AI model should behave, including the model type, temperature, maximum tokens, and more.
+The AiAgent plugin can be configured through the EditorConfig interface. The configuration allows you to define how the AI model should behave, including the model type, temperature, maximum tokens, and more.
 
-follow below example to add AiAssist.
+follow below example to add AiAgent.
 
 ```typescript
 ClassicEditor
     .create( document.querySelector( '#editor' ), {
-        plugins: [ AiAssist, ... ],
-        toolbar: [ 'AiAssist', ... ],
-        aiAssist: {
+        plugins: [ AiAgent, ... ],
+        toolbar: [ 'AiAgent', ... ],
+        aiAgent: {
             model: 'gpt-4o',
             apiKey: 'YOUR_API_KEY // required
             temperature: 0.7,
@@ -52,7 +52,7 @@ ClassicEditor
 ```
 ## Configuration Options
 
-The AiAssist plugin can be configured through the EditorConfig interface. Here are the configuration options available:
+The AiAgent plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
 | Option | Type | Description |
 | :-------- | :------- | :-------------------------------- |
@@ -114,7 +114,7 @@ In the first example, the command prompts the AI to write about India. In the se
 
 ## Error Handling
 
-The AiAssist plugin includes built-in error handling for various scenarios such as unsupported languages, API request failures, and more. Error messages are displayed to the user and logged in the console for debugging purposes.
+The AiAgent plugin includes built-in error handling for various scenarios such as unsupported languages, API request failures, and more. Error messages are displayed to the user and logged in the console for debugging purposes.
 
 
 This package was created by the [ckeditor5-package-generator](https://www.npmjs.com/package/ckeditor5-package-generator) package.
@@ -232,9 +232,9 @@ for update localization, change the language object to /sample/dll.html
 ```typescript
 CKEditor5.editorClassic.ClassicEditor
     .create( document.querySelector( '#editor' ), {
-        plugins: [ AiAssist, ... ],
+        plugins: [ AiAgent, ... ],
         ... // other configurations
-        aiAssist: {
+        aiAgent: {
             model: 'gpt-4o',
             apiKey: 'YOUR_API_KEY // required
         },
@@ -317,6 +317,6 @@ These scripts compile TypeScript and remove the compiled files. They are used in
 
 ## License
 
-The `@dxpr/ckeditor5-ai-assist` package is available under [MIT license](https://opensource.org/licenses/MIT).
+The `@dxpr/ckeditor5-ai-agent` package is available under [MIT license](https://opensource.org/licenses/MIT).
 
 However, it is the default license of packages created by the [ckeditor5-package-generator](https://www.npmjs.com/package/ckeditor5-package-generator) package and can be changed.

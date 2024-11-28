@@ -1,13 +1,13 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { Element } from 'ckeditor5/src/engine.js';
 import type { AiModel, MarkdownContent } from './type-identifiers.js';
-import { aiAssistContext } from './aiassistcontext.js';
+import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
 
-export default class AiAssistService {
+export default class AiAgentService {
 	private editor: Editor;
 	private aiModel: AiModel;
 	private apiKey: string | undefined;
@@ -18,7 +18,7 @@ export default class AiAssistService {
 	private retryAttempts: number;
 	private streamContent: boolean;
 	private stopSequences: Array<string>;
-	private aiAssistFeatureLockId = Symbol( 'ai-assist-feature' );
+	private aiAgentFeatureLockId = Symbol( 'ai-agent-feature' );
 	private promptHelper: PromptHelper;
 	private htmlParser: HtmlParser;
 
@@ -28,7 +28,7 @@ export default class AiAssistService {
 	private abortGeneration: boolean = false;
 
 	/**
-	 * Initializes the AiAssistService with the provided editor and configuration settings.
+	 * Initializes the AiAgentService with the provided editor and configuration settings.
 	 *
 	 * @param editor - The CKEditor instance to be used with the AI assist service.
 	 */
@@ -36,7 +36,7 @@ export default class AiAssistService {
 		this.editor = editor;
 		this.promptHelper = new PromptHelper( editor );
 		this.htmlParser = new HtmlParser( editor );
-		const config = editor.config.get( 'aiAssist' )!;
+		const config = editor.config.get( 'aiAgent' )!;
 
 		this.aiModel = config.model!;
 		this.apiKey = config.apiKey;
@@ -99,7 +99,7 @@ export default class AiAssistService {
 			const domRange: any = domSelection?.getRangeAt( 0 );
 			const rect = domRange.getBoundingClientRect();
 
-			aiAssistContext.showLoader( rect );
+			aiAgentContext.showLoader( rect );
 			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
 				content ?? '',
 				parentEquivalentHTML?.innerText
@@ -112,7 +112,7 @@ export default class AiAssistService {
 			throw error;
 		} finally {
 			this.isInlineInsertion = false;
-			aiAssistContext.hideLoader();
+			aiAgentContext.hideLoader();
 		}
 	}
 
@@ -169,13 +169,13 @@ export default class AiAssistService {
 				throw new Error( 'Fetch failed' );
 			}
 
-			aiAssistContext.hideLoader();
+			aiAgentContext.hideLoader();
 
 			const reader = response.body!.getReader();
 			const decoder = new TextDecoder( 'utf-8' );
 
 			this.clearParentContent( parent );
-			// this.editor.enableReadOnlyMode( this.aiAssistFeatureLockId );
+			// this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
 
 			let insertParent = true;
 
@@ -261,7 +261,7 @@ export default class AiAssistService {
 			const isRetryableError = [
 				'AbortError',
 				'ReadableStream not supported',
-				'AiAssist: Fetch failed'
+				'AiAgent: Fetch failed'
 			].includes( errorIdentifier );
 			if ( retries > 0 && isRetryableError ) {
 				console.warn( `Retrying... (${ retries } attempts left)` );
@@ -278,7 +278,7 @@ export default class AiAssistService {
 						'Browser does not support readable streams'
 					);
 					break;
-				case 'AiAssist: Fetch failed':
+				case 'AiAgent: Fetch failed':
 					errorMessage = t(
 						'We couldn\'t connect to the AI. Please check your internet'
 					);
@@ -289,9 +289,9 @@ export default class AiAssistService {
 					);
 			}
 
-			aiAssistContext.showError( errorMessage );
+			aiAgentContext.showError( errorMessage );
 		} finally {
-			this.editor.disableReadOnlyMode( this.aiAssistFeatureLockId );
+			this.editor.disableReadOnlyMode( this.aiAgentFeatureLockId );
 		}
 	}
 

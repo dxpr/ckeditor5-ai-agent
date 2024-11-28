@@ -1,17 +1,17 @@
-import { aiAssistContext } from './aiassistcontext.js';
+import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
-export default class AiAssistService {
+export default class AiAgentService {
     /**
-     * Initializes the AiAssistService with the provided editor and configuration settings.
+     * Initializes the AiAgentService with the provided editor and configuration settings.
      *
      * @param editor - The CKEditor instance to be used with the AI assist service.
      */
     constructor(editor) {
         var _a, _b;
-        this.aiAssistFeatureLockId = Symbol('ai-assist-feature');
+        this.aiAgentFeatureLockId = Symbol('ai-agent-feature');
         this.buffer = '';
         this.openTags = [];
         this.isInlineInsertion = false;
@@ -19,7 +19,7 @@ export default class AiAssistService {
         this.editor = editor;
         this.promptHelper = new PromptHelper(editor);
         this.htmlParser = new HtmlParser(editor);
-        const config = editor.config.get('aiAssist');
+        const config = editor.config.get('aiAgent');
         this.aiModel = config.model;
         this.apiKey = config.apiKey;
         this.endpointUrl = config.endpointUrl;
@@ -75,7 +75,7 @@ export default class AiAssistService {
             const domSelection = window.getSelection();
             const domRange = domSelection === null || domSelection === void 0 ? void 0 : domSelection.getRangeAt(0);
             const rect = domRange.getBoundingClientRect();
-            aiAssistContext.showLoader(rect);
+            aiAgentContext.showLoader(rect);
             const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(content !== null && content !== void 0 ? content : '', parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.innerText);
             if (parent && gptPrompt) {
                 await this.fetchAndProcessGptResponse(gptPrompt, parent);
@@ -87,7 +87,7 @@ export default class AiAssistService {
         }
         finally {
             this.isInlineInsertion = false;
-            aiAssistContext.hideLoader();
+            aiAgentContext.hideLoader();
         }
     }
     /**
@@ -132,11 +132,11 @@ export default class AiAssistService {
             if (!response.ok) {
                 throw new Error('Fetch failed');
             }
-            aiAssistContext.hideLoader();
+            aiAgentContext.hideLoader();
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
             this.clearParentContent(parent);
-            // this.editor.enableReadOnlyMode( this.aiAssistFeatureLockId );
+            // this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
             let insertParent = true;
             this.cancelGenerationButton(blockID, controller);
             editor.model.change(writer => {
@@ -211,7 +211,7 @@ export default class AiAssistService {
             const isRetryableError = [
                 'AbortError',
                 'ReadableStream not supported',
-                'AiAssist: Fetch failed'
+                'AiAgent: Fetch failed'
             ].includes(errorIdentifier);
             if (retries > 0 && isRetryableError) {
                 console.warn(`Retrying... (${retries} attempts left)`);
@@ -222,16 +222,16 @@ export default class AiAssistService {
                 case 'ReadableStream not supported':
                     errorMessage = t('Browser does not support readable streams');
                     break;
-                case 'AiAssist: Fetch failed':
+                case 'AiAgent: Fetch failed':
                     errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
                     break;
                 default:
                     errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
             }
-            aiAssistContext.showError(errorMessage);
+            aiAgentContext.showError(errorMessage);
         }
         finally {
-            this.editor.disableReadOnlyMode(this.aiAssistFeatureLockId);
+            this.editor.disableReadOnlyMode(this.aiAgentFeatureLockId);
         }
     }
     /**

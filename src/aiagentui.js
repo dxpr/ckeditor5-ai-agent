@@ -1,11 +1,11 @@
 import { Plugin } from 'ckeditor5/src/core.js';
 // import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
-import aiAssistIcon from '../theme/icons/ai-assist.svg';
-import { aiAssistContext } from './aiassistcontext.js';
+import aiAgentIcon from '../theme/icons/ai-agent.svg';
+import { aiAgentContext } from './aiagentcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
-export default class AiAssistUI extends Plugin {
+export default class AiAgentUI extends Plugin {
     constructor() {
         super(...arguments);
         this.PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -13,18 +13,18 @@ export default class AiAssistUI extends Plugin {
         this.GPT_RESPONSE_ERROR_ID = 'gpt-error';
     }
     static get pluginName() {
-        return 'AiAssistUI';
+        return 'AiAgentUI';
     }
     static get requires() {
         return [Widget];
     }
     /**
-     * Initializes the AI Assist UI plugin, setting up UI components and event listeners.
+     * Initializes the AI Agent UI plugin, setting up UI components and event listeners.
      * This method is called when the plugin is loaded.
      */
     init() {
         try {
-            aiAssistContext.uiComponent = this;
+            aiAgentContext.uiComponent = this;
             // Initialize UI components like buttons, placeholders, loaders, etc.
             this.initializeUIComponents();
             // Set displays content in the appropriate language.
@@ -81,13 +81,13 @@ export default class AiAssistUI extends Plugin {
         this.addPlaceholder();
         this.addLoader();
         this.addGptErrorToolTip();
-        editor.ui.componentFactory.add('aiAssistButton', locale => {
+        editor.ui.componentFactory.add('aiAgentButton', locale => {
             // const dropdownView = createDropdown( locale, SplitButtonView );
             const view = new ButtonView(locale);
             // const view =  dropdownView.buttonView;
             view.set({
-                label: t('Ai assist'),
-                icon: aiAssistIcon,
+                label: t('Ai agent'),
+                icon: aiAgentIcon,
                 tooltip: true
             });
             view.on('execute', () => {

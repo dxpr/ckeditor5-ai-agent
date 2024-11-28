@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { AiAssist as AiAssistDll, icons } from '../src/index.js';
-import AiAssist from '../src/aiassist.js';
+import { AiAgent as AiAgentDll, icons } from '../src/index.js';
+import AiAgent from '../src/aiagent.js';
 
 import ckeditor from './../theme/icons/ckeditor.svg';
 
-describe( 'CKEditor5 AiAssist DLL', () => {
-	it( 'exports AiAssist', () => {
-		expect( AiAssistDll ).to.equal( AiAssist );
+describe( 'CKEditor5 AiAgent DLL', () => {
+	it( 'exports AiAgent', () => {
+		expect( AiAgentDll ).to.equal( AiAgent );
 	} );
 
 	describe( 'icons', () => {

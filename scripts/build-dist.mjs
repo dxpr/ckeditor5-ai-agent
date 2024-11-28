@@ -56,7 +56,7 @@ function dist( path ) {
 		sourceMap: true,
 		minify: true,
 		browser: true,
-		name: 'AiAssist',
+		name: 'AiAgent',
 		external: [
 			'ckeditor5',
 			'ckeditor5-premium-features'

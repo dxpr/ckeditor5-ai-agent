@@ -1,5 +1,5 @@
 {
-	"Ai assist": "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance.",
+	"Ai agent": "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance.",
 	"Type / to request AI content": "Hint suggesting users utilize AI for documenting or content creation.",
 	"Browser does not support readable streams": "Appears when the Browser does not support readable streams.",
 	"Oops! Something went wrong while processing your request": "Indicates a failure when processing the provided prompt.",

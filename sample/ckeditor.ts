@@ -24,12 +24,12 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
 
-import AiAssist from '../src/aiassist.js';
+import AiAgent from '../src/aiagent.js';
 
 ClassicEditor
 	.create( document.getElementById( 'editor' )!, {
 		plugins: [
-			AiAssist,
+			AiAgent,
 			Essentials,
 			Autoformat,
 			BlockQuote,
@@ -54,7 +54,7 @@ ClassicEditor
 			SourceEditing
 		],
 		toolbar: [
-			'aiAssistButton',
+			'aiAgentButton',
 			'|',
 			'heading',
 			'|',
@@ -92,7 +92,7 @@ ClassicEditor
 				'mergeTableCells'
 			]
 		},
-		aiAssist: {
+		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
 			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
@@ -115,7 +115,7 @@ ClassicEditor
 ClassicEditor
 	.create( document.getElementById( 'editor2' )!, {
 		plugins: [
-			AiAssist,
+			AiAgent,
 			Essentials,
 			Autoformat,
 			BlockQuote,
@@ -130,7 +130,7 @@ ClassicEditor
 			SourceEditing
 		],
 		toolbar: [
-			'aiAssistButton',
+			'aiAgentButton',
 			'|', 'paragraph', 'heading1', 'heading2', 'heading3', 'heading4', 'heading5', 'heading6',
 			'|',
 			'bold',
@@ -153,7 +153,7 @@ ClassicEditor
 				{ model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
 			]
 		},
-		aiAssist: {
+		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
 			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,

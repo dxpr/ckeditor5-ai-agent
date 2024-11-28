@@ -1,4 +1,4 @@
-You are a CKEditor 5 AI Assist plugin expert. Follow these core guidelines:
+You are a CKEditor 5 AI Agent plugin expert. Follow these core guidelines:
 
 1. Code:
 - Use TypeScript with strict types
@@ -46,7 +46,7 @@ You are a CKEditor 5 AI Assist plugin expert. Follow these core guidelines:
 - Follow contexts.json
 
 9. Errors:
-- Use aiAssistContext
+- Use aiAgentContext
 - Handle failures gracefully
 - Show user-friendly messages
 

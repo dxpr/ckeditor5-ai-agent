@@ -1,22 +1,22 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import AiAssistCommand from './aiassistcommand.js';
+import AiAgentCommand from './aiagentcommand.js';
 import type { Element } from 'ckeditor5';
-import AiAssistService from './aiassistservice.js';
+import AiAgentService from './aiagentservice.js';
 
-export default class AiAssistEditing extends Plugin {
+export default class AiAgentEditing extends Plugin {
 	public static get pluginName() {
-		return 'AiAssistEditing' as const;
+		return 'AiAgentEditing' as const;
 	}
 
 	/**
-	 * Initializes the AI Assist editing plugin, setting up commands and key handling.
+	 * Initializes the AI Agent editing plugin, setting up commands and key handling.
 	 */
 	public init(): void {
 		const editor = this.editor;
-		const aiAssistService = new AiAssistService( editor );
+		const aiAgentService = new AiAgentService( editor );
 		editor.commands.add(
-			'aiAssist',
-			new AiAssistCommand( editor, aiAssistService )
+			'aiAgent',
+			new AiAgentCommand( editor, aiAgentService )
 		);
 
 		this.setupEnterKeyHandling();
@@ -47,7 +47,7 @@ export default class AiAssistEditing extends Plugin {
 				}
 				if ( ( typeof content === 'string' && content.startsWith( '/' ) ) || inlineSlash ) {
 					cancel();
-					await editor.execute( 'aiAssist' );
+					await editor.execute( 'aiAgent' );
 				}
 			}
 		} );

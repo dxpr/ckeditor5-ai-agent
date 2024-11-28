@@ -1,26 +1,26 @@
-import type AiAssistCommand from './aiassistcommand.js';
-import type AiAssistEditing from './aiassistediting.js';
-import type AiAssistUI from './aiassistui.js';
-import type { AiAssist } from './index.js';
+import type AiAgentCommand from './aiagentcommand.js';
+import type AiAgentEditing from './aiagentediting.js';
+import type AiAgentUI from './aiagentui.js';
+import type { AiAgent } from './index.js';
 import type { AiModel } from './type-identifiers.js';
 
 declare module '@ckeditor/ckeditor5-core' {
 	interface CommandsMap {
-        aiAssist: AiAssistCommand;
+        aiAgent: AiAgentCommand;
     }
 
     interface PluginsMap {
-        AiAssist: AiAssist;
-        AiAssistUI: AiAssistUI;
-        AiAssistEditing: AiAssistEditing;
+        AiAgent: AiAgent;
+        AiAgentUI: AiAgentUI;
+        AiAgentEditing: AiAgentEditing;
     }
 
 	interface Plugins {
-        AiAssist: AiAssist;
+        AiAgent: AiAgent;
     }
 
 	interface EditorConfig {
-        aiAssist?: {
+        aiAgent?: {
             model?: AiModel; // AI Model Selection
             apiKey: string; // OPEN AI Key
             temperature?: number; // Temperature Setting

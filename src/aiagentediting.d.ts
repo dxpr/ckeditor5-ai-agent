@@ -1,8 +1,8 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-export default class AiAssistEditing extends Plugin {
-    static get pluginName(): "AiAssistEditing";
+export default class AiAgentEditing extends Plugin {
+    static get pluginName(): "AiAgentEditing";
     /**
-     * Initializes the AI Assist editing plugin, setting up commands and key handling.
+     * Initializes the AI Agent editing plugin, setting up commands and key handling.
      */
     init(): void;
     /**

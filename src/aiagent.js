@@ -1,14 +1,14 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import AiAssistUI from './aiassistui.js';
-import AiAssistEditing from './aiassistediting.js';
+import AiAgentUI from './aiagentui.js';
+import AiAgentEditing from './aiagentediting.js';
 import { TOKEN_LIMITS } from './const.js';
 import '../theme/style.css';
-export default class AiAssist extends Plugin {
+export default class AiAgent extends Plugin {
     constructor(editor) {
         super(editor);
         this.DEFAULT_GPT_MODEL = 'gpt-4o';
         this.DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
-        const config = editor.config.get('aiAssist') || {};
+        const config = editor.config.get('aiAgent') || {};
         // Set default values and merge with provided config
         const defaultConfig = {
             model: this.DEFAULT_GPT_MODEL,
@@ -30,27 +30,27 @@ export default class AiAssist extends Plugin {
         };
         const updatedConfig = { ...defaultConfig, ...config };
         // Set the merged config back to the editor
-        editor.config.set('aiAssist', updatedConfig);
+        editor.config.set('aiAgent', updatedConfig);
         // Validate configuration
         this.validateConfiguration(updatedConfig);
     }
     static get requires() {
-        return [AiAssistUI, AiAssistEditing];
+        return [AiAgentUI, AiAgentEditing];
     }
     static get pluginName() {
-        return 'AiAssist';
+        return 'AiAgent';
     }
     validateConfiguration(config) {
         if (!config.apiKey) {
-            throw new Error('AiAssist: apiKey is required.');
+            throw new Error('AiAgent: apiKey is required.');
         }
         if (config.temperature && (config.temperature < 0 || config.temperature > 2)) {
-            throw new Error('AiAssist: Temperature must be a number between 0 and 2.');
+            throw new Error('AiAgent: Temperature must be a number between 0 and 2.');
         }
         // Validate maxTokens based on the model's token limits
         const { min, max } = TOKEN_LIMITS[config.model];
         if (config.maxTokens < min || config.maxTokens > max) {
-            throw new Error(`AiAssist: maxTokens must be a number between ${min} and ${max}.`);
+            throw new Error(`AiAgent: maxTokens must be a number between ${min} and ${max}.`);
         }
     }
     init() {

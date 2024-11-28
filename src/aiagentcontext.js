@@ -1,14 +1,14 @@
 /**
- * The AiAssistContext class provides a context for the AI Assist plugin,
+ * The AiAgentContext class provides a context for the AI Agent plugin,
  * allowing access to shared resources and state across different components.
  */
-export class AiAssistContext {
+export class AiAgentContext {
     constructor() { }
     static getInstance() {
-        if (!AiAssistContext.instance) {
-            AiAssistContext.instance = new AiAssistContext();
+        if (!AiAgentContext.instance) {
+            AiAgentContext.instance = new AiAgentContext();
         }
-        return AiAssistContext.instance;
+        return AiAgentContext.instance;
     }
     set uiComponent(component) {
         this._uiComponent = component;
@@ -30,4 +30,4 @@ export class AiAssistContext {
         }
     }
 }
-export const aiAssistContext = AiAssistContext.getInstance();
+export const aiAgentContext = AiAgentContext.getInstance();

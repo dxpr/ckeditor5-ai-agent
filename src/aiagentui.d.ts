@@ -1,13 +1,13 @@
 import { Plugin } from 'ckeditor5/src/core.js';
 import { Widget } from 'ckeditor5/src/widget.js';
-export default class AiAssistUI extends Plugin {
+export default class AiAgentUI extends Plugin {
     PLACEHOLDER_TEXT_ID: string;
     GPT_RESPONSE_LOADER_ID: string;
     GPT_RESPONSE_ERROR_ID: string;
-    static get pluginName(): "AiAssistUI";
+    static get pluginName(): "AiAgentUI";
     static get requires(): readonly [typeof Widget];
     /**
-     * Initializes the AI Assist UI plugin, setting up UI components and event listeners.
+     * Initializes the AI Agent UI plugin, setting up UI components and event listeners.
      * This method is called when the plugin is loaded.
      */
     init(): void;

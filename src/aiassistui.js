@@ -1,5 +1,6 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
+// import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
+import { ButtonView } from 'ckeditor5/src/ui.js';
 import aiAssistIcon from '../theme/icons/ai-assist.svg';
 import { aiAssistContext } from './aiassistcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
@@ -81,7 +82,7 @@ export default class AiAssistUI extends Plugin {
         this.addLoader();
         this.addGptErrorToolTip();
         editor.ui.componentFactory.add('aiAssistButton', locale => {
-            const dropdownView = createDropdown(locale, SplitButtonView);
+            // const dropdownView = createDropdown( locale, SplitButtonView );
             const view = new ButtonView(locale);
             // const view =  dropdownView.buttonView;
             view.set({

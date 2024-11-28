@@ -1,6 +1,8 @@
 import { aiAssistContext } from './aiassistcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
+import { ButtonView } from 'ckeditor5/src/ui.js';
+import { env } from 'ckeditor5/src/utils.js';
 export default class AiAssistService {
     /**
      * Initializes the AiAssistService with the provided editor and configuration settings.
@@ -13,6 +15,7 @@ export default class AiAssistService {
         this.buffer = '';
         this.openTags = [];
         this.isInlineInsertion = false;
+        this.abortGeneration = false;
         this.editor = editor;
         this.promptHelper = new PromptHelper(editor);
         this.htmlParser = new HtmlParser(editor);
@@ -133,8 +136,9 @@ export default class AiAssistService {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
             this.clearParentContent(parent);
-            this.editor.enableReadOnlyMode(this.aiAssistFeatureLockId);
+            // this.editor.enableReadOnlyMode( this.aiAssistFeatureLockId );
             let insertParent = true;
+            this.cancelGenerationButton(blockID, controller);
             editor.model.change(writer => {
                 var _a;
                 const position = editor.model.document.selection.getLastPosition();
@@ -196,12 +200,12 @@ export default class AiAssistService {
                     }
                 }
             }
-            const editorData = editor.getData();
-            let editorContent = editorData.replace(`<ai-tag id="${blockID}">`, '');
-            editorContent = editorContent.replace('</ai-tag>', '');
-            editor.setData(editorContent);
+            this.processCompleted(blockID);
         }
         catch (error) {
+            if (this.abortGeneration) {
+                return;
+            }
             console.error('Error in fetchAndProcessGptResponse:', error);
             const errorIdentifier = ((error === null || error === void 0 ? void 0 : error.message) || '').trim() || ((error === null || error === void 0 ? void 0 : error.name) || '').trim();
             const isRetryableError = [
@@ -230,6 +234,73 @@ export default class AiAssistService {
             this.editor.disableReadOnlyMode(this.aiAssistFeatureLockId);
         }
     }
+    /**
+     * Creates and configures a cancel generation button with keyboard shortcut support.
+     *
+     * @param blockID - Unique identifier for the AI generation block
+     * @param controller - AbortController to cancel the ongoing AI generation
+     * @private
+     */
+    cancelGenerationButton(blockID, controller) {
+        const editor = this.editor;
+        const view = new ButtonView();
+        const keystroke = env.isMac ? '\u2318 + \u232B' : 'Ctrl + \u232B';
+        view.set({
+            label: `${keystroke} Cancel Generation`,
+            labelStyle: 'font-weight: 100; font-size:0.85em; color: gray',
+            withText: true,
+            class: 'cancel-request'
+        });
+        view.on('execute', () => {
+            this.abortGeneration = true;
+            controller.abort();
+            this.processCompleted(blockID);
+        });
+        view.render();
+        editor.keystrokes.set('Ctrl+Backspace', (keyEvtData, cancel) => {
+            if (keyEvtData.ctrlKey || keyEvtData.metaKey) {
+                this.abortGeneration = true;
+                controller.abort();
+                this.processCompleted(blockID);
+            }
+            cancel();
+        });
+        if (editor.ui.view.element && view.element) {
+            const panelContent = editor.ui.view.element.querySelector('.ck-sticky-panel__content .ck-toolbar__items');
+            if (panelContent) {
+                panelContent.append(view.element);
+            }
+        }
+    }
+    /**
+     * Handles cleanup after AI generation is completed or cancelled.
+     * Removes the cancel button from the UI and cleans up the temporary AI tag from editor content.
+     *
+     * @param blockID - Unique identifier for the AI generation block to be cleaned up
+     * @private
+     */
+    processCompleted(blockID) {
+        const editor = this.editor;
+        if (editor.ui.view.element) {
+            const cancelButton = editor.ui.view.element.querySelector('.cancel-request');
+            if (cancelButton) {
+                cancelButton.remove();
+            }
+        }
+        const editorData = editor.getData();
+        let editorContent = editorData.replace(`<ai-tag id="${blockID}">`, '');
+        editorContent = editorContent.replace('</ai-tag>', '');
+        editor.setData(editorContent);
+    }
+    /**
+     * Updates the content of an AI-generated block in the editor.
+     *
+     * @param newHtml - The new HTML content to insert
+     * @param blockID - The unique identifier of the AI block to update
+     * @param insertParent - Whether to insert at parent level or child level
+     * @returns Promise that resolves when the update is complete
+     * @private
+     */
     async updateContent(newHtml, blockID, insertParent) {
         const editor = this.editor;
         editor.model.change(writer => {

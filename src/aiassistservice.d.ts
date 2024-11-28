@@ -16,6 +16,7 @@ export default class AiAssistService {
     private buffer;
     private openTags;
     private isInlineInsertion;
+    private abortGeneration;
     /**
      * Initializes the AiAssistService with the provided editor and configuration settings.
      *
@@ -37,6 +38,31 @@ export default class AiAssistService {
      * @returns A promise that resolves when the response has been processed.
      */
     private fetchAndProcessGptResponse;
+    /**
+     * Creates and configures a cancel generation button with keyboard shortcut support.
+     *
+     * @param blockID - Unique identifier for the AI generation block
+     * @param controller - AbortController to cancel the ongoing AI generation
+     * @private
+     */
+    private cancelGenerationButton;
+    /**
+     * Handles cleanup after AI generation is completed or cancelled.
+     * Removes the cancel button from the UI and cleans up the temporary AI tag from editor content.
+     *
+     * @param blockID - Unique identifier for the AI generation block to be cleaned up
+     * @private
+     */
+    private processCompleted;
+    /**
+     * Updates the content of an AI-generated block in the editor.
+     *
+     * @param newHtml - The new HTML content to insert
+     * @param blockID - The unique identifier of the AI block to update
+     * @param insertParent - Whether to insert at parent level or child level
+     * @returns Promise that resolves when the update is complete
+     * @private
+     */
     private updateContent;
     /**
      * Processes the provided content and inserts it into the specified parent element.

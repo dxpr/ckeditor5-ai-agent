@@ -1,7 +1,7 @@
 import sbd from 'sbd';
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { MarkdownContent } from '../type-identifiers.js';
-import { aiAssistContext } from '../aiassistcontext.js';
+import { aiAgentContext } from '../aiagentcontext.js';
 export class PromptHelper {
 	private editor: Editor;
 	private contextSize: number;
@@ -12,7 +12,7 @@ export class PromptHelper {
 
 	constructor( editor: Editor ) {
 		this.editor = editor;
-		const config = editor.config.get( 'aiAssist' )!;
+		const config = editor.config.get( 'aiAgent' )!;
 
 		this.contextSize = config.contextSize!;
 		this.responseOutputFormat = config.promptSettings?.outputFormat ?? [];
@@ -145,7 +145,7 @@ export class PromptHelper {
 
 		// Log the system prompt if debug mode is enabled
 		if ( this.debugMode ) {
-			console.group( 'AiAssist System Prompt Debug' );
+			console.group( 'AiAgent System Prompt Debug' );
 			console.log( 'System Prompt:' );
 			console.log( systemPrompt );
 			console.groupEnd();
@@ -246,7 +246,7 @@ export class PromptHelper {
 
 		// Debugging Information
 		if ( this.debugMode ) {
-			console.group( 'AiAssist Prompt Debug' );
+			console.group( 'AiAgent Prompt Debug' );
 			console.log( 'User Prompt:', request );
 			console.log( 'Generated GPT Prompt:' );
 			console.log( corpus.join( '\n' ) );
@@ -384,7 +384,7 @@ export class PromptHelper {
 			const urlStr = emptyContent?.map( content => content?.url ).join( ',' );
 			errorMsg = t( 'Failed to fetch content of : %0', urlStr );
 			if ( errorMsg ) {
-				aiAssistContext.showError( errorMsg );
+				aiAgentContext.showError( errorMsg );
 			}
 			throw new Error( 'Unable to fetch content for few urls' );
 		}

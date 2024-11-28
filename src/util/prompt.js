@@ -1,10 +1,10 @@
 import sbd from 'sbd';
-import { aiAssistContext } from '../aiassistcontext.js';
+import { aiAgentContext } from '../aiagentcontext.js';
 export class PromptHelper {
     constructor(editor) {
         var _a, _b, _c, _d, _e, _f, _g;
         this.editor = editor;
-        const config = editor.config.get('aiAssist');
+        const config = editor.config.get('aiAgent');
         this.contextSize = config.contextSize;
         this.responseOutputFormat = (_b = (_a = config.promptSettings) === null || _a === void 0 ? void 0 : _a.outputFormat) !== null && _b !== void 0 ? _b : [];
         this.responseContextData = (_d = (_c = config.promptSettings) === null || _c === void 0 ? void 0 : _c.contextData) !== null && _d !== void 0 ? _d : [];
@@ -96,7 +96,7 @@ export class PromptHelper {
         const systemPrompt = corpus.join('\n');
         // Log the system prompt if debug mode is enabled
         if (this.debugMode) {
-            console.group('AiAssist System Prompt Debug');
+            console.group('AiAgent System Prompt Debug');
             console.log('System Prompt:');
             console.log(systemPrompt);
             console.groupEnd();
@@ -169,7 +169,7 @@ export class PromptHelper {
         }
         // Debugging Information
         if (this.debugMode) {
-            console.group('AiAssist Prompt Debug');
+            console.group('AiAgent Prompt Debug');
             console.log('User Prompt:', request);
             console.log('Generated GPT Prompt:');
             console.log(corpus.join('\n'));
@@ -274,7 +274,7 @@ export class PromptHelper {
             const urlStr = emptyContent === null || emptyContent === void 0 ? void 0 : emptyContent.map(content => content === null || content === void 0 ? void 0 : content.url).join(',');
             errorMsg = t('Failed to fetch content of : %0', urlStr);
             if (errorMsg) {
-                aiAssistContext.showError(errorMsg);
+                aiAgentContext.showError(errorMsg);
             }
             throw new Error('Unable to fetch content for few urls');
         }

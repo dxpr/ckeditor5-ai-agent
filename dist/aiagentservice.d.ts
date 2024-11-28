@@ -1,5 +1,5 @@
 import type { Editor } from 'ckeditor5/src/core.js';
-export default class AiAssistService {
+export default class AiAgentService {
     private editor;
     private aiModel;
     private apiKey;
@@ -10,14 +10,14 @@ export default class AiAssistService {
     private retryAttempts;
     private streamContent;
     private stopSequences;
-    private aiAssistFeatureLockId;
+    private aiAgentFeatureLockId;
     private promptHelper;
     private htmlParser;
     private buffer;
     private openTags;
     private isInlineInsertion;
     /**
-     * Initializes the AiAssistService with the provided editor and configuration settings.
+     * Initializes the AiAgentService with the provided editor and configuration settings.
      *
      * @param editor - The CKEditor instance to be used with the AI assist service.
      */

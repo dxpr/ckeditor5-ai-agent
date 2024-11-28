@@ -1,18 +1,18 @@
 import { Plugin } from 'ckeditor5/src/core.js';
 // import { ButtonView, createDropdown, SplitButtonView } from 'ckeditor5/src/ui.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
-import aiAssistIcon from '../theme/icons/ai-assist.svg';
-import { aiAssistContext } from './aiassistcontext.js';
+import aiAgentIcon from '../theme/icons/ai-agent.svg';
+import { aiAgentContext } from './aiagentcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 
-export default class AiAssistUI extends Plugin {
+export default class AiAgentUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
 	public GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
 	public GPT_RESPONSE_ERROR_ID = 'gpt-error';
 
 	public static get pluginName() {
-		return 'AiAssistUI' as const;
+		return 'AiAgentUI' as const;
 	}
 
 	public static get requires() {
@@ -20,12 +20,12 @@ export default class AiAssistUI extends Plugin {
 	}
 
 	/**
-	 * Initializes the AI Assist UI plugin, setting up UI components and event listeners.
+	 * Initializes the AI Agent UI plugin, setting up UI components and event listeners.
 	 * This method is called when the plugin is loaded.
 	 */
 	public init(): void {
 		try {
-			aiAssistContext.uiComponent = this;
+			aiAgentContext.uiComponent = this;
 			// Initialize UI components like buttons, placeholders, loaders, etc.
 			this.initializeUIComponents();
 
@@ -90,13 +90,13 @@ export default class AiAssistUI extends Plugin {
 		this.addLoader();
 		this.addGptErrorToolTip();
 
-		editor.ui.componentFactory.add( 'aiAssistButton', locale => {
+		editor.ui.componentFactory.add( 'aiAgentButton', locale => {
 			// const dropdownView = createDropdown( locale, SplitButtonView );
 			const view = new ButtonView( locale );
 			// const view =  dropdownView.buttonView;
 			view.set( {
-				label: t( 'Ai assist' ),
-				icon: aiAssistIcon,
+				label: t( 'Ai agent' ),
+				icon: aiAgentIcon,
 				tooltip: true
 			} );
 			view.on( 'execute', () => {

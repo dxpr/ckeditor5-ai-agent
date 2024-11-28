@@ -1,23 +1,24 @@
 import { Plugin, Command } from '@ckeditor/ckeditor5-core/dist/index.js';
-import { createDropdown, SplitButtonView, ButtonView } from '@ckeditor/ckeditor5-ui/dist/index.js';
+import { ButtonView } from '@ckeditor/ckeditor5-ui/dist/index.js';
+import { Widget, toWidget } from '@ckeditor/ckeditor5-widget/dist/index.js';
 import sbd from 'sbd';
 
 var ckeditor = "<svg width='68' height='64' viewBox='0 0 68 64' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><path d='M43.71 11.025a11.508 11.508 0 0 0-1.213 5.159c0 6.42 5.244 11.625 11.713 11.625.083 0 .167 0 .25-.002v16.282a5.464 5.464 0 0 1-2.756 4.739L30.986 60.7a5.548 5.548 0 0 1-5.512 0L4.756 48.828A5.464 5.464 0 0 1 2 44.089V20.344c0-1.955 1.05-3.76 2.756-4.738L25.474 3.733a5.548 5.548 0 0 1 5.512 0l12.724 7.292z' fill='#FFF'/><path d='M45.684 8.79a12.604 12.604 0 0 0-1.329 5.65c0 7.032 5.744 12.733 12.829 12.733.091 0 .183-.001.274-.003v17.834a5.987 5.987 0 0 1-3.019 5.19L31.747 63.196a6.076 6.076 0 0 1-6.037 0L3.02 50.193A5.984 5.984 0 0 1 0 45.003V18.997c0-2.14 1.15-4.119 3.019-5.19L25.71.804a6.076 6.076 0 0 1 6.037 0L45.684 8.79zm-29.44 11.89c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h25.489c.833 0 1.51-.67 1.51-1.498v-.715c0-.827-.677-1.498-1.51-1.498h-25.49.001zm0 9.227c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h18.479c.833 0 1.509-.67 1.509-1.498v-.715c0-.827-.676-1.498-1.51-1.498H16.244zm0 9.227c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h25.489c.833 0 1.51-.67 1.51-1.498v-.715c0-.827-.677-1.498-1.51-1.498h-25.49.001zm41.191-14.459c-5.835 0-10.565-4.695-10.565-10.486 0-5.792 4.73-10.487 10.565-10.487C63.27 3.703 68 8.398 68 14.19c0 5.791-4.73 10.486-10.565 10.486v-.001z' fill='#1EBC61' fill-rule='nonzero'/><path d='M60.857 15.995c0-.467-.084-.875-.251-1.225a2.547 2.547 0 0 0-.686-.88 2.888 2.888 0 0 0-1.026-.531 4.418 4.418 0 0 0-1.259-.175c-.134 0-.283.006-.447.018-.15.01-.3.034-.446.07l.075-1.4h3.587v-1.8h-5.462l-.214 5.06c.319-.116.682-.21 1.089-.28.406-.071.77-.107 1.088-.107.218 0 .437.021.655.063.218.041.413.114.585.218s.313.244.422.419c.109.175.163.391.163.65 0 .424-.132.745-.396.961a1.434 1.434 0 0 1-.938.325c-.352 0-.656-.1-.912-.3-.256-.2-.43-.453-.523-.762l-1.925.588c.1.35.258.664.472.943.214.279.47.514.767.706.298.191.63.339.995.443.365.104.749.156 1.151.156.437 0 .86-.064 1.272-.193.41-.13.778-.323 1.1-.581a2.8 2.8 0 0 0 .775-.981c.193-.396.29-.864.29-1.405h-.001z' fill='#FFF' fill-rule='nonzero'/></g></svg>\n";
 
-var aiAssistIcon = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M4.00815 5.01816H19.3851V10.9145H21.1594V3.2439H2.23389V22.1694H12.3955V20.3951H4.00815V5.01816Z\" fill=\"#222330\"/>\n    <path d=\"M15.1908 20.046L20.9028 12.7065L22.9998 14.3385L17.2878 21.678L15.0341 22.755C14.8582 22.8391 14.6619 22.6862 14.7002 22.4951L15.1908 20.046Z\" fill=\"#222330\"/>\n    <path d=\"M16.1211 8.43794V15.7494H14.5753V8.43794H16.1211Z\" fill=\"#222330\"/>\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.31458 15.7495H6.65807L9.18211 8.43804H11.1742L13.6947 15.7495H12.0382L11.4968 14.0823H8.85696L8.31458 15.7495ZM10.2067 10.1088L11.1051 12.8756H9.24951L10.1496 10.1088H10.2067Z\" fill=\"#222330\"/>\n</svg>";
+var aiAgentIcon = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M4.00815 5.01816H19.3851V10.9145H21.1594V3.2439H2.23389V22.1694H12.3955V20.3951H4.00815V5.01816Z\" fill=\"#222330\"/>\n    <path d=\"M15.1908 20.046L20.9028 12.7065L22.9998 14.3385L17.2878 21.678L15.0341 22.755C14.8582 22.8391 14.6619 22.6862 14.7002 22.4951L15.1908 20.046Z\" fill=\"#222330\"/>\n    <path d=\"M16.1211 8.43794V15.7494H14.5753V8.43794H16.1211Z\" fill=\"#222330\"/>\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.31458 15.7495H6.65807L9.18211 8.43804H11.1742L13.6947 15.7495H12.0382L11.4968 14.0823H8.85696L8.31458 15.7495ZM10.2067 10.1088L11.1051 12.8756H9.24951L10.1496 10.1088H10.2067Z\" fill=\"#222330\"/>\n</svg>";
 
 /**
- * The AiAssistContext class provides a context for the AI Assist plugin,
+ * The AiAgentContext class provides a context for the AI Agent plugin,
  * allowing access to shared resources and state across different components.
- */ class AiAssistContext {
+ */ class AiAgentContext {
     static instance;
     _uiComponent;
     constructor(){}
     static getInstance() {
-        if (!AiAssistContext.instance) {
-            AiAssistContext.instance = new AiAssistContext();
+        if (!AiAgentContext.instance) {
+            AiAgentContext.instance = new AiAgentContext();
         }
-        return AiAssistContext.instance;
+        return AiAgentContext.instance;
     }
     set uiComponent(component) {
         this._uiComponent = component;
@@ -39,7 +40,7 @@ var aiAssistIcon = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\
         }
     }
 }
-const aiAssistContext = AiAssistContext.getInstance();
+const aiAgentContext = AiAgentContext.getInstance();
 
 // const
 const TOKEN_LIMITS = {
@@ -65,12 +66,17 @@ const TOKEN_LIMITS = {
     },
     'gpt-4-turbo': {
         min: 1,
-        max: 4096,
+        max: 16384,
         context: 128000
     },
     'gpt-4o-mini': {
         min: 1,
-        max: 4096,
+        max: 16384,
+        context: 128000
+    },
+    'kavya-m1': {
+        min: 0,
+        max: 16384,
         context: 128000
     }
 };
@@ -81,19 +87,24 @@ const SUPPORTED_LANGUAGES = [
     'nl'
 ];
 
-class AiAssistUI extends Plugin {
+class AiAgentUI extends Plugin {
     PLACEHOLDER_TEXT_ID = 'slash-placeholder';
     GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
     GPT_RESPONSE_ERROR_ID = 'gpt-error';
     static get pluginName() {
-        return 'AiAssistUI';
+        return 'AiAgentUI';
+    }
+    static get requires() {
+        return [
+            Widget
+        ];
     }
     /**
-	 * Initializes the AI Assist UI plugin, setting up UI components and event listeners.
+	 * Initializes the AI Agent UI plugin, setting up UI components and event listeners.
 	 * This method is called when the plugin is loaded.
 	 */ init() {
         try {
-            aiAssistContext.uiComponent = this;
+            aiAgentContext.uiComponent = this;
             // Initialize UI components like buttons, placeholders, loaders, etc.
             this.initializeUIComponents();
             // Set displays content in the appropriate language.
@@ -154,13 +165,13 @@ class AiAssistUI extends Plugin {
         this.addPlaceholder();
         this.addLoader();
         this.addGptErrorToolTip();
-        editor.ui.componentFactory.add('aiAssistButton', (locale)=>{
-            createDropdown(locale, SplitButtonView);
+        editor.ui.componentFactory.add('aiAgentButton', (locale)=>{
+            // const dropdownView = createDropdown( locale, SplitButtonView );
             const view = new ButtonView(locale);
             // const view =  dropdownView.buttonView;
             view.set({
-                label: t('Ai assist'),
-                icon: aiAssistIcon,
+                label: t('Ai agent'),
+                icon: aiAgentIcon,
                 tooltip: true
             });
             view.on('execute', ()=>{
@@ -179,6 +190,52 @@ class AiAssistUI extends Plugin {
                 editor.editing.view.focus();
             });
             return view;
+        });
+        editor.model.schema.register('ai-tag', {
+            inheritAllFrom: '$block',
+            isInline: true,
+            isObject: true,
+            allowWhere: '$block',
+            allowAttributes: [
+                'id'
+            ]
+        });
+        editor.model.schema.extend('$block', {
+            allowIn: 'ai-tag'
+        });
+        this.addCustomTagConversions();
+    }
+    addCustomTagConversions() {
+        const editor = this.editor;
+        editor.conversion.for('upcast').elementToElement({
+            view: {
+                name: 'ai-tag',
+                attributes: [
+                    'id'
+                ]
+            },
+            model: (viewElement, { writer })=>{
+                return writer.createElement('ai-tag', {
+                    id: viewElement.getAttribute('id')
+                });
+            }
+        });
+        editor.conversion.for('dataDowncast').elementToElement({
+            model: 'ai-tag',
+            view: (modelElement, { writer })=>{
+                return writer.createContainerElement('ai-tag', {
+                    id: modelElement.getAttribute('id')
+                });
+            }
+        });
+        editor.conversion.for('editingDowncast').elementToElement({
+            model: 'ai-tag',
+            view: (modelElement, { writer })=>{
+                const customTag = writer.createContainerElement('ai-tag', {
+                    id: modelElement.getAttribute('id')
+                });
+                return toWidget(customTag, writer);
+            }
         });
     }
     /**
@@ -374,16 +431,16 @@ class AiAssistUI extends Plugin {
     }
 }
 
-class AiAssistCommand extends Command {
-    aiAssistService;
+class AiAgentCommand extends Command {
+    aiAgentService;
     /**
-	 * Creates an instance of the AiAssistCommand.
+	 * Creates an instance of the AiAgentCommand.
 	 *
 	 * @param editor - The editor instance to which this command belongs.
-	 * @param aiAssistService - The service instance that handles AI assist functionality.
-	 */ constructor(editor, aiAssistService){
+	 * @param aiAgentService - The service instance that handles AI assist functionality.
+	 */ constructor(editor, aiAgentService){
         super(editor);
-        this.aiAssistService = aiAssistService;
+        this.aiAgentService = aiAgentService;
     }
     /**
 	 * Checks whether the command can be executed based on the current selection.
@@ -398,7 +455,7 @@ class AiAssistCommand extends Command {
 	 *
 	 * @param options - An optional parameter for additional execution options.
 	 */ async execute() {
-        await this.aiAssistService.handleSlashCommand();
+        await this.aiAgentService.handleSlashCommand();
     }
 }
 
@@ -411,7 +468,7 @@ class PromptHelper {
     debugMode;
     constructor(editor){
         this.editor = editor;
-        const config = editor.config.get('aiAssist');
+        const config = editor.config.get('aiAgent');
         this.contextSize = config.contextSize;
         this.responseOutputFormat = config.promptSettings?.outputFormat ?? [];
         this.responseContextData = config.promptSettings?.contextData ?? [];
@@ -484,11 +541,22 @@ class PromptHelper {
         corpus.push('10. Avoid using inline styles or class attributes unless specifically requested.');
         corpus.push('11. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.');
         corpus.push('12. Beginning word of response must be a valid html tag');
+        if (this.getAllowedHtmlTags().includes('img')) {
+            corpus.push('13. For image elements, follow these strict formatting rules:');
+            corpus.push('    a. Every <img> tag MUST include both src and alt attributes');
+            corpus.push('    b. Format the src URL exactly as: https://placehold.co/600x400?text=[alt_text]');
+            corpus.push('    c. The [alt_text] in the src URL must:');
+            corpus.push('       - Be identical to the alt attribute value');
+            corpus.push('       - Replace spaces with + characters');
+            corpus.push('       - Exclude any special characters');
+            corpus.push('    d. Example:');
+            corpus.push('       <img src="https://placehold.co/600x400?text=Beautiful+Sunset" alt="Beautiful Sunset">');
+        }
         // Join all instructions into a single formatted string.
         const systemPrompt = corpus.join('\n');
         // Log the system prompt if debug mode is enabled
         if (this.debugMode) {
-            console.group('AiAssist System Prompt Debug');
+            console.group('AiAgent System Prompt Debug');
             console.log('System Prompt:');
             console.log(systemPrompt);
             console.groupEnd();
@@ -558,7 +626,7 @@ class PromptHelper {
         }
         // Debugging Information
         if (this.debugMode) {
-            console.group('AiAssist Prompt Debug');
+            console.group('AiAgent Prompt Debug');
             console.log('User Prompt:', request);
             console.log('Generated GPT Prompt:');
             console.log(corpus.join('\n'));
@@ -658,7 +726,7 @@ class PromptHelper {
             const urlStr = emptyContent?.map((content)=>content?.url).join(',');
             errorMsg = t('Failed to fetch content of : %0', urlStr);
             if (errorMsg) {
-                aiAssistContext.showError(errorMsg);
+                aiAgentContext.showError(errorMsg);
             }
             throw new Error('Unable to fetch content for few urls');
         }
@@ -1060,7 +1128,7 @@ class HtmlParser {
     }
 }
 
-class AiAssistService {
+class AiAgentService {
     editor;
     aiModel;
     apiKey;
@@ -1071,21 +1139,21 @@ class AiAssistService {
     retryAttempts;
     streamContent;
     stopSequences;
-    aiAssistFeatureLockId = Symbol('ai-assist-feature');
+    aiAgentFeatureLockId = Symbol('ai-agent-feature');
     promptHelper;
     htmlParser;
     buffer = '';
     openTags = [];
     isInlineInsertion = false;
     /**
-	 * Initializes the AiAssistService with the provided editor and configuration settings.
+	 * Initializes the AiAgentService with the provided editor and configuration settings.
 	 *
 	 * @param editor - The CKEditor instance to be used with the AI assist service.
 	 */ constructor(editor){
         this.editor = editor;
         this.promptHelper = new PromptHelper(editor);
         this.htmlParser = new HtmlParser(editor);
-        const config = editor.config.get('aiAssist');
+        const config = editor.config.get('aiAgent');
         this.aiModel = config.model;
         this.apiKey = config.apiKey;
         this.endpointUrl = config.endpointUrl;
@@ -1137,7 +1205,7 @@ class AiAssistService {
             const domSelection = window.getSelection();
             const domRange = domSelection?.getRangeAt(0);
             const rect = domRange.getBoundingClientRect();
-            aiAssistContext.showLoader(rect);
+            aiAgentContext.showLoader(rect);
             const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(content ?? '', parentEquivalentHTML?.innerText);
             if (parent && gptPrompt) {
                 await this.fetchAndProcessGptResponse(gptPrompt, parent);
@@ -1147,7 +1215,7 @@ class AiAssistService {
             throw error;
         } finally{
             this.isInlineInsertion = false;
-            aiAssistContext.hideLoader();
+            aiAgentContext.hideLoader();
         }
     }
     /**
@@ -1165,6 +1233,7 @@ class AiAssistService {
         const timeoutId = setTimeout(()=>controller.abort(), this.timeOutDuration);
         let buffer = '';
         let contentBuffer = '';
+        const blockID = `ai-${new Date().getTime()}`;
         try {
             const response = await fetch(this.endpointUrl, {
                 method: 'POST',
@@ -1195,11 +1264,38 @@ class AiAssistService {
             if (!response.ok) {
                 throw new Error('Fetch failed');
             }
-            aiAssistContext.hideLoader();
+            aiAgentContext.hideLoader();
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
             this.clearParentContent(parent);
-            this.editor.enableReadOnlyMode(this.aiAssistFeatureLockId);
+            this.editor.enableReadOnlyMode(this.aiAgentFeatureLockId);
+            let insertParent = true;
+            editor.model.change((writer)=>{
+                const position = editor.model.document.selection.getLastPosition();
+                if (position) {
+                    const aiTag = writer.createElement('ai-tag', {
+                        id: blockID
+                    });
+                    const parent = position.parent;
+                    if (parent) {
+                        if (parent.parent?.name === 'tableCell') {
+                            insertParent = false;
+                        } else if (parent.getAttribute('listType') === 'bulleted') {
+                            insertParent = false;
+                        }
+                    }
+                    let parentContent = '';
+                    for (const child of parent.getChildren()){
+                        if (child.is('$text')) {
+                            parentContent += child.data;
+                        }
+                    }
+                    const parentPosition = parentContent ? writer.createPositionAfter(parent) : writer.createPositionBefore(parent);
+                    writer.insert(aiTag, insertParent ? parentPosition : position);
+                    const newPosition = writer.createPositionAt(aiTag, 'end');
+                    writer.setSelection(newPosition);
+                }
+            });
             console.log('Starting to process response');
             for(;;){
                 const { done, value } = await reader.read();
@@ -1224,30 +1320,27 @@ class AiAssistService {
                         try {
                             const data = JSON.parse(jsonStr);
                             const content = data.choices[0]?.delta?.content;
-                            if (content) {
+                            if (content !== null && content !== undefined) {
                                 contentBuffer += content;
-                                if (this.htmlParser.isCompleteHtmlChunk(contentBuffer)) {
-                                    await this.processContent(contentBuffer, parent);
-                                    contentBuffer = '';
-                                }
                             }
+                            await this.updateContent(contentBuffer, blockID, insertParent);
                         } catch (parseError) {
                             console.warn('Error parsing JSON:', parseError);
                         }
                     }
                 }
             }
-            // Process any remaining content in the buffer
-            if (contentBuffer.trim()) {
-                await this.processContent(contentBuffer.trim(), parent);
-            }
+            const editorData = editor.getData();
+            let editorContent = editorData.replace(`<ai-tag id="${blockID}">`, '');
+            editorContent = editorContent.replace('</ai-tag>', '');
+            editor.setData(editorContent);
         } catch (error) {
             console.error('Error in fetchAndProcessGptResponse:', error);
             const errorIdentifier = (error?.message || '').trim() || (error?.name || '').trim();
             const isRetryableError = [
                 'AbortError',
                 'ReadableStream not supported',
-                'AiAssist: Fetch failed'
+                'AiAgent: Fetch failed'
             ].includes(errorIdentifier);
             if (retries > 0 && isRetryableError) {
                 console.warn(`Retrying... (${retries} attempts left)`);
@@ -1258,16 +1351,49 @@ class AiAssistService {
                 case 'ReadableStream not supported':
                     errorMessage = t('Browser does not support readable streams');
                     break;
-                case 'AiAssist: Fetch failed':
+                case 'AiAgent: Fetch failed':
                     errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
                     break;
                 default:
                     errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
             }
-            aiAssistContext.showError(errorMessage);
+            aiAgentContext.showError(errorMessage);
         } finally{
-            this.editor.disableReadOnlyMode(this.aiAssistFeatureLockId);
+            this.editor.disableReadOnlyMode(this.aiAgentFeatureLockId);
         }
+    }
+    async updateContent(newHtml, blockID, insertParent) {
+        const editor = this.editor;
+        editor.model.change((writer)=>{
+            const root = editor.model.document.getRoot();
+            let targetElement = null;
+            if (root) {
+                for (const child of root.getChildren()){
+                    const childElement = child;
+                    if (insertParent) {
+                        if (childElement.is('element', 'ai-tag') && childElement.getAttribute('id') === blockID) {
+                            targetElement = childElement;
+                            break;
+                        }
+                    } else {
+                        for (const innerChild of childElement.getChildren()){
+                            if (innerChild.is('element', 'ai-tag') && innerChild.getAttribute('id') === blockID) {
+                                targetElement = innerChild;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (targetElement) {
+                    const range = editor.model.createRangeIn(targetElement);
+                    writer.remove(range);
+                    const viewFragment = editor.data.processor.toView(newHtml);
+                    const modelFragment = editor.data.toModel(viewFragment);
+                    writer.insert(modelFragment, targetElement, 'end');
+                }
+            }
+        });
+        await new Promise((resolve)=>setTimeout(resolve));
     }
     /**
 	 * Processes the provided content and inserts it into the specified parent element.
@@ -1276,7 +1402,7 @@ class AiAssistService {
 	 *
 	 * @param content - The content to be processed and inserted.
 	 * @param parent - The parent element in the editor where the content will be inserted.
-	 */ async processContent(content, parent) {
+	 */ async processContent(content) {
         try {
             console.log('--- Start of processContent ---');
             console.log('Processing content:', content, this.isInlineInsertion);
@@ -1384,16 +1510,16 @@ class AiAssistService {
     }
 }
 
-class AiAssistEditing extends Plugin {
+class AiAgentEditing extends Plugin {
     static get pluginName() {
-        return 'AiAssistEditing';
+        return 'AiAgentEditing';
     }
     /**
-	 * Initializes the AI Assist editing plugin, setting up commands and key handling.
+	 * Initializes the AI Agent editing plugin, setting up commands and key handling.
 	 */ init() {
         const editor = this.editor;
-        const aiAssistService = new AiAssistService(editor);
-        editor.commands.add('aiAssist', new AiAssistCommand(editor, aiAssistService));
+        const aiAgentService = new AiAgentService(editor);
+        editor.commands.add('aiAgent', new AiAgentCommand(editor, aiAgentService));
         this.setupEnterKeyHandling();
     }
     /**
@@ -1416,19 +1542,19 @@ class AiAssistEditing extends Plugin {
                 }
                 if (typeof content === 'string' && content.startsWith('/') || inlineSlash) {
                     cancel();
-                    await editor.execute('aiAssist');
+                    await editor.execute('aiAgent');
                 }
             }
         });
     }
 }
 
-class AiAssist extends Plugin {
+class AiAgent extends Plugin {
     DEFAULT_GPT_MODEL = 'gpt-4o';
     DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
     constructor(editor){
         super(editor);
-        const config = editor.config.get('aiAssist') || {};
+        const config = editor.config.get('aiAgent') || {};
         // Set default values and merge with provided config
         const defaultConfig = {
             model: this.DEFAULT_GPT_MODEL,
@@ -1453,30 +1579,30 @@ class AiAssist extends Plugin {
             ...config
         };
         // Set the merged config back to the editor
-        editor.config.set('aiAssist', updatedConfig);
+        editor.config.set('aiAgent', updatedConfig);
         // Validate configuration
         this.validateConfiguration(updatedConfig);
     }
     static get requires() {
         return [
-            AiAssistUI,
-            AiAssistEditing
+            AiAgentUI,
+            AiAgentEditing
         ];
     }
     static get pluginName() {
-        return 'AiAssist';
+        return 'AiAgent';
     }
     validateConfiguration(config) {
         if (!config.apiKey) {
-            throw new Error('AiAssist: apiKey is required.');
+            throw new Error('AiAgent: apiKey is required.');
         }
         if (config.temperature && (config.temperature < 0 || config.temperature > 2)) {
-            throw new Error('AiAssist: Temperature must be a number between 0 and 2.');
+            throw new Error('AiAgent: Temperature must be a number between 0 and 2.');
         }
         // Validate maxTokens based on the model's token limits
         const { min, max } = TOKEN_LIMITS[config.model];
         if (config.maxTokens < min || config.maxTokens > max) {
-            throw new Error(`AiAssist: maxTokens must be a number between ${min} and ${max}.`);
+            throw new Error(`AiAgent: maxTokens must be a number between ${min} and ${max}.`);
         }
     }
     init() {
@@ -1488,5 +1614,5 @@ const icons = {
     ckeditor
 };
 
-export { AiAssist, icons };
+export { AiAgent, icons };
 //# sourceMappingURL=index.js.map

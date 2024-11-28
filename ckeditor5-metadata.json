@@ -1,13 +1,13 @@
 {
   "plugins": [
     {
-      "name": "Ai assist",
-      "className": "AiAssist",
+      "name": "Ai agent",
+      "className": "AiAgent",
       "description": "Adds text to the editor.",
-      "path": "src/aiassist.ts",
+      "path": "src/aiagent.ts",
       "uiComponents": [
         {
-          "name": "aiAssistButton",
+          "name": "aiAgentButton",
           "type": "Button",
           "iconPath": "theme/icons/ckeditor.svg"
         }

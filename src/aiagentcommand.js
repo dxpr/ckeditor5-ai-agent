@@ -1,14 +1,14 @@
 import { Command } from 'ckeditor5/src/core.js';
-export default class AiAssistCommand extends Command {
+export default class AiAgentCommand extends Command {
     /**
-     * Creates an instance of the AiAssistCommand.
+     * Creates an instance of the AiAgentCommand.
      *
      * @param editor - The editor instance to which this command belongs.
-     * @param aiAssistService - The service instance that handles AI assist functionality.
+     * @param aiAgentService - The service instance that handles AI assist functionality.
      */
-    constructor(editor, aiAssistService) {
+    constructor(editor, aiAgentService) {
         super(editor);
-        this.aiAssistService = aiAssistService;
+        this.aiAgentService = aiAgentService;
     }
     /**
      * Checks whether the command can be executed based on the current selection.
@@ -25,6 +25,6 @@ export default class AiAssistCommand extends Command {
      * @param options - An optional parameter for additional execution options.
      */
     async execute() {
-        await this.aiAssistService.handleSlashCommand();
+        await this.aiAgentService.handleSlashCommand();
     }
 }

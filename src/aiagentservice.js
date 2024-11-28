@@ -8,7 +8,7 @@ export default class AiAgentService {
      * @param editor - The CKEditor instance to be used with the AI assist service.
      */
     constructor(editor) {
-        var _a, _b;
+        var _a, _b, _c;
         this.aiAgentFeatureLockId = Symbol('ai-agent-feature');
         this.buffer = '';
         this.openTags = [];
@@ -22,10 +22,10 @@ export default class AiAgentService {
         this.endpointUrl = config.endpointUrl;
         this.temperature = config.temperature;
         this.timeOutDuration = (_a = config.timeOutDuration) !== null && _a !== void 0 ? _a : 45000;
-        this.maxTokens = config.maxTokens;
+        this.maxTokens = (_b = config.maxOutputTokens) !== null && _b !== void 0 ? _b : config.maxTokens;
         this.retryAttempts = config.retryAttempts;
         this.stopSequences = config.stopSequences;
-        this.streamContent = (_b = config.streamContent) !== null && _b !== void 0 ? _b : true;
+        this.streamContent = (_c = config.streamContent) !== null && _c !== void 0 ? _c : true;
     }
     /**
      * Handles the slash command input from the user, processes it, and interacts with the AI model.

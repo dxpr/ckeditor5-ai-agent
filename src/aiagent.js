@@ -16,9 +16,10 @@ export default class AiAgent extends Plugin {
             endpointUrl: this.DEFAULT_AI_END_POINT,
             temperature: undefined,
             timeOutDuration: 45000,
-            maxTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].max,
+            maxOutputTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxOutputTokens,
+            maxInputTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxInputContextTokens,
             retryAttempts: 1,
-            contextSize: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].context * 0.75,
+            contextSize: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxInputContextTokens * 0.75,
             stopSequences: [],
             promptSettings: {
                 outputFormat: [],
@@ -47,10 +48,20 @@ export default class AiAgent extends Plugin {
         if (config.temperature && (config.temperature < 0 || config.temperature > 2)) {
             throw new Error('AiAgent: Temperature must be a number between 0 and 2.');
         }
-        // Validate maxTokens based on the model's token limits
-        const { min, max } = TOKEN_LIMITS[config.model];
-        if (config.maxTokens < min || config.maxTokens > max) {
-            throw new Error(`AiAgent: maxTokens must be a number between ${min} and ${max}.`);
+        const limits = TOKEN_LIMITS[config.model];
+        // Validate output tokens
+        if (config.maxOutputTokens !== undefined) {
+            if (config.maxOutputTokens < limits.minOutputTokens ||
+                config.maxOutputTokens > limits.maxOutputTokens) {
+                throw new Error(`AiAgent: maxOutputTokens must be between ${limits.minOutputTokens} ` +
+                    `and ${limits.maxOutputTokens} for ${config.model}`);
+            }
+        }
+        // Validate input tokens
+        if (config.maxInputTokens !== undefined &&
+            config.maxInputTokens > limits.maxInputContextTokens) {
+            throw new Error(`AiAgent: maxInputTokens cannot exceed ${limits.maxInputContextTokens} ` +
+                `for ${config.model}`);
         }
     }
     init() {

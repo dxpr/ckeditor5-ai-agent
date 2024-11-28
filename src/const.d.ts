@@ -1,7 +1,3 @@
-import type { AiModel } from './type-identifiers.js';
-export declare const TOKEN_LIMITS: Record<AiModel, {
-    min: number;
-    max: number;
-    context: number;
-}>;
+import type { AiModel, ModelTokenLimits } from './type-identifiers.js';
+export declare const TOKEN_LIMITS: Record<AiModel, ModelTokenLimits>;
 export declare const SUPPORTED_LANGUAGES: string[];

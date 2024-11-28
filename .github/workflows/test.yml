@@ -1,0 +1,50 @@
+name: Run Tests on PRs
+
+on:
+  pull_request:
+    branches:
+      - 1.x  # Run this action for PRs targeting the `1.x` branch
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use the Node.js version your project requires
+
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn install
+
+      # Install Xvfb
+      - name: Install Xvfb
+        run: sudo apt-get install -y xvfb
+
+      # Start Xvfb
+      - name: Start Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 &
+
+      # Set DISPLAY environment variable
+      - name: Set DISPLAY
+        run: echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      # Run tests
+      - name: Run tests
+        run: yarn test
+
+      # Upload test results (optional)
+      - name: Archive test results
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results/

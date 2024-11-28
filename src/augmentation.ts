@@ -21,20 +21,34 @@ declare module '@ckeditor/ckeditor5-core' {
 
 	interface EditorConfig {
         aiAgent?: {
-            model?: AiModel; // AI Model Selection
-            apiKey: string; // OPEN AI Key
-            temperature?: number; // Temperature Setting
-            maxTokens?: number; // Max Tokens
-            stopSequences?: Array<string>; // Stop Sequences
-            retryAttempts?: number; // Retry Attempts
-            contextSize?: number; // max content to includes as content
-            timeOutDuration?: number; // Time-Out Duration in milliseconds
-            endpointUrl?: string; // Endpoint URL
+            model?: AiModel;
+            apiKey: string;
+
+            // Temperature Setting
+            temperature?: number;
+
+            // Token Configuration
+            maxOutputTokens?: number;
+            maxInputTokens?: number;
+            maxTokens?: number;
+
+            // Sequence Control
+            stopSequences?: Array<string>;
+            retryAttempts?: number;
+
+            // Context Configuration
+            contextSize?: number;
+            timeOutDuration?: number;
+            endpointUrl?: string;
+
+            // Prompt Settings
             promptSettings?: {
                 outputFormat?: Array<string>;
                 contextData?: Array<string>;
                 filters?: Array<string>;
             };
+
+            // Behavior Settings
             streamContent?: boolean;
             debugMode?: boolean;
         };

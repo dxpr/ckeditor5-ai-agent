@@ -1,11 +1,27 @@
-import type { AiModel } from './type-identifiers.js';
+import type { AiModel, ModelTokenLimits } from './type-identifiers.js';
 
 // const
-export const TOKEN_LIMITS: Record<AiModel, { min: number; max: number; context: number }> = {
-	'gpt-3.5-turbo': { min: 1, max: 4096, context: 16385 },
-	'gpt-4o': { min: 0, max: 16384, context: 128000 },
-	'gpt-4o-mini': { min: 1, max: 16384, context: 128000 },
-	'kavya-m1': { min: 0, max: 16384, context: 128000 }
+export const TOKEN_LIMITS: Record<AiModel, ModelTokenLimits> = {
+	'gpt-3.5-turbo': {
+		minOutputTokens: 1,
+		maxOutputTokens: 4096,
+		maxInputContextTokens: 16385
+	},
+	'gpt-4o': {
+		minOutputTokens: 0,
+		maxOutputTokens: 16384,
+		maxInputContextTokens: 128000
+	},
+	'gpt-4o-mini': {
+		minOutputTokens: 1,
+		maxOutputTokens: 16384,
+		maxInputContextTokens: 128000
+	},
+	'kavya-m1': {
+		minOutputTokens: 0,
+		maxOutputTokens: 16384,
+		maxInputContextTokens: 128000
+	}
 };
 
 export const SUPPORTED_LANGUAGES = [ 'en', 'es', 'hi', 'nl' ];

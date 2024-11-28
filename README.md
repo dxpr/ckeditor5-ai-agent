@@ -59,7 +59,8 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
 | `apiKey` | `string` | Your Open_AI key for authenticate. |
 | `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
-| `maxTokens` | `number` | The maximum number of tokens to generate. Should be within the model's token limits. (optional)|
+| `maxOutputTokens` | `number` | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. (optional) |
+| `maxInputTokens` | `number` | Maximum number of tokens allowed in the combined prompt and context sent to the AI. Cannot exceed the model's context window size. (optional) |
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
 | `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|

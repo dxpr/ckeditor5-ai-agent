@@ -51,6 +51,7 @@ declare module '@ckeditor/ckeditor5-core' {
             // Behavior Settings
             streamContent?: boolean;
             debugMode?: boolean;
+            moderation?: boolean;
         };
     }
 }

@@ -35,6 +35,7 @@ declare module '@ckeditor/ckeditor5-core' {
             };
             streamContent?: boolean;
             debugMode?: boolean;
+            moderation?: boolean;
         };
     }
 }

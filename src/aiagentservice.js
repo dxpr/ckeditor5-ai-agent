@@ -8,11 +8,12 @@ export default class AiAgentService {
      * @param editor - The CKEditor instance to be used with the AI assist service.
      */
     constructor(editor) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         this.aiAgentFeatureLockId = Symbol('ai-agent-feature');
         this.buffer = '';
         this.openTags = [];
         this.isInlineInsertion = false;
+        this.moderationUrl = 'https://api.openai.com/v1/moderations';
         this.editor = editor;
         this.promptHelper = new PromptHelper(editor);
         this.htmlParser = new HtmlParser(editor);
@@ -26,6 +27,7 @@ export default class AiAgentService {
         this.retryAttempts = config.retryAttempts;
         this.stopSequences = config.stopSequences;
         this.streamContent = (_c = config.streamContent) !== null && _c !== void 0 ? _c : true;
+        this.moderation = (_d = config.moderation) !== null && _d !== void 0 ? _d : false;
     }
     /**
      * Handles the slash command input from the user, processes it, and interacts with the AI model.
@@ -68,6 +70,12 @@ export default class AiAgentService {
                 content = parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.innerText;
             }
         }
+        if (this.moderation) {
+            const moderateContent = await this.moderateContent(content !== null && content !== void 0 ? content : '');
+            if (!moderateContent) {
+                return;
+            }
+        }
         try {
             const domSelection = window.getSelection();
             const domRange = domSelection === null || domSelection === void 0 ? void 0 : domSelection.getRangeAt(0);
@@ -85,6 +93,68 @@ export default class AiAgentService {
         finally {
             this.isInlineInsertion = false;
             aiAgentContext.hideLoader();
+        }
+    }
+    /**
+     * Moderates the input content using OpenAI's moderation API to check for inappropriate content.
+     *
+     * @param input - The text content to be moderated
+     * @returns A promise that resolves to:
+     * - `true` if content is acceptable or if moderation fails (fail-open)
+     * - `false` if content is flagged as inappropriate
+     *
+     * @throws Shows user-friendly error messages via aiAgentContext for:
+     * - Flagged content ("Cannot process your query...")
+     * - API errors ("Error in content moderation")
+     */
+    async moderateContent(input) {
+        var _a;
+        const editor = this.editor;
+        const t = editor.t;
+        const controller = new AbortController();
+        // Set timeout for moderation request
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        try {
+            const response = await fetch(this.moderationUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (!((_a = data === null || data === void 0 ? void 0 : data.results) === null || _a === void 0 ? void 0 : _a[0])) {
+                throw new Error('Invalid moderation response format');
+            }
+            if (data.results[0].flagged) {
+                aiAgentContext.showError(t('Cannot process your query, please adjust your query'));
+                return false;
+            }
+            return true;
+        }
+        catch (error) {
+            console.error('Moderation error:', error);
+            // Handle specific error cases
+            if (error instanceof TypeError) {
+                aiAgentContext.showError(t('Network error during content moderation'));
+            }
+            else if (error instanceof DOMException && error.name === 'AbortError') {
+                aiAgentContext.showError(t('Content moderation timed out'));
+            }
+            else {
+                aiAgentContext.showError(t('Error in content moderation'));
+            }
+            // Fail open for moderation errors
+            return true;
+        }
+        finally {
+            clearTimeout(timeoutId);
         }
     }
     /**

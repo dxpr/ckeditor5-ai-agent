@@ -105,6 +105,14 @@ export default class AiAgentUI extends Plugin {
             });
             return view;
         });
+        editor.accessibility.addKeystrokeInfos({
+            keystrokes: [
+                {
+                    label: t('Insert slash command (AI Agent)'),
+                    keystroke: '/'
+                }
+            ]
+        });
         editor.model.schema.register('ai-tag', {
             inheritAllFrom: '$block',
             isInline: true,

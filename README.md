@@ -69,8 +69,18 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
 | `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `promptSettings.overrides` | `object` | Override default prompt components. See Prompt Settings section below. (optional) |
-| `promptSettings.additions` | `object` | Add rules to default prompt components. See Prompt Settings section below. (optional) |
+| `promptSettings.overrides.responseRules` | `string` | Override core response generation rules and formatting |
+| `promptSettings.overrides.htmlFormatting` | `string` | Override HTML generation rules and tag structure |
+| `promptSettings.overrides.contentStructure` | `string` | Override document structure and organization guidelines |
+| `promptSettings.overrides.tone` | `string` | Override language style and voice settings |
+| `promptSettings.overrides.inlineContent` | `string` | Override inline content, list, and table handling |
+| `promptSettings.overrides.imageHandling` | `string` | Override image formatting and attribute requirements |
+| `promptSettings.additions.responseRules` | `string` | Additional response generation rules |
+| `promptSettings.additions.htmlFormatting` | `string` | Additional HTML formatting requirements |
+| `promptSettings.additions.contentStructure` | `string` | Additional structure guidelines |
+| `promptSettings.additions.tone` | `string` | Additional tone and style requirements |
+| `promptSettings.additions.inlineContent` | `string` | Additional inline content handling rules |
+| `promptSettings.additions.imageHandling` | `string` | Additional image processing requirements |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
 | `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
 
@@ -82,16 +92,16 @@ The plugin uses various prompt components to guide AI response generation. You c
 
 Each component can be customized using either `overrides` (to replace default rules) or `additions` (to add new rules):
 
-- `html-formatting`: Rules for HTML generation
-- `content-structure`: Document structure guidelines
+- `htmlFormatting`: Rules for HTML generation
+- `contentStructure`: Document structure guidelines
 - `tone`: Language and tone settings
-- `response-rules`: Core response generation rules
-- `inline-content`: Inline content handling rules
-- `image-handling`: Image element requirements
+- `responseRules`: Core response generation rules
+- `inlineContent`: Inline content handling rules
+- `imageHandling`: Image element requirements
 
 #### Default Components
 
-##### Core Response Rules (`response-rules`)
+##### Core Response Rules (`responseRules`)
 ```typescript
 `Follow these step-by-step instructions to respond to user inputs:
 Analyze the CONTEXT section thoroughly to understand the existing content and its style
@@ -112,7 +122,7 @@ Follow the specified language requirements
 Adhere to all HTML formatting rules`
 ```
 
-##### HTML Formatting (`html-formatting`)
+##### HTML Formatting (`htmlFormatting`)
 ```typescript
 `HTML Formatting Requirements:
 Generate valid HTML snippets only
@@ -129,7 +139,7 @@ First word must be a valid HTML tag
 Block elements must not contain other block elements`
 ```
 
-##### Content Structure (`content-structure`)
+##### Content Structure (`contentStructure`)
 ```typescript
 `Content Structure Rules:
 Organize information logically
@@ -153,7 +163,7 @@ Keep the tone engaging and reader-friendly
 Adapt style based on content type`
 ```
 
-##### Inline Content (`inline-content`)
+##### Inline Content (`inlineContent`)
 ```typescript
 `Inline Content Specific Rules:
 Determine content type (list, table, or inline)
@@ -162,7 +172,7 @@ Ensure seamless integration
 Maintain proper nesting`
 ```
 
-##### Image Handling (`image-handling`)
+##### Image Handling (`imageHandling`)
 ```typescript
 `Image Element Requirements:
 Every <img> must have src and alt attributes

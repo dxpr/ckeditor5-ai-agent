@@ -69,11 +69,146 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
 | `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
-| `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
-| `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
+| `promptSettings.overrides` | `object` | Override default prompt components. See Prompt Settings section below. (optional) |
+| `promptSettings.additions` | `object` | Add rules to default prompt components. See Prompt Settings section below. (optional) |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
 | `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
+
+### Prompt Settings
+
+The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
+
+#### Available Components
+
+Each component can be customized using either `overrides` (to replace default rules) or `additions` (to add new rules):
+
+- `html-formatting`: Rules for HTML generation
+- `content-structure`: Document structure guidelines
+- `tone`: Language and tone settings
+- `response-rules`: Core response generation rules
+- `inline-content`: Inline content handling rules
+- `image-handling`: Image element requirements
+
+#### Default Components
+
+##### Core Response Rules (`response-rules`)
+```typescript
+`Follow these step-by-step instructions to respond to user inputs:
+1. Analyze the CONTEXT section thoroughly to understand the existing content and its style
+2. Identify the specific requirements from the TASK section
+3. If markdown content is present, extract relevant information that aligns with the task
+4. Determine the appropriate tone and style based on the context
+5. Generate a response that seamlessly integrates with the existing content
+6. Format the response according to the HTML and structural requirements
+7. Verify that the response meets all formatting and content guidelines
+
+Core Response Generation Rules:
+1. Replace "@@@cursor@@@" with contextually appropriate content
+2. Maintain consistency with the surrounding text's tone and style
+3. Ensure the response flows naturally with the existing content
+4. Avoid repeating context verbatim
+5. Generate original content that adds value
+6. Follow the specified language requirements
+7. Adhere to all HTML formatting rules`
+```
+
+##### HTML Formatting (`html-formatting`)
+```typescript
+`HTML Formatting Requirements:
+1. Generate valid HTML snippets only
+2. Use only the following allowed tags: ${getAllowedHtmlTags(this.editor).join(', ')}
+3. Ensure proper tag nesting
+4. Avoid empty elements
+5. Use semantic HTML where appropriate
+6. Maintain clean, readable HTML structure
+7. Follow block-level element rules
+8. Properly close all tags
+9. No inline styles unless specified
+10. No script or style tags
+11. First word must be a valid HTML tag
+12. Block elements must not contain other block elements`
+```
+
+##### Content Structure (`content-structure`)
+```typescript
+`Content Structure Rules:
+1. Organize information logically
+2. Use appropriate paragraph breaks
+3. Maintain consistent formatting
+4. Follow document hierarchy
+5. Use appropriate list structures when needed
+6. Ensure proper content flow
+7. Respect existing document structure`
+```
+
+##### Tone Guidelines (`tone`)
+```typescript
+`Language and Tone Guidelines:
+1. Match the formality level of the surrounding content
+2. Maintain consistent voice throughout the response
+3. Use appropriate technical terminology when relevant
+4. Ensure proper grammar and punctuation
+5. Avoid overly complex sentence structures
+6. Keep the tone engaging and reader-friendly
+7. Adapt style based on content type`
+```
+
+##### Inline Content (`inline-content`)
+```typescript
+`Inline Content Specific Rules:
+1. Determine content type (list, table, or inline)
+2. Format according to content type
+3. Ensure seamless integration
+4. Maintain proper nesting`
+```
+
+##### Image Handling (`image-handling`)
+```typescript
+`Image Element Requirements:
+1. Every <img> must have src and alt attributes
+2. Format src URLs as: https://placehold.co/600x400?text=[alt_text]
+3. Alt text must be descriptive and meaningful`
+```
+
+#### Usage Examples
+
+Override default rules:
+```typescript
+ClassicEditor.create(document.querySelector('#editor'), {
+    plugins: [AiAgent],
+    aiAgent: {
+        promptSettings: {
+            overrides: {
+                'html-formatting': `HTML Requirements:
+1. Use only <p> and <strong> tags
+2. Always wrap text in paragraphs
+3. No nested elements allowed
+4. Keep HTML structure minimal
+5. Validate all markup`
+            }
+        }
+    }
+});
+```
+
+Add additional rules:
+```typescript
+ClassicEditor.create(document.querySelector('#editor'), {
+    plugins: [AiAgent],
+    aiAgent: {
+        promptSettings: {
+            additions: {
+                'content-structure': `
+Keep paragraphs under 100 words
+Start each section with a topic sentence
+Use descriptive headings`
+            }
+        }
+    }
+});
+```
+
+Note: When using overrides, all default rules for that component are replaced. When using additions, new rules are appended to the existing defaults.
 
 ## Usage Examples
 

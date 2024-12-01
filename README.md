@@ -18,7 +18,7 @@
 
 To install the `AiAgent` plugin in your CKEditor 5 setup, follow these steps:
 
-1. Install the plugin via npm:
+Install the plugin via npm:
 
    ```bash
    npm install ai-agent-ckeditor-plugin
@@ -94,80 +94,80 @@ Each component can be customized using either `overrides` (to replace default ru
 ##### Core Response Rules (`response-rules`)
 ```typescript
 `Follow these step-by-step instructions to respond to user inputs:
-1. Analyze the CONTEXT section thoroughly to understand the existing content and its style
-2. Identify the specific requirements from the TASK section
-3. If markdown content is present, extract relevant information that aligns with the task
-4. Determine the appropriate tone and style based on the context
-5. Generate a response that seamlessly integrates with the existing content
-6. Format the response according to the HTML and structural requirements
-7. Verify that the response meets all formatting and content guidelines
+Analyze the CONTEXT section thoroughly to understand the existing content and its style
+Identify the specific requirements from the TASK section
+If markdown content is present, extract relevant information that aligns with the task
+Determine the appropriate tone and style based on the context
+Generate a response that seamlessly integrates with the existing content
+Format the response according to the HTML and structural requirements
+Verify that the response meets all formatting and content guidelines
 
 Core Response Generation Rules:
-1. Replace "@@@cursor@@@" with contextually appropriate content
-2. Maintain consistency with the surrounding text's tone and style
-3. Ensure the response flows naturally with the existing content
-4. Avoid repeating context verbatim
-5. Generate original content that adds value
-6. Follow the specified language requirements
-7. Adhere to all HTML formatting rules`
+Replace "@@@cursor@@@" with contextually appropriate content
+Maintain consistency with the surrounding text's tone and style
+Ensure the response flows naturally with the existing content
+Avoid repeating context verbatim
+Generate original content that adds value
+Follow the specified language requirements
+Adhere to all HTML formatting rules`
 ```
 
 ##### HTML Formatting (`html-formatting`)
 ```typescript
 `HTML Formatting Requirements:
-1. Generate valid HTML snippets only
-2. Use only the following allowed tags: ${getAllowedHtmlTags(this.editor).join(', ')}
-3. Ensure proper tag nesting
-4. Avoid empty elements
-5. Use semantic HTML where appropriate
-6. Maintain clean, readable HTML structure
-7. Follow block-level element rules
-8. Properly close all tags
-9. No inline styles unless specified
-10. No script or style tags
-11. First word must be a valid HTML tag
-12. Block elements must not contain other block elements`
+Generate valid HTML snippets only
+Use only the following allowed tags: ${getAllowedHtmlTags(this.editor).join(', ')}
+Ensure proper tag nesting
+Avoid empty elements
+Use semantic HTML where appropriate
+Maintain clean, readable HTML structure
+Follow block-level element rules
+Properly close all tags
+No inline styles unless specified
+No script or style tags
+First word must be a valid HTML tag
+Block elements must not contain other block elements`
 ```
 
 ##### Content Structure (`content-structure`)
 ```typescript
 `Content Structure Rules:
-1. Organize information logically
-2. Use appropriate paragraph breaks
-3. Maintain consistent formatting
-4. Follow document hierarchy
-5. Use appropriate list structures when needed
-6. Ensure proper content flow
-7. Respect existing document structure`
+Organize information logically
+Use appropriate paragraph breaks
+Maintain consistent formatting
+Follow document hierarchy
+Use appropriate list structures when needed
+Ensure proper content flow
+Respect existing document structure`
 ```
 
 ##### Tone Guidelines (`tone`)
 ```typescript
 `Language and Tone Guidelines:
-1. Match the formality level of the surrounding content
-2. Maintain consistent voice throughout the response
-3. Use appropriate technical terminology when relevant
-4. Ensure proper grammar and punctuation
-5. Avoid overly complex sentence structures
-6. Keep the tone engaging and reader-friendly
-7. Adapt style based on content type`
+Match the formality level of the surrounding content
+Maintain consistent voice throughout the response
+Use appropriate technical terminology when relevant
+Ensure proper grammar and punctuation
+Avoid overly complex sentence structures
+Keep the tone engaging and reader-friendly
+Adapt style based on content type`
 ```
 
 ##### Inline Content (`inline-content`)
 ```typescript
 `Inline Content Specific Rules:
-1. Determine content type (list, table, or inline)
-2. Format according to content type
-3. Ensure seamless integration
-4. Maintain proper nesting`
+Determine content type (list, table, or inline)
+Format according to content type
+Ensure seamless integration
+Maintain proper nesting`
 ```
 
 ##### Image Handling (`image-handling`)
 ```typescript
 `Image Element Requirements:
-1. Every <img> must have src and alt attributes
-2. Format src URLs as: https://placehold.co/600x400?text=[alt_text]
-3. Alt text must be descriptive and meaningful`
+Every <img> must have src and alt attributes
+Format src URLs as: https://placehold.co/600x400?text=[alt_text]
+Alt text must be descriptive and meaningful`
 ```
 
 #### Usage Examples
@@ -180,11 +180,11 @@ ClassicEditor.create(document.querySelector('#editor'), {
         promptSettings: {
             overrides: {
                 'html-formatting': `HTML Requirements:
-1. Use only <p> and <strong> tags
-2. Always wrap text in paragraphs
-3. No nested elements allowed
-4. Keep HTML structure minimal
-5. Validate all markup`
+Use only <p> and <strong> tags
+Always wrap text in paragraphs
+No nested elements allowed
+Keep HTML structure minimal
+Validate all markup`
             }
         }
     }
@@ -214,12 +214,12 @@ Note: When using overrides, all default rules for that component are replaced. W
 
 Here are some examples of how to use the SlashCommandPlugin:
 
-1. **Basic Command**
+**Basic Command**
    ```
    /write about SuperHero
    ```
 
-2. **Compile Command with URLs**
+**Compile Command with URLs**
    ```
    /Benefits of mindfulness in 500 words: 
    https://www.mindful.org/how-to-practice-mindfulness/

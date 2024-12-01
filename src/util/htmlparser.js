@@ -1,7 +1,9 @@
 export class HtmlParser {
     constructor(editor) {
+        var _a;
         this.editor = editor;
         this.model = editor.model;
+        this.debugMode = (_a = editor.config.get('aiAgent.debugMode')) !== null && _a !== void 0 ? _a : false;
     }
     /**
      * Inserts simple HTML content into the editor.
@@ -11,7 +13,9 @@ export class HtmlParser {
      */
     async insertSimpleHtml(html) {
         var _a;
-        console.log('Attempting to insert simple HTML:', html);
+        if (this.debugMode) {
+            console.log('Attempting to insert simple HTML:', html);
+        }
         const viewFragment = this.editor.data.processor.toView(html);
         const modelFragment = this.editor.data.toModel(viewFragment, '$root');
         const selection = this.model.document.selection;

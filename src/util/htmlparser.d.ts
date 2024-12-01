@@ -3,6 +3,7 @@ import type { Element, Position } from 'ckeditor5/src/engine.js';
 export declare class HtmlParser {
     private editor;
     private model;
+    private debugMode;
     constructor(editor: Editor);
     /**
      * Inserts simple HTML content into the editor.

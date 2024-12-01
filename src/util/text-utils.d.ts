@@ -1,3 +1,4 @@
+import type { Editor } from 'ckeditor5/src/core.js';
 /**
  * Utility functions for text processing operations.
  */
@@ -16,4 +17,4 @@ export declare function removeLeadingSpaces(text: string): string;
  * @param reverse - Whether to extract from the end of the text
  * @returns The extracted text portion
  */
-export declare function extractEditorContent(contentAfterPrompt: string, contextSize: number, reverse?: boolean): string;
+export declare function extractEditorContent(contentAfterPrompt: string, contextSize: number, reverse: boolean | undefined, editor: Editor): string;

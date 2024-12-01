@@ -14,16 +14,6 @@ export class PromptHelper {
         this.responseFilters = (_f = (_e = config.promptSettings) === null || _e === void 0 ? void 0 : _e.filters) !== null && _f !== void 0 ? _f : [];
         this.debugMode = (_g = config.debugMode) !== null && _g !== void 0 ? _g : false;
     }
-    /**
-     * Constructs the system prompt that guides the AI in generating responses.
-     *
-     * This method assembles a comprehensive set of instructions and context
-     * that the AI will utilize to formulate responses based on user input
-     * and the provided content, ensuring adherence to specified rules and formats.
-     *
-     * @param isInlineResponse - A boolean indicating whether the response should be inline.
-     * @returns A string containing the formatted system prompt for the AI.
-    */
     getSystemPrompt(isInlineResponse = false) {
         const corpus = [];
         // Core system instructions
@@ -139,25 +129,32 @@ export class PromptHelper {
 				${this.responseOutputFormat.join('\n')}
 			`);
         }
-        // Debug mode handling
         const systemPrompt = corpus.map(text => removeLeadingSpaces(text)).join('\n\n');
         if (this.debugMode) {
             console.group('AiAgent System Prompt Debug');
-            console.log('System Prompt:');
-            console.log(systemPrompt);
+            console.log('System Prompt:', systemPrompt);
             console.groupEnd();
         }
         return systemPrompt;
     }
-    /**
-     * Formats the final prompt to be sent to the GPT model, including context and instructions.
-     *
-     * @param request - The user's request string.
-     * @param context - The trimmed context string.
-     * @param markDownContents - An array of MarkdownContent objects for additional context.
-     * @param isEditorEmpty - A boolean indicating if the editor is empty.
-     * @returns The formatted prompt string.
-     */
+    trimContext(prompt, promptContainerText) {
+        if (!promptContainerText) {
+            promptContainerText = this.editor.getData();
+        }
+        const cursorPosition = promptContainerText.indexOf('@@@cursor@@@');
+        let contentBeforePrompt = '';
+        let contentAfterPrompt = '';
+        if (cursorPosition !== -1) {
+            contentBeforePrompt = extractEditorContent(promptContainerText.substring(0, cursorPosition), this.contextSize, true, this.editor);
+            contentAfterPrompt = extractEditorContent(promptContainerText.substring(cursorPosition + 13), this.contextSize, false, this.editor);
+        }
+        else {
+            const editorContent = this.editor.getData();
+            contentAfterPrompt = extractEditorContent(editorContent, this.contextSize, false, this.editor);
+            contentBeforePrompt = extractEditorContent(editorContent, this.contextSize, true, this.editor);
+        }
+        return `${contentBeforePrompt}@@@cursor@@@${contentAfterPrompt}`;
+    }
     formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
         if (this.debugMode) {
             console.group('formatFinalPrompt Debug');
@@ -166,12 +163,11 @@ export class PromptHelper {
             console.log('MarkDownContents:', markDownContents);
             console.log('IsEditorEmpty:', isEditorEmpty);
         }
-        const contentLanguageCode = this.editor.locale.contentLanguage;
-        let prompt = '';
-        // Context section
-        prompt += `CONTEXT:\n\n"""\n${context}\n"""\n\n`;
-        // Task section
-        prompt += `TASK:\n\n"""\n${request}\n"""\n`;
+        let prompt = 'TASK:\n' + request + '\n\n';
+        // Add context section if not empty
+        if (!isEditorEmpty) {
+            prompt += 'CONTEXT:\n' + context + '\n\n';
+        }
         // Markdown content section
         if (markDownContents.length) {
             prompt += `
@@ -186,86 +182,13 @@ export class PromptHelper {
 				`;
             });
         }
-        // Response format section
-        if (this.responseOutputFormat.length) {
-            prompt += '\n\nOUTPUT FORMAT:\n\n';
-            prompt += this.responseOutputFormat.join('\n');
-        }
-        // Context data section
-        if (this.responseContextData.length) {
-            prompt += '\n\nADDITIONAL CONTEXT:\n\n';
-            prompt += this.responseContextData.join('\n');
-        }
-        // Filters section
-        if (this.responseFilters.length) {
-            prompt += '\n\nCONTENT FILTERS:\n\n';
-            prompt += this.responseFilters.join('\n');
-        }
-        // Language section
-        if (contentLanguageCode) {
-            prompt += `\n\nLANGUAGE: ${contentLanguageCode}`;
-        }
-        // Empty editor note
-        if (isEditorEmpty) {
-            prompt += '\n\nNOTE: The editor is empty. Feel free to start fresh.';
-        }
-        // Debug logging
         if (this.debugMode) {
             console.group('AiAgent Final Prompt Debug');
             console.log('Final Prompt:', prompt);
-            console.log('Final formatted prompt:', prompt);
             console.groupEnd();
         }
         return prompt;
     }
-    /**
-     * Trims the context around the user's prompt to create a suitable context for the AI model.
-     * This method identifies the position of the user's prompt within the provided text and extracts
-     * the surrounding context, placing a cursor placeholder where the prompt is located.
-     *
-     * @param prompt - The user's prompt string to locate within the context.
-     * @param promptContainerText - The text container in which the prompt is located (optional).
-     * @returns The trimmed context string with a cursor placeholder indicating the prompt's position.
-    */
-    trimContext(prompt, promptContainerText) {
-        // Get the editor content if promptContainerText is not provided
-        if (!promptContainerText) {
-            promptContainerText = this.editor.getData();
-        }
-        const cursorPosition = promptContainerText.indexOf('@@@cursor@@@');
-        let contentBeforePrompt = '';
-        let contentAfterPrompt = '';
-        if (cursorPosition !== -1) {
-            contentBeforePrompt = extractEditorContent(promptContainerText.substring(0, cursorPosition), this.contextSize, true);
-            contentAfterPrompt = extractEditorContent(promptContainerText.substring(cursorPosition + 13), this.contextSize);
-        }
-        else {
-            // If no cursor found, use the editor content
-            const editorContent = this.editor.getData();
-            contentAfterPrompt = extractEditorContent(editorContent, this.contextSize);
-            contentBeforePrompt = extractEditorContent(editorContent, this.contextSize, true);
-        }
-        return `${contentBeforePrompt}@@@cursor@@@${contentAfterPrompt}`;
-    }
-    /**
-     * Allocates tokens to fetched content based on available limits.
-     */
-    allocateTokensToFetchedContent(prompt, fetchedContent) {
-        const promptTokens = countTokens(prompt);
-        const maxTokens = this.contextSize;
-        const availableTokens = Math.max(0, maxTokens - promptTokens);
-        if (availableTokens === 0 || !fetchedContent.length) {
-            return fetchedContent;
-        }
-        const tokensPerContent = Math.floor(availableTokens / fetchedContent.length);
-        return fetchedContent.map(content => ({
-            ...content,
-            content: trimLLMContentByTokens(content.content, tokensPerContent)
-        }));
-    }
-    /**
-     * Generates markdown content from URLs with proper error handling.
-     */
     async generateMarkDownForUrls(urls) {
         try {
             const markdownContents = [];
@@ -290,166 +213,24 @@ export class PromptHelper {
             return this.allocateTokensToFetchedContent(this.getSystemPrompt(), markdownContents);
         }
         catch (error) {
-            console.error('Error generating markdown content:', error);
+            if (this.debugMode) {
+                console.error('Error generating markdown content:', error);
+            }
             aiAgentContext.showError('Failed to generate markdown content');
             return [];
         }
     }
-    /**
-     * Fetches the content of a given URL and returns it as a string.
-     *
-     * @param url - The URL to fetch content from.
-     * @returns A promise that resolves to the fetched content as a string.
-     * @throws Will throw an error if the URL is invalid or if the fetch fails.
-     */
-    async fetchUrlContent(url) {
-        const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-        const trimmedUrl = url.trim();
-        if (!urlRegex.test(trimmedUrl)) {
-            throw new Error('Invalid URL');
+    allocateTokensToFetchedContent(prompt, fetchedContent) {
+        const promptTokens = countTokens(prompt);
+        const maxTokens = this.contextSize;
+        const availableTokens = Math.max(0, maxTokens - promptTokens);
+        if (availableTokens === 0 || !fetchedContent.length) {
+            return fetchedContent;
         }
-        try {
-            // Use a regular expression to remove hidden characters
-            const cleanedUrl = trimmedUrl.replace(/[^\x20-\x7E]/g, '');
-            const requestURL = `https://r.jina.ai/${cleanedUrl.trim()}`;
-            const response = await fetch(requestURL.trim(), {
-                headers: {
-                    'X-With-Generated-Alt': 'true'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const content = await response.text();
-            // Updated error matching
-            if (content.includes('Warning: Target URL returned error')) {
-                throw new Error(`Target URL (${trimmedUrl}) returned an error`);
-            }
-            if (content.trim().length === 0) {
-                throw new Error('Empty content received');
-            }
-            return content.replace(/\(https?:\/\/[^\s]+\)/g, '').replace(/^\s*$/gm, '').trim();
-        }
-        catch (error) {
-            if (this.debugMode) {
-                console.error(`Failed to fetch content: ${url}`, error);
-            }
-            return '';
-        }
-    }
-    /**
-     * Counts the number of tokens in the provided content string.
-     *
-     * @param content - The content string to count tokens in.
-     * @returns The number of tokens in the content.
-     */
-    countTokens(content) {
-        if (!content || typeof content !== 'string') {
-            return 0;
-        }
-        // Normalize the content by trimming and reducing multiple whitespaces.
-        const normalizedContent = content
-            .trim()
-            .replace(/\s+/g, ' ');
-        // Approximate tokens by breaking words, contractions, and common punctuation marks.
-        const tokens = normalizedContent.match(/\b\w+('\w+)?\b|[.,!?;:"(){}[\]]/g) || [];
-        // Heuristic: Long words (over 10 characters) are likely to be split into multiple tokens.
-        // GPT often breaks down long words into smaller subword chunks.
-        let approxTokenCount = 0;
-        tokens.forEach(token => {
-            // Break long words into chunks to approximate GPT subword tokenization.
-            if (token.length > 10) {
-                approxTokenCount += Math.ceil(token.length / 4); // Approximation: 4 characters per token.
-            }
-            else {
-                approxTokenCount += 1;
-            }
-        });
-        return approxTokenCount;
-    }
-    /**
-     * Trims the LLM content by tokens while ensuring that sentences or other structures (e.g., bullet points, paragraphs)
-     * are not clipped mid-way.
-     *
-     * @param content - The LLM-generated content string to trim.
-     * @param maxTokens - The maximum number of tokens allowed.
-     * @returns The trimmed content string.
-     */
-    trimLLMContentByTokens(content, maxTokens) {
-        const elements = content.split('\n');
-        let accumulatedTokens = 0;
-        let trimmedContent = '';
-        for (const element of elements) {
-            const elementTokenCount = this.countTokens(element);
-            if (accumulatedTokens + elementTokenCount > maxTokens) {
-                break; // Stop if adding this element would exceed the token limit.
-            }
-            accumulatedTokens += elementTokenCount;
-            trimmedContent += element + '\n'; // Add the whole structural element.
-        }
-        return trimmedContent;
-    }
-    /**
-     * Retrieves the allowed HTML tags based on the CKEditor schema.
-     *
-     * @returns An array of allowed HTML tags.
-     */
-    getAllowedHtmlTags() {
-        const editor = this.editor;
-        const schema = editor.model.schema;
-        const definitions = schema.getDefinitions();
-        const schemaNodes = Object.keys(definitions).sort();
-        // Map of CKEditor nodes to HTML tags
-        const nodeToHtmlMap = {
-            blockQuote: 'blockquote',
-            caption: 'figcaption',
-            codeBlock: 'pre',
-            heading1: 'h1',
-            heading2: 'h2',
-            heading3: 'h3',
-            imageBlock: 'img',
-            imageInline: 'img',
-            paragraph: 'p',
-            table: 'table',
-            tableCell: 'td',
-            tableRow: 'tr',
-            $listItem: 'li',
-            horizontalLine: 'hr'
-        };
-        // Map text attributes to HTML tags
-        const textAttributeToHtmlMap = {
-            bold: 'strong',
-            italic: 'em',
-            code: 'code',
-            strikethrough: 's',
-            subscript: 'sub',
-            superscript: 'sup',
-            underline: 'u',
-            linkHref: 'a'
-        };
-        // Collect allowed tags
-        const allowedTags = new Set();
-        // Add tags from node mappings
-        schemaNodes.forEach(node => {
-            if (node in nodeToHtmlMap) {
-                allowedTags.add(nodeToHtmlMap[node]);
-            }
-        });
-        // Add tags from text attributes
-        const textDefinition = definitions.$text;
-        if (textDefinition && textDefinition.allowAttributes) {
-            textDefinition.allowAttributes.forEach((attr) => {
-                if (attr in textAttributeToHtmlMap) {
-                    allowedTags.add(textAttributeToHtmlMap[attr]);
-                }
-            });
-        }
-        // If listItem is present, add ul and ol
-        if (allowedTags.has('li')) {
-            allowedTags.add('ul');
-            allowedTags.add('ol');
-        }
-        // Sort and return the unique allowed tags
-        return Array.from(allowedTags).sort();
+        const tokensPerContent = Math.floor(availableTokens / fetchedContent.length);
+        return fetchedContent.map(content => ({
+            ...content,
+            content: trimLLMContentByTokens(content.content, tokensPerContent)
+        }));
     }
 }

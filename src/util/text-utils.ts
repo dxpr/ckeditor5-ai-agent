@@ -1,3 +1,5 @@
+import type { Editor } from 'ckeditor5/src/core.js';
+import { getAllowedHtmlTags } from './html-utils.js';
 import sbd from 'sbd';
 
 // Disable camelcase for external library types
@@ -40,7 +42,8 @@ export function removeLeadingSpaces( text: string ): string {
 export function extractEditorContent(
 	contentAfterPrompt: string,
 	contextSize: number,
-	reverse: boolean = false
+	reverse: boolean = false,
+	editor: Editor
 ): string {
 	let trimmedContent = '';
 	let charCount = 0;
@@ -48,11 +51,7 @@ export function extractEditorContent(
 	const options: SbdOptions = {
 		preserve_whitespace: true,
 		html_boundaries: true,
-		allowed_tags: [
-			'blockquote', 'figcaption', 'pre',
-			'h2', 'h1', 'h3', 'img', 'p',
-			'table', 'td', 'tr', 'li', 'hr', 'br'
-		]
+		allowed_tags: getAllowedHtmlTags( editor )
 	};
 
 	const sentences = sbd.sentences( contentAfterPrompt, options );

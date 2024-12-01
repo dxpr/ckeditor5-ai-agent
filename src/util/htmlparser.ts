@@ -4,10 +4,12 @@ import type { Element, Model, Position } from 'ckeditor5/src/engine.js';
 export class HtmlParser {
 	private editor: Editor;
 	private model: Model;
+	private debugMode: boolean;
 
 	constructor( editor: Editor ) {
 		this.editor = editor;
 		this.model = editor.model;
+		this.debugMode = editor.config.get( 'aiAgent.debugMode' ) ?? false;
 	}
 
 	/**
@@ -17,7 +19,9 @@ export class HtmlParser {
 	 * @returns A promise that resolves when the HTML has been inserted.
 	 */
 	public async insertSimpleHtml( html: string ): Promise<void> {
-		console.log( 'Attempting to insert simple HTML:', html );
+		if ( this.debugMode ) {
+			console.log( 'Attempting to insert simple HTML:', html );
+		}
 		const viewFragment = this.editor.data.processor.toView( html );
 		const modelFragment = this.editor.data.toModel( viewFragment, '$root' );
 

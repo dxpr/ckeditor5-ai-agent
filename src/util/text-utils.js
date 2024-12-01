@@ -1,3 +1,4 @@
+import { getAllowedHtmlTags } from './html-utils.js';
 import sbd from 'sbd';
 /* eslint-enable camelcase */
 /**
@@ -22,17 +23,13 @@ export function removeLeadingSpaces(text) {
  * @param reverse - Whether to extract from the end of the text
  * @returns The extracted text portion
  */
-export function extractEditorContent(contentAfterPrompt, contextSize, reverse = false) {
+export function extractEditorContent(contentAfterPrompt, contextSize, reverse = false, editor) {
     let trimmedContent = '';
     let charCount = 0;
     const options = {
         preserve_whitespace: true,
         html_boundaries: true,
-        allowed_tags: [
-            'blockquote', 'figcaption', 'pre',
-            'h2', 'h1', 'h3', 'img', 'p',
-            'table', 'td', 'tr', 'li', 'hr', 'br'
-        ]
+        allowed_tags: getAllowedHtmlTags(editor)
     };
     const sentences = sbd.sentences(contentAfterPrompt, options);
     const iterator = reverse ? sentences.reverse() : sentences;

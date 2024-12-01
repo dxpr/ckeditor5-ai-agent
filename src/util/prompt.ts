@@ -156,46 +156,56 @@ export class PromptHelper {
 		return systemPrompt;
 	}
 
-	public trimContext( prompt: string, promptContainerText?: string ): string {
-		if ( !promptContainerText ) {
-			promptContainerText = this.editor.getData();
-		}
-
-		const cursorPosition = promptContainerText.indexOf( '@@@cursor@@@' );
+	public trimContext( prompt: string, promptContainerText: string = '' ): string {
 		let contentBeforePrompt = '';
 		let contentAfterPrompt = '';
+		const splitText = promptContainerText ?? prompt;
+		const view = this.editor?.editing?.view?.domRoots?.get( 'main' );
+		const context = view?.innerText ?? '';
 
-		if ( cursorPosition !== -1 ) {
-			contentBeforePrompt = extractEditorContent(
-				promptContainerText.substring( 0, cursorPosition ),
-				this.contextSize,
-				true,
-				this.editor
-			);
+		const matchIndex = context.indexOf( splitText );
+		const nextEnterIndex = context.indexOf( '\n', matchIndex );
+		const firstNewlineIndex = nextEnterIndex !== -1 ? nextEnterIndex : matchIndex + splitText.length;
+		const beforeNewline = context.substring( 0, firstNewlineIndex );
+		const afterNewline = context.substring( firstNewlineIndex + 1 );
+		const contextParts = [ beforeNewline, afterNewline ];
 
-			contentAfterPrompt = extractEditorContent(
-				promptContainerText.substring( cursorPosition + 13 ),
-				this.contextSize,
-				false,
-				this.editor
-			);
-		} else {
-			const editorContent = this.editor.getData();
-			contentAfterPrompt = extractEditorContent(
-				editorContent,
-				this.contextSize,
-				false,
-				this.editor
-			);
-			contentBeforePrompt = extractEditorContent(
-				editorContent,
-				this.contextSize,
-				true,
-				this.editor
-			);
+		const allocatedEditorContextToken = Math.floor( this.contextSize * 0.3 );
+		if ( contextParts.length > 1 ) {
+			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
+				contentBeforePrompt = extractEditorContent(
+					contextParts[ 0 ],
+					allocatedEditorContextToken / 2,
+					true,
+					this.editor
+				);
+				contentAfterPrompt = extractEditorContent(
+					contextParts[ 1 ],
+					allocatedEditorContextToken - contentBeforePrompt.length / 4,
+					false,
+					this.editor
+				);
+			} else {
+				contentAfterPrompt = extractEditorContent(
+					contextParts[ 1 ],
+					allocatedEditorContextToken / 2,
+					false,
+					this.editor
+				);
+				contentBeforePrompt = extractEditorContent(
+					contextParts[ 0 ],
+					allocatedEditorContextToken - contentAfterPrompt.length / 4,
+					true,
+					this.editor
+				);
+			}
 		}
 
-		return `${ contentBeforePrompt }@@@cursor@@@${ contentAfterPrompt }`;
+		// Combine the trimmed context with the cursor placeholder
+		const escapedPrompt = prompt.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ); // Escapes special characters
+		contentBeforePrompt = contentBeforePrompt.trim().replace( new RegExp( escapedPrompt.slice( 1 ) ), '@@@cursor@@@' );
+		const trimmedContext = `${ contentBeforePrompt }\n${ contentAfterPrompt }`;
+		return trimmedContext.trim();
 	}
 
 	public formatFinalPrompt(

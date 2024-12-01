@@ -224,39 +224,85 @@ export class PromptHelper {
 			console.log( 'IsEditorEmpty:', isEditorEmpty );
 		}
 
-		let prompt = `TASK:
-${ request }
+		const contentLanguageCode = this.editor.locale.contentLanguage;
+		const corpus: Array<string> = [];
 
-`;
-
+		// Context and Task
 		if ( !isEditorEmpty ) {
-			prompt += `CONTEXT:
-${ context }
-
-`;
+			corpus.push( `CONTEXT:\n"""\n${ context }\n"""\n` );
 		}
 
-		// Markdown content section
+		corpus.push( `TASK:\n"""\n${ request }\n"""\n` );
+
+		// Markdown Content Section
 		if ( markDownContents.length ) {
-			prompt += `
-Refer to following markdown content as a source of information, 
-but generate new text that fits the given context & task.
+			corpus.push( `
+				Refer to following markdown content as a source of information, 
+				but generate new text that fits the given context & task.
 
-${ markDownContents.map( ( markdown, index ) => `
------------- Starting Markdown Content ${ index + 1 } ------------
-${ markdown.content }
------------- Ending Markdown Content ${ index + 1 } ------------
-` ).join( '\n' ) }
-`;
+				${ markDownContents.map( ( markdown, index ) => `
+					------------ Starting Markdown Content ${ index + 1 } ------------
+					${ markdown.content }
+					------------ Ending Markdown Content ${ index + 1 } ------------
+				` ).join( '\n' ) }
+			` );
+
+			// Markdown Usage Instructions
+			corpus.push( `
+				Markdown Content Guidelines:
+				1. Use information from provided markdown to generate new text
+				2. Do not copy content verbatim
+				3. Ensure natural flow with existing context
+				4. Avoid markdown formatting in response
+				5. Consider whole markdown as single source
+				6. Generate requested percentage of content
+			` );
 		}
 
+		// Instructions Section
+		corpus.push( '\nINSTRUCTIONS:\n' );
+		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
+
+		// Response Output Format
+		if ( this.responseOutputFormat.length ) {
+			corpus.push( `
+				Output Format Requirements:
+				${ this.responseOutputFormat.join( '\n' ) }
+			` );
+		}
+
+		// Response Filters
+		if ( this.responseFilters.length ) {
+			corpus.push( ...this.responseFilters );
+		} else {
+			corpus.push( 'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.' );
+		}
+
+		// Context-Specific Instructions
+		if ( !isEditorEmpty ) {
+			corpus.push( `
+				Context Integration Requirements:
+				1. Maintain seamless connection with surrounding text
+				2. Ensure smooth and natural transitions
+				3. Do not modify original text except @@@cursor@@@ replacement
+				4. Match existing style and tone
+				5. Preserve document structure
+			` );
+		}
+
+		// Additional Context Data
+		if ( this.responseContextData.length ) {
+			corpus.push( ...this.responseContextData );
+		}
+
+		// Debug Output
 		if ( this.debugMode ) {
 			console.group( 'AiAgent Final Prompt Debug' );
-			console.log( 'Final Prompt:', prompt );
+			console.log( 'Final Prompt:', corpus.join( '\n' ) );
 			console.groupEnd();
 		}
 
-		return prompt;
+		return corpus.map( text => removeLeadingSpaces( text ) ).join( '\n' );
 	}
 
 	public async generateMarkDownForUrls( urls: Array<string> ): Promise<Array<MarkdownContent>> {

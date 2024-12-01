@@ -159,11 +159,13 @@ export class PromptHelper {
      * @returns The formatted prompt string.
      */
     formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
-        console.group('formatFinalPrompt Debug');
-        console.log('Request:', request);
-        console.log('Context:', context);
-        console.log('MarkDownContents:', markDownContents);
-        console.log('IsEditorEmpty:', isEditorEmpty);
+        if (this.debugMode) {
+            console.group('formatFinalPrompt Debug');
+            console.log('Request:', request);
+            console.log('Context:', context);
+            console.log('MarkDownContents:', markDownContents);
+            console.log('IsEditorEmpty:', isEditorEmpty);
+        }
         const contentLanguageCode = this.editor.locale.contentLanguage;
         let prompt = '';
         // Context section
@@ -211,10 +213,9 @@ export class PromptHelper {
         if (this.debugMode) {
             console.group('AiAgent Final Prompt Debug');
             console.log('Final Prompt:', prompt);
+            console.log('Final formatted prompt:', prompt);
             console.groupEnd();
         }
-        console.log('Final formatted prompt:', prompt);
-        console.groupEnd();
         return prompt;
     }
     /**
@@ -280,7 +281,9 @@ export class PromptHelper {
                     }
                 }
                 catch (error) {
-                    console.error(`Failed to fetch content from ${url}:`, error);
+                    if (this.debugMode) {
+                        console.error(`Failed to fetch content from ${url}:`, error);
+                    }
                     aiAgentContext.showError(`Failed to fetch content from ${url}`);
                 }
             }
@@ -328,7 +331,9 @@ export class PromptHelper {
             return content.replace(/\(https?:\/\/[^\s]+\)/g, '').replace(/^\s*$/gm, '').trim();
         }
         catch (error) {
-            console.error(`Failed to fetch content: ${url}`, error);
+            if (this.debugMode) {
+                console.error(`Failed to fetch content: ${url}`, error);
+            }
             return '';
         }
     }

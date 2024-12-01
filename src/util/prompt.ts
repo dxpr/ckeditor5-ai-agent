@@ -212,27 +212,30 @@ export class PromptHelper {
 			console.log( 'IsEditorEmpty:', isEditorEmpty );
 		}
 
-		let prompt = 'TASK:\n' + request + '\n\n';
+		let prompt = `TASK:
+${ request }
 
-		// Add context section if not empty
+`;
+
 		if ( !isEditorEmpty ) {
-			prompt += 'CONTEXT:\n' + context + '\n\n';
+			prompt += `CONTEXT:
+${ context }
+
+`;
 		}
 
 		// Markdown content section
 		if ( markDownContents.length ) {
 			prompt += `
-				\nRefer to following markdown content as a source of information, 
-				but generate new text that fits the given context & task.\n
-			`;
+Refer to following markdown content as a source of information, 
+but generate new text that fits the given context & task.
 
-			markDownContents.forEach( ( markdown, index ) => {
-				prompt += `
-					\n------------ Starting Markdown Content ${ index + 1 } ------------\n
-					${ markdown.content }
-					\n------------ Ending Markdown Content ${ index + 1 } ------------\n
-				`;
-			} );
+${ markDownContents.map( ( markdown, index ) => `
+------------ Starting Markdown Content ${ index + 1 } ------------
+${ markdown.content }
+------------ Ending Markdown Content ${ index + 1 } ------------
+` ).join( '\n' ) }
+`;
 		}
 
 		if ( this.debugMode ) {

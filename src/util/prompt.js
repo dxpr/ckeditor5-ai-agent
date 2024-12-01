@@ -25,7 +25,7 @@ export class PromptHelper {
 			and Ending Markdown Content \${index} with certain instructions to follow 
 			while generating a response under an INSTRUCTION section.
 
-			If there is an article with """Stating Markdown Content""", your task is 
+			If there is an article with """Starting Markdown Content""", your task is 
 			to use that provided information solely to respond to the user request in 
 			the TASK section.
 
@@ -163,24 +163,28 @@ export class PromptHelper {
             console.log('MarkDownContents:', markDownContents);
             console.log('IsEditorEmpty:', isEditorEmpty);
         }
-        let prompt = 'TASK:\n' + request + '\n\n';
-        // Add context section if not empty
+        let prompt = `TASK:
+${request}
+
+`;
         if (!isEditorEmpty) {
-            prompt += 'CONTEXT:\n' + context + '\n\n';
+            prompt += `CONTEXT:
+${context}
+
+`;
         }
         // Markdown content section
         if (markDownContents.length) {
             prompt += `
-				\nRefer to following markdown content as a source of information, 
-				but generate new text that fits the given context & task.\n
-			`;
-            markDownContents.forEach((markdown, index) => {
-                prompt += `
-					\n------------ Starting Markdown Content ${index + 1} ------------\n
-					${markdown.content}
-					\n------------ Ending Markdown Content ${index + 1} ------------\n
-				`;
-            });
+Refer to following markdown content as a source of information, 
+but generate new text that fits the given context & task.
+
+${markDownContents.map((markdown, index) => `
+------------ Starting Markdown Content ${index + 1} ------------
+${markdown.content}
+------------ Ending Markdown Content ${index + 1} ------------
+`).join('\n')}
+`;
         }
         if (this.debugMode) {
             console.group('AiAgent Final Prompt Debug');

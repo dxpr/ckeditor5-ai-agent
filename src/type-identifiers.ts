@@ -35,6 +35,5 @@ export interface AiAgentConfig {
 export interface MarkdownContent {
     content: string;
     url: string;
-    tokenToRequest?: number;
-    availableToken?: number;
+    tokenCount?: number;
 }

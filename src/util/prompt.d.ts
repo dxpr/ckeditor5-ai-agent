@@ -40,18 +40,11 @@ export declare class PromptHelper {
     */
     trimContext(prompt: string, promptContainerText?: string): string;
     /**
-     * Allocates tokens to the fetched content based on the available limit and the user's prompt.
-     *
-     * @param prompt - The user's prompt string.
-     * @param fetchedContent - An array of MarkdownContent objects containing fetched content.
-     * @returns An array of MarkdownContent objects with calculated tokenToRequest values.
+     * Allocates tokens to fetched content based on available limits.
      */
     allocateTokensToFetchedContent(prompt: string, fetchedContent: Array<MarkdownContent>): Array<MarkdownContent>;
     /**
-     * Generates Markdown content for an array of URLs by fetching their content.
-     *
-     * @param urls - An array of URLs to fetch content from.
-     * @returns A promise that resolves to an array of MarkdownContent objects.
+     * Generates markdown content from URLs with proper error handling.
      */
     generateMarkDownForUrls(urls: Array<string>): Promise<Array<MarkdownContent>>;
     /**
@@ -84,13 +77,4 @@ export declare class PromptHelper {
      * @returns An array of allowed HTML tags.
      */
     getAllowedHtmlTags(): Array<string>;
-    /**
-     * Extracts a portion of content based on the specified context size and direction.
-     *
-     * @param contentAfterPrompt - The content string to extract from.
-     * @param contextSize - The maximum size of the context to extract.
-     * @param reverse - A boolean indicating whether to extract in reverse order (default is false).
-     * @returns The extracted content string.
-     */
-    extractEditorContent(contentAfterPrompt: string, contextSize: number, reverse?: boolean): string;
 }

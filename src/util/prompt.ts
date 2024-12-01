@@ -37,7 +37,7 @@ export class PromptHelper {
 			and Ending Markdown Content \${index} with certain instructions to follow 
 			while generating a response under an INSTRUCTION section.
 
-			If there is an article with """Stating Markdown Content""", your task is 
+			If there is an article with """Starting Markdown Content""", your task is 
 			to use that provided information solely to respond to the user request in 
 			the TASK section.
 

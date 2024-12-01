@@ -94,15 +94,6 @@ export class PromptHelper {
 			10. No script or style tags
 			11. First word must be a valid HTML tag
 			12. Block elements must not contain other block elements
-
-			Markdown Content Processing:
-			1. Convert markdown to plain text
-			2. Preserve essential formatting
-			3. Maintain content hierarchy
-			4. Keep list structures intact
-			5. Preserve links and references
-			6. Handle code blocks appropriately
-			7. Maintain table structures
 		` );
 
 		// Inline response handling

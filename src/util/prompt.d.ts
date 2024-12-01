@@ -7,7 +7,10 @@ export declare class PromptHelper {
     private responseContextData;
     private responseFilters;
     private debugMode;
-    constructor(editor: Editor);
+    private editorContextRatio;
+    constructor(editor: Editor, options?: {
+        editorContextRatio?: number;
+    });
     getSystemPrompt(isInlineResponse?: boolean): string;
     trimContext(prompt: string, promptContainerText?: string): string;
     formatFinalPrompt(request: string, context: string, markDownContents: Array<MarkdownContent>, isEditorEmpty: boolean): string;

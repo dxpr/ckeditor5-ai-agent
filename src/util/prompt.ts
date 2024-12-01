@@ -13,16 +13,18 @@ export class PromptHelper {
 	private responseContextData: Array<string>;
 	private responseFilters: Array<string>;
 	private debugMode: boolean;
+	private editorContextRatio: number;
 
-	constructor( editor: Editor ) {
+	constructor( editor: Editor, options: { editorContextRatio?: number } = {} ) {
 		this.editor = editor;
 		const config = editor.config.get( 'aiAgent' )!;
 
-		this.contextSize = config.contextSize!;
+		this.contextSize = config.contextSize ?? 4000;
 		this.responseOutputFormat = config.promptSettings?.outputFormat ?? [];
 		this.responseContextData = config.promptSettings?.contextData ?? [];
 		this.responseFilters = config.promptSettings?.filters ?? [];
 		this.debugMode = config.debugMode ?? false;
+		this.editorContextRatio = options.editorContextRatio ?? 0.3;
 	}
 
 	public getSystemPrompt( isInlineResponse: boolean = false ): string {
@@ -170,7 +172,7 @@ export class PromptHelper {
 		const afterNewline = context.substring( firstNewlineIndex + 1 );
 		const contextParts = [ beforeNewline, afterNewline ];
 
-		const allocatedEditorContextToken = Math.floor( this.contextSize * 0.3 );
+		const allocatedEditorContextToken = Math.floor( this.contextSize * this.editorContextRatio );
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
 				contentBeforePrompt = extractEditorContent(
@@ -296,15 +298,18 @@ ${ markdown.content }
 		prompt: string,
 		fetchedContent: Array<MarkdownContent>
 	): Array<MarkdownContent> {
-		const promptTokens = countTokens( prompt );
-		const maxTokens = this.contextSize;
-		const availableTokens = Math.max( 0, maxTokens - promptTokens );
+		const editorContent = this.editor?.editing?.view?.domRoots?.get( 'main' )?.innerText ?? '';
+		const editorToken = Math.min(
+			Math.floor( this.contextSize * this.editorContextRatio ),
+			countTokens( editorContent )
+		);
+		const availableLimit = this.contextSize - editorToken;
 
-		if ( availableTokens === 0 || !fetchedContent.length ) {
+		if ( availableLimit === 0 || !fetchedContent.length ) {
 			return fetchedContent;
 		}
 
-		const tokensPerContent = Math.floor( availableTokens / fetchedContent.length );
+		const tokensPerContent = Math.floor( availableLimit / fetchedContent.length );
 
 		return fetchedContent.map( content => ( {
 			...content,

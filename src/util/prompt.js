@@ -4,15 +4,16 @@ import { countTokens, trimLLMContentByTokens } from './token-utils.js';
 import { getAllowedHtmlTags } from './html-utils.js';
 import { fetchUrlContent } from './url-utils.js';
 export class PromptHelper {
-    constructor(editor) {
-        var _a, _b, _c, _d, _e, _f, _g;
+    constructor(editor, options = {}) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         this.editor = editor;
         const config = editor.config.get('aiAgent');
-        this.contextSize = config.contextSize;
-        this.responseOutputFormat = (_b = (_a = config.promptSettings) === null || _a === void 0 ? void 0 : _a.outputFormat) !== null && _b !== void 0 ? _b : [];
-        this.responseContextData = (_d = (_c = config.promptSettings) === null || _c === void 0 ? void 0 : _c.contextData) !== null && _d !== void 0 ? _d : [];
-        this.responseFilters = (_f = (_e = config.promptSettings) === null || _e === void 0 ? void 0 : _e.filters) !== null && _f !== void 0 ? _f : [];
-        this.debugMode = (_g = config.debugMode) !== null && _g !== void 0 ? _g : false;
+        this.contextSize = (_a = config.contextSize) !== null && _a !== void 0 ? _a : 4000;
+        this.responseOutputFormat = (_c = (_b = config.promptSettings) === null || _b === void 0 ? void 0 : _b.outputFormat) !== null && _c !== void 0 ? _c : [];
+        this.responseContextData = (_e = (_d = config.promptSettings) === null || _d === void 0 ? void 0 : _d.contextData) !== null && _e !== void 0 ? _e : [];
+        this.responseFilters = (_g = (_f = config.promptSettings) === null || _f === void 0 ? void 0 : _f.filters) !== null && _g !== void 0 ? _g : [];
+        this.debugMode = (_h = config.debugMode) !== null && _h !== void 0 ? _h : false;
+        this.editorContextRatio = (_j = options.editorContextRatio) !== null && _j !== void 0 ? _j : 0.3;
     }
     getSystemPrompt(isInlineResponse = false) {
         const corpus = [];
@@ -137,23 +138,35 @@ export class PromptHelper {
         }
         return systemPrompt;
     }
-    trimContext(prompt, promptContainerText) {
-        if (!promptContainerText) {
-            promptContainerText = this.editor.getData();
-        }
-        const cursorPosition = promptContainerText.indexOf('@@@cursor@@@');
+    trimContext(prompt, promptContainerText = '') {
+        var _a, _b, _c, _d, _e;
         let contentBeforePrompt = '';
         let contentAfterPrompt = '';
-        if (cursorPosition !== -1) {
-            contentBeforePrompt = extractEditorContent(promptContainerText.substring(0, cursorPosition), this.contextSize, true, this.editor);
-            contentAfterPrompt = extractEditorContent(promptContainerText.substring(cursorPosition + 13), this.contextSize, false, this.editor);
+        const splitText = promptContainerText !== null && promptContainerText !== void 0 ? promptContainerText : prompt;
+        const view = (_d = (_c = (_b = (_a = this.editor) === null || _a === void 0 ? void 0 : _a.editing) === null || _b === void 0 ? void 0 : _b.view) === null || _c === void 0 ? void 0 : _c.domRoots) === null || _d === void 0 ? void 0 : _d.get('main');
+        const context = (_e = view === null || view === void 0 ? void 0 : view.innerText) !== null && _e !== void 0 ? _e : '';
+        const matchIndex = context.indexOf(splitText);
+        const nextEnterIndex = context.indexOf('\n', matchIndex);
+        const firstNewlineIndex = nextEnterIndex !== -1 ? nextEnterIndex : matchIndex + splitText.length;
+        const beforeNewline = context.substring(0, firstNewlineIndex);
+        const afterNewline = context.substring(firstNewlineIndex + 1);
+        const contextParts = [beforeNewline, afterNewline];
+        const allocatedEditorContextToken = Math.floor(this.contextSize * this.editorContextRatio);
+        if (contextParts.length > 1) {
+            if (contextParts[0].length < contextParts[1].length) {
+                contentBeforePrompt = extractEditorContent(contextParts[0], allocatedEditorContextToken / 2, true, this.editor);
+                contentAfterPrompt = extractEditorContent(contextParts[1], allocatedEditorContextToken - contentBeforePrompt.length / 4, false, this.editor);
+            }
+            else {
+                contentAfterPrompt = extractEditorContent(contextParts[1], allocatedEditorContextToken / 2, false, this.editor);
+                contentBeforePrompt = extractEditorContent(contextParts[0], allocatedEditorContextToken - contentAfterPrompt.length / 4, true, this.editor);
+            }
         }
-        else {
-            const editorContent = this.editor.getData();
-            contentAfterPrompt = extractEditorContent(editorContent, this.contextSize, false, this.editor);
-            contentBeforePrompt = extractEditorContent(editorContent, this.contextSize, true, this.editor);
-        }
-        return `${contentBeforePrompt}@@@cursor@@@${contentAfterPrompt}`;
+        // Combine the trimmed context with the cursor placeholder
+        const escapedPrompt = prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
+        contentBeforePrompt = contentBeforePrompt.trim().replace(new RegExp(escapedPrompt.slice(1)), '@@@cursor@@@');
+        const trimmedContext = `${contentBeforePrompt}\n${contentAfterPrompt}`;
+        return trimmedContext.trim();
     }
     formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
         if (this.debugMode) {
@@ -225,13 +238,14 @@ ${markdown.content}
         }
     }
     allocateTokensToFetchedContent(prompt, fetchedContent) {
-        const promptTokens = countTokens(prompt);
-        const maxTokens = this.contextSize;
-        const availableTokens = Math.max(0, maxTokens - promptTokens);
-        if (availableTokens === 0 || !fetchedContent.length) {
+        var _a, _b, _c, _d, _e, _f;
+        const editorContent = (_f = (_e = (_d = (_c = (_b = (_a = this.editor) === null || _a === void 0 ? void 0 : _a.editing) === null || _b === void 0 ? void 0 : _b.view) === null || _c === void 0 ? void 0 : _c.domRoots) === null || _d === void 0 ? void 0 : _d.get('main')) === null || _e === void 0 ? void 0 : _e.innerText) !== null && _f !== void 0 ? _f : '';
+        const editorToken = Math.min(Math.floor(this.contextSize * this.editorContextRatio), countTokens(editorContent));
+        const availableLimit = this.contextSize - editorToken;
+        if (availableLimit === 0 || !fetchedContent.length) {
             return fetchedContent;
         }
-        const tokensPerContent = Math.floor(availableTokens / fetchedContent.length);
+        const tokensPerContent = Math.floor(availableLimit / fetchedContent.length);
         return fetchedContent.map(content => ({
             ...content,
             content: trimLLMContentByTokens(content.content, tokensPerContent)

@@ -1,4 +1,7 @@
 // types
+import type { Command } from 'ckeditor5';
+import type { PromptSettings } from './types/prompt-settings.js';
+
 export type AiModel =
     'gpt-3.5-turbo' |
     'gpt-4o' |

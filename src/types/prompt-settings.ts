@@ -1,4 +1,4 @@
-export type PromptComponentKey = 
+export type PromptComponentKey =
 	'response-rules' |
 	'tone' |
 	'content-structure' |

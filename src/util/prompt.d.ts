@@ -3,14 +3,13 @@ import type { MarkdownContent } from '../type-identifiers.js';
 export declare class PromptHelper {
     private editor;
     private contextSize;
-    private responseOutputFormat;
-    private responseContextData;
-    private responseFilters;
+    private promptSettings;
     private debugMode;
     private editorContextRatio;
     constructor(editor: Editor, options?: {
         editorContextRatio?: number;
     });
+    private getDefaultPromptComponents;
     getSystemPrompt(isInlineResponse?: boolean): string;
     trimContext(prompt: string, promptContainerText?: string): string;
     formatFinalPrompt(request: string, context: string, markDownContents: Array<MarkdownContent>, isEditorEmpty: boolean): string;

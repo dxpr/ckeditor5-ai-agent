@@ -5,48 +5,40 @@ import type { Editor } from 'ckeditor5';
 import type { AiModel, AiAgentConfig } from './type-identifiers.js';
 import { TOKEN_LIMITS } from './const.js';
 import '../theme/style.css';
+
+/**
+ * The AI Agent plugin for CKEditor 5.
+ *
+ * This plugin integrates AI capabilities into CKEditor 5, allowing users to generate
+ * and manipulate content using AI services. It provides a UI component for interaction
+ * and handles the communication with AI endpoints.
+ *
+ * @example
+ * ```ts
+ * ClassicEditor
+ *   .create( document.querySelector( '#editor' ), {
+ *     plugins: [ AiAgent, ... ],
+ *     aiAgent: {
+ *       apiKey: 'your-api-key',
+ *       endpointUrl: 'https://api.example.com/v1/chat',
+ *       model: 'gpt-4'
+ *     }
+ *   } )
+ *   .then( ... )
+ *   .catch( ... );
+ * ```
+ */
 export default class AiAgent extends Plugin {
-	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
-	public DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
-
-	constructor( editor: Editor ) {
-		super( editor );
-
-		const config = editor.config.get( 'aiAgent' ) || {};
-		// Set default values and merge with provided config
-		const defaultConfig = {
-			model: this.DEFAULT_GPT_MODEL, // Default AI model
-			apiKey: '', // Default OpenAI key
-			endpointUrl: this.DEFAULT_AI_END_POINT, // Default endpoint URL
-			temperature: undefined, // Default temperature
-			timeOutDuration: 45000, // Default timeout duration
-			maxOutputTokens: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxOutputTokens,
-			maxInputTokens: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxInputContextTokens,
-			retryAttempts: 1, // Default retry attempts
-			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxInputContextTokens * 0.75, // Default context size
-			stopSequences: [], // Default stop sequences
-			promptSettings: {
-				outputFormat: [], // Default output format
-				contextData: [], // Default context data
-				filters: [] // Default filters
-			},
-			debugMode: false, // Default debug mode
-			streamContent: true // Default streaming mode
-		};
-
-		const updatedConfig = { ...defaultConfig, ...config };
-
-		// Set the merged config back to the editor
-		editor.config.set( 'aiAgent', updatedConfig );
-
-		// Validate configuration
-		this.validateConfiguration( updatedConfig );
-	}
-
+	/**
+	 * Required plugins for the AI Agent.
+	 */
 	public static get requires() {
-		return [ AiAgentUI, AiAgentEditing ] as const;
+		return [AiAgentUI, AiAgentEditing] as const;
 	}
 
+	/**
+	 * The plugin name.
+	 */
 	public static get pluginName() {
 		return 'AiAgent' as const;
 	}
@@ -83,7 +75,34 @@ export default class AiAgent extends Plugin {
 		}
 	}
 
+	/**
+	 * Initializes the AI Agent plugin.
+	 *
+	 * Sets up the default configuration and validates required settings.
+	 */
 	public init(): void {
-		// Any additional initialization if needed
+		const editor = this.editor;
+		const config = editor.config.get('aiAgent');
+
+		if (config) {
+			const updatedConfig = {
+				...config,
+				promptSettings: {
+					overrides: config.promptSettings?.overrides ?? {},
+					additions: config.promptSettings?.additions ?? {}
+				}
+			};
+
+			this.validateConfiguration(updatedConfig);
+			editor.config.set('aiAgent', updatedConfig);
+		}
+	}
+
+	/**
+	 * Destroys the plugin instance.
+	 */
+	public override destroy(): void {
+		// Clean up any resources
+		super.destroy();
 	}
 }

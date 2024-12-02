@@ -1,4 +1,7 @@
 // types
+import type { Command } from 'ckeditor5';
+import type { PromptSettings } from './types/prompt-settings.js';
+
 export type AiModel =
     'gpt-3.5-turbo' |
     'gpt-4o' |
@@ -23,11 +26,7 @@ export interface AiAgentConfig {
     contextSize?: number;
     timeOutDuration?: number;
     endpointUrl?: string;
-    promptSettings?: {
-        outputFormat?: Array<string>;
-        contextData?: Array<string>;
-        filters?: Array<string>;
-    };
+    promptSettings?: PromptSettings;
     streamContent?: boolean;
     debugMode?: boolean;
 }
@@ -36,4 +35,8 @@ export interface MarkdownContent {
     content: string;
     url: string;
     tokenCount?: number;
+}
+
+export interface AiAgentEditingPlugin extends Plugin {
+    getCommand(): Command;
 }

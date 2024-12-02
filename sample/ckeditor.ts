@@ -96,7 +96,25 @@ ClassicEditor
 			apiKey: 'YOUR_API_KEY',
 			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
-			model: 'gpt-4o'
+			model: 'gpt-4o',
+			debugMode: true,
+			promptSettings: {
+				overrides: {
+					'tone': `Custom tone requirements:
+1. Use a professional, academic writing style
+2. Maintain formal language throughout
+3. Avoid colloquialisms and casual expressions
+4. Use precise terminology
+5. Focus on clarity and objectivity`
+				},
+				additions: {
+					'html-formatting': `
+Additional HTML requirements:
+1. Use semantic HTML5 elements when appropriate
+2. Include ARIA attributes for accessibility
+3. Follow BEM naming convention for any classes`
+				}
+			}
 		},
 		language: {
 			content: 'en',
@@ -157,7 +175,26 @@ ClassicEditor
 			apiKey: 'YOUR_API_KEY',
 			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
-			model: 'gpt-4o'
+			model: 'gpt-4o',
+			debugMode: true,
+			promptSettings: {
+				overrides: {
+					'response-rules': `Custom response rules:
+1. Focus on technical accuracy
+2. Include relevant code examples
+3. Maintain consistent terminology
+4. Reference industry standards
+5. Provide practical implementation details`
+				},
+				additions: {
+					'content-structure': `
+Additional structure requirements:
+1. Begin with a brief overview
+2. Include implementation steps
+3. End with best practices
+4. Add relevant warnings or notes`
+				}
+			}
 		},
 		language: {
 			content: 'en',

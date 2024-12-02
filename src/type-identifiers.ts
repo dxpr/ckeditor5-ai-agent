@@ -23,11 +23,7 @@ export interface AiAgentConfig {
     contextSize?: number;
     timeOutDuration?: number;
     endpointUrl?: string;
-    promptSettings?: {
-        outputFormat?: Array<string>;
-        contextData?: Array<string>;
-        filters?: Array<string>;
-    };
+    promptSettings?: PromptSettings;
     streamContent?: boolean;
     debugMode?: boolean;
 }
@@ -36,4 +32,8 @@ export interface MarkdownContent {
     content: string;
     url: string;
     tokenCount?: number;
+}
+
+export interface AiAgentEditingPlugin extends Plugin {
+    getCommand(): Command;
 }

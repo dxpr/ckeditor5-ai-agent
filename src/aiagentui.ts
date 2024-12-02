@@ -5,6 +5,7 @@ import aiAgentIcon from '../theme/icons/ai-agent.svg';
 import { aiAgentContext } from './aiagentcontext.js';
 import { SUPPORTED_LANGUAGES } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
+import { env } from 'ckeditor5/src/utils.js';
 
 export default class AiAgentUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -136,6 +137,22 @@ export default class AiAgentUI extends Plugin {
 		editor.model.schema.extend( '$block', { allowIn: 'ai-tag' } );
 
 		this.addCustomTagConversions();
+		let keystroke = '';
+		if ( env.isMac ) {
+			keystroke = 'Cmd + Backspace';
+		}
+
+		if ( env.isWindows ) {
+			keystroke = 'Ctrl + Backspace';
+		}
+		editor.accessibility.addKeystrokeInfos( {
+			keystrokes: [
+				{
+					label: t( 'Cancel AI Generation' ),
+					keystroke
+				}
+			]
+		} );
 	}
 
 	private addCustomTagConversions(): void {

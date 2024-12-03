@@ -16,6 +16,17 @@ export function removeLeadingSpaces(text) {
         .join('\n');
 }
 /**
+ * Removes leading & trailing spaces from each line while preserving empty lines and content indentation.
+ *
+ * @param text - The text to process
+ * @returns The processed text with leading spaces removed
+ */
+export function trimMultilineString(text) {
+    return text.split('\n')
+        .map(line => line.trim())
+        .join('\n');
+}
+/**
  * Extracts a portion of text from the editor content based on sentence boundaries.
  *
  * @param contentAfterPrompt - The text to extract from

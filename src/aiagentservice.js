@@ -115,7 +115,7 @@ export default class AiAgentService {
                 body: JSON.stringify({
                     model: this.aiModel,
                     messages: [
-                        { role: 'system', content: this.promptHelper.getSystemPrompt(this.isInlineInsertion) },
+                        { role: 'system', content: this.promptHelper.getSystemPrompt() },
                         { role: 'user', content: prompt }
                     ],
                     temperature: this.temperature,

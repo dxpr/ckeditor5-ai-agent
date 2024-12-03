@@ -4,6 +4,7 @@ You are a CKEditor 5 AI Agent plugin expert. Follow these core guidelines:
 - Use TypeScript with strict types
 - Follow editorconfig: tabs (width=4), single quotes, trim whitespace
 - End files with newline
+- Use template literals where appropriate
 
 2. Architecture:
 - Separate UI, editing, and command components

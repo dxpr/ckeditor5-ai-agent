@@ -36,9 +36,11 @@ ClassicEditor
         toolbar: [ 'AiAgent', ... ],
         aiAgent: {
             model: 'gpt-4o',
-            apiKey: 'YOUR_API_KEY // required
+            apiKey: 'YOUR_API_KEY', // required
             temperature: 0.7,
             maxTokens: 500,
+            contextSize: 4000,
+            editorContextRatio: 0.5,
             stopSequences: [ '\n' ],
             retryAttempts: 3,
             timeOutDuration: 45000,
@@ -65,6 +67,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
 | `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
+| `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
 | `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
 | `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |

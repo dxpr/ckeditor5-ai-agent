@@ -122,3 +122,49 @@
 		text-shadow: none;
 	}
 }
+
+.ck.ck-button.ck-cancel-request-button {
+	cursor: pointer;
+	left: 0;
+	margin: 0 auto;
+	padding: 0.3125rem 0.625rem;
+	position: absolute;
+	right: 0;
+	top: 2.8125rem;
+	width: fit-content;
+	box-shadow: 0px 2px 6px var(--ck-color-shadow-drop);
+	z-index: 1;
+	transform: scale(1.1);
+	background: var(--ck-color-input-background);
+	opacity: 0;
+	transition: opacity 300ms ease-in;
+	pointer-events: none;
+}
+.ck.ck-button.ck-cancel-request-button:hover {
+	background: var(--ck-color-button-default-hover-background);
+}
+
+.ck.ck-button.ck-cancel-request-button.visible {
+	opacity: 1;
+	pointer-events: auto;
+	/* Enable interactions */
+}
+
+.ck.ck-toolbar>.ck-toolbar__items>.ck.ck-cancel-request-button:last-child {
+	margin-right: auto;
+}
+
+.ck.ck-button.ck-cancel-request-button .ck-button__label {
+	font-weight: 100;
+	font-size: 1em;
+	color: var(--ck-color-text);
+	line-height: 1;
+}
+
+/* Disable animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	#cancel-button {
+		transition: none;
+		/* Disable all transitions */
+	}
+}

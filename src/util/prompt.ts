@@ -5,6 +5,7 @@ import { removeLeadingSpaces, extractEditorContent, trimMultilineString } from '
 import { countTokens, trimLLMContentByTokens } from './token-utils.js';
 import { fetchUrlContent } from './url-utils.js';
 import { getDefaultRules } from './default-rules.js';
+import { getAllowedHtmlTags } from './html-utils.js';
 
 export class PromptHelper {
 	private editor: Editor;
@@ -29,6 +30,11 @@ export class PromptHelper {
 
 		// Process each component
 		for ( const [ id, defaultContent ] of Object.entries( defaultComponents ) ) {
+			// Skip components that are not allowed in the editor
+			if ( id === ( 'imageHandling' as PromptComponentKey ) && !getAllowedHtmlTags( this.editor ).includes( 'img' ) ) {
+				continue;
+			}
+
 			const componentId = id as PromptComponentKey;
 			let content = defaultContent;
 

@@ -2,7 +2,7 @@ import type AiAgentCommand from './aiagentcommand.js';
 import type AiAgentEditing from './aiagentediting.js';
 import type AiAgentUI from './aiagentui.js';
 import type { AiAgent } from './index.js';
-import type { AiModel } from './type-identifiers.js';
+import type { AiModel, ModerationFlagsTypes } from './type-identifiers.js';
 
 declare module '@ckeditor/ckeditor5-core' {
 	interface CommandsMap {
@@ -51,6 +51,12 @@ declare module '@ckeditor/ckeditor5-core' {
             // Behavior Settings
             streamContent?: boolean;
             debugMode?: boolean;
+            showErrorDuration?: number;
+            moderation?: {
+                key: string;
+                enable: boolean;
+                disableFlags?: Array<ModerationFlagsTypes>;
+            };
         };
     }
 }

@@ -42,7 +42,8 @@ module.exports = {
 			rules: {
 				// To write complex tests, you may need to import files that are not exported in DLL files by default.
 				// Hence, imports CKEditor 5 packages in test files are not checked.
-				'ckeditor5-rules/ckeditor-imports': 'off'
+				'ckeditor5-rules/ckeditor-imports': 'off',
+				'no-magic-numbers': 'error'
 			}
 		}
 	]

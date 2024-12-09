@@ -3,15 +3,19 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import aiAgentIcon from '../theme/icons/ai-agent.svg';
 import { aiAgentContext } from './aiagentcontext.js';
-import { SUPPORTED_LANGUAGES } from './const.js';
+import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 import { env } from 'ckeditor5/src/utils.js';
 export default class AiAgentUI extends Plugin {
-    constructor() {
-        super(...arguments);
+    constructor(editor) {
+        var _a;
+        super(editor);
         this.PLACEHOLDER_TEXT_ID = 'slash-placeholder';
         this.GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
         this.GPT_RESPONSE_ERROR_ID = 'gpt-error';
+        this.showErrorDuration = SHOW_ERROR_DURATION;
+        const config = editor.config.get('aiAgent');
+        this.showErrorDuration = (_a = config === null || config === void 0 ? void 0 : config.showErrorDuration) !== null && _a !== void 0 ? _a : SHOW_ERROR_DURATION;
     }
     static get pluginName() {
         return 'AiAgentUI';
@@ -367,7 +371,7 @@ export default class AiAgentUI extends Plugin {
             tooltipElement.textContent = message;
             setTimeout(() => {
                 this.hideGptErrorToolTip();
-            }, 2000);
+            }, this.showErrorDuration);
         }
     }
     /**

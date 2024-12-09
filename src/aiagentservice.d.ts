@@ -17,6 +17,9 @@ export default class AiAgentService {
     private openTags;
     private isInlineInsertion;
     private abortGeneration;
+    private moderationKey;
+    private moderationEnable;
+    private disableFlags;
     /**
      * Initializes the AiAgentService with the provided editor and configuration settings.
      *
@@ -29,6 +32,19 @@ export default class AiAgentService {
      * @returns A promise that resolves when the command has been processed.
      */
     handleSlashCommand(): Promise<void>;
+    /**
+     * Moderates the input content using OpenAI's moderation API to check for inappropriate content.
+     *
+     * @param input - The text content to be moderated
+     * @returns A promise that resolves to:
+     * - `true` if content is acceptable or if moderation fails (fail-open)
+     * - `false` if content is flagged as inappropriate
+     *
+     * @throws Shows user-friendly error messages via aiAgentContext for:
+     * - Flagged content ("Cannot process your query...")
+     * - API errors ("Error in content moderation")
+     */
+    private moderateContent;
     /**
      * Fetches and processes the GPT response based on the provided prompt and parent element.
      *

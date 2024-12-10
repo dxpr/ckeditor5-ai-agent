@@ -31,7 +31,7 @@ export default class AiAgentService {
      *
      * @returns A promise that resolves when the command has been processed.
      */
-    handleSlashCommand(): Promise<void>;
+    handleSlashCommand(command?: string): Promise<void>;
     /**
      * Moderates the input content using OpenAI's moderation API to check for inappropriate content.
      *

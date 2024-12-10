@@ -30,6 +30,10 @@ export class PromptHelper {
 			to use that provided information solely to respond to the user request in 
 			the TASK section.
 
+			If there is """Selected Content""" I'll use only that content to answer 
+            the user's request in the TASK section, ignoring any additional CONTEXT 
+            or prior knowledge.
+
 			Follow these step-by-step instructions to respond to user inputs:
 			1. Analyze the CONTEXT section thoroughly to understand the existing
 			content and its style
@@ -159,7 +163,7 @@ export class PromptHelper {
         const trimmedContext = `${contentBeforePrompt}\n${contentAfterPrompt}`;
         return trimmedContext.trim();
     }
-    formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
+    formatFinalPrompt(request, context, markDownContents, isEditorEmpty, selectedContent) {
         if (this.debugMode) {
             console.group('formatFinalPrompt Debug');
             console.log('Request:', request);
@@ -174,6 +178,9 @@ export class PromptHelper {
             corpus.push(`CONTEXT:\n"""\n${context}\n"""\n`);
         }
         corpus.push(`TASK:\n"""\n${request}\n"""\n`);
+        if (selectedContent) {
+            corpus.push(`Selected Content:\n"""\n${selectedContent}\n"""\n`);
+        }
         // Markdown Content Section
         if (markDownContents.length) {
             corpus.push(`

@@ -40,13 +40,14 @@ export default class AiAgentService {
      *
      * @returns A promise that resolves when the command has been processed.
      */
-    async handleSlashCommand() {
+    async handleSlashCommand(command) {
         const editor = this.editor;
         const model = editor.model;
         const mapper = editor.editing.mapper;
         const view = editor.editing.view;
         const root = model.document.getRoot();
         let content;
+        let selectedContent;
         let parentEquivalentHTML;
         let parent;
         const position = model.document.selection.getLastPosition();
@@ -76,6 +77,17 @@ export default class AiAgentService {
                 content = parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.innerText;
             }
         }
+        if (command) {
+            content = command;
+            selectedContent = parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.outerHTML;
+            const selection = model.document.selection;
+            const range = selection.getFirstRange();
+            if (range) {
+                model.change(writer => {
+                    writer.setSelection(range.end);
+                });
+            }
+        }
         if (this.moderationEnable) {
             const moderateContent = await this.moderateContent(content !== null && content !== void 0 ? content : '');
             if (!moderateContent) {
@@ -87,7 +99,7 @@ export default class AiAgentService {
             const domRange = domSelection === null || domSelection === void 0 ? void 0 : domSelection.getRangeAt(0);
             const rect = domRange.getBoundingClientRect();
             aiAgentContext.showLoader(rect);
-            const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(content !== null && content !== void 0 ? content : '', parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.innerText);
+            const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(content !== null && content !== void 0 ? content : '', parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.innerText, selectedContent);
             if (parent && gptPrompt) {
                 await this.fetchAndProcessGptResponse(gptPrompt, parent);
             }
@@ -385,8 +397,8 @@ export default class AiAgentService {
             }
         }
         const editorData = editor.getData();
-        let editorContent = editorData.replace(`<ai-tag id="${blockID}">`, '');
-        editorContent = editorContent.replace('</ai-tag>', '');
+        let editorContent = editorData.replace('</ai-tag><p>&nbsp;</p>', '');
+        editorContent = editorContent.replace(`<ai-tag id="${blockID}">`, '');
         editor.setData(editorContent);
     }
     /**
@@ -529,7 +541,7 @@ export default class AiAgentService {
      * @param promptContainerText - Optional text from the container that may provide additional context.
      * @returns A promise that resolves to the generated GPT prompt string or null if an error occurs.
     */
-    async generateGptPromptBasedOnUserPrompt(prompt, promptContainerText) {
+    async generateGptPromptBasedOnUserPrompt(prompt, promptContainerText, selectedContent) {
         try {
             const context = this.promptHelper.trimContext(prompt, promptContainerText);
             const request = prompt.slice(1); // Remove the leading slash
@@ -544,7 +556,7 @@ export default class AiAgentService {
                 markDownContents = this.promptHelper.allocateTokensToFetchedContent(prompt, markDownContents);
             }
             const isEditorEmpty = context === '"@@@cursor@@@"';
-            return this.promptHelper.formatFinalPrompt(request, context, markDownContents, isEditorEmpty);
+            return this.promptHelper.formatFinalPrompt(request, context, markDownContents, isEditorEmpty, selectedContent);
         }
         catch (error) {
             console.error(error);

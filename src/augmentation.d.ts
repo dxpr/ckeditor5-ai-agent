@@ -41,6 +41,13 @@ declare module '@ckeditor/ckeditor5-core' {
                 enable: boolean;
                 disableFlags?: Array<ModerationFlagsTypes>;
             };
+            commandsDropdown?: Array<{
+                title: string;
+                items: Array<{
+                    title: string;
+                    command: string;
+                }>;
+            }>;
         };
     }
 }

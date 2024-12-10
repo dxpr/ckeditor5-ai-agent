@@ -61,7 +61,7 @@ export default class AiAgentService {
 	 *
 	 * @returns A promise that resolves when the command has been processed.
 	 */
-	public async handleSlashCommand(): Promise<void> {
+	public async handleSlashCommand( command?: string ): Promise<void> {
 		const editor = this.editor;
 		const model = editor.model;
 		const mapper = editor.editing.mapper;
@@ -69,6 +69,7 @@ export default class AiAgentService {
 		const root = model.document.getRoot();
 
 		let content: string | undefined;
+		let selectedContent: string | undefined;
 		let parentEquivalentHTML: HTMLElement | undefined;
 		let parent: Element | undefined;
 		const position = model.document.selection.getLastPosition();
@@ -101,6 +102,18 @@ export default class AiAgentService {
 			}
 		}
 
+		if ( command ) {
+			content = command;
+			selectedContent = parentEquivalentHTML?.outerHTML;
+			const selection = model.document.selection;
+			const range = selection.getFirstRange();
+			if ( range ) {
+				model.change( writer => {
+					writer.setSelection( range.end );
+				} );
+			}
+		}
+
 		if ( this.moderationEnable ) {
 			const moderateContent = await this.moderateContent( content ?? '' );
 			if ( !moderateContent ) {
@@ -116,7 +129,8 @@ export default class AiAgentService {
 			aiAgentContext.showLoader( rect );
 			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
 				content ?? '',
-				parentEquivalentHTML?.innerText
+				parentEquivalentHTML?.innerText,
+				selectedContent
 			);
 			if ( parent && gptPrompt ) {
 				await this.fetchAndProcessGptResponse( gptPrompt, parent );
@@ -469,8 +483,8 @@ export default class AiAgentService {
 		}
 
 		const editorData = editor.getData();
-		let editorContent = editorData.replace( `<ai-tag id="${ blockID }">`, '' );
-		editorContent = editorContent.replace( '</ai-tag>', '' );
+		let editorContent = editorData.replace( '</ai-tag><p>&nbsp;</p>', '' );
+		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
 		editor.setData( editorContent );
 	}
 
@@ -625,7 +639,8 @@ export default class AiAgentService {
 	*/
 	private async generateGptPromptBasedOnUserPrompt(
 		prompt: string,
-		promptContainerText?: string
+		promptContainerText?: string,
+		selectedContent?: string
 	): Promise<string | null> {
 		try {
 			const context = this.promptHelper.trimContext( prompt, promptContainerText );
@@ -646,7 +661,8 @@ export default class AiAgentService {
 				request,
 				context,
 				markDownContents,
-				isEditorEmpty
+				isEditorEmpty,
+				selectedContent
 			);
 		} catch ( error ) {
 			console.error( error );

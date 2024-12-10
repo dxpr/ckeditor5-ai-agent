@@ -78,6 +78,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `moderation.key` | `string` | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
 | `moderation.enable` | `boolean` | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. Default is false. (optional) |
 | `moderation.disableFlags` | `Array<ModerationFlagsTypes>` | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
+| `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>` | Specifies the commands available in the dropdown menu for the AI agent. Example: [ { title: 'Change tone', items: [ { title: 'Professional', command: 'Improve using polished, formal, and respectful language to convey professional expertise and competence. You must keep the text formatting.' } ] } ]. (optional) |
 
 ## Usage Examples
 

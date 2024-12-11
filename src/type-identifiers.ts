@@ -7,6 +7,18 @@ export type AiModel =
     'gpt-4o-mini' |
     'kavya-m1';
 
+export type PromptComponentKey =
+    'responseRules' |
+    'htmlFormatting' |
+    'contentStructure' |
+    'tone' |
+    'inlineContent' |
+    'imageHandling';
+
+export interface PromptSettings {
+    overrides?: Partial<Record<PromptComponentKey, string>>;
+    additions?: Partial<Record<PromptComponentKey, string>>;
+}
 export interface ModelTokenLimits {
     minOutputTokens: number;
     maxOutputTokens: number;
@@ -25,11 +37,7 @@ export interface AiAgentConfig {
     contextSize?: number;
     timeOutDuration?: number;
     endpointUrl?: string;
-    promptSettings?: {
-        outputFormat?: Array<string>;
-        contextData?: Array<string>;
-        filters?: Array<string>;
-    };
+    promptSettings?: PromptSettings;
     streamContent?: boolean;
     debugMode?: boolean;
 }

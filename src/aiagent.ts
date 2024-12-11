@@ -25,11 +25,7 @@ export default class AiAgent extends Plugin {
 			retryAttempts: 1, // Default retry attempts
 			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxInputContextTokens * 0.75, // Default context size
 			stopSequences: [], // Default stop sequences
-			promptSettings: {
-				outputFormat: [], // Default output format
-				contextData: [], // Default context data
-				filters: [] // Default filters
-			},
+			promptSettings: {},
 			debugMode: false, // Default debug mode
 			streamContent: true // Default streaming mode
 		};

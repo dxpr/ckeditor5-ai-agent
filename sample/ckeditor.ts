@@ -96,8 +96,7 @@ ClassicEditor
 			apiKey: 'YOUR_API_KEY',
 			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
-			model: 'gpt-4o',
-			debugMode: true
+			model: 'gpt-4o'
 		},
 		language: {
 			content: 'en',
@@ -158,8 +157,7 @@ ClassicEditor
 			apiKey: 'YOUR_API_KEY',
 			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
-			model: 'gpt-4o',
-			debugMode: true
+			model: 'gpt-4o'
 		},
 		language: {
 			content: 'en',

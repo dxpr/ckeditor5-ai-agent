@@ -69,15 +69,153 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
 | `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
 | `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `promptSettings.outputFormat` | `Array<string>` | Specifies the desired format of the generated output (e.g., plain text, markdown). (optional) |
-| `promptSettings.contextData` | `Array<string>` | Provides contextual data or hints to be included in the AI prompt for better response generation. (optional) |
-| `promptSettings.filters` | `Array<string>` | Contains any filtering logic or constraints to refine the AI's output. (optional) |
+| `promptSettings.overrides.responseRules` | `string` | Override core response generation rules and formatting |
+| `promptSettings.overrides.htmlFormatting` | `string` | Override HTML generation rules and tag structure |
+| `promptSettings.overrides.contentStructure` | `string` | Override document structure and organization guidelines |
+| `promptSettings.overrides.tone` | `string` | Override language style and voice settings |
+| `promptSettings.overrides.inlineContent` | `string` | Override inline content, list, and table handling |
+| `promptSettings.overrides.imageHandling` | `string` | Override image formatting and attribute requirements |
+| `promptSettings.additions.responseRules` | `string` | Additional response generation rules |
+| `promptSettings.additions.htmlFormatting` | `string` | Additional HTML formatting requirements |
+| `promptSettings.additions.contentStructure` | `string` | Additional structure guidelines |
+| `promptSettings.additions.tone` | `string` | Additional tone and style requirements |
+| `promptSettings.additions.inlineContent` | `string` | Additional inline content handling rules |
+| `promptSettings.additions.imageHandling` | `string` | Additional image processing requirements |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
 | `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
 | `showErrorDuration` | `number` | The duration in milliseconds for which moderation error messages will be displayed to the user. This helps in providing feedback on moderation checks. Default is 5000ms (5 seconds). (optional) |
 | `moderation.key` | `string` | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
 | `moderation.enable` | `boolean` | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. Default is false. (optional) |
 | `moderation.disableFlags` | `Array<ModerationFlagsTypes>` | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
+
+### Prompt Settings
+The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
+#### Available Components
+Each component can be customized using either `overrides` (to replace default rules) or `additions` (to add new rules):
+- `htmlFormatting`: Rules for HTML generation
+- `contentStructure`: Document structure guidelines
+- `tone`: Language and tone settings
+- `responseRules`: Core response generation rules
+- `inlineContent`: Inline content handling rules
+- `imageHandling`: Image element requirements
+#### Default Components
+##### Core Response Rules (`responseRules`)
+```typescript
+`Follow these step-by-step instructions to respond to user inputs:
+Analyze the CONTEXT section thoroughly to understand the existing content and its style
+Identify the specific requirements from the TASK section
+If markdown content is present, extract relevant information that aligns with the task
+Determine the appropriate tone and style based on the context
+Generate a response that seamlessly integrates with the existing content
+Format the response according to the HTML and structural requirements
+Verify that the response meets all formatting and content guidelines
+Core Response Generation Rules:
+Replace "@@@cursor@@@" with contextually appropriate content
+Maintain consistency with the surrounding text's tone and style
+Ensure the response flows naturally with the existing content
+Avoid repeating context verbatim
+Generate original content that adds value
+Follow the specified language requirements
+Adhere to all HTML formatting rules`
+```
+
+##### HTML Formatting (`htmlFormatting`)
+```typescript
+`HTML Formatting Requirements:
+Generate valid HTML snippets only
+Use only the following allowed tags: ${getAllowedHtmlTags(this.editor).join(', ')}
+Ensure proper tag nesting
+Avoid empty elements
+Use semantic HTML where appropriate
+Maintain clean, readable HTML structure
+Follow block-level element rules
+Properly close all tags
+No inline styles unless specified
+No script or style tags
+First word must be a valid HTML tag
+Block elements must not contain other block elements`
+```
+
+##### Content Structure (`contentStructure`)
+```typescript
+`Content Structure Rules:
+Organize information logically
+Use appropriate paragraph breaks
+Maintain consistent formatting
+Follow document hierarchy
+Use appropriate list structures when needed
+Ensure proper content flow
+Respect existing document structure`
+```
+
+##### Tone Guidelines (`tone`)
+```typescript
+`Language and Tone Guidelines:
+Match the formality level of the surrounding content
+Maintain consistent voice throughout the response
+Use appropriate technical terminology when relevant
+Ensure proper grammar and punctuation
+Avoid overly complex sentence structures
+Keep the tone engaging and reader-friendly
+Adapt style based on content type`
+```
+
+##### Inline Content (`inlineContent`)
+```typescript
+`Inline Content Specific Rules:
+Determine content type (list, table, or inline)
+Format according to content type
+Ensure seamless integration
+Maintain proper nesting`
+```
+
+##### Image Handling (`imageHandling`)
+```typescript
+`Image Element Requirements:
+Every <img> must have src and alt attributes
+Format src URLs as: https://placehold.co/600x400?text=[alt_text]
+Alt text must be descriptive and meaningful`
+```
+
+#### Usage Examples
+
+Override default rules:
+```typescript
+ClassicEditor.create(document.querySelector('#editor'), {
+    plugins: [AiAgent],
+    aiAgent: {
+        promptSettings: {
+            overrides: {
+                'htmlFormatting': `HTML Requirements:
+Use only <p> and <strong> tags
+Always wrap text in paragraphs
+No nested elements allowed
+Keep HTML structure minimal
+Validate all markup`
+            }
+        }
+    }
+});
+```
+
+Add additional rules:
+```typescript
+ClassicEditor.create(document.querySelector('#editor'), {
+    plugins: [AiAgent],
+    aiAgent: {
+        promptSettings: {
+            additions: {
+                'contentStructure': `
+Keep paragraphs under 100 words
+Start each section with a topic sentence
+Use descriptive headings`
+            }
+        }
+    }
+});
+```
+
+Note: When using overrides, all default rules for that component are replaced. When using additions, new rules are appended to the existing defaults.
 
 ## Usage Examples
 

@@ -2,7 +2,7 @@ import type AiAgentCommand from './aiagentcommand.js';
 import type AiAgentEditing from './aiagentediting.js';
 import type AiAgentUI from './aiagentui.js';
 import type { AiAgent } from './index.js';
-import type { AiModel, ModerationFlagsTypes } from './type-identifiers.js';
+import type { AiModel, PromptSettings, ModerationFlagsTypes } from './type-identifiers.js';
 declare module '@ckeditor/ckeditor5-core' {
     interface CommandsMap {
         aiAgent: AiAgentCommand;
@@ -28,11 +28,7 @@ declare module '@ckeditor/ckeditor5-core' {
             contextSize?: number;
             timeOutDuration?: number;
             endpointUrl?: string;
-            promptSettings?: {
-                outputFormat?: Array<string>;
-                contextData?: Array<string>;
-                filters?: Array<string>;
-            };
+            promptSettings?: PromptSettings;
             streamContent?: boolean;
             debugMode?: boolean;
             showErrorDuration?: number;

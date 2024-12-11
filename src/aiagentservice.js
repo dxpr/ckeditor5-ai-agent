@@ -543,7 +543,7 @@ export default class AiAgentService {
                 markDownContents = await this.promptHelper.generateMarkDownForUrls(formattedUrl);
                 markDownContents = this.promptHelper.allocateTokensToFetchedContent(prompt, markDownContents);
             }
-            const isEditorEmpty = context === '"@@@cursor@@@"';
+            const isEditorEmpty = context === '@@@cursor@@@';
             return this.promptHelper.formatFinalPrompt(request, context, markDownContents, isEditorEmpty);
         }
         catch (error) {

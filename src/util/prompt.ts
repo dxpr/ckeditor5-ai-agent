@@ -176,12 +176,9 @@ export class PromptHelper {
 		if ( !isEditorEmpty ) {
 			corpus.push( '\n<CONTEXT_REQUIREMENTS>' );
 			corpus.push( trimMultilineString( `
-				CRITICAL CURSOR INSTRUCTIONS:
-				1. Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY
-				2. NEVER copy or paraphrase context text
-				3. Generate 100% original content
-				4. Match style but use different words
-				5. Verify zero phrase duplication
+				Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY
+				NEVER copy or paraphrase context text
+				Verify zero phrase duplication
 			` ) );
 			corpus.push( '</CONTEXT_REQUIREMENTS>' );
 		}

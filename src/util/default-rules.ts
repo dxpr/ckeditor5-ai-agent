@@ -6,7 +6,7 @@ export function getDefaultRules( editor: any ): { [key: string]: string } {
             Follow these step-by-step instructions to respond to user inputs:
             Analyze the CONTEXT section thoroughly to understand the existing content and its style.
             Identify the specific requirements from the TASK section.
-            If markdown content is present, extract relevant information that aligns with the task.
+            Do not include any markdown syntax in the response.
             Determine the appropriate tone and style based on the context.
             Generate a response that seamlessly integrates with the existing content.
             Format the response according to the HTML and structural requirements.

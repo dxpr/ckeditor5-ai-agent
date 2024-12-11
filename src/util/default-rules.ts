@@ -4,22 +4,11 @@ export function getDefaultRules( editor: any ): { [key: string]: string } {
 	return {
 		responseRules: `
             Follow these step-by-step instructions to respond to user inputs:
-            Analyze the CONTEXT section thoroughly to understand the existing content and its style.
             Identify the specific requirements from the TASK section.
             Do not include any markdown syntax in the response.
-            Determine the appropriate tone and style based on the context.
             Generate a response that seamlessly integrates with the existing content.
             Format the response according to the HTML and structural requirements.
             Verify that the response meets all formatting and content guidelines.
-
-            Core Response Generation Rules:
-            Replace "@@@cursor@@@" with contextually appropriate content.
-            Maintain consistency with the surrounding text's tone and style.
-            Ensure the response flows naturally with the existing content.
-            Avoid repeating context verbatim.
-            Generate original content that adds value.
-            Follow the specified language requirements.
-            Adhere to all HTML formatting rules.
         `,
 		htmlFormatting: `
             HTML Formatting Requirements:

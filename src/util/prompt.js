@@ -123,12 +123,18 @@ export class PromptHelper {
         if (!isEditorEmpty) {
             corpus.push('\n<CONTEXT_REQUIREMENTS>');
             corpus.push(trimMultilineString(`
-				CRITICAL CURSOR INSTRUCTIONS:
-				1. Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY
-				2. NEVER copy or paraphrase context text
-				3. Generate 100% original content
-				4. Match style but use different words
-				5. Verify zero phrase duplication
+				Replace "@@@cursor@@@" with contextually appropriate content.
+				Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+				NEVER copy or paraphrase context text.
+				Verify zero phrase duplication.
+				Analyze the CONTEXT section thoroughly 
+				to understand the existing content and its style.
+				Generate a response that seamlessly integrates 
+				with the existing content.
+				Determine the appropriate tone and style based
+				on the context. Ensure the response flows 
+				naturally with the existing content.
+
 			`));
             corpus.push('</CONTEXT_REQUIREMENTS>');
         }

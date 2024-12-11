@@ -1,9 +1,12 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { Element } from 'ckeditor5/src/engine.js';
-import type { AiModel, MarkdownContent } from './type-identifiers.js';
+import type { AiModel, MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
+import { ButtonView } from 'ckeditor5/src/ui.js';
+import { env } from 'ckeditor5/src/utils.js';
+import { ALL_MODERATION_FLAGS, MODERATION_URL } from './const.js';
 
 export default class AiAgentService {
 	private editor: Editor;
@@ -23,6 +26,10 @@ export default class AiAgentService {
 	private buffer = '';
 	private openTags: Array<string> = [];
 	private isInlineInsertion: boolean = false;
+	private abortGeneration: boolean = false;
+	private moderationKey: string;
+	private moderationEnable: boolean;
+	private disableFlags: Array<ModerationFlagsTypes> = [];
 
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
@@ -44,6 +51,9 @@ export default class AiAgentService {
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
 		this.streamContent = config.streamContent ?? true;
+		this.moderationKey = config.moderation?.key ?? '';
+		this.moderationEnable = config.moderation?.enable ?? false;
+		this.disableFlags = config.moderation?.disableFlags ?? [];
 	}
 
 	/**
@@ -91,6 +101,13 @@ export default class AiAgentService {
 			}
 		}
 
+		if ( this.moderationEnable ) {
+			const moderateContent = await this.moderateContent( content ?? '' );
+			if ( !moderateContent ) {
+				return;
+			}
+		}
+
 		try {
 			const domSelection = window.getSelection();
 			const domRange: any = domSelection?.getRangeAt( 0 );
@@ -110,6 +127,93 @@ export default class AiAgentService {
 		} finally {
 			this.isInlineInsertion = false;
 			aiAgentContext.hideLoader();
+		}
+	}
+
+	/**
+	 * Moderates the input content using OpenAI's moderation API to check for inappropriate content.
+	 *
+	 * @param input - The text content to be moderated
+	 * @returns A promise that resolves to:
+	 * - `true` if content is acceptable or if moderation fails (fail-open)
+	 * - `false` if content is flagged as inappropriate
+	 *
+	 * @throws Shows user-friendly error messages via aiAgentContext for:
+	 * - Flagged content ("Cannot process your query...")
+	 * - API errors ("Error in content moderation")
+	 */
+	private async moderateContent( input: string ): Promise<boolean> {
+		if ( !this.moderationKey ) {
+			return true;
+		}
+		const editor = this.editor;
+		const t = editor.t;
+		const controller = new AbortController();
+
+		// Set timeout for moderation request
+		const timeoutId = setTimeout( () => controller.abort(), this.timeOutDuration );
+
+		try {
+			const response = await fetch( MODERATION_URL, {
+				method: 'POST',
+				headers: {
+					'Authorization': `Bearer ${ this.moderationKey }`,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify( { input } ),
+				signal: controller.signal
+			} );
+
+			clearTimeout( timeoutId );
+
+			if ( !response.ok ) {
+				throw new Error( `HTTP error! status: ${ response.status }` );
+			}
+
+			const data = await response.json() as ModerationResponse;
+
+			if ( !data?.results?.[ 0 ] ) {
+				throw new Error( 'Invalid moderation response format' );
+			}
+
+			const flags = ALL_MODERATION_FLAGS.filter( flag => !this.disableFlags.includes( flag ) );
+
+			if ( data.results[ 0 ].flagged ) {
+				let error = false;
+				const categories = data.results[ 0 ].categories;
+				for ( let index = 0; index < flags.length; index++ ) {
+					const flag = flags[ index ];
+					if ( flags.includes( flag ) ) {
+						if ( categories[ flag ] ) {
+							error = true;
+							break;
+						}
+					}
+				}
+
+				if ( error ) {
+					aiAgentContext.showError( t( 'I\'m sorry, but I cannot assist with that request.' ) );
+					return false;
+				}
+			}
+
+			return true;
+		} catch ( error ) {
+			console.error( 'Moderation error:', error );
+
+			// Handle specific error cases
+			if ( error instanceof TypeError ) {
+				aiAgentContext.showError( t( 'Network error during content moderation' ) );
+			} else if ( error instanceof DOMException && error.name === 'AbortError' ) {
+				aiAgentContext.showError( t( 'Content moderation timed out' ) );
+			} else {
+				aiAgentContext.showError( t( 'Error in content moderation' ) );
+			}
+
+			// Fail open for moderation errors
+			return true;
+		} finally {
+			clearTimeout( timeoutId );
 		}
 	}
 
@@ -172,9 +276,11 @@ export default class AiAgentService {
 			const decoder = new TextDecoder( 'utf-8' );
 
 			this.clearParentContent( parent );
-			this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
+			// this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
 
 			let insertParent = true;
+
+			this.cancelGenerationButton( blockID, controller );
 
 			editor.model.change( writer => {
 				const position = editor.model.document.selection.getLastPosition();
@@ -244,11 +350,12 @@ export default class AiAgentService {
 				}
 			}
 
-			const editorData = editor.getData();
-			let editorContent = editorData.replace( `<ai-tag id="${ blockID }">`, '' );
-			editorContent = editorContent.replace( '</ai-tag>', '' );
-			editor.setData( editorContent );
+			this.processCompleted( blockID );
 		} catch ( error: any ) {
+			if ( this.abortGeneration ) {
+				return;
+			}
+
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			const errorIdentifier =
 				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
@@ -289,6 +396,93 @@ export default class AiAgentService {
 		}
 	}
 
+	/**
+     * Creates and configures a cancel generation button with keyboard shortcut support.
+     *
+     * @param blockID - Unique identifier for the AI generation block
+     * @param controller - AbortController to cancel the ongoing AI generation
+     * @private
+     */
+	private cancelGenerationButton( blockID: string, controller: AbortController ) {
+		const editor = this.editor;
+		const t = editor.t;
+
+		const view = new ButtonView();
+		let label = t( 'Cancel Generation' );
+
+		if ( env.isMac ) {
+			label = t( '\u2318 + \u232B Cancel Generation' );
+		}
+
+		if ( env.isWindows ) {
+			label = t( 'Ctrl + \u232B Cancel Generation' );
+		}
+
+		view.set( {
+			label,
+			withText: true,
+			class: 'ck-cancel-request-button'
+		} );
+
+		view.on( 'execute', () => {
+			this.abortGeneration = true;
+			controller.abort();
+			this.processCompleted( blockID );
+		} );
+
+		view.render();
+
+		editor.keystrokes.set( 'Ctrl+Backspace', ( keyEvtData, cancel ) => {
+			if ( keyEvtData.ctrlKey || keyEvtData.metaKey ) {
+				this.abortGeneration = true;
+				controller.abort();
+				this.processCompleted( blockID );
+			}
+			cancel();
+		} );
+
+		if ( editor.ui.view.element && view.element ) {
+			const panelContent = editor.ui.view.element.querySelector( '.ck-sticky-panel__content .ck-toolbar__items' );
+			if ( panelContent ) {
+				panelContent.append( view.element );
+			}
+		}
+
+		setTimeout( () => view.set( { class: 'ck-cancel-request-button visible' } ), 2000 );
+	}
+
+	/**
+	 * Handles cleanup after AI generation is completed or cancelled.
+	 * Removes the cancel button from the UI and cleans up the temporary AI tag from editor content.
+	 *
+	 * @param blockID - Unique identifier for the AI generation block to be cleaned up
+	 * @private
+	 */
+	private processCompleted( blockID: string ) {
+		const editor = this.editor;
+
+		if ( editor.ui.view.element ) {
+			const cancelButton = editor.ui.view.element.querySelector( '.ck-cancel-request-button' );
+			if ( cancelButton ) {
+				cancelButton.remove();
+			}
+		}
+
+		const editorData = editor.getData();
+		let editorContent = editorData.replace( `<ai-tag id="${ blockID }">`, '' );
+		editorContent = editorContent.replace( '</ai-tag>', '' );
+		editor.setData( editorContent );
+	}
+
+	/**
+	 * Updates the content of an AI-generated block in the editor.
+	 *
+	 * @param newHtml - The new HTML content to insert
+	 * @param blockID - The unique identifier of the AI block to update
+	 * @param insertParent - Whether to insert at parent level or child level
+	 * @returns Promise that resolves when the update is complete
+	 * @private
+	 */
 	private async updateContent( newHtml: string, blockID: string, insertParent: boolean ): Promise<void> {
 		const editor = this.editor;
 		editor.model.change( writer => {

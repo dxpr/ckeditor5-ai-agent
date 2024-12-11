@@ -1,3 +1,4 @@
+import type { ALL_MODERATION_FLAGS } from './const.js';
 export type AiModel = 'gpt-3.5-turbo' | 'gpt-4o' | 'gpt-4o-mini' | 'kavya-m1';
 export type PromptComponentKey = 'responseRules' | 'htmlFormatting' | 'contentStructure' | 'tone' | 'inlineContent' | 'imageHandling';
 export interface PromptSettings {
@@ -29,4 +30,12 @@ export interface MarkdownContent {
     content: string;
     url: string;
     tokenCount?: number;
+}
+export type ModerationFlagsTypes = typeof ALL_MODERATION_FLAGS[number];
+export interface ModerationResponse {
+    results: Array<{
+        flagged: boolean;
+        categories: Record<ModerationFlagsTypes, boolean>;
+        category_scores: Record<ModerationFlagsTypes, number>;
+    }>;
 }

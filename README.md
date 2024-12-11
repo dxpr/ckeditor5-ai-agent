@@ -83,6 +83,10 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `promptSettings.additions.imageHandling` | `string` | Additional image processing requirements |
 | `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
 | `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
+| `showErrorDuration` | `number` | The duration in milliseconds for which moderation error messages will be displayed to the user. This helps in providing feedback on moderation checks. Default is 5000ms (5 seconds). (optional) |
+| `moderation.key` | `string` | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
+| `moderation.enable` | `boolean` | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. Default is false. (optional) |
+| `moderation.disableFlags` | `Array<ModerationFlagsTypes>` | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
 
 ### Prompt Settings
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

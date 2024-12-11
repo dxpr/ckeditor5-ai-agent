@@ -24,14 +24,17 @@ export class PromptHelper {
 		this.editorContextRatio = options.editorContextRatio ?? 0.3;
 	}
 
-	public getSystemPrompt(): string {
+	public getSystemPrompt( isInlineResponse: boolean = false ): string {
 		const defaultComponents = getDefaultRules( this.editor );
 		let systemPrompt = '';
 
 		// Process each component
 		for ( const [ id, defaultContent ] of Object.entries( defaultComponents ) ) {
-			// Skip components that are not allowed in the editor
-			if ( id === ( 'imageHandling' as PromptComponentKey ) && !getAllowedHtmlTags( this.editor ).includes( 'img' ) ) {
+			// Skip components that are not allowed in the editor and not inline response
+			if (
+				( id === 'imageHandling' && !getAllowedHtmlTags( this.editor ).includes( 'img' ) ) ||
+				( id === 'inlineContent' && !isInlineResponse )
+			) {
 				continue;
 			}
 

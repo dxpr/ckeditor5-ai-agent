@@ -3,6 +3,7 @@ import { removeLeadingSpaces, extractEditorContent, trimMultilineString } from '
 import { countTokens, trimLLMContentByTokens } from './token-utils.js';
 import { fetchUrlContent } from './url-utils.js';
 import { getDefaultRules } from './default-rules.js';
+import { getAllowedHtmlTags } from './html-utils.js';
 export class PromptHelper {
     constructor(editor, options = {}) {
         var _a, _b, _c, _d;
@@ -13,12 +14,17 @@ export class PromptHelper {
         this.debugMode = (_c = config.debugMode) !== null && _c !== void 0 ? _c : false;
         this.editorContextRatio = (_d = options.editorContextRatio) !== null && _d !== void 0 ? _d : 0.3;
     }
-    getSystemPrompt() {
+    getSystemPrompt(isInlineResponse = false) {
         var _a, _b;
         const defaultComponents = getDefaultRules(this.editor);
         let systemPrompt = '';
         // Process each component
         for (const [id, defaultContent] of Object.entries(defaultComponents)) {
+            // Skip components that are not allowed in the editor and not inline response
+            if ((id === 'imageHandling' && !getAllowedHtmlTags(this.editor).includes('img')) ||
+                (id === 'inlineContent' && !isInlineResponse)) {
+                continue;
+            }
             const componentId = id;
             let content = defaultContent;
             // Apply overrides if they exist

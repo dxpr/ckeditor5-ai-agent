@@ -9,7 +9,7 @@ export declare class PromptHelper {
     constructor(editor: Editor, options?: {
         editorContextRatio?: number;
     });
-    getSystemPrompt(): string;
+    getSystemPrompt(isInlineResponse?: boolean): string;
     trimContext(prompt: string, promptContainerText?: string): string;
     formatFinalPrompt(request: string, context: string, markDownContents: Array<MarkdownContent>, isEditorEmpty: boolean): string;
     generateMarkDownForUrls(urls: Array<string>): Promise<Array<MarkdownContent>>;

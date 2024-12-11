@@ -94,7 +94,6 @@ ClassicEditor
 		},
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
-			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
 			model: 'gpt-4o'
 		},
@@ -155,7 +154,6 @@ ClassicEditor
 		},
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
-			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			temperature: 0.7,
 			model: 'gpt-4o'
 		},

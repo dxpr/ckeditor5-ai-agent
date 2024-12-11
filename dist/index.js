@@ -1,6 +1,7 @@
 import { Plugin, Command } from '@ckeditor/ckeditor5-core/dist/index.js';
 import { ButtonView } from '@ckeditor/ckeditor5-ui/dist/index.js';
 import { Widget, toWidget } from '@ckeditor/ckeditor5-widget/dist/index.js';
+import { env } from '@ckeditor/ckeditor5-utils/dist/index.js';
 import sbd from 'sbd';
 
 var ckeditor = "<svg width='68' height='64' viewBox='0 0 68 64' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><path d='M43.71 11.025a11.508 11.508 0 0 0-1.213 5.159c0 6.42 5.244 11.625 11.713 11.625.083 0 .167 0 .25-.002v16.282a5.464 5.464 0 0 1-2.756 4.739L30.986 60.7a5.548 5.548 0 0 1-5.512 0L4.756 48.828A5.464 5.464 0 0 1 2 44.089V20.344c0-1.955 1.05-3.76 2.756-4.738L25.474 3.733a5.548 5.548 0 0 1 5.512 0l12.724 7.292z' fill='#FFF'/><path d='M45.684 8.79a12.604 12.604 0 0 0-1.329 5.65c0 7.032 5.744 12.733 12.829 12.733.091 0 .183-.001.274-.003v17.834a5.987 5.987 0 0 1-3.019 5.19L31.747 63.196a6.076 6.076 0 0 1-6.037 0L3.02 50.193A5.984 5.984 0 0 1 0 45.003V18.997c0-2.14 1.15-4.119 3.019-5.19L25.71.804a6.076 6.076 0 0 1 6.037 0L45.684 8.79zm-29.44 11.89c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h25.489c.833 0 1.51-.67 1.51-1.498v-.715c0-.827-.677-1.498-1.51-1.498h-25.49.001zm0 9.227c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h18.479c.833 0 1.509-.67 1.509-1.498v-.715c0-.827-.676-1.498-1.51-1.498H16.244zm0 9.227c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h25.489c.833 0 1.51-.67 1.51-1.498v-.715c0-.827-.677-1.498-1.51-1.498h-25.49.001zm41.191-14.459c-5.835 0-10.565-4.695-10.565-10.486 0-5.792 4.73-10.487 10.565-10.487C63.27 3.703 68 8.398 68 14.19c0 5.791-4.73 10.486-10.565 10.486v-.001z' fill='#1EBC61' fill-rule='nonzero'/><path d='M60.857 15.995c0-.467-.084-.875-.251-1.225a2.547 2.547 0 0 0-.686-.88 2.888 2.888 0 0 0-1.026-.531 4.418 4.418 0 0 0-1.259-.175c-.134 0-.283.006-.447.018-.15.01-.3.034-.446.07l.075-1.4h3.587v-1.8h-5.462l-.214 5.06c.319-.116.682-.21 1.089-.28.406-.071.77-.107 1.088-.107.218 0 .437.021.655.063.218.041.413.114.585.218s.313.244.422.419c.109.175.163.391.163.65 0 .424-.132.745-.396.961a1.434 1.434 0 0 1-.938.325c-.352 0-.656-.1-.912-.3-.256-.2-.43-.453-.523-.762l-1.925.588c.1.35.258.664.472.943.214.279.47.514.767.706.298.191.63.339.995.443.365.104.749.156 1.151.156.437 0 .86-.064 1.272-.193.41-.13.778-.323 1.1-.581a2.8 2.8 0 0 0 .775-.981c.193-.396.29-.864.29-1.405h-.001z' fill='#FFF' fill-rule='nonzero'/></g></svg>\n";
@@ -44,40 +45,25 @@ const aiAgentContext = AiAgentContext.getInstance();
 
 // const
 const TOKEN_LIMITS = {
-    'gpt-3': {
-        min: 1,
-        max: 4096,
-        context: 16385
-    },
     'gpt-3.5-turbo': {
-        min: 1,
-        max: 4096,
-        context: 16385
-    },
-    'gpt-4': {
-        min: 1,
-        max: 4096,
-        context: 128000
+        minOutputTokens: 1,
+        maxOutputTokens: 4096,
+        maxInputContextTokens: 16385
     },
     'gpt-4o': {
-        min: 0,
-        max: 4096,
-        context: 128000
-    },
-    'gpt-4-turbo': {
-        min: 1,
-        max: 16384,
-        context: 128000
+        minOutputTokens: 0,
+        maxOutputTokens: 16384,
+        maxInputContextTokens: 128000
     },
     'gpt-4o-mini': {
-        min: 1,
-        max: 16384,
-        context: 128000
+        minOutputTokens: 1,
+        maxOutputTokens: 16384,
+        maxInputContextTokens: 128000
     },
     'kavya-m1': {
-        min: 0,
-        max: 16384,
-        context: 128000
+        minOutputTokens: 0,
+        maxOutputTokens: 16384,
+        maxInputContextTokens: 128000
     }
 };
 const SUPPORTED_LANGUAGES = [
@@ -86,11 +72,32 @@ const SUPPORTED_LANGUAGES = [
     'hi',
     'nl'
 ];
+const MODERATION_URL = 'https://api.openai.com/v1/moderations';
+const ALL_MODERATION_FLAGS = [
+    'harassment',
+    'harassment/threatening',
+    'hate',
+    'hate/threatening',
+    'self-harm',
+    'self-harm/instructions',
+    'self-harm/intent',
+    'sexual',
+    'sexual/minors',
+    'violence',
+    'violence/graphic'
+];
+const SHOW_ERROR_DURATION = 5000;
 
 class AiAgentUI extends Plugin {
     PLACEHOLDER_TEXT_ID = 'slash-placeholder';
     GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
     GPT_RESPONSE_ERROR_ID = 'gpt-error';
+    showErrorDuration = SHOW_ERROR_DURATION;
+    constructor(editor){
+        super(editor);
+        const config = editor.config.get('aiAgent');
+        this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
+    }
     static get pluginName() {
         return 'AiAgentUI';
     }
@@ -191,6 +198,14 @@ class AiAgentUI extends Plugin {
             });
             return view;
         });
+        editor.accessibility.addKeystrokeInfos({
+            keystrokes: [
+                {
+                    label: t('Insert slash command (AI Agent)'),
+                    keystroke: '/'
+                }
+            ]
+        });
         editor.model.schema.register('ai-tag', {
             inheritAllFrom: '$block',
             isInline: true,
@@ -204,6 +219,21 @@ class AiAgentUI extends Plugin {
             allowIn: 'ai-tag'
         });
         this.addCustomTagConversions();
+        let keystroke = '';
+        if (env.isMac) {
+            keystroke = 'Cmd + Backspace';
+        }
+        if (env.isWindows) {
+            keystroke = 'Ctrl + Backspace';
+        }
+        editor.accessibility.addKeystrokeInfos({
+            keystrokes: [
+                {
+                    label: t('Cancel AI Generation'),
+                    keystroke
+                }
+            ]
+        });
     }
     addCustomTagConversions() {
         const editor = this.editor;
@@ -418,7 +448,7 @@ class AiAgentUI extends Plugin {
             tooltipElement.textContent = message;
             setTimeout(()=>{
                 this.hideGptErrorToolTip();
-            }, 2000);
+            }, this.showErrorDuration);
         }
     }
     /**
@@ -459,196 +489,313 @@ class AiAgentCommand extends Command {
     }
 }
 
+// Map of CKEditor nodes to HTML tags
+const nodeToHtmlMap = {
+    blockQuote: 'blockquote',
+    caption: 'figcaption',
+    codeBlock: 'pre',
+    heading1: 'h1',
+    heading2: 'h2',
+    heading3: 'h3',
+    imageBlock: 'img',
+    imageInline: 'img',
+    paragraph: 'p',
+    table: 'table',
+    tableCell: 'td',
+    tableRow: 'tr',
+    $listItem: 'li',
+    horizontalLine: 'hr'
+};
+// Map text attributes to HTML tags
+const textAttributeToHtmlMap = {
+    bold: 'strong',
+    italic: 'em',
+    code: 'code',
+    strikethrough: 's',
+    subscript: 'sub',
+    superscript: 'sup',
+    underline: 'u',
+    linkHref: 'a'
+};
+/**
+ * Gets the allowed HTML tags from the editor schema.
+ *
+ * @param editor - The CKEditor instance
+ * @returns Array of allowed HTML tag names
+ */ function getAllowedHtmlTags(editor) {
+    const schema = editor.model.schema;
+    const definitions = schema.getDefinitions();
+    const schemaNodes = Object.keys(definitions).sort();
+    const allowedTags = new Set();
+    // Add tags from node mappings
+    schemaNodes.forEach((node)=>{
+        if (node in nodeToHtmlMap) {
+            allowedTags.add(nodeToHtmlMap[node]);
+        }
+    });
+    // Add tags from text attributes
+    const textDefinition = definitions.$text;
+    if (textDefinition && textDefinition.allowAttributes) {
+        textDefinition.allowAttributes.forEach((attr)=>{
+            if (attr in textAttributeToHtmlMap) {
+                allowedTags.add(textAttributeToHtmlMap[attr]);
+            }
+        });
+    }
+    // If listItem is present, add ul and ol
+    if (allowedTags.has('li')) {
+        allowedTags.add('ul');
+        allowedTags.add('ol');
+    }
+    return Array.from(allowedTags).sort();
+}
+
+/* eslint-enable camelcase */ /**
+ * Utility functions for text processing operations.
+ */ /**
+ * Removes leading spaces from each line while preserving empty lines and content indentation.
+ *
+ * @param text - The text to process
+ * @returns The processed text with leading spaces removed
+ */ function removeLeadingSpaces(text) {
+    return text.split('\n').map((line)=>line.trimStart()).join('\n');
+}
+/**
+ * Removes leading & trailing spaces from each line while preserving empty lines and content indentation.
+ *
+ * @param text - The text to process
+ * @returns The processed text with leading spaces removed
+ */ function trimMultilineString(text) {
+    return text.split('\n').map((line)=>line.trim()).join('\n');
+}
+/**
+ * Extracts a portion of text from the editor content based on sentence boundaries.
+ *
+ * @param contentAfterPrompt - The text to extract from
+ * @param contextSize - Maximum size of the context to extract
+ * @param reverse - Whether to extract from the end of the text
+ * @returns The extracted text portion
+ */ function extractEditorContent(contentAfterPrompt, contextSize, reverse = false, editor) {
+    let trimmedContent = '';
+    let charCount = 0;
+    const options = {
+        preserve_whitespace: true,
+        html_boundaries: true,
+        allowed_tags: getAllowedHtmlTags(editor)
+    };
+    const sentences = sbd.sentences(contentAfterPrompt, options);
+    const iterator = reverse ? sentences.reverse() : sentences;
+    for (const sentence of iterator){
+        const sentenceLength = sentence.length;
+        if ((charCount + sentenceLength) / 4 <= contextSize) {
+            trimmedContent = reverse ? sentence + trimmedContent : trimmedContent + sentence;
+            charCount += sentenceLength;
+        } else {
+            break;
+        }
+    }
+    return trimmedContent.trim();
+}
+
+/**
+ * Utility functions for token management and calculations.
+ */ /**
+ * Counts the number of tokens in the provided content string.
+ *
+ * @param content - The content string to count tokens in.
+ * @returns The number of tokens in the content.
+ */ function countTokens(content) {
+    if (!content || typeof content !== 'string') {
+        return 0;
+    }
+    // Normalize the content by trimming and reducing multiple whitespaces
+    const normalizedContent = content.trim().replace(/\s+/g, ' ');
+    // Approximate tokens by breaking words, contractions, and common punctuation marks
+    const tokens = normalizedContent.match(/\b\w+('\w+)?\b|[.,!?;:"(){}[\]]/g) || [];
+    // Heuristic: Long words (over 10 characters) are likely to be split into multiple tokens
+    let approxTokenCount = 0;
+    tokens.forEach((token)=>{
+        // Break long words into chunks to approximate GPT subword tokenization
+        if (token.length > 10) {
+            approxTokenCount += Math.ceil(token.length / 4); // Approximation: 4 characters per token
+        } else {
+            approxTokenCount += 1;
+        }
+    });
+    return approxTokenCount;
+}
+/**
+ * Trims the LLM content by tokens while ensuring that sentences or other structures
+ * are not clipped mid-way.
+ *
+ * @param content - The LLM-generated content string to trim
+ * @param maxTokens - The maximum number of tokens allowed
+ * @returns The trimmed content string
+ */ function trimLLMContentByTokens(content, maxTokens) {
+    const elements = content.split('\n');
+    let accumulatedTokens = 0;
+    let trimmedContent = '';
+    for (const element of elements){
+        const elementTokenCount = countTokens(element);
+        if (accumulatedTokens + elementTokenCount > maxTokens) {
+            break; // Stop if adding this element would exceed the token limit
+        }
+        accumulatedTokens += elementTokenCount;
+        trimmedContent += element + '\n'; // Add the whole structural element
+    }
+    return trimmedContent;
+}
+
+/**
+ * Fetches the content of a given URL and returns it as a string.
+ *
+ * @param url - The URL to fetch content from.
+ * @returns A promise that resolves to the fetched content as a string.
+ * @throws Will throw an error if the URL is invalid or if the fetch fails.
+ */ async function fetchUrlContent(url) {
+    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+    const trimmedUrl = url.trim();
+    if (!urlRegex.test(trimmedUrl)) {
+        throw new Error('Invalid URL');
+    }
+    try {
+        // Use a regular expression to remove hidden characters
+        const cleanedUrl = trimmedUrl.replace(/[^\x20-\x7E]/g, '');
+        const requestURL = `https://r.jina.ai/${cleanedUrl.trim()}`;
+        const response = await fetch(requestURL.trim(), {
+            headers: {
+                'X-With-Generated-Alt': 'true'
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const content = await response.text();
+        // Updated error matching
+        if (content.includes('Warning: Target URL returned error')) {
+            throw new Error(`Target URL (${trimmedUrl}) returned an error`);
+        }
+        if (content.trim().length === 0) {
+            throw new Error('Empty content received');
+        }
+        return content.replace(/\(https?:\/\/[^\s]+\)/g, '').replace(/^\s*$/gm, '').trim();
+    } catch (error) {
+        console.error(`Failed to fetch content: ${url}`, error);
+        aiAgentContext.showError('Failed to fetch URL content');
+        return '';
+    }
+}
+
+function getDefaultRules(editor) {
+    return {
+        responseRules: `
+            Follow these step-by-step instructions to respond to user inputs:
+            Identify the specific requirements from the TASK section.
+            Do not include any markdown syntax in the response.
+            Generate a response that seamlessly integrates with the existing content.
+            Format the response according to the HTML and structural requirements.
+            Verify that the response meets all formatting and content guidelines.
+        `,
+        htmlFormatting: `
+            HTML Formatting Requirements:
+            Generate valid HTML snippets only.
+            Use only the following allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.
+            Ensure proper tag nesting.
+            Avoid empty elements.
+            Use semantic HTML where appropriate.
+            Maintain clean, readable HTML structure.
+            Follow block-level element rules.
+            Properly close all tags.
+            No inline styles unless specified.
+            No script or style tags.
+            The first word must be a valid HTML tag.
+            Block elements must not contain other block elements.
+        `,
+        contentStructure: `
+            Content Structure Rules:
+            Organize information logically.
+            Use appropriate paragraph breaks.
+            Maintain consistent formatting.
+            Follow document hierarchy.
+            Use appropriate list structures when needed.
+            Ensure proper content flow.
+            Respect existing document structure.
+        `,
+        tone: `
+            Language and Tone Guidelines:
+            Match the formality level of the surrounding content.
+            Maintain a consistent voice throughout the response.
+            Use appropriate technical terminology when relevant.
+            Ensure proper grammar and punctuation.
+            Avoid overly complex sentence structures.
+            Keep the tone engaging and reader-friendly.
+            Adapt style based on content type.
+        `,
+        inlineContent: `
+            Inline Content Specific Rules:
+            Determine content type (list, table, or inline).
+            Format according to content type.
+            Ensure seamless integration.
+            Preserve existing content flow.
+            Maintain proper nesting.
+        `,
+        imageHandling: `
+            Image Element Requirements:
+            Every <img> must have src and alt attributes.
+            Format src URLs as: https://placehold.co/600x400?text=[alt_text].
+            Alt text must be descriptive and meaningful.
+        `
+    };
+}
+
 class PromptHelper {
     editor;
     contextSize;
-    responseOutputFormat;
-    responseContextData;
-    responseFilters;
+    promptSettings;
     debugMode;
-    constructor(editor){
+    editorContextRatio;
+    constructor(editor, options = {}){
         this.editor = editor;
         const config = editor.config.get('aiAgent');
-        this.contextSize = config.contextSize;
-        this.responseOutputFormat = config.promptSettings?.outputFormat ?? [];
-        this.responseContextData = config.promptSettings?.contextData ?? [];
-        this.responseFilters = config.promptSettings?.filters ?? [];
+        this.contextSize = config.contextSize ?? 4000;
+        this.promptSettings = config.promptSettings ?? {};
         this.debugMode = config.debugMode ?? false;
+        this.editorContextRatio = options.editorContextRatio ?? 0.3;
     }
-    /**
-	 * Constructs the system prompt that guides the AI in generating responses.
-	 *
-	 * This method assembles a comprehensive set of instructions and context
-	 * that the AI will utilize to formulate responses based on user input
-	 * and the provided content, ensuring adherence to specified rules and formats.
-	 *
-	 * @param isInlineResponse - A boolean indicating whether the response should be inline.
-	 * @returns A string containing the formatted system prompt for the AI.
-	*/ getSystemPrompt(isInlineResponse = false) {
-        const corpus = [];
-        corpus.push(`You will be provided with a partially written article with """@@@cursor@@@""" somewhere 
-			under a CONTEXT section, user input under a TASK section, and sometimes there will be articles 
-			(delimited with marked-up language) separated by Starting Markdown Content \${ number } and 
-			Ending Markdown Content \${ index } with certain instructions to follow while generating a response 
-			under an INSTRUCTION section`);
-        corpus.push(`If there is an article with """Stating Markdown Content""", your task is to 
-			use that provided information solely to respond to the user request in the TASK section.`);
-        corpus.push('Follow these step-by-step instructions to respond to user inputs:');
-        corpus.push(`Step 1 - Summarize information under the CONTEXT section, set a tone for the article, and 
-			later use that summarized information to generate a response`);
-        corpus.push(`Step 2: If there is an article with """Stating Markdown Content""", 
-			break it into derived sections and eliminate unnecessary information 
-			that does not relate to the context and user prompt.`);
-        corpus.push('Final Step - use all summarized information to respond to user input under the TASK section');
-        corpus.push('While generating the response, adhere to the following rules:');
-        corpus.push(`1. Provide only the new text content that should replace "@@@cursor@@@" based on the context above, 
-			ensuring that the response must primarily based on the request.`);
-        corpus.push(`2. Avoid including any part of the context in the output at any cost, 
-			except for necessary glimpses that enhance the response.`);
-        corpus.push(`3. Ensure response adheres to the specified tone or style, such as 
-			formal, informal, or technical, as appropriate for the context.`);
-        corpus.push('4. Do not use any markdown formatting in your response. (e.g., **, ##, ###, ---, ===, ____).');
-        corpus.push(`5. Use a relaxed, formal or informal tone based on the summary of context with lots of personal touches. 
-			Feel free to include spontaneous thoughts, offhand comments, or quirky observations.`);
-        corpus.push(`6. Vary sentence lengths and styles—include fragments, casual interjections, 
-			and minor grammar slips, but avoid spelling mistakes.`);
-        corpus.push('7. Add in personal anecdotes or emotional reactions to make it sound like a genuine conversation.');
-        corpus.push('8. Avoid overly polished language or structured sentences, aim for a natural and solely human-like tone.');
-        if (isInlineResponse) {
-            corpus.push(`9: Determine from the context, task, and the position of the @@@cursor@@@ whether the request 
-				involves list items, table cells, or inline content.
-				- List items: Format each item as <li> within an <ol> or <ul> as appropriate.
-				- Table cells: Present each item in plain text, wrapping it within <p> tags.
-				- Inline content: Wrap entire response in a single <p> tag, ensuring it fits seamlessly within the existing paragraph or 
-				sentence structure where the @@@cursor@@@ is located.
-				Strictly adherence to these rules is mandatory to avoid errors, based on where the @@@cursor@@@ is placed within content.`);
+    getSystemPrompt(isInlineResponse = false) {
+        const defaultComponents = getDefaultRules(this.editor);
+        let systemPrompt = '';
+        // Process each component
+        for (const [id, defaultContent] of Object.entries(defaultComponents)){
+            // Skip components that are not allowed in the editor and not inline response
+            if (id === 'imageHandling' && !getAllowedHtmlTags(this.editor).includes('img') || id === 'inlineContent' && !isInlineResponse) {
+                continue;
+            }
+            const componentId = id;
+            let content = defaultContent;
+            // Apply overrides if they exist
+            if (this.promptSettings.overrides?.[componentId]) {
+                content = this.promptSettings.overrides[componentId];
+            }
+            // Apply additions if they exist
+            if (this.promptSettings.additions?.[componentId]) {
+                content += '\n' + this.promptSettings.additions[componentId];
+            }
+            // Add the component to the system prompt
+            systemPrompt += trimMultilineString(content) + '\n\n';
         }
-        corpus.push('Above are the rules apply every time, but below will only be applied if markdown content is present');
-        corpus.push('1. Extract each content as plain text without any special formatting, emphasis, or markdown');
-        corpus.push('2. The response should synthesize information from both the editor content ' + 'and the fetched sources, maintaining a balance between them.');
-        corpus.push('3. Highlight key points from the fetched sources while ensuring that ' + 'the context from the editor is acknowledged and integrated where relevant.');
-        corpus.push('4. Clearly differentiate between the information derived from the editor ' + 'content and that from the fetched sources to avoid confusion.');
-        corpus.push('When generating content, adhere to the following HTML-specific rules:');
-        corpus.push('1. Generate an HTML snippet, not a full HTML document.');
-        corpus.push('2. You are an HTML generator. When providing HTML code, ensure it follows standard HTML norms and best practices.');
-        corpus.push('4. Block-level elements (e.g., <p>, <div>, <section>) must not contain other block-level elements.');
-        corpus.push('5. Ensure valid nesting of elements.');
-        corpus.push('6. Use the following allowed HTML tags:');
-        corpus.push(`${this.getAllowedHtmlTags().join(', ')}`);
-        corpus.push('7. Do not include any HTML, HEAD, or BODY tags.');
-        corpus.push('8. Ensure all HTML tags are properly closed and nested.');
-        corpus.push('9. Do not include any HTML, HEAD, or BODY tags.');
-        corpus.push('10. Avoid using inline styles or class attributes unless specifically requested.');
-        corpus.push('11. Provide clean, valid HTML that adheres to best practices and is ready for use in web development.');
-        corpus.push('12. Beginning word of response must be a valid html tag');
-        if (this.getAllowedHtmlTags().includes('img')) {
-            corpus.push('13. For image elements, follow these strict formatting rules:');
-            corpus.push('    a. Every <img> tag MUST include both src and alt attributes');
-            corpus.push('    b. Format the src URL exactly as: https://placehold.co/600x400?text=[alt_text]');
-            corpus.push('    c. The [alt_text] in the src URL must:');
-            corpus.push('       - Be identical to the alt attribute value');
-            corpus.push('       - Replace spaces with + characters');
-            corpus.push('       - Exclude any special characters');
-            corpus.push('    d. Example:');
-            corpus.push('       <img src="https://placehold.co/600x400?text=Beautiful+Sunset" alt="Beautiful Sunset">');
-        }
-        // Join all instructions into a single formatted string.
-        const systemPrompt = corpus.join('\n');
-        // Log the system prompt if debug mode is enabled
         if (this.debugMode) {
             console.group('AiAgent System Prompt Debug');
-            console.log('System Prompt:');
-            console.log(systemPrompt);
+            console.log('System Prompt:', systemPrompt);
             console.groupEnd();
         }
         return systemPrompt;
     }
-    /**
-	 * Formats the final prompt to be sent to the GPT model, including context and instructions.
-	 *
-	 * @param request - The user's request string.
-	 * @param context - The trimmed context string.
-	 * @param markDownContents - An array of MarkdownContent objects for additional context.
-	 * @param isEditorEmpty - A boolean indicating if the editor is empty.
-	 * @returns The formatted prompt string.
-	 */ formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
-        const editor = this.editor;
-        const contentLanguageCode = editor.locale.contentLanguage;
-        const corpus = [];
-        // Context and Task
-        corpus.push('CONTEXT:');
-        corpus.push(`\n"""\n${context}\n"""\n`);
-        corpus.push('\n\nTASK:\n\n');
-        corpus.push(`"""\n${request}\n"""\n`);
-        // Markdown Content
-        if (markDownContents.length) {
-            corpus.push('Refer to following markdown content as a source of information, but generate new text that fits the given context & task.');
-            markDownContents.forEach((markdown, index)=>{
-                corpus.push(`\n\n------------ Stating Markdown Content ${index + 1} ------------\n\n`);
-                corpus.push(markdown.content);
-                corpus.push(`\n\n------------ Ending Markdown Content ${index + 1} ------------\n\n`);
-            });
-        }
-        // Instructions
-        corpus.push('\n\nINSTRUCTIONS:\n\n');
-        corpus.push(`The response must follow the language code - ${contentLanguageCode}.`);
-        // Response Output Format
-        if (this.responseOutputFormat.length) {
-            corpus.push(...this.responseOutputFormat);
-        }
-        // Markdown Content Usage
-        if (markDownContents.length) {
-            corpus.push('Use information from provided markdown content to generate new text, but do not copy it verbatim.');
-            corpus.push('Ensure the new text flows naturally with the existing context and integrates smoothly.');
-            corpus.push('Do not use any markdown formatting in your response. ' + 'specially for title and list item like """**Performance**""" is not acceptable where as """performance""" is.');
-            corpus.push('consider whole markdown of single source as content and then generate % content requested');
-        }
-        // Response Filters
-        if (this.responseFilters.length) {
-            corpus.push(...this.responseFilters);
-        } else {
-            const defaultFilterInstructions = [
-                'The response should directly follow the context, avoiding any awkward transitions or noticeable gaps.'
-            ];
-            corpus.push(...defaultFilterInstructions);
-        }
-        // Context-Specific Instructions
-        if (!isEditorEmpty) {
-            const defaultContextInstructions = [
-                'Ensure the inserted content maintains a seamless connection with the surrounding text,',
-                'making the transition smooth and natural.',
-                'Do not modify the original text except to replace the "@@@cursor@@@" placeholder with the generated content.'
-            ];
-            corpus.push(...defaultContextInstructions);
-        }
-        if (this.responseContextData.length) {
-            corpus.push(...this.responseContextData);
-        }
-        // Debugging Information
-        if (this.debugMode) {
-            console.group('AiAgent Prompt Debug');
-            console.log('User Prompt:', request);
-            console.log('Generated GPT Prompt:');
-            console.log(corpus.join('\n'));
-            console.groupEnd();
-        }
-        // Join all instructions into a single formatted string.
-        return corpus.join('\n');
-    }
-    /**
-	 * Trims the context around the user's prompt to create a suitable context for the AI model.
-	 * This method identifies the position of the user's prompt within the provided text and extracts
-	 * the surrounding context, placing a cursor placeholder where the prompt is located.
-	 *
-	 * @param prompt - The user's prompt string to locate within the context.
-	 * @param promptContainerText - The text container in which the prompt is located (optional).
-	 * @returns The trimmed context string with a cursor placeholder indicating the prompt's position.
-	*/ trimContext(prompt, promptContainerText = '') {
+    trimContext(prompt, promptContainerText = '') {
         let contentBeforePrompt = '';
         let contentAfterPrompt = '';
         const splitText = promptContainerText ?? prompt;
-        const editor = this.editor;
-        const view = editor?.editing?.view?.domRoots?.get('main');
+        const view = this.editor?.editing?.view?.domRoots?.get('main');
         const context = view?.innerText ?? '';
         const matchIndex = context.indexOf(splitText);
         const nextEnterIndex = context.indexOf('\n', matchIndex);
@@ -659,280 +806,143 @@ class PromptHelper {
             beforeNewline,
             afterNewline
         ];
-        const allocatedEditorContextToken = Math.floor(this.contextSize * 0.3);
+        const allocatedEditorContextToken = Math.floor(this.contextSize * this.editorContextRatio);
         if (contextParts.length > 1) {
             if (contextParts[0].length < contextParts[1].length) {
-                contentBeforePrompt = this.extractEditorContent(contextParts[0], allocatedEditorContextToken / 2, true);
-                contentAfterPrompt = this.extractEditorContent(contextParts[1], allocatedEditorContextToken - contentBeforePrompt.length / 4);
+                contentBeforePrompt = extractEditorContent(contextParts[0], allocatedEditorContextToken / 2, true, this.editor);
+                contentAfterPrompt = extractEditorContent(contextParts[1], allocatedEditorContextToken - contentBeforePrompt.length / 4, false, this.editor);
             } else {
-                contentAfterPrompt = this.extractEditorContent(contextParts[1], allocatedEditorContextToken / 2);
-                contentBeforePrompt = this.extractEditorContent(contextParts[0], allocatedEditorContextToken - contentAfterPrompt.length / 4, true);
+                contentAfterPrompt = extractEditorContent(contextParts[1], allocatedEditorContextToken / 2, false, this.editor);
+                contentBeforePrompt = extractEditorContent(contextParts[0], allocatedEditorContextToken - contentAfterPrompt.length / 4, true, this.editor);
             }
         }
         // Combine the trimmed context with the cursor placeholder
         const escapedPrompt = prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
-        contentBeforePrompt = contentBeforePrompt.trim().replace(new RegExp(escapedPrompt.slice(1)), '@@@cursor@@@');
+        contentBeforePrompt = contentBeforePrompt.trim().replace(new RegExp(escapedPrompt.slice(1)), '@@@cursor@@@').replace('/@@@cursor@@@', '@@@cursor@@@'); // Remove forward slash if present
         const trimmedContext = `${contentBeforePrompt}\n${contentAfterPrompt}`;
         return trimmedContext.trim();
     }
-    /**
-	 * Allocates tokens to the fetched content based on the available limit and the user's prompt.
-	 *
-	 * @param prompt - The user's prompt string.
-	 * @param fetchedContent - An array of MarkdownContent objects containing fetched content.
-	 * @returns An array of MarkdownContent objects with calculated tokenToRequest values.
-	 */ allocateTokensToFetchedContent(prompt, fetchedContent) {
-        const editorContent = this.editor?.editing?.view?.domRoots?.get('main')?.innerText ?? '';
-        const editorToken = Math.min(Math.floor(this.contextSize * 0.3), this.countTokens(editorContent));
-        let availableLimit = this.contextSize - editorToken;
-        fetchedContent = fetchedContent.map((content)=>({
-                ...content,
-                availableToken: this.countTokens(content.content)
-            })).sort((a, b)=>(a.availableToken ?? 0) - (b.availableToken ?? 0));
-        let maxTokenFromEachURL = availableLimit / fetchedContent.length;
-        return fetchedContent.map((content, index)=>{
-            if (content.availableToken && content.availableToken <= maxTokenFromEachURL) {
-                content.tokenToRequest = content.availableToken;
-                availableLimit -= content.availableToken;
-            } else if (content.availableToken) {
-                content.tokenToRequest = maxTokenFromEachURL;
-                availableLimit -= maxTokenFromEachURL;
-            }
-            maxTokenFromEachURL = availableLimit / (fetchedContent.length - (index + 1));
-            if (content.tokenToRequest) {
-                content.content = this.trimLLMContentByTokens(content.content, content.tokenToRequest);
-            }
-            return content;
-        });
-    }
-    /**
-	 * Generates Markdown content for an array of URLs by fetching their content.
-	 *
-	 * @param urls - An array of URLs to fetch content from.
-	 * @returns A promise that resolves to an array of MarkdownContent objects.
-	 */ async generateMarkDownForUrls(urls) {
-        const editor = this.editor;
-        const t = editor.t;
-        let errorMsg;
-        const markDownContents = await Promise.all(urls.map(async (url)=>{
-            const content = await this.fetchUrlContent(url);
-            return {
-                content,
-                url
-            };
-        }));
-        const emptyContent = markDownContents.filter((content)=>!content?.content);
-        if (emptyContent.length) {
-            const urlStr = emptyContent?.map((content)=>content?.url).join(',');
-            errorMsg = t('Failed to fetch content of : %0', urlStr);
-            if (errorMsg) {
-                aiAgentContext.showError(errorMsg);
-            }
-            throw new Error('Unable to fetch content for few urls');
+    formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
+        if (this.debugMode) {
+            console.group('formatFinalPrompt Debug');
+            console.log('Request:', request);
+            console.log('Context:', context);
+            console.log('MarkDownContents:', markDownContents);
+            console.log('IsEditorEmpty:', isEditorEmpty);
         }
-        return markDownContents.filter((content)=>content !== null);
-    }
-    /**
-	 * Fetches the content of a given URL and returns it as a string.
-	 *
-	 * @param url - The URL to fetch content from.
-	 * @returns A promise that resolves to the fetched content as a string.
-	 * @throws Will throw an error if the URL is invalid or if the fetch fails.
-	 */ async fetchUrlContent(url) {
-        const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-        const trimmedUrl = url.trim();
-        if (!urlRegex.test(trimmedUrl)) {
-            throw new Error('Invalid URL');
+        const contentLanguageCode = this.editor.locale.contentLanguage;
+        const corpus = [];
+        // Task Section
+        corpus.push('<TASK>');
+        corpus.push(request);
+        corpus.push('</TASK>');
+        // Context Section
+        if (context?.length) {
+            corpus.push('\n<CONTEXT>');
+            corpus.push(context);
+            corpus.push('</CONTEXT>');
         }
+        // Markdown Content Section
+        if (markDownContents?.length) {
+            corpus.push('\n<REFERENCE_CONTENT>');
+            for (const content of markDownContents){
+                corpus.push(`<SOURCE url="${content.url}">\n${content.content}\n</SOURCE>`);
+            }
+            corpus.push('</REFERENCE_CONTENT>');
+            corpus.push('\n<REFERENCE_GUIDELINES>');
+            corpus.push(trimMultilineString(`
+				Use information from provided markdown to generate new text.
+				Do not copy content verbatim.
+				Ensure natural flow with existing context.
+				Avoid markdown formatting in response.
+				Consider whole markdown as single source.
+				Generate requested percentage of content.
+			`));
+            corpus.push('</REFERENCE_GUIDELINES>');
+        }
+        // Instructions Section
+        corpus.push('\n<INSTRUCTIONS>');
+        corpus.push(`The response must follow the language code - ${contentLanguageCode}.`);
+        corpus.push('</INSTRUCTIONS>');
+        // Context-Specific Instructions
+        if (!isEditorEmpty) {
+            corpus.push('\n<CONTEXT_REQUIREMENTS>');
+            corpus.push(trimMultilineString(`
+				Replace "@@@cursor@@@" with contextually appropriate content.
+				Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+				NEVER copy or paraphrase context text.
+				Verify zero phrase duplication.
+				Analyze the CONTEXT section thoroughly 
+				to understand the existing content and its style.
+				Generate a response that seamlessly integrates 
+				with the existing content.
+				Determine the appropriate tone and style based
+				on the context. Ensure the response flows 
+				naturally with the existing content.
+
+			`));
+            corpus.push('</CONTEXT_REQUIREMENTS>');
+        }
+        // Debug Output
+        if (this.debugMode) {
+            console.group('AiAgent Final Prompt Debug');
+            console.log('Final Prompt:', corpus.join('\n'));
+            console.groupEnd();
+        }
+        return corpus.map((text)=>removeLeadingSpaces(text)).join('\n');
+    }
+    async generateMarkDownForUrls(urls) {
         try {
-            // Use a regular expression to remove hidden characters
-            const cleanedUrl = trimmedUrl.replace(/[^\x20-\x7E]/g, '');
-            const requestURL = `https://r.jina.ai/${cleanedUrl.trim()}`;
-            const response = await fetch(requestURL.trim(), {
-                headers: {
-                    'X-With-Generated-Alt': 'true'
+            const markdownContents = [];
+            for (const url of urls){
+                try {
+                    const content = await fetchUrlContent(url);
+                    if (content) {
+                        markdownContents.push({
+                            content,
+                            url,
+                            tokenCount: countTokens(content)
+                        });
+                    }
+                } catch (error) {
+                    if (this.debugMode) {
+                        console.error(`Failed to fetch content from ${url}:`, error);
+                    }
+                    aiAgentContext.showError(`Failed to fetch content from ${url}`);
                 }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const content = await response.text();
-            // Updated error matching
-            if (content.includes('Warning: Target URL returned error')) {
-                throw new Error(`Target URL (${trimmedUrl}) returned an error`);
-            }
-            if (content.trim().length === 0) {
-                throw new Error('Empty content received');
-            }
-            return content.replace(/\(https?:\/\/[^\s]+\)/g, '').replace(/^\s*$/gm, '').trim();
+            return this.allocateTokensToFetchedContent(this.getSystemPrompt(), markdownContents);
         } catch (error) {
-            console.error(`Failed to fetch content: ${url}`, error);
-            return '';
+            if (this.debugMode) {
+                console.error('Error generating markdown content:', error);
+            }
+            aiAgentContext.showError('Failed to generate markdown content');
+            return [];
         }
     }
-    /**
-	 * Counts the number of tokens in the provided content string.
-	 *
-	 * @param content - The content string to count tokens in.
-	 * @returns The number of tokens in the content.
-	 */ countTokens(content) {
-        if (!content || typeof content !== 'string') {
-            return 0;
+    allocateTokensToFetchedContent(prompt, fetchedContent) {
+        const editorContent = this.editor?.editing?.view?.domRoots?.get('main')?.innerText ?? '';
+        const editorToken = Math.min(Math.floor(this.contextSize * this.editorContextRatio), countTokens(editorContent));
+        const availableLimit = this.contextSize - editorToken;
+        if (availableLimit === 0 || !fetchedContent.length) {
+            return fetchedContent;
         }
-        // Normalize the content by trimming and reducing multiple whitespaces.
-        const normalizedContent = content.trim().replace(/\s+/g, ' ');
-        // Approximate tokens by breaking words, contractions, and common punctuation marks.
-        const tokens = normalizedContent.match(/\b\w+('\w+)?\b|[.,!?;:"(){}[\]]/g) || [];
-        // Heuristic: Long words (over 10 characters) are likely to be split into multiple tokens.
-        // GPT often breaks down long words into smaller subword chunks.
-        let approxTokenCount = 0;
-        tokens.forEach((token)=>{
-            // Break long words into chunks to approximate GPT subword tokenization.
-            if (token.length > 10) {
-                approxTokenCount += Math.ceil(token.length / 4); // Approximation: 4 characters per token.
-            } else {
-                approxTokenCount += 1;
-            }
-        });
-        return approxTokenCount;
-    }
-    /**
-	 * Trims the LLM content by tokens while ensuring that sentences or other structures (e.g., bullet points, paragraphs)
-	 * are not clipped mid-way.
-	 *
-	 * @param content - The LLM-generated content string to trim.
-	 * @param maxTokens - The maximum number of tokens allowed.
-	 * @returns The trimmed content string.
-	 */ trimLLMContentByTokens(content, maxTokens) {
-        const elements = content.split('\n');
-        let accumulatedTokens = 0;
-        let trimmedContent = '';
-        for (const element of elements){
-            const elementTokenCount = this.countTokens(element);
-            if (accumulatedTokens + elementTokenCount > maxTokens) {
-                break; // Stop if adding this element would exceed the token limit.
-            }
-            accumulatedTokens += elementTokenCount;
-            trimmedContent += element + '\n'; // Add the whole structural element.
-        }
-        return trimmedContent;
-    }
-    /**
-	 * Retrieves the allowed HTML tags based on the CKEditor schema.
-	 *
-	 * @returns An array of allowed HTML tags.
-	 */ getAllowedHtmlTags() {
-        const editor = this.editor;
-        const schema = editor.model.schema;
-        const definitions = schema.getDefinitions();
-        const schemaNodes = Object.keys(definitions).sort();
-        // Map of CKEditor nodes to HTML tags
-        const nodeToHtmlMap = {
-            blockQuote: 'blockquote',
-            caption: 'figcaption',
-            codeBlock: 'pre',
-            heading1: 'h1',
-            heading2: 'h2',
-            heading3: 'h3',
-            imageBlock: 'img',
-            imageInline: 'img',
-            paragraph: 'p',
-            table: 'table',
-            tableCell: 'td',
-            tableRow: 'tr',
-            $listItem: 'li',
-            horizontalLine: 'hr'
-        };
-        // Map text attributes to HTML tags
-        const textAttributeToHtmlMap = {
-            bold: 'strong',
-            italic: 'em',
-            code: 'code',
-            strikethrough: 's',
-            subscript: 'sub',
-            superscript: 'sup',
-            underline: 'u',
-            linkHref: 'a'
-        };
-        // Collect allowed tags
-        const allowedTags = new Set();
-        // Add tags from node mappings
-        schemaNodes.forEach((node)=>{
-            if (node in nodeToHtmlMap) {
-                allowedTags.add(nodeToHtmlMap[node]);
-            }
-        });
-        // Add tags from text attributes
-        const textDefinition = definitions.$text;
-        if (textDefinition && textDefinition.allowAttributes) {
-            textDefinition.allowAttributes.forEach((attr)=>{
-                if (attr in textAttributeToHtmlMap) {
-                    allowedTags.add(textAttributeToHtmlMap[attr]);
-                }
-            });
-        }
-        // If listItem is present, add ul and ol
-        if (allowedTags.has('li')) {
-            allowedTags.add('ul');
-            allowedTags.add('ol');
-        }
-        // Sort and return the unique allowed tags
-        return Array.from(allowedTags).sort();
-    }
-    /**
-	 * Extracts a portion of content based on the specified context size and direction.
-	 *
-	 * @param contentAfterPrompt - The content string to extract from.
-	 * @param contextSize - The maximum size of the context to extract.
-	 * @param reverse - A boolean indicating whether to extract in reverse order (default is false).
-	 * @returns The extracted content string.
-	 */ extractEditorContent(contentAfterPrompt, contextSize, reverse = false) {
-        let trimmedContent = '';
-        let charCount = 0;
-        // Tokenize the content into sentences using the sbd library
-        const sentences = sbd.sentences(contentAfterPrompt, {
-            preserve_whitespace: true,
-            html_boundaries: true,
-            allowed_tags: [
-                'blockquote',
-                'figcaption',
-                'pre',
-                'h2',
-                'h1',
-                'h3',
-                'img',
-                'p',
-                'table',
-                'td',
-                'tr',
-                'li',
-                'hr',
-                'br'
-            ]
-        });
-        // Iterate over the sentences based on the direction
-        const iterator = reverse ? sentences.reverse() : sentences;
-        for (const sentence of iterator){
-            const sentenceLength = sentence.length;
-            // Check if adding this sentence would exceed the context size
-            if ((charCount + sentenceLength) / 4 <= contextSize) {
-                trimmedContent = reverse ? sentence + trimmedContent : trimmedContent + sentence;
-                charCount += sentenceLength;
-            } else {
-                break; // Stop if adding the next sentence would exceed the context size
-            }
-        }
-        // Trim to remove any trailing whitespace and return the final trimmed content
-        return trimmedContent.trim();
+        const tokensPerContent = Math.floor(availableLimit / fetchedContent.length);
+        return fetchedContent.map((content)=>({
+                ...content,
+                content: trimLLMContentByTokens(content.content, tokensPerContent)
+            }));
     }
 }
 
 class HtmlParser {
     editor;
     model;
+    debugMode;
     constructor(editor){
         this.editor = editor;
         this.model = editor.model;
+        this.debugMode = editor.config.get('aiAgent.debugMode') ?? false;
     }
     /**
 	 * Inserts simple HTML content into the editor.
@@ -940,7 +950,9 @@ class HtmlParser {
 	 * @param html - The HTML string to be inserted into the editor.
 	 * @returns A promise that resolves when the HTML has been inserted.
 	 */ async insertSimpleHtml(html) {
-        console.log('Attempting to insert simple HTML:', html);
+        if (this.debugMode) {
+            console.log('Attempting to insert simple HTML:', html);
+        }
         const viewFragment = this.editor.data.processor.toView(html);
         const modelFragment = this.editor.data.toModel(viewFragment, '$root');
         const selection = this.model.document.selection;
@@ -1145,6 +1157,10 @@ class AiAgentService {
     buffer = '';
     openTags = [];
     isInlineInsertion = false;
+    abortGeneration = false;
+    moderationKey;
+    moderationEnable;
+    disableFlags = [];
     /**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
 	 *
@@ -1159,10 +1175,13 @@ class AiAgentService {
         this.endpointUrl = config.endpointUrl;
         this.temperature = config.temperature;
         this.timeOutDuration = config.timeOutDuration ?? 45000;
-        this.maxTokens = config.maxTokens;
+        this.maxTokens = config.maxOutputTokens ?? config.maxTokens;
         this.retryAttempts = config.retryAttempts;
         this.stopSequences = config.stopSequences;
         this.streamContent = config.streamContent ?? true;
+        this.moderationKey = config.moderation?.key ?? '';
+        this.moderationEnable = config.moderation?.enable ?? false;
+        this.disableFlags = config.moderation?.disableFlags ?? [];
     }
     /**
 	 * Handles the slash command input from the user, processes it, and interacts with the AI model.
@@ -1201,6 +1220,12 @@ class AiAgentService {
                 content = parentEquivalentHTML?.innerText;
             }
         }
+        if (this.moderationEnable) {
+            const moderateContent = await this.moderateContent(content ?? '');
+            if (!moderateContent) {
+                return;
+            }
+        }
         try {
             const domSelection = window.getSelection();
             const domRange = domSelection?.getRangeAt(0);
@@ -1216,6 +1241,81 @@ class AiAgentService {
         } finally{
             this.isInlineInsertion = false;
             aiAgentContext.hideLoader();
+        }
+    }
+    /**
+	 * Moderates the input content using OpenAI's moderation API to check for inappropriate content.
+	 *
+	 * @param input - The text content to be moderated
+	 * @returns A promise that resolves to:
+	 * - `true` if content is acceptable or if moderation fails (fail-open)
+	 * - `false` if content is flagged as inappropriate
+	 *
+	 * @throws Shows user-friendly error messages via aiAgentContext for:
+	 * - Flagged content ("Cannot process your query...")
+	 * - API errors ("Error in content moderation")
+	 */ async moderateContent(input) {
+        if (!this.moderationKey) {
+            return true;
+        }
+        const editor = this.editor;
+        const t = editor.t;
+        const controller = new AbortController();
+        // Set timeout for moderation request
+        const timeoutId = setTimeout(()=>controller.abort(), this.timeOutDuration);
+        try {
+            const response = await fetch(MODERATION_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.moderationKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    input
+                }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (!data?.results?.[0]) {
+                throw new Error('Invalid moderation response format');
+            }
+            const flags = ALL_MODERATION_FLAGS.filter((flag)=>!this.disableFlags.includes(flag));
+            if (data.results[0].flagged) {
+                let error = false;
+                const categories = data.results[0].categories;
+                for(let index = 0; index < flags.length; index++){
+                    const flag = flags[index];
+                    if (flags.includes(flag)) {
+                        if (categories[flag]) {
+                            error = true;
+                            break;
+                        }
+                    }
+                }
+                if (error) {
+                    aiAgentContext.showError(t('I\'m sorry, but I cannot assist with that request.'));
+                    return false;
+                }
+            }
+            return true;
+        } catch (error) {
+            console.error('Moderation error:', error);
+            // Handle specific error cases
+            if (error instanceof TypeError) {
+                aiAgentContext.showError(t('Network error during content moderation'));
+            } else if (error instanceof DOMException && error.name === 'AbortError') {
+                aiAgentContext.showError(t('Content moderation timed out'));
+            } else {
+                aiAgentContext.showError(t('Error in content moderation'));
+            }
+            // Fail open for moderation errors
+            return true;
+        } finally{
+            clearTimeout(timeoutId);
         }
     }
     /**
@@ -1268,8 +1368,9 @@ class AiAgentService {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
             this.clearParentContent(parent);
-            this.editor.enableReadOnlyMode(this.aiAgentFeatureLockId);
+            // this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
             let insertParent = true;
+            this.cancelGenerationButton(blockID, controller);
             editor.model.change((writer)=>{
                 const position = editor.model.document.selection.getLastPosition();
                 if (position) {
@@ -1330,11 +1431,11 @@ class AiAgentService {
                     }
                 }
             }
-            const editorData = editor.getData();
-            let editorContent = editorData.replace(`<ai-tag id="${blockID}">`, '');
-            editorContent = editorContent.replace('</ai-tag>', '');
-            editor.setData(editorContent);
+            this.processCompleted(blockID);
         } catch (error) {
+            if (this.abortGeneration) {
+                return;
+            }
             console.error('Error in fetchAndProcessGptResponse:', error);
             const errorIdentifier = (error?.message || '').trim() || (error?.name || '').trim();
             const isRetryableError = [
@@ -1362,7 +1463,80 @@ class AiAgentService {
             this.editor.disableReadOnlyMode(this.aiAgentFeatureLockId);
         }
     }
-    async updateContent(newHtml, blockID, insertParent) {
+    /**
+     * Creates and configures a cancel generation button with keyboard shortcut support.
+     *
+     * @param blockID - Unique identifier for the AI generation block
+     * @param controller - AbortController to cancel the ongoing AI generation
+     * @private
+     */ cancelGenerationButton(blockID, controller) {
+        const editor = this.editor;
+        const t = editor.t;
+        const view = new ButtonView();
+        let label = t('Cancel Generation');
+        if (env.isMac) {
+            label = t('\u2318 + \u232B Cancel Generation');
+        }
+        if (env.isWindows) {
+            label = t('Ctrl + \u232B Cancel Generation');
+        }
+        view.set({
+            label,
+            withText: true,
+            class: 'ck-cancel-request-button'
+        });
+        view.on('execute', ()=>{
+            this.abortGeneration = true;
+            controller.abort();
+            this.processCompleted(blockID);
+        });
+        view.render();
+        editor.keystrokes.set('Ctrl+Backspace', (keyEvtData, cancel)=>{
+            if (keyEvtData.ctrlKey || keyEvtData.metaKey) {
+                this.abortGeneration = true;
+                controller.abort();
+                this.processCompleted(blockID);
+            }
+            cancel();
+        });
+        if (editor.ui.view.element && view.element) {
+            const panelContent = editor.ui.view.element.querySelector('.ck-sticky-panel__content .ck-toolbar__items');
+            if (panelContent) {
+                panelContent.append(view.element);
+            }
+        }
+        setTimeout(()=>view.set({
+                class: 'ck-cancel-request-button visible'
+            }), 2000);
+    }
+    /**
+	 * Handles cleanup after AI generation is completed or cancelled.
+	 * Removes the cancel button from the UI and cleans up the temporary AI tag from editor content.
+	 *
+	 * @param blockID - Unique identifier for the AI generation block to be cleaned up
+	 * @private
+	 */ processCompleted(blockID) {
+        const editor = this.editor;
+        if (editor.ui.view.element) {
+            const cancelButton = editor.ui.view.element.querySelector('.ck-cancel-request-button');
+            if (cancelButton) {
+                cancelButton.remove();
+            }
+        }
+        const editorData = editor.getData();
+        let editorContent = editorData.replace(`<ai-tag id="${blockID}">`, '');
+        editorContent = editorContent.replace('</ai-tag>', '');
+        editor.setData(editorContent);
+    }
+    /**
+	 * Updates the content of an AI-generated block in the editor.
+	 *
+	 * @param newHtml - The new HTML content to insert
+	 * @param blockID - The unique identifier of the AI block to update
+	 * @param insertParent - Whether to insert at parent level or child level
+	 * @returns Promise that resolves when the update is complete
+	 * @private
+	 */ async updateContent(newHtml, blockID, insertParent) {
         const editor = this.editor;
         editor.model.change((writer)=>{
             const root = editor.model.document.getRoot();
@@ -1501,7 +1675,7 @@ class AiAgentService {
                 markDownContents = await this.promptHelper.generateMarkDownForUrls(formattedUrl);
                 markDownContents = this.promptHelper.allocateTokensToFetchedContent(prompt, markDownContents);
             }
-            const isEditorEmpty = context === '"@@@cursor@@@"';
+            const isEditorEmpty = context === '@@@cursor@@@';
             return this.promptHelper.formatFinalPrompt(request, context, markDownContents, isEditorEmpty);
         } catch (error) {
             console.error(error);
@@ -1562,15 +1736,12 @@ class AiAgent extends Plugin {
             endpointUrl: this.DEFAULT_AI_END_POINT,
             temperature: undefined,
             timeOutDuration: 45000,
-            maxTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].max,
+            maxOutputTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxOutputTokens,
+            maxInputTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxInputContextTokens,
             retryAttempts: 1,
-            contextSize: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].context * 0.75,
+            contextSize: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxInputContextTokens * 0.75,
             stopSequences: [],
-            promptSettings: {
-                outputFormat: [],
-                contextData: [],
-                filters: [] // Default filters
-            },
+            promptSettings: {},
             debugMode: false,
             streamContent: true // Default streaming mode
         };
@@ -1599,10 +1770,16 @@ class AiAgent extends Plugin {
         if (config.temperature && (config.temperature < 0 || config.temperature > 2)) {
             throw new Error('AiAgent: Temperature must be a number between 0 and 2.');
         }
-        // Validate maxTokens based on the model's token limits
-        const { min, max } = TOKEN_LIMITS[config.model];
-        if (config.maxTokens < min || config.maxTokens > max) {
-            throw new Error(`AiAgent: maxTokens must be a number between ${min} and ${max}.`);
+        const limits = TOKEN_LIMITS[config.model];
+        // Validate output tokens
+        if (config.maxOutputTokens !== undefined) {
+            if (config.maxOutputTokens < limits.minOutputTokens || config.maxOutputTokens > limits.maxOutputTokens) {
+                throw new Error(`AiAgent: maxOutputTokens must be between ${limits.minOutputTokens} ` + `and ${limits.maxOutputTokens} for ${config.model}`);
+            }
+        }
+        // Validate input tokens
+        if (config.maxInputTokens !== undefined && config.maxInputTokens > limits.maxInputContextTokens) {
+            throw new Error(`AiAgent: maxInputTokens cannot exceed ${limits.maxInputContextTokens} ` + `for ${config.model}`);
         }
     }
     init() {

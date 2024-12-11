@@ -1,9 +1,11 @@
-import { Plugin } from 'ckeditor5/src/core.js';
+import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import { Widget } from 'ckeditor5/src/widget.js';
 export default class AiAgentUI extends Plugin {
     PLACEHOLDER_TEXT_ID: string;
     GPT_RESPONSE_LOADER_ID: string;
     GPT_RESPONSE_ERROR_ID: string;
+    private showErrorDuration;
+    constructor(editor: Editor);
     static get pluginName(): "AiAgentUI";
     static get requires(): readonly [typeof Widget];
     /**

@@ -111,7 +111,9 @@ export class PromptHelper {
 
 		// Combine the trimmed context with the cursor placeholder
 		const escapedPrompt = prompt.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ); // Escapes special characters
-		contentBeforePrompt = contentBeforePrompt.trim().replace( new RegExp( escapedPrompt.slice( 1 ) ), '@@@cursor@@@' );
+		contentBeforePrompt = contentBeforePrompt.trim()
+			.replace( new RegExp( escapedPrompt.slice( 1 ) ), '@@@cursor@@@' )
+			.replace( '/@@@cursor@@@', '@@@cursor@@@' ); // Remove forward slash if present
 		const trimmedContext = `${ contentBeforePrompt }\n${ contentAfterPrompt }`;
 		return trimmedContext.trim();
 	}

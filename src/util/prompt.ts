@@ -134,25 +134,26 @@ export class PromptHelper {
 		const corpus: Array<string> = [];
 
 		// Task Section
-		corpus.push( 'TASK:' );
+		corpus.push( '<TASK>' );
 		corpus.push( request );
+		corpus.push( '</TASK>' );
 
 		// Context Section
 		if ( context?.length ) {
-			corpus.push( '\n\nCONTEXT:' );
+			corpus.push( '\n<CONTEXT>' );
 			corpus.push( context );
+			corpus.push( '</CONTEXT>' );
 		}
 
 		// Markdown Content Section
 		if ( markDownContents?.length ) {
-			corpus.push( '\n\nREFERENCE CONTENT:' );
+			corpus.push( '\n<REFERENCE_CONTENT>' );
 			for ( const content of markDownContents ) {
-				corpus.push( `Source: ${ content.url }\n${ content.content }` );
+				corpus.push( `<SOURCE url="${ content.url }">\n${ content.content }\n</SOURCE>` );
 			}
-		}
+			corpus.push( '</REFERENCE_CONTENT>' );
 
-		if ( markDownContents.length ) {
-			corpus.push( '\n\nREFERENCE CONTENT Guidelines:' );
+			corpus.push( '\n<REFERENCE_GUIDELINES>' );
 			corpus.push( trimMultilineString( `
 				Use information from provided markdown to generate new text.
 				Do not copy content verbatim.
@@ -161,22 +162,26 @@ export class PromptHelper {
 				Consider whole markdown as single source.
 				Generate requested percentage of content.
 			` ) );
+			corpus.push( '</REFERENCE_GUIDELINES>' );
 		}
 
 		// Instructions Section
-		corpus.push( '\n\nINSTRUCTIONS:' );
+		corpus.push( '\n<INSTRUCTIONS>' );
 		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
+		corpus.push( '</INSTRUCTIONS>' );
 
 		// Context-Specific Instructions
 		if ( !isEditorEmpty ) {
-			corpus.push( '\n\nContext Integration Requirements:' );
+			corpus.push( '\n<CONTEXT_REQUIREMENTS>' );
 			corpus.push( trimMultilineString( `
-				Maintain seamless connection with surrounding text.
-				Ensure smooth and natural transitions.
-				Do not modify original text except @@@cursor@@@ replacement.
-				Match existing style and tone.
-				Preserve document structure.
+				CRITICAL CURSOR INSTRUCTIONS:
+				1. Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY
+				2. NEVER copy or paraphrase context text
+				3. Generate 100% original content
+				4. Match style but use different words
+				5. Verify zero phrase duplication
 			` ) );
+			corpus.push( '</CONTEXT_REQUIREMENTS>' );
 		}
 
 		// Debug Output

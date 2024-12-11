@@ -21,7 +21,7 @@ To install the `AiAgent` plugin in your CKEditor 5 setup, follow these steps:
 1. Install the plugin via npm:
 
    ```bash
-   npm install ai-agent-ckeditor-plugin
+   npm install @dxpr/ckeditor5-ai-agent
 
 ## Configuration
 

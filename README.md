@@ -12,7 +12,7 @@
 
 #### Like ChatGPT but faster, and better at creating HTML content.
 
-`AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4 and many more to generate, modify, or enhance content directly within the editor.
+`AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4o and many more to generate, modify, or enhance content directly within the editor.
 
 `AI Agent` automatically integrates the context before and after your command into the prompt.
 

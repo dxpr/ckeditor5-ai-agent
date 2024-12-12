@@ -68,6 +68,8 @@ ClassicEditor
 - **Use mid-sentence prompts**: Insert prompts in the middle of a sentence by clicking the AI button in the toolbar.
 - **Cancel response streams**: Press "Cancel" to terminate a response stream immediately, ensuring no tokens are wasted.
 
+- We test our UX on both desktop and mobile devices
+
 ### Features
 
 - **Supports multiple AI models**: Default model is GPT-4o, with flexibility to configure others.

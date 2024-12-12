@@ -54,6 +54,7 @@ ClassicEditor
 * The HTML tags in the response are automatically limited based on the editor's configuration.
 * You can prompt in the middle of a sentence by clicking on the AI button in the toolbar.
 
+![image](https://github.com/user-attachments/assets/1fa9bc07-a872-4d64-8ecc-0e78146a858d)
 
 ### Usage Examples
 
@@ -72,6 +73,10 @@ Here are some examples of how to use the AI Agent plugin:
    ```
 
 You use shift+enter to add new line inside a single slash command.
+
+AI Agent understands complex prompts and can handle complex HTML, here we ask for varied content structures with 3 levels of table nesting:
+
+https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/nested-tables.gif?raw=true
 
 ## Configuration Options
 

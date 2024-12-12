@@ -10,7 +10,7 @@
 
 ## An AI-first user experience for content generation in CKEditor 5
 
-#### Like ChatGPT but fast and capable at creating HTML content.
+#### Like ChatGPT but faster and capable at creating HTML content.
 
 `AiAgent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4 and many more to generate, modify, or enhance content directly within the editor.
 

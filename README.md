@@ -14,6 +14,9 @@
 
 `AiAgent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4 and many more to generate, modify, or enhance content directly within the editor.
 
+![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
+Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "wrong".
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -65,6 +68,7 @@ ClassicEditor
 * Press cancel to stop a response stream, the stream will be terminated immediately, not wasting any tokens.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/ingest-web-content.gif)
+Video of AI Agent ingesting web content as reference material.
 
 ### Usage Examples
 
@@ -87,6 +91,7 @@ You use shift+enter to add new line inside a single slash command.
 AI Agent understands complex prompts and can handle complex HTML, here we ask for varied content structures with 3 levels of table nesting:
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/nested-tables.gif)
+Video of AI Agent rendering complex HTML structures fast, rendering tokens in real-time as they are sent by the model.
 
 ## Configuration Options
 

@@ -22,6 +22,7 @@ Video of AI Agent returning optimal HTML structure based on what is available in
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [How to use](#how-to-use)
+- [Features](#features)
 - [Usage Examples](#usage-examples)
 - [Configuration Options](#configuration-options)
 - [Developing the package](#developing-the-package)
@@ -57,15 +58,39 @@ ClassicEditor
     } );
 ```
 
-## How to use / Features
+### How to Use
 
-* Write a slash command like `/write about open source software` on en empty line.
-* Use shift+enter to create multiline prompts.
-* You can add links inside prompts, link contents will be fetched and added to the prompt as reference material.
-* There is no limit to the number of links added, when needed referenced content is trimmed automatically, making optimal use of the model's context window.
-* The HTML tags in the response are automatically limited based on the editor's configuration.
-* You can prompt in the middle of a sentence by clicking on the AI button in the toolbar.
-* Press cancel to stop a response stream, the stream will be terminated immediately, not wasting any tokens.
+- **Start a prompt with a slash command**: Write a command like `/write about open source software` on an empty line to begin.
+- **Create multiline prompts**: Use `Shift+Enter` to break your prompt into multiple lines.
+- **Add links for reference material**: Include links in your prompt, and their contents will be fetched and integrated automatically. 
+- **No limit on links**: Add as many links as you need; referenced content is automatically trimmed to fit the AI's context window.
+- **HTML tags adapted to editor settings**: The response is formatted with HTML tags that align with the editor's configuration.
+- **Use mid-sentence prompts**: Insert prompts in the middle of a sentence by clicking the AI button in the toolbar.
+- **Cancel response streams**: Press "Cancel" to terminate a response stream immediately, ensuring no tokens are wasted.
+
+### Features
+
+- **Supports multiple AI models**: Default model is GPT-4o, with flexibility to configure others.
+- **OpenAI Moderation API support**: Requires a separate key, enabling future compatibility with non-OpenAI platforms.
+- **Structured prompt customization**: Allows changing and adding prompt defaults for tailored content creation.
+- **Extensive response control**:
+  - Set temperature to control creativity.
+  - Adjust max output tokens and input tokens to align with model capabilities.
+  - Use stop sequences to fine-tune where responses end.
+  - Retry failed requests with configurable attempts.
+  - Time out requests after a specified duration (default: 45 seconds).
+- **Context window optimization**:
+  - Context size adjusts dynamically based on cursor position.
+  - Editor content allocation ratio can be fine-tuned (default: 30%).
+- **Advanced content moderation**:
+  - Enable or disable content checks like harassment or hate speech.
+  - Use custom moderation flags for granular filtering.
+  - Moderation feedback displayed for a configurable duration (default: 5 seconds).
+- **Enhanced editor integration**:
+  - Stream content mode for real-time response streaming.
+  - Debug mode for logging detailed information.
+  - Customizable response formatting, including HTML, tone, structure, and inline content rules.
+- **Custom endpoint support**: Set a specific endpoint URL for tailored AI content generation.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/ingest-web-content.gif)
 Video of AI Agent ingesting web content as reference material.

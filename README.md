@@ -171,7 +171,7 @@ Each component can be customized using either `overrides` (to replace default ru
 - `inlineContent`: Inline content handling rules
 - `imageHandling`: Image element requirements
 
-#### Default Components
+#### Default Prompt Components
 
 ##### Core Response Rules (`responseRules`)
 ```typescript

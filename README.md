@@ -35,23 +35,41 @@ ClassicEditor
         plugins: [ AiAgent, ... ],
         toolbar: [ 'AiAgent', ... ],
         aiAgent: {
-            model: 'gpt-4o',
-            apiKey: 'YOUR_API_KEY', // required
-            temperature: 0.7,
-            maxTokens: 500,
-            contextSize: 4000,
-            editorContextRatio: 0.5,
-            stopSequences: [ '\n' ],
-            retryAttempts: 3,
-            timeOutDuration: 45000,
-            endpointUrl: 'https://api.openai.com/v1/chat/completions',
-            prompt: []
+            apiKey: 'YOUR_API_KEY' // required
         }
     } )
     .catch( error => {
         console.error( error );
     } );
 ```
+
+## How to use
+
+* Write a slash command like `/write about open source software` on en empty line.
+* Use shift+enter to create multiline prompts.
+* You can add links inside prompts, link contents will be fetched and added to the prompt as reference material.
+* The HTML tags in the response are automatically limited based on the editor's configuration.
+* You can prompt in the middle of a sentence by clicking on the AI button in the toolbar.
+
+
+### Usage Examples
+
+Here are some examples of how to use the AI Agent plugin:
+
+1. **Basic Command**
+   ```
+   /write about open source software
+   ```
+
+2. **Compile Command with URLs**
+   ```
+/Create a best blog posts of the week blog, summarize each article in 100 words, add one image for every post, include read-more links:
+https://example.com/post-1
+https://example.com/post-2
+   ```
+
+You use shift+enter to add new line inside a single slash command.
+
 ## Configuration Options
 
 The AiAgent plugin can be configured through the EditorConfig interface. Here are the configuration options available:
@@ -61,8 +79,8 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
 | `apiKey` | `string` | Your Open_AI key for authenticate. |
 | `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
-| `maxOutputTokens` | `number` | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. (optional) |
-| `maxInputTokens` | `number` | Maximum number of tokens allowed in the combined prompt and context sent to the AI. Cannot exceed the model's context window size. (optional) |
+| `maxOutputTokens` | `number` | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. Defaults to model's max output token limit. (optional) |
+| `maxInputTokens` | `number` | Maximum number of tokens allowed in the combined prompt and context sent to the AI. Defaults to model's max context window limit. (optional) |
 | `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
 | `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
 | `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
@@ -90,7 +108,9 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 
 ### Prompt Settings
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
+
 #### Available Components
+
 Each component can be customized using either `overrides` (to replace default rules) or `additions` (to add new rules):
 - `htmlFormatting`: Rules for HTML generation
 - `contentStructure`: Document structure guidelines
@@ -98,7 +118,9 @@ Each component can be customized using either `overrides` (to replace default ru
 - `responseRules`: Core response generation rules
 - `inlineContent`: Inline content handling rules
 - `imageHandling`: Image element requirements
+
 #### Default Components
+
 ##### Core Response Rules (`responseRules`)
 ```typescript
 `Follow these step-by-step instructions to respond to user inputs:
@@ -177,7 +199,7 @@ Format src URLs as: https://placehold.co/600x400?text=[alt_text]
 Alt text must be descriptive and meaningful`
 ```
 
-#### Usage Examples
+#### Prompt customization example
 
 Override default rules:
 ```typescript
@@ -216,51 +238,6 @@ Use descriptive headings`
 ```
 
 Note: When using overrides, all default rules for that component are replaced. When using additions, new rules are appended to the existing defaults.
-
-## Usage Examples
-
-Here are some examples of how to use the SlashCommandPlugin:
-
-1. **Basic Command**
-   ```
-   /write about SuperHero
-   ```
-
-2. **Compile Command with URLs**
-   ```
-   /Benefits of mindfulness in 500 words: 
-   https://www.mindful.org/how-to-practice-mindfulness/
-   https://www.webmd.com/balance/guide/what-is-mindfulness
-   ```
-    ```
-   /Write a blog post on top cities for digital nomads: 
-   https://nomadlist.com/
-   https://www.thediscoveriesof.com/best-digital-nomad-cities/
-   ```
-    ```
-   /Find me everything on the benefits of mindfulness from these pages:
-   https://www.mindful.org/how-to-practice-mindfulness/
-   https://www.webmd.com/balance/guide/what-is-mindfulness. Can you summarize the key points too?
-   ```
-    ```
-   /Please get the top 5 cities for digital nomads from these links and rank them:
-   https://nomadlist.com/ https://www.thediscoveriesof.com/best-digital-nomad-cities/.
-   Include cost of living?
-   ```
-    ```
-   /Compare the pros and cons of electric cars, using this article for pros:
-   https://www.tesla.com/electric-cars, and for cons, pull from here:
-   https://www.carmagazine.co.uk/electric-car-disadvantages/. Also, check this for general trends:
-   https://www.autotrader.com/electric.
-   ```
-
-In the first example, the command prompts the AI to write about India. In the second example, it shows the format for fetching content from specified URLs related to the task.
-
-
-
-## Error Handling
-
-The AiAgent plugin includes built-in error handling for various scenarios such as unsupported languages, API request failures, and more. Error messages are displayed to the user and logged in the console for debugging purposes.
 
 
 This package was created by the [ckeditor5-package-generator](https://www.npmjs.com/package/ckeditor5-package-generator) package.

@@ -1,7 +1,14 @@
+[![npm version](https://img.shields.io/npm/v/@dxpr/ckeditor5-ai-agent)](https://www.npmjs.com/package/@dxpr/ckeditor5-ai-agent)
+[![license](https://img.shields.io/npm/l/@dxpr/ckeditor5-ai-agent)](https://opensource.org/licenses/MIT)
+[![CKEditor 5](https://img.shields.io/badge/ckeditor-5-blue)](https://ckeditor.com/docs/ckeditor5/latest/framework/index.html)
+[![typescript](https://img.shields.io/badge/code-typescript-blue)](https://www.typescriptlang.org/)
+
 @dxpr/ckeditor5-ai-agent
 =========================
 
-# AiAgent CKEditor Plugin
+# AI Agent for CKEditor 5: An AI-first user experience for content generation in CKEditor 5
+
+#### Like ChatGPT but fast and capable at creating HTML content.
 
 `AiAgent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4 and many more to generate, modify, or enhance content directly within the editor.
 

@@ -53,6 +53,7 @@ ClassicEditor
 * There is no limit to the number of links added, when needed referenced content is trimmed automatically, making optimal use of the model's context window.
 * The HTML tags in the response are automatically limited based on the editor's configuration.
 * You can prompt in the middle of a sentence by clicking on the AI button in the toolbar.
+* Press cancel to stop a response stream, the stream will be terminated immediately, not wasting any tokens.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/ingest-web-content.gif)
 

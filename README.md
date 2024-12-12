@@ -74,28 +74,42 @@ ClassicEditor
 
 ### Features
 
-- **Supports multiple AI models**: Default model is GPT-4o, with flexibility to configure others.
-- **OpenAI Moderation API support**: Requires a separate key, enabling future compatibility with non-OpenAI platforms.
-- **Structured prompt customization**: Allows changing and adding prompt defaults for tailored content creation.
-- **Extensive response control**:
-  - Set temperature to control creativity.
-  - Adjust max output tokens and input tokens to align with model capabilities.
-  - Use stop sequences to fine-tune where responses end.
-  - Retry failed requests with configurable attempts.
-  - Time out requests after a specified duration (default: 45 seconds).
-- **Context window optimization**:
-  - Context size adjusts dynamically based on cursor position.
-  - Editor content allocation ratio can be fine-tuned (default: 30%).
-- **Advanced content moderation**:
-  - Enable or disable content checks like harassment or hate speech.
-  - Use custom moderation flags for granular filtering.
-  - Moderation feedback displayed for a configurable duration (default: 5 seconds).
-- **Enhanced editor integration**:
-  - Stream content mode for real-time response streaming.
-  - Debug mode for logging detailed information.
-  - Customizable response formatting, including HTML, tone, structure, and inline content rules.
-- **Custom endpoint support**: Set a specific endpoint URL for tailored AI content generation.
-- **Multingual-ready**: Integrates with CKEditor5 native language configuration.
+- **Automatic integration with surrounding text**: The AI incorporates nearby text when using the slash command for context-aware responses.
+
+- **Built-in web access**: Search the web directly and smartly trim web content to fit within the AI's context window.
+
+- **Multilingual-ready**: Works seamlessly with CKEditor5's language settings, enabling content creation in multiple languages.
+
+- **Enhanced editor integration**:  
+  - Real-time response streaming lets you see generated content as it arrives.  
+  - **Cancel button to terminate stream** for immediate control.  
+  - Debug mode provides detailed logs for troubleshooting.  
+  - Customizable response formatting, including HTML structure, tone, and inline content rules.
+
+- **Structured prompt customization**: Easily adjust and add default settings for AI prompts to match your content needs.
+
+- **Context window optimization**:  
+  - Dynamically adapts context size based on cursor position.  
+  - Smartly trims web and editor content to fit within the AI's context.  
+  - Fine-tune the editor's allocation ratio for context and generation (default: 30%).
+
+- **Extensive response control**:  
+  - Control creativity using the temperature setting.  
+  - Adjust maximum output length to suit your content.  
+  - Define stop sequences to ensure responses end as intended.  
+  - Retry failed requests with a set number of attempts.  
+  - Set timeouts for responses (default: 45 seconds).
+
+- **Supports multiple AI models**: GPT-4o is the default, but you can configure others to suit your preferences.
+
+- **OpenAI Moderation API support**: Add an API key to enable content checks and compatibility with non-OpenAI platforms.
+
+- **Advanced content moderation**:  
+  - Toggle filters for harassment, hate speech, or other content checks.  
+  - Use custom moderation settings for precise filtering.  
+  - Display moderation feedback for a configurable duration (default: 5 seconds).
+
+- **Custom endpoint support**: Use your own AI endpoint URL for tailored content generation.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/ingest-web-content.gif)
 Video of AI Agent ingesting web content as reference material.

@@ -95,6 +95,7 @@ ClassicEditor
   - Debug mode for logging detailed information.
   - Customizable response formatting, including HTML, tone, structure, and inline content rules.
 - **Custom endpoint support**: Set a specific endpoint URL for tailored AI content generation.
+- **Multingual-ready**: Integrates with CKEditor5 native language configuration.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/ingest-web-content.gif)
 Video of AI Agent ingesting web content as reference material.

@@ -6,7 +6,9 @@
 @dxpr/ckeditor5-ai-agent
 =========================
 
-# AI Agent for CKEditor 5: An AI-first user experience for content generation in CKEditor 5
+# AI Agent for CKEditor 5
+
+## An AI-first user experience for content generation in CKEditor 5
 
 #### Like ChatGPT but fast and capable at creating HTML content.
 

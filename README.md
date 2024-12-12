@@ -14,10 +14,10 @@
 
 `AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4o and many more to generate, modify, or enhance content directly within the editor.
 
-`AI Agent` automatically integrates the context before and after your command into the prompt.
+`AI Agent` uses **retrieval-augmented generation (RAG)** to seamlessly integrate external web content into prompts.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
-Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "wrong". After switching the editor configuration from "Full HTML" to "Basic HTML", instead of a table, an unordered is generated, using bold and normal-weight text to simulate some table-like structure.
+Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "wrong". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
 
 ## Table of Contents
 
@@ -25,26 +25,27 @@ Video of AI Agent returning optimal HTML structure based on what is available in
 - [Configuration](#configuration)
 - [How to use](#how-to-use)
 - [Features](#features)
-- [Usage Examples](#usage-examples)
-- [Configuration Options](#configuration-options)
+- [Usage examples](#usage-examples)
+- [Configuration options](#configuration-options)
 - [Developing the package](#developing-the-package)
 - [Available scripts](#available-scripts)
 - [License](#license)
 
 ## Installation
 
-To install the `AiAgent` plugin in your CKEditor 5 setup, follow these steps:
+To install the `AI Agent` plugin in your CKEditor 5 setup:
 
 1. Install the plugin via npm:
 
    ```bash
    npm install @dxpr/ckeditor5-ai-agent
+   ```
 
 ## Configuration
 
-The AiAgent plugin can be configured through the EditorConfig interface. The configuration allows you to define how the AI model should behave, including the model type, temperature, maximum tokens, and more.
+The `AI Agent` plugin can be configured through the EditorConfig interface. Define model behavior, including type, temperature, and tokens.
 
-follow below example to add AiAgent.
+Example configuration:
 
 ```typescript
 ClassicEditor
@@ -60,59 +61,28 @@ ClassicEditor
     } );
 ```
 
-### How to Use
+## How to use
 
-- **Start a prompt with a slash command**: Write a command like `/write about open source software` on an empty line to begin.
-- **Create multiline prompts**: Use `Shift+Enter` to break your prompt into multiple lines.
-- **Add links for reference material**: Include links in your prompt, and their contents will be fetched and integrated automatically. 
+- **Start a prompt with a slash command:** `/write about open source software`.
+- **Create multiline prompts:** Use `Shift+Enter` to break your prompt into lines.
+- **Add links for reference material**: Include links in your prompt, AI fetches and integrates their content (RAG).
 - **No limit on links**: Add as many links as you need; referenced content is automatically trimmed to fit the AI's context window.
-- **HTML tags adapted to editor settings**: The response is formatted with HTML tags that align with the editor's configuration.
 - **Use mid-sentence prompts**: Insert prompts in the middle of a sentence by clicking the AI button in the toolbar.
 - **Cancel response streams**: Press "Cancel" to terminate a response stream immediately, ensuring no tokens are wasted.
 
-- We test our UX on both desktop and mobile devices
+## Features
 
-### Features
-
-- **Automatic integration with surrounding text**: The AI incorporates nearby text when using the slash command for context-aware responses.
-
-- **Built-in web access**: Search the web directly and smartly trim web content to fit within the AI's context window.
-
-- **Multilingual-ready**: Works seamlessly with CKEditor5's language settings, enabling content creation in multiple languages.
-
-- **Enhanced editor integration**:  
-  - Real-time response streaming lets you see generated content as it arrives.  
-  - **Cancel button to terminate stream** for immediate control.  
-  - Debug mode provides detailed logs for troubleshooting.  
-  - Customizable response formatting, including HTML structure, tone, and inline content rules.
-
-- **Structured prompt customization**: Easily adjust and add default settings for AI prompts to match your content needs.
-
-- **Context window optimization**:  
-  - Dynamically adapts context size based on cursor position.  
-  - Smartly trims web and editor content to fit within the AI's context.  
-  - Fine-tune the editor's allocation ratio for context and generation (default: 30%).
-
-- **Extensive response control**:  
-  - Control creativity using the temperature setting.  
-  - Adjust maximum output length to suit your content.  
-  - Define stop sequences to ensure responses end as intended.  
-  - Retry failed requests with a set number of attempts.  
-  - Set timeouts for responses (default: 45 seconds).
-
-- **Supports multiple AI models**: GPT-4o is the default, but you can configure others to suit your preferences.
-
-- **OpenAI Moderation API support**: Add an API key to enable content checks and compatibility with non-OpenAI platforms.
-
-- **Advanced content moderation**:  
-  - Toggle filters for harassment, hate speech, or other content checks.  
-  - Use custom moderation settings for precise filtering.  
-  - Display moderation feedback for a configurable duration (default: 5 seconds).
-
-- **Custom endpoint support**: Use your own AI endpoint URL for tailored content generation.
-
-![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/ingest-web-content.gif)
-Video of AI Agent ingesting web content as reference material.
+- **RAG-enabled retrieval:** Integrates web content into prompts dynamically.
+- **Context-aware prompts:** Auto-incorporates surrounding text for better response accuracy.
+- **Multilingual-ready:** Supports CKEditor 5 language settings.
+- **Real-time response streaming:** View generated content as it arrives.
+- **Customizable responses:** Adjust formatting, HTML, tone, and content rules.
+- **Dynamic context size:** Adapts based on cursor position and context limits.
+- **Advanced controls:** Manage temperature, max tokens, and stop sequences.
+- **Multiple AI model support:** Defaults to GPT-4o but configurable for others.
+- **Moderation API support:** Adds content safety filters and moderation feedback.
+- **Custom endpoints:** Use tailored AI APIs for specific needs.
+- **Debug mode:** Detailed logs for troubleshooting.
 
 ### Usage Examples
 

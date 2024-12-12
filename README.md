@@ -9,9 +9,11 @@
 
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Configuration Options](#configuration-options)
+- [How to use](#how-to-use)
 - [Usage Examples](#usage-examples)
-- [Error Handling](#error-handling)
+- [Configuration Options](#configuration-options)
+- [Developing the package](#developing-the-package)
+- [Available scripts](#available-scripts)
 - [License](#license)
 
 ## Installation

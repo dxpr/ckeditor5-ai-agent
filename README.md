@@ -45,11 +45,12 @@ ClassicEditor
     } );
 ```
 
-## How to use
+## How to use / Features
 
 * Write a slash command like `/write about open source software` on en empty line.
 * Use shift+enter to create multiline prompts.
 * You can add links inside prompts, link contents will be fetched and added to the prompt as reference material.
+* There is no limit to the number of links added, when needed referenced content is trimmed automatically, making optimal use of the model's context window.
 * The HTML tags in the response are automatically limited based on the editor's configuration.
 * You can prompt in the middle of a sentence by clicking on the AI button in the toolbar.
 

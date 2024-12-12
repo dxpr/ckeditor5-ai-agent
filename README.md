@@ -65,9 +65,9 @@ Here are some examples of how to use the AI Agent plugin:
 
 2. **Compile Command with URLs**
    ```
-/Create a best blog posts of the week blog, summarize each article in 100 words, add one image for every post, include read-more links:
-https://example.com/post-1
-https://example.com/post-2
+	/Create a best blog posts of the week blog, summarize each article in 100 words, add one image for every post, include read-more links:
+	https://example.com/post-1
+	https://example.com/post-2
    ```
 
 You use shift+enter to add new line inside a single slash command.

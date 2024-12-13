@@ -324,7 +324,12 @@ export default class AiAgentUI extends Plugin {
 		};
 		placeholder.classList.add( 'place-holder' );
 		placeholder.textContent = t( 'Type / to request AI content' );
-		document.body.appendChild( placeholder );
+		setTimeout( async () => {
+			const panelContent = editor.ui.view.element;
+			if ( panelContent ) {
+				panelContent.append( placeholder );
+			}
+		} );
 	}
 
 	/**
@@ -333,7 +338,8 @@ export default class AiAgentUI extends Plugin {
 	 * @param rect - The DOMRect object defining the position to show the placeholder.
 	 */
 	private showPlaceHolder( rect?: DOMRect ): void {
-		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
+		const editor = this.editor;
+		const ele = editor.ui.view.element?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` ) as HTMLElement;
 		const isReadOnlyMode = this.editor.isReadOnly;
 		if ( ele && rect && !isReadOnlyMode ) {
 			ele.classList.add( 'show-place-holder' );
@@ -348,7 +354,8 @@ export default class AiAgentUI extends Plugin {
 	 * Hides the placeholder element from the document.
 	 */
 	private hidePlaceHolder(): void {
-		const ele = document.getElementById( this.PLACEHOLDER_TEXT_ID );
+		const editor = this.editor;
+		const ele = editor.ui.view.element?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` );
 		if ( ele ) {
 			ele.classList.remove( 'show-place-holder' );
 		}

@@ -8,13 +8,13 @@
 
 # AI Agent for CKEditor 5
 
-## An AI-first user experience for content generation in CKEditor 5
+## 🤖 An AI-first user experience for content generation in CKEditor 5
 
-#### Like ChatGPT but faster, and better at creating HTML content.
+#### 🚀 Like ChatGPT but faster, and better at creating HTML content.
 
-`AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4o and many more to generate, modify, or enhance content directly within the editor.
+✍️ `AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4o and many more to generate, modify, or enhance content directly within the editor.
 
-`AI Agent` uses **retrieval-augmented generation (RAG)** to seamlessly integrate external web content into prompts.
+🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** to seamlessly integrate external web content into prompts.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "wrong". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.

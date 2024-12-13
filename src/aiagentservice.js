@@ -263,8 +263,10 @@ export default class AiAgentService {
                             parentContent += child.data;
                         }
                     }
-                    const parentPosition = parentContent ? writer.createPositionAfter(parent) : writer.createPositionBefore(parent);
-                    writer.insert(aiTag, insertParent ? parentPosition : position);
+                    const nextLinePosition = parentContent ?
+                        writer.createPositionAt(position.parent, 'after') :
+                        writer.createPositionAt(position.parent, 'before');
+                    writer.insert(aiTag, insertParent ? nextLinePosition : position);
                     const newPosition = writer.createPositionAt(aiTag, 'end');
                     writer.setSelection(newPosition);
                 }
@@ -294,7 +296,7 @@ export default class AiAgentService {
                             if (content !== null && content !== undefined) {
                                 contentBuffer += content;
                             }
-                            await this.updateContent(contentBuffer, blockID, insertParent);
+                            await this.updateContent(contentBuffer, blockID);
                         }
                         catch (parseError) {
                             console.warn('Error parsing JSON:', parseError);
@@ -397,9 +399,31 @@ export default class AiAgentService {
             }
         }
         const editorData = editor.getData();
-        let editorContent = editorData.replace('</ai-tag><p>&nbsp;</p>', '');
+        let editorContent = editorData.replace(/<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '');
         editorContent = editorContent.replace(`<ai-tag id="${blockID}">`, '');
         editor.setData(editorContent);
+    }
+    /**
+     * Recursively retrieves all child elements of a given view element that match the specified block ID.
+     *
+     * @param viewElement - The parent view element from which to retrieve children.
+     * @param blockID - The unique identifier of the AI block to search for.
+     * @returns An array of matching child elements.
+     */
+    getViewChildrens(viewElement, blockID) {
+        const results = [];
+        for (const child of viewElement.getChildren()) {
+            if (child.is('element')) {
+                if (child.is('element', 'ai-tag') && child.getAttribute('id') === blockID) {
+                    results.push(child);
+                }
+                else {
+                    const nestedResults = this.getViewChildrens(child, blockID);
+                    results.push(...nestedResults);
+                }
+            }
+        }
+        return results;
     }
     /**
      * Updates the content of an AI-generated block in the editor.
@@ -410,29 +434,13 @@ export default class AiAgentService {
      * @returns Promise that resolves when the update is complete
      * @private
      */
-    async updateContent(newHtml, blockID, insertParent) {
+    async updateContent(newHtml, blockID) {
         const editor = this.editor;
         editor.model.change(writer => {
             const root = editor.model.document.getRoot();
-            let targetElement = null;
             if (root) {
-                for (const child of root.getChildren()) {
-                    const childElement = child;
-                    if (insertParent) {
-                        if (childElement.is('element', 'ai-tag') && childElement.getAttribute('id') === blockID) {
-                            targetElement = childElement;
-                            break;
-                        }
-                    }
-                    else {
-                        for (const innerChild of childElement.getChildren()) {
-                            if (innerChild.is('element', 'ai-tag') && innerChild.getAttribute('id') === blockID) {
-                                targetElement = innerChild;
-                                break;
-                            }
-                        }
-                    }
-                }
+                const childrens = this.getViewChildrens(root, blockID);
+                const targetElement = childrens.length ? childrens[0] : null;
                 if (targetElement) {
                     const range = editor.model.createRangeIn(targetElement);
                     writer.remove(range);
@@ -528,7 +536,7 @@ export default class AiAgentService {
                 const startingPath = (inlineSlash === null || inlineSlash === void 0 ? void 0 : inlineSlash.getPath()) || parent.getPath();
                 const range = model.createRange(model.createPositionFromPath(root, startingPath), model.createPositionFromPath(root, position.path));
                 writer.remove(range);
-                writer.setSelection(model.createPositionFromPath(root, startingPath));
+                // writer.setSelection( model.createPositionFromPath( root, startingPath ) );
             });
         }
     }
@@ -544,7 +552,7 @@ export default class AiAgentService {
     async generateGptPromptBasedOnUserPrompt(prompt, promptContainerText, selectedContent) {
         try {
             const context = this.promptHelper.trimContext(prompt, promptContainerText);
-            const request = prompt.slice(1); // Remove the leading slash
+            const request = selectedContent ? prompt : prompt.slice(1); // Remove the leading slash
             let markDownContents = [];
             const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
             const urls = prompt.match(urlRegex);

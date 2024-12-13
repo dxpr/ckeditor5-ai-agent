@@ -27,9 +27,6 @@ export class PromptHelper {
             }
             const componentId = id;
             let content = defaultContent;
-            // If there is """Selected Content""" I'll use only that content to answer
-            // the user's request in the TASK section, ignoring any additional CONTEXT
-            // or prior knowledge.
             // Apply overrides if they exist
             if ((_a = this.promptSettings.overrides) === null || _a === void 0 ? void 0 : _a[componentId]) {
                 content = this.promptSettings.overrides[componentId];
@@ -95,14 +92,16 @@ export class PromptHelper {
         corpus.push(request);
         corpus.push('</TASK>');
         // Context Section
-        if (context === null || context === void 0 ? void 0 : context.length) {
+        if ((context === null || context === void 0 ? void 0 : context.length) && !selectedContent) {
             corpus.push('\n<CONTEXT>');
             corpus.push(context);
             corpus.push('</CONTEXT>');
         }
-        // if ( selectedContent ) {
-        // 	corpus.push( `Selected Content:\n"""\n${ selectedContent }\n"""\n` );
-        // }
+        if (selectedContent) {
+            corpus.push('<SELECTED_CONTENT>');
+            corpus.push(selectedContent);
+            corpus.push('</SELECTED_CONTENT>');
+        }
         // Markdown Content Section
         if (markDownContents === null || markDownContents === void 0 ? void 0 : markDownContents.length) {
             corpus.push('\n<REFERENCE_CONTENT>');
@@ -126,7 +125,7 @@ export class PromptHelper {
         corpus.push(`The response must follow the language code - ${contentLanguageCode}.`);
         corpus.push('</INSTRUCTIONS>');
         // Context-Specific Instructions
-        if (!isEditorEmpty) {
+        if (!isEditorEmpty && !selectedContent) {
             corpus.push('\n<CONTEXT_REQUIREMENTS>');
             corpus.push(trimMultilineString(`
 				Replace "@@@cursor@@@" with contextually appropriate content.

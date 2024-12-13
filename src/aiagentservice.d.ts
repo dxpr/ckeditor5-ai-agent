@@ -71,6 +71,14 @@ export default class AiAgentService {
      */
     private processCompleted;
     /**
+     * Recursively retrieves all child elements of a given view element that match the specified block ID.
+     *
+     * @param viewElement - The parent view element from which to retrieve children.
+     * @param blockID - The unique identifier of the AI block to search for.
+     * @returns An array of matching child elements.
+     */
+    private getViewChildrens;
+    /**
      * Updates the content of an AI-generated block in the editor.
      *
      * @param newHtml - The new HTML content to insert

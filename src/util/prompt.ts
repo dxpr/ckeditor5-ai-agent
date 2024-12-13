@@ -41,10 +41,6 @@ export class PromptHelper {
 			const componentId = id as PromptComponentKey;
 			let content = defaultContent;
 
-			// If there is """Selected Content""" I'll use only that content to answer
-			// the user's request in the TASK section, ignoring any additional CONTEXT
-			// or prior knowledge.
-
 			// Apply overrides if they exist
 			if ( this.promptSettings.overrides?.[ componentId ] ) {
 				content = this.promptSettings.overrides[ componentId ]!;
@@ -146,14 +142,16 @@ export class PromptHelper {
 		corpus.push( '</TASK>' );
 
 		// Context Section
-		if ( context?.length ) {
+		if ( context?.length && !selectedContent ) {
 			corpus.push( '\n<CONTEXT>' );
 			corpus.push( context );
 			corpus.push( '</CONTEXT>' );
 		}
 
 		if ( selectedContent ) {
-			corpus.push( `Selected Content:\n"""\n${ selectedContent }\n"""\n` );
+			corpus.push( '<SELECTED_CONTENT>' );
+			corpus.push( selectedContent );
+			corpus.push( '</SELECTED_CONTENT>' );
 		}
 
 		// Markdown Content Section
@@ -182,7 +180,7 @@ export class PromptHelper {
 		corpus.push( '</INSTRUCTIONS>' );
 
 		// Context-Specific Instructions
-		if ( !isEditorEmpty ) {
+		if ( !isEditorEmpty && !selectedContent ) {
 			corpus.push( '\n<CONTEXT_REQUIREMENTS>' );
 			corpus.push( trimMultilineString( `
 				Replace "@@@cursor@@@" with contextually appropriate content.

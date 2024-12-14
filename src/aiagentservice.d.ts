@@ -55,6 +55,13 @@ export default class AiAgentService {
      */
     private fetchAndProcessGptResponse;
     /**
+     * Checks if a given string is a valid JSON format.
+     *
+     * @param str - The string to be validated as JSON.
+     * @returns True if the string is valid JSON, otherwise false.
+     */
+    private isValidJSON;
+    /**
      * Creates and configures a cancel generation button with keyboard shortcut support.
      *
      * @param blockID - Unique identifier for the AI generation block

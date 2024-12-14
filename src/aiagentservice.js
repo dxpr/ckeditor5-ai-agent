@@ -220,7 +220,12 @@ export default class AiAgentService {
             });
             clearTimeout(timeoutId);
             if (!response.ok) {
-                throw new Error('Fetch failed');
+                const errorData = await response.json();
+                const error = {
+                    status: response.status,
+                    error: JSON.stringify(errorData)
+                };
+                throw new Error(JSON.stringify(error));
             }
             aiAgentContext.hideLoader();
             const reader = response.body.getReader();
@@ -308,12 +313,27 @@ export default class AiAgentService {
                 return await this.fetchAndProcessGptResponse(prompt, parent, retries - 1);
             }
             let errorMessage;
-            switch ((error === null || error === void 0 ? void 0 : error.name) || ((_c = error === null || error === void 0 ? void 0 : error.message) === null || _c === void 0 ? void 0 : _c.trim())) {
+            const jsonMessage = this.isValidJSON(error === null || error === void 0 ? void 0 : error.message);
+            let status;
+            if (jsonMessage) {
+                const errorObj = JSON.parse(error === null || error === void 0 ? void 0 : error.message);
+                status = errorObj.status;
+            }
+            switch (status || (error === null || error === void 0 ? void 0 : error.name) || ((_c = error === null || error === void 0 ? void 0 : error.message) === null || _c === void 0 ? void 0 : _c.trim())) {
                 case 'ReadableStream not supported':
                     errorMessage = t('Browser does not support readable streams');
                     break;
                 case 'AiAgent: Fetch failed':
                     errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
+                    break;
+                case 401:
+                    errorMessage = t('Unauthorized: Please check your API key or permissions.');
+                    break;
+                case 404:
+                    errorMessage = t('Not Found: The requested resource could not be located.');
+                    break;
+                case 500:
+                    errorMessage = t('Internal Server Error: Please try again later.');
                     break;
                 default:
                     errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
@@ -322,6 +342,21 @@ export default class AiAgentService {
         }
         finally {
             this.editor.disableReadOnlyMode(this.aiAgentFeatureLockId);
+        }
+    }
+    /**
+     * Checks if a given string is a valid JSON format.
+     *
+     * @param str - The string to be validated as JSON.
+     * @returns True if the string is valid JSON, otherwise false.
+     */
+    isValidJSON(str) {
+        try {
+            JSON.parse(str);
+            return true;
+        }
+        catch (error) {
+            return false;
         }
     }
     /**

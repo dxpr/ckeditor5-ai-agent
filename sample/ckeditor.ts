@@ -96,10 +96,7 @@ ClassicEditor
 			]
 		},
 		aiAgent: {
-			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
-			apiKey: 'xxx',
-			temperature: 0.7,
-			model: 'gpt-4o'
+			apiKey: 'YOUR_API_KEY'
 		},
 		language: {
 			content: 'en',
@@ -157,9 +154,7 @@ ClassicEditor
 			]
 		},
 		aiAgent: {
-			apiKey: 'sk-proj-',
-			temperature: 0.7,
-			model: 'gpt-4o'
+			apiKey: 'YOUR_API_KEY'
 		},
 		language: {
 			content: 'en',

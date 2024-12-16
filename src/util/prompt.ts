@@ -18,7 +18,7 @@ export class PromptHelper {
 		this.editor = editor;
 		const config = editor.config.get( 'aiAgent' )!;
 
-		this.contextSize = config.contextSize ?? 4000;
+		this.contextSize = config.contextSize!;
 		this.promptSettings = config.promptSettings ?? {};
 		this.debugMode = config.debugMode ?? false;
 		this.editorContextRatio = options.editorContextRatio ?? 0.3;

@@ -111,38 +111,26 @@ Video of AI Agent rendering complex HTML structures fast, rendering tokens in re
 
 The AiAgent plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
-| Option | Type | Description |
-| :-------- | :------- | :-------------------------------- |
-| `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
-| `apiKey` | `string` | Your Open_AI key for authenticate. |
-| `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
-| `maxOutputTokens` | `number` | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. Defaults to model's max output token limit. (optional) |
-| `maxInputTokens` | `number` | Maximum number of tokens allowed in the combined prompt and context sent to the AI. Defaults to model's max context window limit. (optional) |
-| `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
-| `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
-| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
-| `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
-| `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
-| `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `promptSettings.overrides.responseRules` | `string` | Override core response generation rules and formatting |
-| `promptSettings.overrides.htmlFormatting` | `string` | Override HTML generation rules and tag structure |
-| `promptSettings.overrides.contentStructure` | `string` | Override document structure and organization guidelines |
-| `promptSettings.overrides.tone` | `string` | Override language style and voice settings |
-| `promptSettings.overrides.inlineContent` | `string` | Override inline content, list, and table handling |
-| `promptSettings.overrides.imageHandling` | `string` | Override image formatting and attribute requirements |
-| `promptSettings.additions.responseRules` | `string` | Additional response generation rules |
-| `promptSettings.additions.htmlFormatting` | `string` | Additional HTML formatting requirements |
-| `promptSettings.additions.contentStructure` | `string` | Additional structure guidelines |
-| `promptSettings.additions.tone` | `string` | Additional tone and style requirements |
-| `promptSettings.additions.inlineContent` | `string` | Additional inline content handling rules |
-| `promptSettings.additions.imageHandling` | `string` | Additional image processing requirements |
-| `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
-| `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
-| `showErrorDuration` | `number` | The duration in milliseconds for which moderation error messages will be displayed to the user. This helps in providing feedback on moderation checks. Default is 5000ms (5 seconds). (optional) |
-| `moderation.key` | `string` | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
-| `moderation.enable` | `boolean` | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. Default is false. (optional) |
-| `moderation.disableFlags` | `Array<ModerationFlagsTypes>` | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
-| `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>` | Specifies the commands available in the dropdown menu for the AI agent. When provided, completely replaces the default menu. Default menu includes tone adjustment, content enhancement, and fix/improve commands. Example: [ { title: 'Change tone', items: [ { title: 'Professional', command: 'Improve using polished, formal, and respectful language to convey professional expertise and competence. You must keep the text formatting.' } ] } ]. (optional) |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | `string` | - | Your Open_AI key for authenticate |
+| `model` | `AiModel?` | `'gpt-4o'` | The AI model to use |
+| `temperature` | `number?` | - | Controls the randomness of the AI output. Must be between 0 and 2 |
+| `maxOutputTokens` | `number?` | Model's max output token limit | Maximum number of tokens the AI can generate in its response |
+| `maxInputTokens` | `number?` | Model's max context window limit | Maximum number of tokens allowed in the combined prompt and context |
+| `stopSequences` | `Array<string>?` | - | An array of stop sequences that will end the generation of content when encountered |
+| `retryAttempts` | `number?` | - | The number of times to retry fetching the AI response if the initial request fails |
+| `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
+| `contextSize` | `number?` | `75%` of model's max input token limit | Extracts text symmetrically around the cursor position. For default model (gpt-4o) this is 96000 tokens (128000 * 0.75) |
+| `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
+| `endpointUrl` | `string?` | - | The URL of the AI endpoint to use for generating content |
+| `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
+| `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
+| `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |
+| `moderation.enable` | `boolean?` | `false` | Enables content moderation for AI responses |
+| `moderation.key` | `string?` | - | API key for content moderation service |
+| `moderation.disableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
+| `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
 
 ### Prompt Settings
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
@@ -156,6 +144,92 @@ Each component can be customized using either `overrides` (to replace default ru
 - `responseRules`: Core response generation rules
 - `inlineContent`: Inline content handling rules
 - `imageHandling`: Image element requirements
+
+#### Prompt Components Configuration
+
+| Component | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `responseRules` | `string` | ```
+Response Generation Rules:
+
+Cursor Handling:
+- Replace "@@@cursor@@@" with contextually appropriate content
+- Treat surrounding text as READ-ONLY
+- Only modify content at cursor position
+
+Content Requirements:
+- Generate original content that adds value
+- NEVER copy or paraphrase context text
+- Verify zero phrase duplication
+- Follow specified language requirements
+
+Style and Flow:
+- Maintain consistency with surrounding text's tone and style
+- Ensure response flows naturally with existing content
+- Analyze context thoroughly to understand style
+- Generate seamlessly integrated content
+
+Technical Rules:
+- Adhere to all HTML formatting rules
+``` | Core response generation rules and formatting |
+| `htmlFormatting` | `string` | ```
+HTML Formatting Requirements:
+- Generate valid HTML snippets only
+- Use only the following allowed tags: ${getAllowedHtmlTags(this.editor).join(', ')}
+- Ensure proper tag nesting
+- Avoid empty elements
+- Use semantic HTML where appropriate
+- Maintain clean, readable HTML structure
+- Follow block-level element rules
+- Properly close all tags
+- No inline styles unless specified
+- No script or style tags
+- First word must be a valid HTML tag
+- Block elements must not contain other block elements
+``` | HTML generation rules and tag structure |
+| `contentStructure` | `string` | ```
+Reference Content Guidelines:
+- Use information from provided markdown to generate new text
+- Do not copy content verbatim
+- Ensure natural flow with existing context
+- Avoid markdown formatting in response
+- Consider whole markdown as single source
+- Generate requested percentage of content
+
+Content Structure Rules:
+- Organize information logically
+- Use appropriate paragraph breaks
+- Maintain consistent formatting
+- Follow document hierarchy
+- Use appropriate list structures when needed
+- Ensure proper content flow
+- Respect existing document structure
+``` | Document structure and organization guidelines |
+| `tone` | `string` | ```
+Language and Tone Guidelines:
+- Match the formality level of the surrounding content
+- Maintain consistent voice throughout the response
+- Use appropriate technical terminology when relevant
+- Ensure proper grammar and punctuation
+- Avoid overly complex sentence structures
+- Keep the tone engaging and reader-friendly
+- Adapt style based on content type
+- Follow specified language code requirements
+``` | Language style and voice settings |
+| `inlineContent` | `string` | ```
+Inline Content Specific Rules:
+- Determine content type (list, table, or inline)
+- Format according to content type
+- Ensure seamless integration
+- Maintain proper nesting
+- Respect surrounding content structure
+``` | Inline content, list, and table handling |
+| `imageHandling` | `string` | ```
+Image Element Requirements:
+- Every <img> must have src and alt attributes
+- Format src URLs as: https://placehold.co/600x400?text=[alt_text]
+- Alt text must be descriptive and meaningful
+``` | Image formatting and attribute requirements |
 
 #### Default Prompt Components
 

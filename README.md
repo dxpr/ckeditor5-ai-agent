@@ -111,38 +111,38 @@ Video of AI Agent rendering complex HTML structures fast, rendering tokens in re
 
 The AiAgent plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
-| Option | Type | Description |
-| :-------- | :------- | :-------------------------------- |
-| `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
-| `apiKey` | `string` | Your Open_AI key for authenticate. |
-| `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
-| `maxOutputTokens` | `number` | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. Defaults to model's max output token limit. (optional) |
-| `maxInputTokens` | `number` | Maximum number of tokens allowed in the combined prompt and context sent to the AI. Defaults to model's max context window limit. (optional) |
-| `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
-| `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
-| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
-| `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
-| `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
-| `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `promptSettings.overrides.responseRules` | `string` | Override core response generation rules and formatting |
-| `promptSettings.overrides.htmlFormatting` | `string` | Override HTML generation rules and tag structure |
-| `promptSettings.overrides.contentStructure` | `string` | Override document structure and organization guidelines |
-| `promptSettings.overrides.tone` | `string` | Override language style and voice settings |
-| `promptSettings.overrides.inlineContent` | `string` | Override inline content, list, and table handling |
-| `promptSettings.overrides.imageHandling` | `string` | Override image formatting and attribute requirements |
-| `promptSettings.additions.responseRules` | `string` | Additional response generation rules |
-| `promptSettings.additions.htmlFormatting` | `string` | Additional HTML formatting requirements |
-| `promptSettings.additions.contentStructure` | `string` | Additional structure guidelines |
-| `promptSettings.additions.tone` | `string` | Additional tone and style requirements |
-| `promptSettings.additions.inlineContent` | `string` | Additional inline content handling rules |
-| `promptSettings.additions.imageHandling` | `string` | Additional image processing requirements |
-| `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
-| `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
-| `showErrorDuration` | `number` | The duration in milliseconds for which moderation error messages will be displayed to the user. This helps in providing feedback on moderation checks. Default is 5000ms (5 seconds). (optional) |
-| `moderation.key` | `string` | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
-| `moderation.enable` | `boolean` | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. Default is false. (optional) |
-| `moderation.disableFlags` | `Array<ModerationFlagsTypes>` | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
-| `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>` | Specifies the commands available in the dropdown menu for the AI agent. When provided, completely replaces the default menu. Default menu includes tone adjustment, content enhancement, and fix/improve commands. Example: [ { title: 'Change tone', items: [ { title: 'Professional', command: 'Improve using polished, formal, and respectful language to convey professional expertise and competence. You must keep the text formatting.' } ] } ]. (optional) |
+| Option | Type | Default | Description |
+| :-------- | :------- | :------- | :-------------------------------- |
+| model | AiModel | 'gpt-4o' | The AI model to use. (optional) |
+| apiKey | string | - | Your Open_AI key for authenticate. |
+| temperature | number | - | Controls the randomness of the AI output. Must be between 0 and 2. (optional) |
+| maxOutputTokens | number | Model's max output token limit | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. (optional) |
+| maxInputTokens | number | Model's max context window limit | Maximum number of tokens allowed in the combined prompt and context sent to the AI. (optional) |
+| stopSequences | Array<string> | - | An array of stop sequences that will end the generation of content when encountered. (optional) |
+| retryAttempts | number | - | The number of times to retry fetching the AI response if the initial request fails. (optional) |
+| timeOutDuration | number | 45000 | The duration in milliseconds to wait before timing out the request. (optional) |
+| contextSize | number | 75% of model's total input token limit | Extracts text symmetrically around the cursor position based on the contextSize. |
+| editorContextRatio | number | 0.3 | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1. |
+| endpointUrl | string | - | The URL of the AI endpoint to use for generating content. |
+| promptSettings.overrides.responseRules | string | - | Override core response generation rules and formatting |
+| promptSettings.overrides.htmlFormatting | string | - | Override HTML generation rules and tag structure |
+| promptSettings.overrides.contentStructure | string | - | Override document structure and organization guidelines |
+| promptSettings.overrides.tone | string | - | Override language style and voice settings |
+| promptSettings.overrides.inlineContent | string | - | Override inline content, list, and table handling |
+| promptSettings.overrides.imageHandling | string | - | Override image formatting and attribute requirements |
+| promptSettings.additions.responseRules | string | - | Additional response generation rules |
+| promptSettings.additions.htmlFormatting | string | - | Additional HTML formatting requirements |
+| promptSettings.additions.contentStructure | string | - | Additional structure guidelines |
+| promptSettings.additions.tone | string | - | Additional tone and style requirements |
+| promptSettings.additions.inlineContent | string | - | Additional inline content handling rules |
+| promptSettings.additions.imageHandling | string | - | Additional image processing requirements |
+| debugMode | boolean | false | Enables debug mode, which logs detailed information about prompts and API requests to the console. (optional) |
+| streamContent | boolean | true | Enables stream mode, which stream the response of request. (optional) |
+| showErrorDuration | number | 5000 | The duration in milliseconds for which moderation error messages will be displayed to the user. (optional) |
+| moderation.key | string | - | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
+| moderation.enable | boolean | false | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. (optional) |
+| moderation.disableFlags | Array<ModerationFlagsTypes> | - | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
+| commandsDropdown | Array<{ title: string; items: Array<{ title: string; command: string; }>; }> | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu for the AI agent. When provided, completely replaces the default menu. (optional) |
 
 ### Prompt Settings
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

@@ -659,7 +659,7 @@ export default class AiAgentService {
 	): Promise<string | null> {
 		try {
 			const context = this.promptHelper.trimContext( prompt, promptContainerText );
-			const request = selectedContent ? prompt : prompt.slice( 1 ); // Remove the leading slash
+			const request = selectedContent ? prompt : prompt.slice( 1 );
 			let markDownContents: Array<MarkdownContent> = [];
 			const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
 			const urls = prompt.match( urlRegex );
@@ -675,9 +675,9 @@ export default class AiAgentService {
 			return this.promptHelper.formatFinalPrompt(
 				request,
 				context,
+				selectedContent,
 				markDownContents,
-				isEditorEmpty,
-				selectedContent
+				isEditorEmpty
 			);
 		} catch ( error ) {
 			console.error( error );

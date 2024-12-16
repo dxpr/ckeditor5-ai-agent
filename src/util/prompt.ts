@@ -120,10 +120,10 @@ export class PromptHelper {
 
 	public formatFinalPrompt(
 		request: string,
-		context: string,
-		markDownContents: Array<MarkdownContent>,
-		isEditorEmpty: boolean,
-		selectedContent?: string
+		context?: string,
+		selectedContent?: string,
+		markDownContents?: Array<MarkdownContent>,
+		isEditorEmpty: boolean = false
 	): string {
 		if ( this.debugMode ) {
 			console.group( 'formatFinalPrompt Debug' );
@@ -162,42 +162,23 @@ export class PromptHelper {
 			}
 			corpus.push( '</REFERENCE_CONTENT>' );
 
+			// Use default referenceGuidelines
 			corpus.push( '\n<REFERENCE_GUIDELINES>' );
-			corpus.push( trimMultilineString( `
-				Use information from provided markdown to generate new text.
-				Do not copy content verbatim.
-				Ensure natural flow with existing context.
-				Avoid markdown formatting in response.
-				Consider whole markdown as single source.
-				Generate requested percentage of content.
-			` ) );
+			corpus.push( this.getComponentContent( 'referenceGuidelines' ) );
 			corpus.push( '</REFERENCE_GUIDELINES>' );
 		}
-
-		// Instructions Section
-		corpus.push( '\n<INSTRUCTIONS>' );
-		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
-		corpus.push( '</INSTRUCTIONS>' );
 
 		// Context-Specific Instructions
 		if ( !isEditorEmpty && !selectedContent ) {
 			corpus.push( '\n<CONTEXT_REQUIREMENTS>' );
-			corpus.push( trimMultilineString( `
-				Replace "@@@cursor@@@" with contextually appropriate content.
-				Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
-				NEVER copy or paraphrase context text.
-				Verify zero phrase duplication.
-				Analyze the CONTEXT section thoroughly 
-				to understand the existing content and its style.
-				Generate a response that seamlessly integrates 
-				with the existing content.
-				Determine the appropriate tone and style based
-				on the context. Ensure the response flows 
-				naturally with the existing content.
-
-			` ) );
+			corpus.push( this.getComponentContent( 'contextRequirements' ) );
 			corpus.push( '</CONTEXT_REQUIREMENTS>' );
 		}
+
+		// Add language instructions back
+		corpus.push( '\n<INSTRUCTIONS>' );
+		corpus.push( `The response must follow the language code - ${ contentLanguageCode }.` );
+		corpus.push( '</INSTRUCTIONS>' );
 
 		// Debug Output
 		if ( this.debugMode ) {
@@ -207,6 +188,21 @@ export class PromptHelper {
 		}
 
 		return corpus.map( text => removeLeadingSpaces( text ) ).join( '\n' );
+	}
+
+	private getComponentContent( componentId: PromptComponentKey ): string {
+		const defaultComponents = getDefaultRules( this.editor );
+		let content = defaultComponents[ componentId ];
+
+		if ( this.promptSettings.overrides?.[ componentId ] ) {
+			content = this.promptSettings.overrides[ componentId ]!;
+		}
+
+		if ( this.promptSettings.additions?.[ componentId ] ) {
+			content += '\n' + this.promptSettings.additions[ componentId ];
+		}
+
+		return trimMultilineString( content );
 	}
 
 	public async generateMarkDownForUrls( urls: Array<string> ): Promise<Array<MarkdownContent>> {

@@ -8,12 +8,14 @@ export type AiModel =
     'kavya-m1';
 
 export type PromptComponentKey =
-    'responseRules' |
-    'htmlFormatting' |
-    'contentStructure' |
-    'tone' |
-    'inlineContent' |
-    'imageHandling';
+    | 'responseRules'
+    | 'htmlFormatting'
+    | 'contentStructure'
+    | 'tone'
+    | 'inlineContent'
+    | 'imageHandling'
+    | 'referenceGuidelines'
+    | 'contextRequirements';
 
 export interface PromptSettings {
     overrides?: Partial<Record<PromptComponentKey, string>>;

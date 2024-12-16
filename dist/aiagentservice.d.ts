@@ -31,7 +31,7 @@ export default class AiAgentService {
      *
      * @returns A promise that resolves when the command has been processed.
      */
-    handleSlashCommand(): Promise<void>;
+    handleSlashCommand(command?: string): Promise<void>;
     /**
      * Moderates the input content using OpenAI's moderation API to check for inappropriate content.
      *
@@ -70,6 +70,14 @@ export default class AiAgentService {
      * @private
      */
     private processCompleted;
+    /**
+     * Recursively retrieves all child elements of a given view element that match the specified block ID.
+     *
+     * @param viewElement - The parent view element from which to retrieve children.
+     * @param blockID - The unique identifier of the AI block to search for.
+     * @returns An array of matching child elements.
+     */
+    private getViewChildrens;
     /**
      * Updates the content of an AI-generated block in the editor.
      *

@@ -5,6 +5,7 @@ export default class AiAgentUI extends Plugin {
     GPT_RESPONSE_LOADER_ID: string;
     GPT_RESPONSE_ERROR_ID: string;
     private showErrorDuration;
+    private commandsDropdown;
     constructor(editor: Editor);
     static get pluginName(): "AiAgentUI";
     static get requires(): readonly [typeof Widget];
@@ -18,6 +19,30 @@ export default class AiAgentUI extends Plugin {
      */
     private initializeUIComponents;
     private addCustomTagConversions;
+    /**
+     * Adds the AI Agent button to the editor's UI, which includes a dropdown menu
+     * for various AI commands. The button allows users to insert slash commands
+     * and provides a search functionality for available commands.
+     *
+     * This method sets up the button's execute event, handles user input for
+     * searching commands, and organizes the command menu into groups for better
+     * usability.
+     */
+    private addAiAgentButton;
+    /**
+     * Updates the enabled state of items in the AI Agent command list based on the provided type and data.
+     *
+     * This method iterates through the list of items in the provided listView and enables or disables them
+     * based on the search input or selection state. It checks if the item is a title, separator, or search input
+     * and updates the isEnabled property accordingly.
+     *
+     * @param listView - The MenuBarMenuListView containing the items to update.
+     * @param type - The type of update to perform, either 'search' to filter items based on input or 'enable'
+     *               to enable/disable items based on selection state.
+     * @param data - The search string for filtering items when type is 'search', or a boolean indicating
+     *               whether to enable or disable items when type is 'enable'.
+     */
+    private aiAgentListItemUpdate;
     /**
      * Initializes the UI language settings based on the editor's locale.
      * Displays an error tooltip if the current language is unsupported.

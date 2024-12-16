@@ -23,6 +23,7 @@ import { Paragraph, ParagraphButtonUI } from '@ckeditor/ckeditor5-paragraph';
 import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
+import { AccessibilityHelp } from '@ckeditor/ckeditor5-ui';
 
 import AiAgent from '../src/aiagent.js';
 
@@ -51,7 +52,8 @@ ClassicEditor
 			CodeBlock,
 			Code,
 			Base64UploadAdapter,
-			SourceEditing
+			SourceEditing,
+			AccessibilityHelp
 		],
 		toolbar: [
 			'aiAgentButton',
@@ -74,7 +76,8 @@ ClassicEditor
 			'mediaEmbed',
 			'codeBlock',
 			'|',
-			'sourceEditing'
+			'sourceEditing',
+			'accessibilityHelp'
 		],
 		image: {
 			toolbar: [

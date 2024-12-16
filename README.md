@@ -121,12 +121,16 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `stopSequences` | `Array<string>?` | - | An array of stop sequences that will end the generation of content when encountered |
 | `retryAttempts` | `number?` | - | The number of times to retry fetching the AI response if the initial request fails |
 | `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
-| `contextSize` | `number?` | `75%` of model's total input token limit | Extracts text symmetrically around the cursor position |
+| `contextSize` | `number?` | `75%` of model's max input token limit | Extracts text symmetrically around the cursor position. For default model (gpt-4o) this is 96000 tokens (128000 * 0.75) |
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
 | `endpointUrl` | `string?` | - | The URL of the AI endpoint to use for generating content |
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
 | `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
 | `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |
+| `moderation.enable` | `boolean?` | `false` | Enables content moderation for AI responses |
+| `moderation.key` | `string?` | - | API key for content moderation service |
+| `moderation.disableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
+| `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
 
 ### Prompt Settings
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

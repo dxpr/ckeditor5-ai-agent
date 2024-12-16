@@ -10,6 +10,8 @@
 
 ## 🤖 An AI-first user experience for content generation in CKEditor 5
 
+### Overview
+
 #### 🚀 Like ChatGPT but faster, and better at creating HTML content.
 
 ✍️ `AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4o and many more to generate, modify, or enhance content directly within the editor.
@@ -23,7 +25,7 @@ Video of AI Agent returning optimal HTML structure based on what is available in
 
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [How to use](#how-to-use)
+- [How to Use](#how-to-use)
 - [Features](#features)
 - [Usage examples](#usage-examples)
 - [Configuration options](#configuration-options)
@@ -61,7 +63,7 @@ ClassicEditor
     } );
 ```
 
-## How to use
+## How to Use
 
 - **Start a prompt with a slash command:** `/write about open source software`.
 - **Create multiline prompts:** Use `Shift+Enter` to break your prompt into lines.
@@ -70,21 +72,7 @@ ClassicEditor
 - **Use mid-sentence prompts**: Insert prompts in the middle of a sentence by clicking the AI button in the toolbar.
 - **Cancel response streams**: Press "Cancel" to terminate a response stream immediately, ensuring no tokens are wasted.
 
-## Features
-
-- **RAG-enabled retrieval:** Integrates web content into prompts dynamically.
-- **Context-aware prompts:** Auto-incorporates surrounding text for better response accuracy.
-- **Multilingual-ready:** Supports CKEditor 5 language settings.
-- **Real-time response streaming:** View generated content as it arrives.
-- **Customizable responses:** Adjust formatting, HTML, tone, and content rules.
-- **Dynamic context size:** Adapts based on cursor position and context limits.
-- **Advanced controls:** Manage temperature, max tokens, and stop sequences.
-- **Multiple AI model support:** Defaults to GPT-4o but configurable for others.
-- **Moderation API support:** Adds content safety filters and moderation feedback.
-- **Custom endpoints:** Use tailored AI APIs for specific needs.
-- **Debug mode:** Detailed logs for troubleshooting.
-
-### Usage Examples
+### Basic Usage
 
 Here are some examples of how to use the AI Agent plugin:
 
@@ -107,46 +95,54 @@ AI Agent understands complex prompts and can handle complex HTML, here we ask fo
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/nested-tables.gif)
 Video of AI Agent rendering complex HTML structures fast, rendering tokens in real-time as they are sent by the model.
 
+### Advanced Features
+
+- **RAG-enabled retrieval:** Integrates web content into prompts dynamically.
+- **Context-aware prompts:** Auto-incorporates surrounding text for better response accuracy.
+- **Multilingual-ready:** Supports CKEditor 5 language settings.
+- **Real-time response streaming:** View generated content as it arrives.
+- **Customizable responses:** Adjust formatting, HTML, tone, and content rules.
+- **Dynamic context size:** Adapts based on cursor position and context limits.
+- **Advanced controls:** Manage temperature, max tokens, and stop sequences.
+- **Multiple AI model support:** Defaults to GPT-4o but configurable for others.
+- **Moderation API support:** Adds content safety filters and moderation feedback.
+- **Custom endpoints:** Use tailored AI APIs for specific needs.
+- **Debug mode:** Detailed logs for troubleshooting.
+
 ## Configuration Options
 
 The AiAgent plugin can be configured through the EditorConfig interface. Here are the configuration options available:
 
-| Option | Type | Description |
-| :-------- | :------- | :-------------------------------- |
-| `model` | `AiModel` | The AI model to use, default is gpt-4o. (optional)|
-| `apiKey` | `string` | Your Open_AI key for authenticate. |
-| `temperature` | `number` | Controls the randomness of the AI output. Must be between 0 and 2. (optional)|
-| `maxOutputTokens` | `number` | Maximum number of tokens the AI can generate in its response. Must be within the model's output token limits. Defaults to model's max output token limit. (optional) |
-| `maxInputTokens` | `number` | Maximum number of tokens allowed in the combined prompt and context sent to the AI. Defaults to model's max context window limit. (optional) |
-| `stopSequences` | `Array<string>` | An array of stop sequences that will end the generation of content when encountered. (optional)|
-| `retryAttempts` | `number` | The number of times to retry fetching the AI response if the initial request fails. (optional)|
-| `timeOutDuration` | `number` | The duration in milliseconds to wait before timing out the request. default is 45s (optional)|
-| `contextSize` | `number` | extracts text symmetrically around the cursor position based on the contextSize, default is 75% of the selected model's total input token limit. |
-| `editorContextRatio` | `number` | Upper limit of what portion of the context size is allocated for editor content. Value between 0 and 1, default is 0.3 (30%). |
-| `endpointUrl` | `string` | The URL of the AI endpoint to use for generating content. |
-| `promptSettings.overrides.responseRules` | `string` | Override core response generation rules and formatting |
-| `promptSettings.overrides.htmlFormatting` | `string` | Override HTML generation rules and tag structure |
-| `promptSettings.overrides.contentStructure` | `string` | Override document structure and organization guidelines |
-| `promptSettings.overrides.tone` | `string` | Override language style and voice settings |
-| `promptSettings.overrides.inlineContent` | `string` | Override inline content, list, and table handling |
-| `promptSettings.overrides.imageHandling` | `string` | Override image formatting and attribute requirements |
-| `promptSettings.additions.responseRules` | `string` | Additional response generation rules |
-| `promptSettings.additions.htmlFormatting` | `string` | Additional HTML formatting requirements |
-| `promptSettings.additions.contentStructure` | `string` | Additional structure guidelines |
-| `promptSettings.additions.tone` | `string` | Additional tone and style requirements |
-| `promptSettings.additions.inlineContent` | `string` | Additional inline content handling rules |
-| `promptSettings.additions.imageHandling` | `string` | Additional image processing requirements |
-| `debugMode` | `boolean` | Enables debug mode, which logs detailed information about prompts and API requests to the console. Default is false. (optional) |
-| `streamContent` | `boolean` | Enables stream mode, which stream the response of request. Default is true (optional) |
-| `showErrorDuration` | `number` | The duration in milliseconds for which moderation error messages will be displayed to the user. This helps in providing feedback on moderation checks. Default is 5000ms (5 seconds). (optional) |
-| `moderation.key` | `string` | API key for content moderation service. Required if moderation is enabled. Used to filter inappropriate or unsafe content. (optional) |
-| `moderation.enable` | `boolean` | Enables content moderation for AI responses. When true, responses are checked against moderation rules before being displayed. Default is false. (optional) |
-| `moderation.disableFlags` | `Array<ModerationFlagsTypes>` | Array of moderation flags to disable. Allows skipping specific content checks like harassment, hate speech, etc. Example: ['harassment', 'hate']. (optional) |
+### General Settings
 
-### Prompt Settings
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | `string` | - | Your Open_AI key for authenticate |
+| `model` | `AiModel?` | `'gpt-4o'` | The AI model to use |
+| `temperature` | `number?` | - | Controls the randomness of the AI output. Must be between 0 and 2 |
+| `maxOutputTokens` | `number?` | Model's max output token limit | Maximum number of tokens the AI can generate in its response |
+| `maxInputTokens` | `number?` | Model's max context window limit | Maximum number of tokens allowed in the combined prompt and context |
+| `stopSequences` | `Array<string>?` | - | An array of stop sequences that will end the generation of content when encountered |
+| `retryAttempts` | `number?` | - | The number of times to retry fetching the AI response if the initial request fails |
+| `promptSettings` | `object?` | - | Customize prompt components through `overrides` and `additions`. See [Prompt Components](#prompt-components) for available components |
+| `promptSettings.overrides` | `Record<PromptComponentKey, string>?` | - | Replace default rules for specific components |
+| `promptSettings.additions` | `Record<PromptComponentKey, string>?` | - | Add additional rules to specific components |
+| `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
+| `contextSize` | `number?` | `75%` of model's max input token limit | Extracts text symmetrically around the cursor position. For default model (gpt-4o) this is 96000 tokens (128000 * 0.75) |
+| `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
+| `endpointUrl` | `string?` | - | The URL of the AI endpoint to use for generating content |
+| `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
+| `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
+| `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |
+| `moderation.enable` | `boolean?` | `false` | Enables content moderation for AI responses |
+| `moderation.key` | `string?` | - | API key for content moderation service |
+| `moderation.disableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
+| `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
+
+### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
 
-#### Available Components
+#### Component Types
 
 Each component can be customized using either `overrides` (to replace default rules) or `additions` (to add new rules):
 - `htmlFormatting`: Rules for HTML generation
@@ -155,88 +151,110 @@ Each component can be customized using either `overrides` (to replace default ru
 - `responseRules`: Core response generation rules
 - `inlineContent`: Inline content handling rules
 - `imageHandling`: Image element requirements
+- `referenceGuidelines`: Rules for handling referenced content
+- `contextRequirements`: Rules for context-aware generation
 
-#### Default Prompt Components
+#### Default Values
 
-##### Core Response Rules (`responseRules`)
+##### Response Rules
 ```typescript
-`Follow these step-by-step instructions to respond to user inputs:
-Analyze the CONTEXT section thoroughly to understand the existing content and its style
-Identify the specific requirements from the TASK section
-If markdown content is present, extract relevant information that aligns with the task
-Determine the appropriate tone and style based on the context
-Generate a response that seamlessly integrates with the existing content
-Format the response according to the HTML and structural requirements
-Verify that the response meets all formatting and content guidelines
-Core Response Generation Rules:
-Replace "@@@cursor@@@" with contextually appropriate content
-Maintain consistency with the surrounding text's tone and style
-Ensure the response flows naturally with the existing content
-Avoid repeating context verbatim
-Generate original content that adds value
-Follow the specified language requirements
-Adhere to all HTML formatting rules`
+Follow these step-by-step instructions to respond to user inputs:
+Identify the specific requirements from the TASK section.
+Do not include any markdown syntax in the response.
+Generate a response that seamlessly integrates with the existing content.
+Format the response according to the HTML and structural requirements.
+Verify that the response meets all formatting and content guidelines.
+If there is SELECTED_CONTENT I'll use only that content to answer
+the user's request in the TASK section, ignoring any additional CONTEXT
+or prior knowledge.
 ```
 
-##### HTML Formatting (`htmlFormatting`)
+##### HTML Formatting
 ```typescript
-`HTML Formatting Requirements:
-Generate valid HTML snippets only
-Use only the following allowed tags: ${getAllowedHtmlTags(this.editor).join(', ')}
-Ensure proper tag nesting
-Avoid empty elements
-Use semantic HTML where appropriate
-Maintain clean, readable HTML structure
-Follow block-level element rules
-Properly close all tags
-No inline styles unless specified
-No script or style tags
-First word must be a valid HTML tag
-Block elements must not contain other block elements`
+HTML Formatting Requirements:
+Generate valid HTML snippets only.
+Use only the following allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.
+Ensure proper tag nesting.
+Avoid empty elements.
+Use semantic HTML where appropriate.
+Maintain clean, readable HTML structure.
+Follow block-level element rules.
+Properly close all tags.
+No inline styles unless specified.
+No script or style tags.
+The first word must be a valid HTML tag.
+Block elements must not contain other block elements.
 ```
 
-##### Content Structure (`contentStructure`)
+##### Content Structure
 ```typescript
-`Content Structure Rules:
-Organize information logically
-Use appropriate paragraph breaks
-Maintain consistent formatting
-Follow document hierarchy
-Use appropriate list structures when needed
-Ensure proper content flow
-Respect existing document structure`
+Content Structure Rules:
+Organize information logically.
+Use appropriate paragraph breaks.
+Maintain consistent formatting.
+Follow document hierarchy.
+Use appropriate list structures when needed.
+Ensure proper content flow.
+Respect existing document structure.
 ```
 
-##### Tone Guidelines (`tone`)
+##### Tone Guidelines
 ```typescript
-`Language and Tone Guidelines:
-Match the formality level of the surrounding content
-Maintain consistent voice throughout the response
-Use appropriate technical terminology when relevant
-Ensure proper grammar and punctuation
-Avoid overly complex sentence structures
-Keep the tone engaging and reader-friendly
-Adapt style based on content type`
+Language and Tone Guidelines:
+Match the formality level of the surrounding content.
+Maintain a consistent voice throughout the response.
+Use appropriate technical terminology when relevant.
+Ensure proper grammar and punctuation.
+Avoid overly complex sentence structures.
+Keep the tone engaging and reader-friendly.
+Adapt style based on content type.
 ```
 
-##### Inline Content (`inlineContent`)
+##### Inline Content
 ```typescript
-`Inline Content Specific Rules:
-Determine content type (list, table, or inline)
-Format according to content type
-Ensure seamless integration
-Maintain proper nesting`
+Inline Content Specific Rules:
+Determine content type (list, table, or inline).
+Format according to content type.
+Ensure seamless integration.
+Maintain proper nesting.
 ```
 
-##### Image Handling (`imageHandling`)
+##### Image Handling
 ```typescript
-`Image Element Requirements:
-Every <img> must have src and alt attributes
-Format src URLs as: https://placehold.co/600x400?text=[alt_text]
-Alt text must be descriptive and meaningful`
+Image Element Requirements:
+Every <img> must have src and alt attributes.
+Format src URLs as: https://placehold.co/600x400?text=[alt_text].
+Alt text must be descriptive and meaningful.
 ```
 
-#### Prompt customization example
+##### Reference Guidelines
+```typescript
+Reference Content Rules:
+Use information from provided markdown to generate new text.
+Do not copy content verbatim.
+Ensure natural flow with existing context.
+Avoid markdown formatting in response.
+Consider whole markdown as single source.
+Generate requested percentage of content.
+```
+
+##### Context Requirements
+```typescript
+Context-Specific Rules:
+Replace "@@@cursor@@@" with contextually appropriate content.
+Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+NEVER copy or paraphrase context text.
+Verify zero phrase duplication.
+Analyze the CONTEXT section thoroughly 
+to understand the existing content and its style.
+Generate a response that seamlessly integrates 
+with the existing content.
+Determine the appropriate tone and style based
+on the context. Ensure the response flows 
+naturally with the existing content.
+```
+
+#### Customization Examples
 
 Override default rules:
 ```typescript
@@ -276,31 +294,11 @@ Use descriptive headings`
 
 Note: When using overrides, all default rules for that component are replaced. When using additions, new rules are appended to the existing defaults.
 
-
-This package was created by the [ckeditor5-package-generator](https://www.npmjs.com/package/ckeditor5-package-generator) package.
-
-## Table of contents for Development
-
-* [Developing the package](#developing-the-package)
-* [Available scripts](#available-scripts)
-  * [`start`](#start)
-  * [`test`](#test)
-  * [`lint`](#lint)
-  * [`stylelint`](#stylelint)
-  * [`build:dist`](#builddist)
-  * [`dll:build`](#dllbuild)
-  * [`dll:serve`](#dllserve)
-  * [`translations:collect`](#translationscollect)
-  * [`translations:download`](#translationsdownload)
-  * [`translations:upload`](#translationsupload)
-  * [`ts:build` and `ts:clear`](#tsbuild-and-tsclear)
-* [License](#license)
-
-## Developing the package
+## Development
 
 To read about the CKEditor 5 Framework, visit the [CKEditor 5 Framework documentation](https://ckeditor.com/docs/ckeditor5/latest/framework/index.html).
 
-## Available scripts
+### Available Scripts
 
 NPM scripts are a convenient way to provide commands in a project. They are defined in the `package.json` file and shared with people contributing to the project. It ensures developers use the same command with the same options (flags).
 

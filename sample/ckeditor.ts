@@ -23,6 +23,7 @@ import { Paragraph, ParagraphButtonUI } from '@ckeditor/ckeditor5-paragraph';
 import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
+import { AccessibilityHelp } from '@ckeditor/ckeditor5-ui';
 
 import AiAgent from '../src/aiagent.js';
 
@@ -51,7 +52,8 @@ ClassicEditor
 			CodeBlock,
 			Code,
 			Base64UploadAdapter,
-			SourceEditing
+			SourceEditing,
+			AccessibilityHelp
 		],
 		toolbar: [
 			'aiAgentButton',
@@ -74,7 +76,8 @@ ClassicEditor
 			'mediaEmbed',
 			'codeBlock',
 			'|',
-			'sourceEditing'
+			'sourceEditing',
+			'accessibilityHelp'
 		],
 		image: {
 			toolbar: [
@@ -93,10 +96,43 @@ ClassicEditor
 			]
 		},
 		aiAgent: {
-			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
-			apiKey: 'xxx',
-			temperature: 0.7,
-			model: 'gpt-4o'
+			apiKey: 'YOUR_API_KEY',
+			commandsDropdown: [
+				{
+					title: 'Style & Tone',
+					items: [
+						{
+							title: 'Make Professional',
+							command: 'Improve using formal, and respectful language conveying expertise. Keep the text formatting.'
+						},
+						{
+							title: 'Make Casual',
+							command: 'Rewrite in a friendly, conversational tone while maintaining the key points and formatting'
+						},
+						{
+							title: 'Make Technical',
+							command: 'Rewrite using precise technical language and industry terminology while preserving structure'
+						}
+					]
+				},
+				{
+					title: 'Enhance Content',
+					items: [
+						{
+							title: 'Add Examples',
+							command: 'Add relevant examples and use cases to illustrate the main points'
+						},
+						{
+							title: 'Add Statistics',
+							command: 'Enhance with relevant statistics and data points to support the content'
+						},
+						{
+							title: 'Expand Details',
+							command: 'Expand the current content with more detailed explanations and supporting information'
+						}
+					]
+				}
+			]
 		},
 		language: {
 			content: 'en',
@@ -154,9 +190,7 @@ ClassicEditor
 			]
 		},
 		aiAgent: {
-			apiKey: 'sk-proj-',
-			temperature: 0.7,
-			model: 'gpt-4o'
+			apiKey: 'YOUR_API_KEY'
 		},
 		language: {
 			content: 'en',

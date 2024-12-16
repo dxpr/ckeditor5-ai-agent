@@ -1,7 +1,7 @@
 /* style for placeholder */
 .place-holder {
 	position: fixed;
-	z-index: 100;
+	z-index: -1;
 	opacity: 0;
 	color: hsl(0, 0%, 50%);
 	transition-duration: 0.2s;
@@ -13,6 +13,7 @@
 .show-place-holder {
 	opacity: 1;
 	transition-duration: 1s;
+	z-index: 100;
 }
 
 /* style for response loader */
@@ -57,7 +58,7 @@
 
 .response-error {
 	position: fixed;
-	z-index: 100;
+	z-index: 9999;
 	color: hsl(0, 0%, 100%);
 	background: hsl(0, 39%, 60%);
 	width: auto;
@@ -167,4 +168,28 @@
 		transition: none;
 		/* Disable all transitions */
 	}
+}
+
+.ck-ai-commands-list .ck.ck-button.ck-list-item-button.ck-menu-group-title {
+	padding-left: 0.6em;
+	font-weight: 600;
+	color: var(--ck-color-base-text);
+}
+
+.ck-ai-commands-list .ck.ck-button.ck-list-item-button.ck-menu-group-title .ck-button__label {
+	opacity: 1;
+}
+
+.ck-ai-commands-list .ck.ck-reset.ck-list li:first-child {
+	padding: 1em;
+}
+
+.ck-ai-commands-list .ck-input-icon-wrapper {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+.ck-ai-commands-list .ck.ck-reset.ck-list li:first-child input {
+	padding-left: 25px;
 }

@@ -1,3 +1,3 @@
-import '/Users/meetshiroya/Personal/ckeditor5-ai-assist/tests/aiagent.ts';
-import '/Users/meetshiroya/Personal/ckeditor5-ai-assist/tests/index.ts';
-import '/Users/meetshiroya/Personal/ckeditor5-ai-assist/tests/util/text-utils.test.ts';
+import '/Users/jur/www/ckeditor5-ai-agent/tests/aiagent.ts';
+import '/Users/jur/www/ckeditor5-ai-agent/tests/index.ts';
+import '/Users/jur/www/ckeditor5-ai-agent/tests/util/text-utils.test.ts';

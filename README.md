@@ -227,6 +227,33 @@ Format src URLs as: https://placehold.co/600x400?text=[alt_text].
 Alt text must be descriptive and meaningful.
 ```
 
+##### Reference Guidelines
+```typescript
+Reference Content Rules:
+Use information from provided markdown to generate new text.
+Do not copy content verbatim.
+Ensure natural flow with existing context.
+Avoid markdown formatting in response.
+Consider whole markdown as single source.
+Generate requested percentage of content.
+```
+
+##### Context Requirements
+```typescript
+Context-Specific Rules:
+Replace "@@@cursor@@@" with contextually appropriate content.
+Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+NEVER copy or paraphrase context text.
+Verify zero phrase duplication.
+Analyze the CONTEXT section thoroughly 
+to understand the existing content and its style.
+Generate a response that seamlessly integrates 
+with the existing content.
+Determine the appropriate tone and style based
+on the context. Ensure the response flows 
+naturally with the existing content.
+```
+
 #### Customization Examples
 
 Override default rules:

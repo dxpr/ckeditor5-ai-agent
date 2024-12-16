@@ -1,6 +1,6 @@
 import type { ALL_MODERATION_FLAGS } from './const.js';
 export type AiModel = 'gpt-3.5-turbo' | 'gpt-4o' | 'gpt-4o-mini' | 'kavya-m1';
-export type PromptComponentKey = 'responseRules' | 'htmlFormatting' | 'contentStructure' | 'tone' | 'inlineContent' | 'imageHandling';
+export type PromptComponentKey = 'responseRules' | 'htmlFormatting' | 'contentStructure' | 'tone' | 'inlineContent' | 'imageHandling' | 'referenceGuidelines' | 'contextRequirements';
 export interface PromptSettings {
     overrides?: Partial<Record<PromptComponentKey, string>>;
     additions?: Partial<Record<PromptComponentKey, string>>;

@@ -390,7 +390,28 @@ function getDefaultRules(editor) {
             Every <img> must have src and alt attributes.
             Format src URLs as: https://placehold.co/600x400?text=[alt_text].
             Alt text must be descriptive and meaningful.
-        `
+        `,
+        referenceGuidelines: `
+			Use information from provided markdown to generate new text.
+			Do not copy content verbatim.
+			Ensure natural flow with existing context.
+			Avoid markdown formatting in response.
+			Consider whole markdown as single source.
+			Generate requested percentage of content.
+		`,
+        contextRequirements: `
+			Replace "@@@cursor@@@" with contextually appropriate content.
+			Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+			NEVER copy or paraphrase context text.
+			Verify zero phrase duplication.
+			Analyze the CONTEXT section thoroughly 
+			to understand the existing content and its style.
+			Generate a response that seamlessly integrates 
+			with the existing content.
+			Determine the appropriate tone and style based
+			on the context. Ensure the response flows 
+			naturally with the existing content.
+		`
     };
 }
 
@@ -403,7 +424,7 @@ class PromptHelper {
     constructor(editor, options = {}){
         this.editor = editor;
         const config = editor.config.get('aiAgent');
-        this.contextSize = config.contextSize ?? 4000;
+        this.contextSize = config.contextSize;
         this.promptSettings = config.promptSettings ?? {};
         this.debugMode = config.debugMode ?? false;
         this.editorContextRatio = options.editorContextRatio ?? 0.3;
@@ -468,7 +489,7 @@ class PromptHelper {
         const trimmedContext = `${contentBeforePrompt}\n${contentAfterPrompt}`;
         return trimmedContext.trim();
     }
-    formatFinalPrompt(request, context, markDownContents, isEditorEmpty, selectedContent) {
+    formatFinalPrompt(request, context, selectedContent, markDownContents, isEditorEmpty = false) {
         if (this.debugMode) {
             console.group('formatFinalPrompt Debug');
             console.log('Request:', request);
@@ -500,40 +521,21 @@ class PromptHelper {
                 corpus.push(`<SOURCE url="${content.url}">\n${content.content}\n</SOURCE>`);
             }
             corpus.push('</REFERENCE_CONTENT>');
+            // Use default referenceGuidelines
             corpus.push('\n<REFERENCE_GUIDELINES>');
-            corpus.push(trimMultilineString(`
-				Use information from provided markdown to generate new text.
-				Do not copy content verbatim.
-				Ensure natural flow with existing context.
-				Avoid markdown formatting in response.
-				Consider whole markdown as single source.
-				Generate requested percentage of content.
-			`));
+            corpus.push(this.getComponentContent('referenceGuidelines'));
             corpus.push('</REFERENCE_GUIDELINES>');
         }
-        // Instructions Section
-        corpus.push('\n<INSTRUCTIONS>');
-        corpus.push(`The response must follow the language code - ${contentLanguageCode}.`);
-        corpus.push('</INSTRUCTIONS>');
         // Context-Specific Instructions
         if (!isEditorEmpty && !selectedContent) {
             corpus.push('\n<CONTEXT_REQUIREMENTS>');
-            corpus.push(trimMultilineString(`
-				Replace "@@@cursor@@@" with contextually appropriate content.
-				Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
-				NEVER copy or paraphrase context text.
-				Verify zero phrase duplication.
-				Analyze the CONTEXT section thoroughly 
-				to understand the existing content and its style.
-				Generate a response that seamlessly integrates 
-				with the existing content.
-				Determine the appropriate tone and style based
-				on the context. Ensure the response flows 
-				naturally with the existing content.
-
-			`));
+            corpus.push(this.getComponentContent('contextRequirements'));
             corpus.push('</CONTEXT_REQUIREMENTS>');
         }
+        // Add language instructions back
+        corpus.push('\n<INSTRUCTIONS>');
+        corpus.push(`The response must follow the language code - ${contentLanguageCode}.`);
+        corpus.push('</INSTRUCTIONS>');
         // Debug Output
         if (this.debugMode) {
             console.group('AiAgent Final Prompt Debug');
@@ -541,6 +543,17 @@ class PromptHelper {
             console.groupEnd();
         }
         return corpus.map((text)=>removeLeadingSpaces(text)).join('\n');
+    }
+    getComponentContent(componentId) {
+        const defaultComponents = getDefaultRules(this.editor);
+        let content = defaultComponents[componentId];
+        if (this.promptSettings.overrides?.[componentId]) {
+            content = this.promptSettings.overrides[componentId];
+        }
+        if (this.promptSettings.additions?.[componentId]) {
+            content += '\n' + this.promptSettings.additions[componentId];
+        }
+        return trimMultilineString(content);
     }
     async generateMarkDownForUrls(urls) {
         try {
@@ -1338,7 +1351,7 @@ class AiAgentService {
 	*/ async generateGptPromptBasedOnUserPrompt(prompt, promptContainerText, selectedContent) {
         try {
             const context = this.promptHelper.trimContext(prompt, promptContainerText);
-            const request = selectedContent ? prompt : prompt.slice(1); // Remove the leading slash
+            const request = selectedContent ? prompt : prompt.slice(1);
             let markDownContents = [];
             const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
             const urls = prompt.match(urlRegex);
@@ -1350,7 +1363,7 @@ class AiAgentService {
                 markDownContents = this.promptHelper.allocateTokensToFetchedContent(prompt, markDownContents);
             }
             const isEditorEmpty = context === '@@@cursor@@@';
-            return this.promptHelper.formatFinalPrompt(request, context, markDownContents, isEditorEmpty, selectedContent);
+            return this.promptHelper.formatFinalPrompt(request, context, selectedContent, markDownContents, isEditorEmpty);
         } catch (error) {
             console.error(error);
             return null;
@@ -1935,7 +1948,7 @@ class AiAgent extends Plugin {
             model: this.DEFAULT_GPT_MODEL,
             apiKey: '',
             endpointUrl: this.DEFAULT_AI_END_POINT,
-            temperature: undefined,
+            temperature: 0.7,
             timeOutDuration: 45000,
             maxOutputTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxOutputTokens,
             maxInputTokens: TOKEN_LIMITS[this.DEFAULT_GPT_MODEL].maxInputContextTokens,

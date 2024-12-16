@@ -1,6 +1,6 @@
 {
   "name": "@dxpr/ckeditor5-ai-agent",
-  "version": "1.0.0-beta5",
+  "version": "1.0.0-beta6",
   "description": "A plugin for CKEditor 5.",
   "keywords": [
     "ckeditor",
@@ -38,6 +38,7 @@
     "lang",
     "src/**/*.js",
     "src/**/*.d.ts",
+    "src/**/*.json",
     "theme",
     "build",
     "ckeditor5-metadata.json"

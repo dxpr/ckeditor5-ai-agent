@@ -8,6 +8,9 @@ export function getDefaultRules(editor) {
             Generate a response that seamlessly integrates with the existing content.
             Format the response according to the HTML and structural requirements.
             Verify that the response meets all formatting and content guidelines.
+            If there is SELECTED_CONTENT I'll use only that content to answer
+			the user's request in the TASK section, ignoring any additional CONTEXT
+			or prior knowledge.
         `,
         htmlFormatting: `
             HTML Formatting Requirements:

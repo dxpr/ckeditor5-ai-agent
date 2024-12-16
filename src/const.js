@@ -37,3 +37,45 @@ export const ALL_MODERATION_FLAGS = [
     'violence/graphic'
 ];
 export const SHOW_ERROR_DURATION = 5000;
+export const AI_AGENT_DROPDOWN_MENU = [
+    {
+        title: 'Edit or review',
+        items: [
+            {
+                title: 'Improve Writing',
+                command: `Fix spelling mistakes, use proper grammar and apply good writing practices.
+					Do not lose the original meaning.\nYou must keep the text formatting.`
+            },
+            {
+                title: 'Make Shorter',
+                command: `Remove any repetitive, redundant, or non-essential writing in this
+					content without changing the meaning or losing any key information.`
+            },
+            {
+                title: 'Make Longer',
+                command: `Improve this content by using descriptive language and inserting
+					more information and more detailed explanations.\nYou must keep the text formatting.`
+            },
+            {
+                title: 'Simplify Language',
+                command: `Simplify the writing style of this content and reduce the complexity,
+					so that the content is easy to understand.\nYou must keep the text formatting`
+            }
+        ]
+    },
+    {
+        title: 'Generate from selection',
+        items: [
+            {
+                title: 'Summarize',
+                command: `Summarize this content into one paragraph of text. Include only the key ideas and conclusions.
+					Keep it short. Do not keep original text formatting`
+            },
+            {
+                title: 'Continue',
+                command: `Start with the provided content and write at the end of it continuing this topic.
+					Keep the added part short.\nYou must keep the text formatting`
+            }
+        ]
+    }
+];

@@ -122,7 +122,8 @@ export class PromptHelper {
 		request: string,
 		context: string,
 		markDownContents: Array<MarkdownContent>,
-		isEditorEmpty: boolean
+		isEditorEmpty: boolean,
+		selectedContent?: string
 	): string {
 		if ( this.debugMode ) {
 			console.group( 'formatFinalPrompt Debug' );
@@ -141,10 +142,16 @@ export class PromptHelper {
 		corpus.push( '</TASK>' );
 
 		// Context Section
-		if ( context?.length ) {
+		if ( context?.length && !selectedContent ) {
 			corpus.push( '\n<CONTEXT>' );
 			corpus.push( context );
 			corpus.push( '</CONTEXT>' );
+		}
+
+		if ( selectedContent ) {
+			corpus.push( '<SELECTED_CONTENT>' );
+			corpus.push( selectedContent );
+			corpus.push( '</SELECTED_CONTENT>' );
 		}
 
 		// Markdown Content Section
@@ -173,7 +180,7 @@ export class PromptHelper {
 		corpus.push( '</INSTRUCTIONS>' );
 
 		// Context-Specific Instructions
-		if ( !isEditorEmpty ) {
+		if ( !isEditorEmpty && !selectedContent ) {
 			corpus.push( '\n<CONTEXT_REQUIREMENTS>' );
 			corpus.push( trimMultilineString( `
 				Replace "@@@cursor@@@" with contextually appropriate content.

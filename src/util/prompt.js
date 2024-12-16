@@ -77,7 +77,7 @@ export class PromptHelper {
         const trimmedContext = `${contentBeforePrompt}\n${contentAfterPrompt}`;
         return trimmedContext.trim();
     }
-    formatFinalPrompt(request, context, markDownContents, isEditorEmpty) {
+    formatFinalPrompt(request, context, markDownContents, isEditorEmpty, selectedContent) {
         if (this.debugMode) {
             console.group('formatFinalPrompt Debug');
             console.log('Request:', request);
@@ -92,10 +92,15 @@ export class PromptHelper {
         corpus.push(request);
         corpus.push('</TASK>');
         // Context Section
-        if (context === null || context === void 0 ? void 0 : context.length) {
+        if ((context === null || context === void 0 ? void 0 : context.length) && !selectedContent) {
             corpus.push('\n<CONTEXT>');
             corpus.push(context);
             corpus.push('</CONTEXT>');
+        }
+        if (selectedContent) {
+            corpus.push('<SELECTED_CONTENT>');
+            corpus.push(selectedContent);
+            corpus.push('</SELECTED_CONTENT>');
         }
         // Markdown Content Section
         if (markDownContents === null || markDownContents === void 0 ? void 0 : markDownContents.length) {
@@ -120,7 +125,7 @@ export class PromptHelper {
         corpus.push(`The response must follow the language code - ${contentLanguageCode}.`);
         corpus.push('</INSTRUCTIONS>');
         // Context-Specific Instructions
-        if (!isEditorEmpty) {
+        if (!isEditorEmpty && !selectedContent) {
             corpus.push('\n<CONTEXT_REQUIREMENTS>');
             corpus.push(trimMultilineString(`
 				Replace "@@@cursor@@@" with contextually appropriate content.

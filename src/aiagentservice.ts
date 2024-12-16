@@ -421,11 +421,20 @@ export default class AiAgentService {
 				case 401:
 					errorMessage = t( 'Unauthorized: Please check your API key or permissions.' );
 					break;
+				case 403:
+					errorMessage = t( 'You are accessing the API from an unsupported country, region, or territory.' );
+					break;
 				case 404:
 					errorMessage = t( 'Not Found: The requested resource could not be located.' );
 					break;
+				case 429:
+					errorMessage = t( 'You are sending requests too quickly.' );
+					break;
 				case 500:
 					errorMessage = t( 'Internal Server Error: Please try again later.' );
+					break;
+				case 503:
+					errorMessage = t( 'Our servers are experiencing high traffic' );
 					break;
 				default:
 					errorMessage = t(

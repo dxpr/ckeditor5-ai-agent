@@ -30,8 +30,7 @@ export default class AiAgentUI extends Plugin {
 
 		const config = editor.config.get( 'aiAgent' );
 		this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
-		this.commandsDropdown = config?.commandsDropdown ?
-			[ ...AI_AGENT_DROPDOWN_MENU, ...config?.commandsDropdown ] : AI_AGENT_DROPDOWN_MENU;
+		this.commandsDropdown = config?.commandsDropdown ?? AI_AGENT_DROPDOWN_MENU;
 	}
 
 	public static get pluginName() {

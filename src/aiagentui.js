@@ -9,7 +9,7 @@ import { env } from 'ckeditor5/src/utils.js';
 import AiAgentService from './aiagentservice.js';
 export default class AiAgentUI extends Plugin {
     constructor(editor) {
-        var _a;
+        var _a, _b;
         super(editor);
         this.PLACEHOLDER_TEXT_ID = 'slash-placeholder';
         this.GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
@@ -18,8 +18,7 @@ export default class AiAgentUI extends Plugin {
         this.commandsDropdown = AI_AGENT_DROPDOWN_MENU;
         const config = editor.config.get('aiAgent');
         this.showErrorDuration = (_a = config === null || config === void 0 ? void 0 : config.showErrorDuration) !== null && _a !== void 0 ? _a : SHOW_ERROR_DURATION;
-        this.commandsDropdown = (config === null || config === void 0 ? void 0 : config.commandsDropdown) ?
-            [...AI_AGENT_DROPDOWN_MENU, ...config === null || config === void 0 ? void 0 : config.commandsDropdown] : AI_AGENT_DROPDOWN_MENU;
+        this.commandsDropdown = (_b = config === null || config === void 0 ? void 0 : config.commandsDropdown) !== null && _b !== void 0 ? _b : AI_AGENT_DROPDOWN_MENU;
     }
     static get pluginName() {
         return 'AiAgentUI';

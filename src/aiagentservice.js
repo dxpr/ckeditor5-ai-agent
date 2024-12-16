@@ -57,11 +57,13 @@ export default class AiAgentService {
             const equivalentView = mapper.toViewElement(parent);
             parentEquivalentHTML = equivalentView ? view.domConverter.mapViewToDom(equivalentView) : undefined;
             if (inlineSlash) {
+                editor.model.change(writer => {
+                    const endPosition = writer.createPositionAt(inlineSlash, 'end');
+                    writer.setSelection(endPosition);
+                });
                 this.isInlineInsertion = true;
-                const startingPath = inlineSlash.getPath();
-                const endingPath = position === null || position === void 0 ? void 0 : position.path;
-                const startPosition = model.createPositionFromPath(root, startingPath); // Example path
-                const endPosition = model.createPositionFromPath(root, endingPath); // Example path
+                const startPosition = editor.model.createPositionAt(inlineSlash, 0);
+                const endPosition = editor.model.createPositionAt(inlineSlash, 'end');
                 const range = model.createRange(startPosition, endPosition);
                 parentEquivalentHTML = (equivalentView === null || equivalentView === void 0 ? void 0 : equivalentView.parent) ?
                     view.domConverter.mapViewToDom(equivalentView.parent) :
@@ -74,6 +76,10 @@ export default class AiAgentService {
                 }
             }
             else if (parentEquivalentHTML) {
+                editor.model.change(writer => {
+                    const endPosition = writer.createPositionAt(position.parent, 'end');
+                    writer.setSelection(endPosition);
+                });
                 content = parentEquivalentHTML === null || parentEquivalentHTML === void 0 ? void 0 : parentEquivalentHTML.innerText;
             }
         }

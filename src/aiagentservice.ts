@@ -7,6 +7,7 @@ import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
 import { ALL_MODERATION_FLAGS, MODERATION_URL } from './const.js';
+import { getStatusMessage } from 'http-status-message';
 
 export default class AiAgentService {
 	private editor: Editor;
@@ -188,13 +189,18 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 
 			if ( !response.ok ) {
-				throw new Error( `HTTP error! status: ${ response.status }` );
+				const errorData = await response.json();
+				const error = {
+					status: response.status,
+					error: JSON.stringify( errorData )
+				};
+				throw new Error( JSON.stringify( error ) );
 			}
 
 			const data = await response.json() as ModerationResponse;
 
 			if ( !data?.results?.[ 0 ] ) {
-				throw new Error( 'Invalid moderation response format' );
+				throw new Error( t( 'Invalid moderation response format' ) );
 			}
 
 			const flags = ALL_MODERATION_FLAGS.filter( flag => !this.disableFlags.includes( flag ) );
@@ -219,17 +225,23 @@ export default class AiAgentService {
 			}
 
 			return true;
-		} catch ( error ) {
+		} catch ( error: any ) {
 			console.error( 'Moderation error:', error );
-
-			// Handle specific error cases
-			if ( error instanceof TypeError ) {
-				aiAgentContext.showError( t( 'Network error during content moderation' ) );
-			} else if ( error instanceof DOMException && error.name === 'AbortError' ) {
-				aiAgentContext.showError( t( 'Content moderation timed out' ) );
+			let errorMessage: string = t(
+				'We couldn\'t connect to the AI. Please check your internet'
+			);
+			const jsonMessage = this.isValidJSON( error?.message );
+			if ( jsonMessage ) {
+				const errorObj = JSON.parse( error?.message );
+				const status = errorObj.status;
+				errorMessage = t( getStatusMessage( status, 'formal' ).message );
 			} else {
-				aiAgentContext.showError( t( 'Error in content moderation' ) );
+				errorMessage = error?.message?.trim();
+				if ( errorMessage === 'ReadableStream not supported' ) {
+					errorMessage = t( 'Browser does not support readable streams' );
+				}
 			}
+			aiAgentContext.showError( errorMessage );
 
 			// Fail open for moderation errors
 			return true;
@@ -376,7 +388,6 @@ export default class AiAgentService {
 					}
 				}
 			}
-
 			this.processCompleted( blockID );
 		} catch ( error: any ) {
 			if ( this.abortGeneration ) {
@@ -384,62 +395,25 @@ export default class AiAgentService {
 			}
 
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
-			const errorIdentifier =
-				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
-			const isRetryableError = [
-				'AbortError',
-				'ReadableStream not supported',
-				'AiAgent: Fetch failed'
-			].includes( errorIdentifier );
-			if ( retries > 0 && isRetryableError ) {
-				console.warn( `Retrying... (${ retries } attempts left)` );
-				return await this.fetchAndProcessGptResponse(
-					prompt,
-					parent,
-					retries - 1
-				);
-			}
-			let errorMessage: string;
+			let errorMessage: string = t(
+				'We couldn\'t connect to the AI. Please check your internet'
+			);
+
 			const jsonMessage = this.isValidJSON( error?.message );
-			let status;
 			if ( jsonMessage ) {
 				const errorObj = JSON.parse( error?.message );
-				status = errorObj.status;
-			}
-
-			switch ( status || error?.name || error?.message?.trim() ) {
-				case 'ReadableStream not supported':
-					errorMessage = t(
-						'Browser does not support readable streams'
+				const status = errorObj.status;
+				errorMessage = t( getStatusMessage( status, 'formal' ).message );
+				if ( retries > 0 ) {
+					console.warn( `Retrying... (${ retries } attempts left)` );
+					return await this.fetchAndProcessGptResponse(
+						prompt,
+						parent,
+						retries - 1
 					);
-					break;
-				case 'AiAgent: Fetch failed':
-					errorMessage = t(
-						'We couldn\'t connect to the AI. Please check your internet'
-					);
-					break;
-				case 401:
-					errorMessage = t( 'Unauthorized: Please check your API key or permissions.' );
-					break;
-				case 403:
-					errorMessage = t( 'You are accessing the API from an unsupported country, region, or territory.' );
-					break;
-				case 404:
-					errorMessage = t( 'Not Found: The requested resource could not be located.' );
-					break;
-				case 429:
-					errorMessage = t( 'You are sending requests too quickly.' );
-					break;
-				case 500:
-					errorMessage = t( 'Internal Server Error: Please try again later.' );
-					break;
-				case 503:
-					errorMessage = t( 'Our servers are experiencing high traffic' );
-					break;
-				default:
-					errorMessage = t(
-						'We couldn\'t connect to the AI. Please check your internet'
-					);
+				}
+			} else {
+				errorMessage = error?.message?.trim();
 			}
 
 			aiAgentContext.showError( errorMessage );
@@ -478,11 +452,11 @@ export default class AiAgentService {
 		let label = t( 'Cancel Generation' );
 
 		if ( env.isMac ) {
-			label = t( '\u2318 + \u232B Cancel Generation' );
+			label = `\u2318 + \u232B ${ t( 'Cancel Generation' ) }`;
 		}
 
 		if ( env.isWindows ) {
-			label = t( 'Ctrl + \u232B Cancel Generation' );
+			label = `Ctrl + \u232B ${ t( 'Cancel Generation' ) }`;
 		}
 
 		view.set( {

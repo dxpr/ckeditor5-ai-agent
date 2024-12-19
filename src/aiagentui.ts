@@ -117,7 +117,7 @@ export default class AiAgentUI extends Plugin {
 			keystrokes: [
 				{
 					label: t( 'Insert slash command (AI Agent)' ),
-					keystroke: '/'
+					keystroke: 'Ctrl + /'
 				}
 			]
 		} );
@@ -197,9 +197,24 @@ export default class AiAgentUI extends Plugin {
 	 * usability.
 	 */
 	private addAiAgentButton(): void {
+		const editor = this.editor;
 		const t = this.editor.t;
 		const model = this.editor.model;
 		const viewDocument = this.editor.editing.view.document;
+
+		const executeCommand = () => {
+			this.editor.model.change( writer => {
+				const position = this.editor.model.document.selection.getLastPosition();
+				if ( position ) {
+					const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
+					writer.insertText( '/', inlineSlashContainer );
+					writer.insert( inlineSlashContainer, position );
+					const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
+					writer.setSelection( newPosition );
+				}
+			} );
+			this.editor.editing.view.focus();
+		};
 
 		this.editor.ui.componentFactory.add( 'aiAgentButton', locale => {
 			const dropdownView = createDropdown( locale, SplitButtonView );
@@ -211,20 +226,8 @@ export default class AiAgentUI extends Plugin {
 				tooltip: true
 			} );
 
-			// Add the functionality for the dropdown button's execute event
-			buttonView.on( 'execute', () => {
-				this.editor.model.change( writer => {
-					const position = this.editor.model.document.selection.getLastPosition();
-					if ( position ) {
-						const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
-						writer.insertText( '/', inlineSlashContainer );
-						writer.insert( inlineSlashContainer, position );
-						const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
-						writer.setSelection( newPosition );
-					}
-				} );
-				this.editor.editing.view.focus();
-			} );
+			buttonView.on( 'execute', executeCommand );
+
 			const menuView = new MenuBarMenuView( locale );
 			const listView = new MenuBarMenuListView( locale );
 			const searchContainer = new MenuBarMenuListItemView( locale, menuView );
@@ -303,6 +306,12 @@ export default class AiAgentUI extends Plugin {
 			}
 			dropdownView.panelView.children.add( listView );
 			return dropdownView;
+		} );
+
+		editor.editing.view.document.on( 'keydown', ( event, data ) => {
+			if ( data.ctrlKey && data.keyCode === 191 ) {
+				executeCommand();
+			}
 		} );
 	}
 

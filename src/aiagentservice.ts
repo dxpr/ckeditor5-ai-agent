@@ -189,12 +189,8 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 
 			if ( !response.ok ) {
-				const errorData = await response.json();
-				const error = {
-					status: response.status,
-					error: JSON.stringify( errorData )
-				};
-				throw new Error( JSON.stringify( error ) );
+				const error = await this.getError( response );
+				throw new Error( error );
 			}
 
 			const data = await response.json() as ModerationResponse;
@@ -300,12 +296,8 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 
 			if ( !response.ok ) {
-				const errorData = await response.json();
-				const error = {
-					status: response.status,
-					error: JSON.stringify( errorData )
-				};
-				throw new Error( JSON.stringify( error ) );
+				const error = await this.getError( response );
+				throw new Error( error );
 			}
 
 			aiAgentContext.hideLoader();
@@ -702,5 +694,31 @@ export default class AiAgentService {
 			console.error( error );
 			return null;
 		}
+	}
+
+	/**
+	 * Retrieves and formats the error message from the response object.
+	 *
+	 * @param response - The response object from the fetch request.
+	 * @returns A promise that resolves to a JSON string containing the status and error message.
+	 * The error message is extracted based on the content type of the response, which can be
+	 * in JSON, HTML, or plain text format.
+	 */
+	private async getError( response: Response ) {
+		let errorData = '';
+		const contentType = response.headers.get( 'content-type' );
+		if ( contentType && contentType.includes( 'application/json' ) ) {
+			errorData = JSON.stringify( await response.json() );
+		} else if ( contentType && contentType.includes( 'text/html' ) ) {
+			errorData = await response.text();
+		} else if ( contentType && contentType.includes( 'text/plain' ) ) {
+			errorData = await response.text();
+		}
+
+		const error = {
+			status: response.status,
+			error: errorData
+		};
+		return JSON.stringify( error );
 	}
 }

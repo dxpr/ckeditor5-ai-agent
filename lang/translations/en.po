@@ -10,11 +10,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgctxt ""
-"Tooltip displayed when hovering over the CKEditor 5 icon, providing "
-"information about AI assistance."
-msgid "Ai agent"
-msgstr "Ai agent"
+msgctxt "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance."
+msgid "AI Agent"
+msgstr "AI Agent"
 
 msgctxt "Hint suggesting users utilize AI for documenting or content creation."
 msgid "Type / to request AI content"
@@ -24,14 +22,6 @@ msgctxt "Appears when the Browser does not support readable streams."
 msgid "Browser does not support readable streams"
 msgstr "Browser does not support readable streams"
 
-msgctxt "Indicates a failure when processing the provided prompt."
-msgid "Oops! Something went wrong while processing your request"
-msgstr "Oops! Something went wrong while processing your request"
-
-msgctxt "Indicates an error when unable to parse the AI response stream."
-msgid "An error occurred while handling the AI's response"
-msgstr "An error occurred while handling the AI's response"
-
 msgctxt "Indicates a failure during a network call."
 msgid "We couldn't connect to the AI. Please check your internet"
 msgstr "We couldn't connect to the AI. Please check your internet"
@@ -40,6 +30,338 @@ msgctxt "Appears when an unsupported language code is provided."
 msgid "Unsupported language code"
 msgstr "Unsupported language code"
 
-msgctxt "Appears when jina reader fails to fetch url content"
-msgid "Failed to fetch content of : %0"
-msgstr "Failed to fetch content of : %0"
+msgctxt "Invalid moderation response format"
+msgid "Invalid moderation response format"
+msgstr "Invalid moderation response format"
+
+msgctxt "I'm sorry, but I cannot assist with that request."
+msgid "I'm sorry, but I cannot assist with that request."
+msgstr "I'm sorry, but I cannot assist with that request."
+
+msgctxt "Cancel Generation"
+msgid "Cancel Generation"
+msgstr "Cancel Generation"
+
+msgctxt "Insert slash command (AI Agent)"
+msgid "Insert slash command (AI Agent)"
+msgstr "Insert slash command (AI Agent)"
+
+msgctxt "Cancel AI Generation"
+msgid "Cancel AI Generation"
+msgstr "Cancel AI Generation"
+
+msgctxt "Search AI command"
+msgid "Search AI command"
+msgstr "Search AI command"
+
+msgctxt "Continue: The server has received the request headers and the client should proceed to send the request body."
+msgid "Continue: The server has received the request headers and the client should proceed to send the request body."
+msgstr "Continue: The server has received the request headers and the client should proceed to send the request body."
+
+msgctxt "Switching Protocols: The server is switching protocols according to the Upgrade header."
+msgid "Switching Protocols: The server is switching protocols according to the Upgrade header."
+msgstr "Switching Protocols: The server is switching protocols according to the Upgrade header."
+
+msgctxt "Processing: The server has received and is processing the request, but no response is available yet."
+msgid "Processing: The server has received and is processing the request, but no response is available yet."
+msgstr "Processing: The server has received and is processing the request, but no response is available yet."
+
+msgctxt "Early Hints: Used to return some response headers before final HTTP message."
+msgid "Early Hints: Used to return some response headers before final HTTP message."
+msgstr "Early Hints: Used to return some response headers before final HTTP message."
+
+msgctxt "The request has succeeded."
+msgid "The request has succeeded."
+msgstr "The request has succeeded."
+
+msgctxt "The request has been fulfilled and resulted in a new resource being created."
+msgid "The request has been fulfilled and resulted in a new resource being created."
+msgstr "The request has been fulfilled and resulted in a new resource being created."
+
+msgctxt "The request has been accepted for processing, but the processing has not been completed."
+msgid "The request has been accepted for processing, but the processing has not been completed."
+msgstr "The request has been accepted for processing, but the processing has not been completed."
+
+msgctxt "The server successfully processed the request, but is returning information from another source."
+msgid "The server successfully processed the request, but is returning information from another source."
+msgstr "The server successfully processed the request, but is returning information from another source."
+
+msgctxt "The server successfully processed the request, but is not returning any content."
+msgid "The server successfully processed the request, but is not returning any content."
+msgstr "The server successfully processed the request, but is not returning any content."
+
+msgctxt "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+msgid "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+msgstr "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+
+msgctxt "The server has fulfilled the partial GET request for the resource."
+msgid "The server has fulfilled the partial GET request for the resource."
+msgstr "The server has fulfilled the partial GET request for the resource."
+
+msgctxt "The response from the server contains multiple status codes, each with its own set of headers and body."
+msgid "The response from the server contains multiple status codes, each with its own set of headers and body."
+msgstr "The response from the server contains multiple status codes, each with its own set of headers and body."
+
+msgctxt "The server has encountered a previous condition and is applying it to this current request."
+msgid "The server has encountered a previous condition and is applying it to this current request."
+msgstr "The server has encountered a previous condition and is applying it to this current request."
+
+msgctxt "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+msgid "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+msgstr "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+
+msgctxt "The server has multiple options for the requested resource."
+msgid "The server has multiple options for the requested resource."
+msgstr "The server has multiple options for the requested resource."
+
+msgctxt "The requested resource has been permanently moved to a new location."
+msgid "The requested resource has been permanently moved to a new location."
+msgstr "The requested resource has been permanently moved to a new location."
+
+msgctxt "The requested resource has been found, but it has been temporarily moved to a different location."
+msgid "The requested resource has been found, but it has been temporarily moved to a different location."
+msgstr "The requested resource has been found, but it has been temporarily moved to a different location."
+
+msgctxt "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+msgid "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+msgstr "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+
+msgctxt "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+msgid "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+msgstr "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+
+msgctxt "The requested resource must be accessed through the proxy given by the Location field."
+msgid "The requested resource must be accessed through the proxy given by the Location field."
+msgstr "The requested resource must be accessed through the proxy given by the Location field."
+
+msgctxt "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+msgid "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+msgstr "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+
+msgctxt "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+msgid "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+msgstr "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+
+msgctxt "The server could not understand the request due to invalid syntax."
+msgid "The server could not understand the request due to invalid syntax."
+msgstr "The server could not understand the request due to invalid syntax."
+
+msgctxt "The request requires user authentication."
+msgid "The request requires user authentication."
+msgstr "The request requires user authentication."
+
+msgctxt "Payment is required to fulfill the request."
+msgid "Payment is required to fulfill the request."
+msgstr "Payment is required to fulfill the request."
+
+msgctxt "Access to the requested resource is forbidden."
+msgid "Access to the requested resource is forbidden."
+msgstr "Access to the requested resource is forbidden."
+
+msgctxt "The server could not find the requested resource."
+msgid "The server could not find the requested resource."
+msgstr "The server could not find the requested resource."
+
+msgctxt "The request method is not allowed for the requested resource."
+msgid "The request method is not allowed for the requested resource."
+msgstr "The request method is not allowed for the requested resource."
+
+msgctxt "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+msgid "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+msgstr "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+
+msgctxt "Proxy authentication is required to access the requested resource."
+msgid "Proxy authentication is required to access the requested resource."
+msgstr "Proxy authentication is required to access the requested resource."
+
+msgctxt "The server timed out waiting for the request."
+msgid "The server timed out waiting for the request."
+msgstr "The server timed out waiting for the request."
+
+msgctxt "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+msgid "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+msgstr "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+
+msgctxt "Gone. The requested resource is no longer available and will not be available again."
+msgid "Gone. The requested resource is no longer available and will not be available again."
+msgstr "Gone. The requested resource is no longer available and will not be available again."
+
+msgctxt "Length required. The server requires a Content-Length header to be included in the request."
+msgid "Length required. The server requires a Content-Length header to be included in the request."
+msgstr "Length required. The server requires a Content-Length header to be included in the request."
+
+msgctxt "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+msgid "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+msgstr "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+
+msgctxt "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+msgid "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+msgstr "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+
+msgctxt "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+msgid "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+msgstr "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+
+msgctxt "Unsupported media type. The server refuses to process the request because the media type is not supported."
+msgid "Unsupported media type. The server refuses to process the request because the media type is not supported."
+msgstr "Unsupported media type. The server refuses to process the request because the media type is not supported."
+
+msgctxt "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+msgid "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+msgstr "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+
+msgctxt "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+msgid "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+msgstr "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+
+msgctxt "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+msgid "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+msgstr "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+
+msgctxt "Misdirected request. The request was directed at a server that is not able to produce a response."
+msgid "Misdirected request. The request was directed at a server that is not able to produce a response."
+msgstr "Misdirected request. The request was directed at a server that is not able to produce a response."
+
+msgctxt "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+msgid "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+msgstr "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+
+msgctxt "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+msgid "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+msgstr "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+
+msgctxt "Failed dependency. The request failed because it depended on another request and that request failed."
+msgid "Failed dependency. The request failed because it depended on another request and that request failed."
+msgstr "Failed dependency. The request failed because it depended on another request and that request failed."
+
+msgctxt "Too early. The server is unwilling to risk processing a request that might be replayed."
+msgid "Too early. The server is unwilling to risk processing a request that might be replayed."
+msgstr "Too early. The server is unwilling to risk processing a request that might be replayed."
+
+msgctxt "Upgrade required. The client should switch to a different protocol."
+msgid "Upgrade required. The client should switch to a different protocol."
+msgstr "Upgrade required. The client should switch to a different protocol."
+
+msgctxt "Precondition required. The origin server requires the request to be conditional."
+msgid "Precondition required. The origin server requires the request to be conditional."
+msgstr "Precondition required. The origin server requires the request to be conditional."
+
+msgctxt "Too many requests. The user has sent too many requests in a given amount of time."
+msgid "Too many requests. The user has sent too many requests in a given amount of time."
+msgstr "Too many requests. The user has sent too many requests in a given amount of time."
+
+msgctxt "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+msgid "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+msgstr "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+
+msgctxt "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+msgid "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+msgstr "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+
+msgctxt "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+msgid "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+msgstr "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+
+msgctxt "Not Implemented. The server does not support the functionality required to fulfill the request."
+msgid "Not Implemented. The server does not support the functionality required to fulfill the request."
+msgstr "Not Implemented. The server does not support the functionality required to fulfill the request."
+
+msgctxt "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+msgid "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+msgstr "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+
+msgctxt "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+msgid "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+msgstr "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+
+msgctxt "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+msgid "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+msgstr "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+
+msgctxt "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+msgid "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+msgstr "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+
+msgctxt "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+msgid "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+msgstr "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+
+msgctxt "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+msgid "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+msgstr "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+
+msgctxt "Loop Detected. The server detected an infinite loop while processing the request."
+msgid "Loop Detected. The server detected an infinite loop while processing the request."
+msgstr "Loop Detected. The server detected an infinite loop while processing the request."
+
+msgctxt "Not Extended. Further extensions to the request are required for the server to fulfill it."
+msgid "Not Extended. Further extensions to the request are required for the server to fulfill it."
+msgstr "Not Extended. Further extensions to the request are required for the server to fulfill it."
+
+msgctxt "Network Authentication Required. The client needs to authenticate to gain network access."
+msgid "Network Authentication Required. The client needs to authenticate to gain network access."
+msgstr "Network Authentication Required. The client needs to authenticate to gain network access."
+
+msgctxt "Edit or review"
+msgid "Edit or review"
+msgstr "Edit or review"
+
+msgctxt "Improve Writing"
+msgid "Improve Writing"
+msgstr "Improve Writing"
+
+msgctxt "Make Shorter"
+msgid "Make Shorter"
+msgstr "Make Shorter"
+
+msgctxt "Make Longer"
+msgid "Make Longer"
+msgstr "Make Longer"
+
+msgctxt "Simplify Language"
+msgid "Simplify Language"
+msgstr "Simplify Language"
+
+msgctxt "Generate from selection"
+msgid "Generate from selection"
+msgstr "Generate from selection"
+
+msgctxt "Summarize"
+msgid "Summarize"
+msgstr "Summarize"
+
+msgctxt "Continue"
+msgid "Continue"
+msgstr "Continue"
+
+msgctxt "Style & Tone"
+msgid "Style & Tone"
+msgstr "Style & Tone"
+
+msgctxt "Make Professional"
+msgid "Make Professional"
+msgstr "Make Professional"
+
+msgctxt "Make Casual"
+msgid "Make Casual"
+msgstr "Make Casual"
+
+msgctxt "Make Technical"
+msgid "Make Technical"
+msgstr "Make Technical"
+
+msgctxt "Enhance Content"
+msgid "Enhance Content"
+msgstr "Enhance Content"
+
+msgctxt "Add Examples"
+msgid "Add Examples"
+msgstr "Add Examples"
+
+msgctxt "Add Statistics"
+msgid "Add Statistics"
+msgstr "Add Statistics"
+
+msgctxt "Expand Details"
+msgid "Expand Details"
+msgstr "Expand Details"

@@ -3,43 +3,365 @@ msgstr ""
 "Project-Id-Version: ckeditor 5-ai-agent\n"
 "PO-Revision-Date: 2024-09-05 11:18+0530\n"
 "Last-Translator: Meet Shiroya <meetshiroya@meets-macbook-air.local>\n"
-"Language-Team: French <traduc@traduc.org>\n"
-"Language: fr\n"
+"Language-Team: Hindi <traduc@traduc.org>\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt ""
-"Tooltip displayed when hovering over the CKEditor 5 icon, providing "
-"information about AI assistance."
-msgid "Ai agent"
-msgstr "Ai सहायक"
+msgctxt "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance."
+msgid "AI Agent"
+msgstr "एआई एजेंट"
 
 msgctxt "Hint suggesting users utilize AI for documenting or content creation."
 msgid "Type / to request AI content"
-msgstr "एआई सामग्री के लिए अनुरोध करने हेतु / टाइप करें"
+msgstr "/ टाइप करें एआई सामग्री का अनुरोध करने के लिए"
 
 msgctxt "Appears when the Browser does not support readable streams."
 msgid "Browser does not support readable streams"
-msgstr "ब्राउज़र पठनीय स्ट्रीम्स का समर्थन नहीं करता"
-
-msgctxt "Indicates a failure when processing the provided prompt."
-msgid "Oops! Something went wrong while processing your request"
-msgstr "ओह! आपकी अनुरोध को संसाधित करते समय कुछ गलत हुआ"
-
-msgctxt "Indicates an error when unable to parse the AI response stream."
-msgid "An error occurred while handling the AI's response"
-msgstr "एआई की प्रतिक्रिया को संभालते समय एक त्रुटि हुई"
+msgstr "ब्राउज़र पठनीय स्ट्रीम का समर्थन नहीं करता है"
 
 msgctxt "Indicates a failure during a network call."
 msgid "We couldn't connect to the AI. Please check your internet"
-msgstr "हम एआई से कनेक्ट नहीं हो सके। कृपया अपनी इंटरनेट कनेक्शन की जाँच करें"
+msgstr "हम एआई से कनेक्ट नहीं हो सके। कृपया अपना इंटरनेट जांचें"
 
 msgctxt "Appears when an unsupported language code is provided."
 msgid "Unsupported language code"
 msgstr "असमर्थित भाषा कोड"
 
-msgctxt "Appears when jina reader fails to fetch url content"
-msgid "Failed to fetch content of : %0"
-msgstr "सामग्री को प्राप्त करने में विफल हुआ: %0"
+msgctxt "Invalid moderation response format"
+msgid "Invalid moderation response format"
+msgstr "अमान्य मॉडरेशन प्रतिक्रिया प्रारूप"
+
+msgctxt "I'm sorry, but I cannot assist with that request."
+msgid "I'm sorry, but I cannot assist with that request."
+msgstr "मुझे खेद है, लेकिन मैं उस अनुरोध में सहायता नहीं कर सकता।"
+
+msgctxt "Cancel Generation"
+msgid "Cancel Generation"
+msgstr "जनरेशन रद्द करें"
+
+msgctxt "Insert slash command (AI Agent)"
+msgid "Insert slash command (AI Agent)"
+msgstr "स्लैश कमांड डालें (एआई एजेंट)"
+
+msgctxt "Cancel AI Generation"
+msgid "Cancel AI Generation"
+msgstr "एआई जनरेशन रद्द करें"
+
+msgctxt "Search AI command"
+msgid "Search AI command"
+msgstr "एआई कमांड खोजें"
+
+msgctxt "Continue: The server has received the request headers and the client should proceed to send the request body."
+msgid "Continue: The server has received the request headers and the client should proceed to send the request body."
+msgstr "जारी रखें: सर्वर ने अनुरोध हेडर प्राप्त कर लिया है और क्लाइंट को अनुरोध बॉडी भेजनी चाहिए।"
+
+msgctxt "Switching Protocols: The server is switching protocols according to the Upgrade header."
+msgid "Switching Protocols: The server is switching protocols according to the Upgrade header."
+msgstr "प्रोटोकॉल बदलना: सर्वर अपग्रेड हेडर के अनुसार प्रोटोकॉल बदल रहा है।"
+
+msgctxt "Processing: The server has received and is processing the request, but no response is available yet."
+msgid "Processing: The server has received and is processing the request, but no response is available yet."
+msgstr "प्रोसेसिंग: सर्वर ने अनुरोध प्राप्त कर लिया है और इसे संसाधित कर रहा है, लेकिन अभी कोई प्रतिक्रिया उपलब्ध नहीं है।"
+
+msgctxt "Early Hints: Used to return some response headers before final HTTP message."
+msgid "Early Hints: Used to return some response headers before final HTTP message."
+msgstr "प्रारंभिक संकेत: अंतिम HTTP संदेश से पहले कुछ प्रतिक्रिया हेडर लौटाने के लिए उपयोग किया जाता है।"
+
+msgctxt "The request has succeeded."
+msgid "The request has succeeded."
+msgstr "अनुरोध सफल रहा।"
+
+msgctxt "The request has been fulfilled and resulted in a new resource being created."
+msgid "The request has been fulfilled and resulted in a new resource being created."
+msgstr "अनुरोध पूरा हो गया है और एक नया संसाधन बनाया गया है।"
+
+msgctxt "The request has been accepted for processing, but the processing has not been completed."
+msgid "The request has been accepted for processing, but the processing has not been completed."
+msgstr "प्रसंस्करण के लिए अनुरोध स्वीकार कर लिया गया है, लेकिन प्रसंस्करण पूरा नहीं हुआ है।"
+
+msgctxt "The server successfully processed the request, but is returning information from another source."
+msgid "The server successfully processed the request, but is returning information from another source."
+msgstr "सर्वर ने अनुरोध को सफलतापूर्वक संसाधित कर दिया है, लेकिन यह किसी अन्य स्रोत से जानकारी लौटा रहा है।"
+
+msgctxt "The server successfully processed the request, but is not returning any content."
+msgid "The server successfully processed the request, but is not returning any content."
+msgstr "सर्वर ने अनुरोध को सफलतापूर्वक संसाधित कर दिया है, लेकिन कोई भी सामग्री वापस नहीं कर रहा है।"
+
+msgctxt "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+msgid "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+msgstr "सर्वर ने अनुरोध को सफलतापूर्वक संसाधित कर दिया है, लेकिन कोई भी सामग्री वापस नहीं कर रहा है। उपयोगकर्ता एजेंट को दस्तावेज़ दृश्य को रीसेट करना चाहिए।"
+
+msgctxt "The server has fulfilled the partial GET request for the resource."
+msgid "The server has fulfilled the partial GET request for the resource."
+msgstr "सर्वर ने संसाधन के लिए आंशिक GET अनुरोध को पूरा कर दिया है।"
+
+msgctxt "The response from the server contains multiple status codes, each with its own set of headers and body."
+msgid "The response from the server contains multiple status codes, each with its own set of headers and body."
+msgstr "सर्वर की प्रतिक्रिया में कई स्थिति कोड होते हैं, जिनमें से प्रत्येक का अपना हेडर और बॉडी होता है।"
+
+msgctxt "The server has encountered a previous condition and is applying it to this current request."
+msgid "The server has encountered a previous condition and is applying it to this current request."
+msgstr "सर्वर ने एक पूर्व स्थिति का सामना किया है और इसे वर्तमान अनुरोध पर लागू कर रहा है।"
+
+msgctxt "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+msgid "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+msgstr "सर्वर ने संसाधन के लिए GET अनुरोध को पूरा कर दिया है, और प्रतिक्रिया उस परिणाम का प्रतिनिधित्व करती है जो एक या अधिक उदाहरण हेरफेर लागू करने के बाद आया है।"
+
+msgctxt "The server has multiple options for the requested resource."
+msgid "The server has multiple options for the requested resource."
+msgstr "सर्वर के पास अनुरोधित संसाधन के लिए कई विकल्प हैं।"
+
+msgctxt "The requested resource has been permanently moved to a new location."
+msgid "The requested resource has been permanently moved to a new location."
+msgstr "अनुरोधित संसाधन को स्थायी रूप से एक नए स्थान पर स्थानांतरित कर दिया गया है।"
+
+msgctxt "The requested resource has been found, but it has been temporarily moved to a different location."
+msgid "The requested resource has been found, but it has been temporarily moved to a different location."
+msgstr "अनुरोधित संसाधन पाया गया है, लेकिन इसे अस्थायी रूप से किसी अन्य स्थान पर स्थानांतरित कर दिया गया है।"
+
+msgctxt "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+msgid "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+msgstr "अनुरोध के लिए प्रतिक्रिया किसी भिन्न URI के तहत पाई जा सकती है और उस संसाधन पर GET विधि का उपयोग करके पुनः प्राप्त की जानी चाहिए।"
+
+msgctxt "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+msgid "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+msgstr "पिछले अनुरोध के बाद से अनुरोधित संसाधन में कोई संशोधन नहीं किया गया है। यह अभी भी सर्वर की कैश से मान्य है।"
+
+msgctxt "The requested resource must be accessed through the proxy given by the Location field."
+msgid "The requested resource must be accessed through the proxy given by the Location field."
+msgstr "अनुरोधित संसाधन तक पहुंचने के लिए लोकेशन फ़ील्ड द्वारा दिए गए प्रॉक्सी के माध्यम से जाना आवश्यक है।"
+
+msgctxt "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+msgid "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+msgstr "अनुरोधित संसाधन को अस्थायी रूप से किसी अन्य स्थान पर स्थानांतरित कर दिया गया है, और ग्राहक को भविष्य के अनुरोधों के लिए उसी विधि का उपयोग जारी रखना चाहिए।"
+
+msgctxt "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+msgid "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+msgstr "अनुरोधित संसाधन को स्थायी रूप से किसी अन्य स्थान पर स्थानांतरित कर दिया गया है, और ग्राहक को भविष्य के सभी अनुरोधों के लिए नए URI का उपयोग करना चाहिए।"
+
+msgctxt "The server could not understand the request due to invalid syntax."
+msgid "The server could not understand the request due to invalid syntax."
+msgstr "अमान्य सिंटैक्स के कारण सर्वर अनुरोध को समझ नहीं सका।"
+
+msgctxt "The request requires user authentication."
+msgid "The request requires user authentication."
+msgstr "अनुरोध के लिए उपयोगकर्ता प्रमाणीकरण की आवश्यकता होती है।"
+
+msgctxt "Payment is required to fulfill the request."
+msgid "Payment is required to fulfill the request."
+msgstr "अनुरोध को पूरा करने के लिए भुगतान की आवश्यकता है।"
+
+msgctxt "Access to the requested resource is forbidden."
+msgid "Access to the requested resource is forbidden."
+msgstr "अनुरोधित संसाधन तक पहुंच निषिद्ध है।"
+
+msgctxt "The server could not find the requested resource."
+msgid "The server could not find the requested resource."
+msgstr "सर्वर अनुरोधित संसाधन को खोज नहीं सका।"
+
+msgctxt "The request method is not allowed for the requested resource."
+msgid "The request method is not allowed for the requested resource."
+msgstr "अनुरोधित संसाधन के लिए अनुरोध विधि की अनुमति नहीं है।"
+
+msgctxt "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+msgid "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+msgstr "सर्वर अनुरोध में भेजे गए एक्सेप्ट हेडर के अनुसार स्वीकार्य सामग्री उत्पन्न नहीं कर सकता।"
+
+msgctxt "Proxy authentication is required to access the requested resource."
+msgid "Proxy authentication is required to access the requested resource."
+msgstr "अनुरोधित संसाधन तक पहुंचने के लिए प्रॉक्सी प्रमाणीकरण की आवश्यकता है।"
+
+msgctxt "The server timed out waiting for the request."
+msgid "The server timed out waiting for the request."
+msgstr "अनुरोध की प्रतीक्षा करते समय सर्वर का समय समाप्त हो गया।"
+
+msgctxt "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+msgid "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+msgstr "संघर्ष का पता चला। वर्तमान संसाधन की स्थिति के साथ संघर्ष के कारण अनुरोध पूरा नहीं किया जा सका।"
+
+msgctxt "Gone. The requested resource is no longer available and will not be available again."
+msgid "Gone. The requested resource is no longer available and will not be available again."
+msgstr "चला गया। अनुरोधित संसाधन अब उपलब्ध नहीं है और फिर से उपलब्ध नहीं होगा।"
+
+msgctxt "Length required. The server requires a Content-Length header to be included in the request."
+msgid "Length required. The server requires a Content-Length header to be included in the request."
+msgstr "लंबाई आवश्यक है। सर्वर को अनुरोध में एक Content-Length हेडर शामिल करने की आवश्यकता है।"
+
+msgctxt "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+msgid "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+msgstr "पूर्व शर्त विफल हो गई। अनुरोध हेडर में निर्दिष्ट एक या अधिक शर्तें सर्वर पर परीक्षण के दौरान गलत पाई गईं।"
+
+msgctxt "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+msgid "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+msgstr "पेलोड बहुत बड़ा है। सर्वर अनुरोध को संसाधित करने से इनकार करता है क्योंकि पेलोड सर्वर की क्षमता से बड़ा है।"
+
+msgctxt "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+msgid "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+msgstr "URI बहुत लंबा है। सर्वर अनुरोध को संसाधित करने से इनकार करता है क्योंकि URI सर्वर की व्याख्या क्षमता से बड़ा है।"
+
+msgctxt "Unsupported media type. The server refuses to process the request because the media type is not supported."
+msgid "Unsupported media type. The server refuses to process the request because the media type is not supported."
+msgstr "असमर्थित मीडिया प्रकार। सर्वर अनुरोध को संसाधित करने से इनकार करता है क्योंकि मीडिया प्रकार समर्थित नहीं है।"
+
+msgctxt "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+msgid "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+msgstr "रेंज संतोषजनक नहीं है। सर्वर अनुरोध को पूरा नहीं कर सकता क्योंकि क्लाइंट ने फ़ाइल के उस हिस्से का अनुरोध किया है जिसे प्रदान नहीं किया जा सकता।"
+
+msgctxt "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+msgid "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+msgstr "अपेक्षा विफल हो गई। सर्वर 'Expect' अनुरोध हेडर फ़ील्ड द्वारा निर्दिष्ट आवश्यकताओं को पूरा करने में असमर्थ है।"
+
+msgctxt "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+msgid "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+msgstr "मैं एक टीपॉट हूं। सर्वर कॉफी बनाने से इनकार करता है क्योंकि यह स्थायी रूप से और जानबूझकर एक टीपॉट है।"
+
+msgctxt "Misdirected request. The request was directed at a server that is not able to produce a response."
+msgid "Misdirected request. The request was directed at a server that is not able to produce a response."
+msgstr "ग़लत दिशा में अनुरोध। अनुरोध को ऐसे सर्वर पर निर्देशित किया गया था जो प्रतिक्रिया उत्पन्न करने में सक्षम नहीं है।"
+
+msgctxt "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+msgid "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+msgstr "अप्रक्रियनीय इकाई। सर्वर अनुरोध इकाई के सामग्री प्रकार को समझता है, लेकिन इसमें शामिल निर्देशों को संसाधित नहीं कर सकता।"
+
+msgctxt "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+msgid "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+msgstr "लॉक किया गया। अनुरोधित संसाधन लॉक कर दिया गया है और केवल उसी क्लाइंट द्वारा एक्सेस किया जा सकता है जिसने इसे लॉक किया है।"
+
+msgctxt "Failed dependency. The request failed because it depended on another request and that request failed."
+msgid "Failed dependency. The request failed because it depended on another request and that request failed."
+msgstr "असफल निर्भरता। अनुरोध विफल हो गया क्योंकि यह किसी अन्य अनुरोध पर निर्भर था और वह अनुरोध विफल हो गया।"
+
+msgctxt "Too early. The server is unwilling to risk processing a request that might be replayed."
+msgid "Too early. The server is unwilling to risk processing a request that might be replayed."
+msgstr "बहुत जल्दी। सर्वर उस अनुरोध को संसाधित करने का जोखिम उठाने के लिए तैयार नहीं है जिसे पुनः चलाया जा सकता है।"
+
+msgctxt "Upgrade required. The client should switch to a different protocol."
+msgid "Upgrade required. The client should switch to a different protocol."
+msgstr "अपग्रेड आवश्यक। क्लाइंट को किसी भिन्न प्रोटोकॉल पर स्विच करना चाहिए।"
+
+msgctxt "Precondition required. The origin server requires the request to be conditional."
+msgid "Precondition required. The origin server requires the request to be conditional."
+msgstr "पूर्व शर्त आवश्यक। ओरिजिन सर्वर को अनुरोध के सशर्त होने की आवश्यकता है।"
+
+msgctxt "Too many requests. The user has sent too many requests in a given amount of time."
+msgid "Too many requests. The user has sent too many requests in a given amount of time."
+msgstr "बहुत अधिक अनुरोध। उपयोगकर्ता ने दिए गए समय में बहुत अधिक अनुरोध भेजे हैं।"
+
+msgctxt "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+msgid "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+msgstr "अनुरोध हेडर फ़ील्ड बहुत बड़े हैं। सर्वर अनुरोध को संसाधित करने से इनकार करता है क्योंकि इसके हेडर फ़ील्ड बहुत बड़े हैं।"
+
+msgctxt "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+msgid "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+msgstr "कानूनी कारणों से अनुपलब्ध। सर्वर कानूनी मांग के परिणामस्वरूप संसाधन तक पहुंच को अस्वीकार कर रहा है।"
+
+msgctxt "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+msgid "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+msgstr "आंतरिक सर्वर त्रुटि। सर्वर को एक अप्रत्याशित स्थिति का सामना करना पड़ा जिसने उसे अनुरोध को पूरा करने से रोका।"
+
+msgctxt "Not Implemented. The server does not support the functionality required to fulfill the request."
+msgid "Not Implemented. The server does not support the functionality required to fulfill the request."
+msgstr "अमल में नहीं लाया गया। सर्वर उस कार्यक्षमता का समर्थन नहीं करता जो अनुरोध को पूरा करने के लिए आवश्यक है।"
+
+msgctxt "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+msgid "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+msgstr "खराब गेटवे। सर्वर, एक गेटवे या प्रॉक्सी के रूप में कार्य करते हुए, उस अपस्ट्रीम सर्वर से एक अमान्य प्रतिक्रिया प्राप्त की जिसे वह अनुरोध को पूरा करने के प्रयास में पहुँचा।"
+
+msgctxt "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+msgid "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+msgstr "सेवा अनुपलब्ध। सर्वर वर्तमान में अस्थायी ओवरलोडिंग या सर्वर के रखरखाव के कारण अनुरोध को संभालने में असमर्थ है।"
+
+msgctxt "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+msgid "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+msgstr "गेटवे टाइमआउट। सर्वर, एक गेटवे या प्रॉक्सी के रूप में कार्य करते हुए, उस अपस्ट्रीम सर्वर से समय पर प्रतिक्रिया प्राप्त करने में विफल रहा जिसे वह अनुरोध को पूरा करने के प्रयास में पहुँचा।"
+
+msgctxt "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+msgid "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+msgstr "HTTP संस्करण समर्थित नहीं है। सर्वर उस HTTP प्रोटोकॉल संस्करण का समर्थन नहीं करता है जो अनुरोध में उपयोग किया गया था।"
+
+msgctxt "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+msgid "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+msgstr "वैरिएंट भी बातचीत करता है। अनुरोध के लिए पारदर्शी सामग्री वार्ता का परिणाम एक परिपत्र संदर्भ में होता है।"
+
+msgctxt "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+msgid "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+msgstr "अपर्याप्त भंडारण। सर्वर उस प्रतिनिधित्व को संग्रहीत करने में असमर्थ है जिसकी अनुरोध को पूरा करने के लिए आवश्यकता होती है।"
+
+msgctxt "Loop Detected. The server detected an infinite loop while processing the request."
+msgid "Loop Detected. The server detected an infinite loop while processing the request."
+msgstr "लूप का पता चला। सर्वर ने अनुरोध को संसाधित करते समय एक अनंत लूप का पता लगाया।"
+
+msgctxt "Not Extended. Further extensions to the request are required for the server to fulfill it."
+msgid "Not Extended. Further extensions to the request are required for the server to fulfill it."
+msgstr "विस्तारित नहीं। सर्वर को अनुरोध को पूरा करने के लिए आगे के एक्सटेंशन की आवश्यकता होती है।"
+
+msgctxt "Network Authentication Required. The client needs to authenticate to gain network access."
+msgid "Network Authentication Required. The client needs to authenticate to gain network access."
+msgstr "नेटवर्क प्रमाणीकरण आवश्यक। क्लाइंट को नेटवर्क एक्सेस प्राप्त करने के लिए प्रमाणीकरण करना आवश्यक है।"
+
+msgctxt "Edit or review"
+msgid "Edit or review"
+msgstr "संपादित करें या समीक्षा करें"
+
+msgctxt "Improve Writing"
+msgid "Improve Writing"
+msgstr "लेखन में सुधार करें"
+
+msgctxt "Make Shorter"
+msgid "Make Shorter"
+msgstr "छोटा करें"
+
+msgctxt "Make Longer"
+msgid "Make Longer"
+msgstr "लंबा करें"
+
+msgctxt "Simplify Language"
+msgid "Simplify Language"
+msgstr "भाषा को सरल बनाएं"
+
+msgctxt "Generate from selection"
+msgid "Generate from selection"
+msgstr "चयन से उत्पन्न करें"
+
+msgctxt "Summarize"
+msgid "Summarize"
+msgstr "सारांशित करें"
+
+msgctxt "Continue"
+msgid "Continue"
+msgstr "जारी रखें"
+
+msgctxt "Style & Tone"
+msgid "Style & Tone"
+msgstr "शैली और स्वर"
+
+msgctxt "Make Professional"
+msgid "Make Professional"
+msgstr "पेशेवर बनाएं"
+
+msgctxt "Make Casual"
+msgid "Make Casual"
+msgstr "आम बनाएं"
+
+msgctxt "Make Technical"
+msgid "Make Technical"
+msgstr "तकनीकी बनाएं"
+
+msgctxt "Enhance Content"
+msgid "Enhance Content"
+msgstr "सामग्री को बेहतर बनाएं"
+
+msgctxt "Add Examples"
+msgid "Add Examples"
+msgstr "उदाहरण जोड़ें"
+
+msgctxt "Add Statistics"
+msgid "Add Statistics"
+msgstr "सांख्यिकी जोड़ें"
+
+msgctxt "Expand Details"
+msgid "Expand Details"
+msgstr "विवरण बढ़ाएं"

@@ -1,20 +1,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ckeditor 5-ai-agent\n"
-"PO-Revision-Date: 2024-09-05 11:19+0530\n"
+"PO-Revision-Date: 2024-09-05 11:18+0530\n"
 "Last-Translator: Meet Shiroya <meetshiroya@meets-macbook-air.local>\n"
-"Language-Team: French <traduc@traduc.org>\n"
-"Language: fr\n"
+"Language-Team: Dutch <traduc@traduc.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt ""
-"Tooltip displayed when hovering over the CKEditor 5 icon, providing "
-"information about AI assistance."
-msgid "Ai agent"
-msgstr "AI assistent"
+msgctxt "Tooltip displayed when hovering over the CKEditor 5 icon, providing information about AI assistance."
+msgid "AI Agent"
+msgstr "AI-agent"
 
 msgctxt "Hint suggesting users utilize AI for documenting or content creation."
 msgid "Type / to request AI content"
@@ -24,22 +22,346 @@ msgctxt "Appears when the Browser does not support readable streams."
 msgid "Browser does not support readable streams"
 msgstr "Browser ondersteunt geen leesbare streams"
 
-msgctxt "Indicates a failure when processing the provided prompt."
-msgid "Oops! Something went wrong while processing your request"
-msgstr "Oeps! Er ging iets mis bij het verwerken van je verzoek"
-
-msgctxt "Indicates an error when unable to parse the AI response stream."
-msgid "An error occurred while handling the AI's response"
-msgstr "Er is een fout opgetreden bij het verwerken van de AI-reactie"
-
 msgctxt "Indicates a failure during a network call."
 msgid "We couldn't connect to the AI. Please check your internet"
-msgstr "We konden geen verbinding maken met de AI. Controleer je internetverbinding"
+msgstr "We konden geen verbinding maken met de AI. Controleer uw internetverbinding"
 
 msgctxt "Appears when an unsupported language code is provided."
 msgid "Unsupported language code"
 msgstr "Niet-ondersteunde taalcode"
 
-msgctxt "Appears when jina reader fails to fetch url content"
-msgid "Failed to fetch content of : %0"
-msgstr "Het is niet gelukt om de inhoud van : %0"
+msgctxt "Invalid moderation response format"
+msgid "Invalid moderation response format"
+msgstr "Ongeldig moderatie-antwoordformaat"
+
+msgctxt "I'm sorry, but I cannot assist with that request."
+msgid "I'm sorry, but I cannot assist with that request."
+msgstr "Het spijt me, maar ik kan niet helpen met dat verzoek."
+
+msgctxt "Cancel Generation"
+msgid "Cancel Generation"
+msgstr "Generatie annuleren"
+
+msgctxt "Insert slash command (AI Agent)"
+msgid "Insert slash command (AI Agent)"
+msgstr "Voeg schuine-streep-commando in (AI-agent)"
+
+msgctxt "Cancel AI Generation"
+msgid "Cancel AI Generation"
+msgstr "AI-generatie annuleren"
+
+msgctxt "Search AI command"
+msgid "Search AI command"
+msgstr "Zoek AI-commando"
+
+msgctxt "Continue: The server has received the request headers and the client should proceed to send the request body."
+msgid "Continue: The server has received the request headers and the client should proceed to send the request body."
+msgstr "Doorgaan: De server heeft de aanvraagheaders ontvangen en de client moet doorgaan met het verzenden van de aanvraaginhoud."
+
+msgctxt "Switching Protocols: The server is switching protocols according to the Upgrade header."
+msgid "Switching Protocols: The server is switching protocols according to the Upgrade header."
+msgstr "Wisselen van protocollen: De server wisselt van protocollen volgens de Upgrade-header."
+
+msgctxt "Processing: The server has received and is processing the request, but no response is available yet."
+msgid "Processing: The server has received and is processing the request, but no response is available yet."
+msgstr "Verwerken: De server heeft het verzoek ontvangen en is het aan het verwerken, maar er is nog geen antwoord beschikbaar."
+
+msgctxt "Early Hints: Used to return some response headers before final HTTP message."
+msgid "Early Hints: Used to return some response headers before final HTTP message."
+msgstr "Vroege hints: Wordt gebruikt om enkele antwoordheaders terug te sturen voordat het definitieve HTTP-bericht wordt verzonden."
+
+msgctxt "The request has succeeded."
+msgid "The request has succeeded."
+msgstr "Het verzoek is geslaagd."
+
+msgctxt "The request has been fulfilled and resulted in a new resource being created."
+msgid "The request has been fulfilled and resulted in a new resource being created."
+msgstr "Het verzoek is uitgevoerd en heeft geresulteerd in het aanmaken van een nieuwe bron."
+
+msgctxt "The request has been accepted for processing, but the processing has not been completed."
+msgid "The request has been accepted for processing, but the processing has not been completed."
+msgstr "Het verzoek is geaccepteerd voor verwerking, maar de verwerking is nog niet voltooid."
+
+msgctxt "The server successfully processed the request, but is returning information from another source."
+msgid "The server successfully processed the request, but is returning information from another source."
+msgstr "De server heeft het verzoek met succes verwerkt, maar geeft informatie terug van een andere bron."
+
+msgctxt "The server successfully processed the request, but is not returning any content."
+msgid "The server successfully processed the request, but is not returning any content."
+msgstr "De server heeft het verzoek met succes verwerkt, maar geeft geen inhoud terug."
+
+msgctxt "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+msgid "The server successfully processed the request, but is not returning any content. The user agent should reset the document view."
+msgstr "De server heeft het verzoek met succes verwerkt, maar geeft geen inhoud terug. De gebruikersagent moet de documentweergave opnieuw instellen."
+
+msgctxt "The server has fulfilled the partial GET request for the resource."
+msgid "The server has fulfilled the partial GET request for the resource."
+msgstr "De server heeft het gedeeltelijke GET-verzoek voor de bron uitgevoerd."
+
+msgctxt "The response from the server contains multiple status codes, each with its own set of headers and body."
+msgid "The response from the server contains multiple status codes, each with its own set of headers and body."
+msgstr "De reactie van de server bevat meerdere statuscodes, elk met zijn eigen set headers en inhoud."
+
+msgctxt "The server has encountered a previous condition and is applying it to this current request."
+msgid "The server has encountered a previous condition and is applying it to this current request."
+msgstr "De server heeft een eerdere voorwaarde ondervonden en past deze toe op dit huidige verzoek."
+
+msgctxt "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+msgid "The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
+msgstr "De server heeft een GET-verzoek voor de bron voltooid, en de reactie is een weergave van het resultaat van een of meer instantie-manipulaties die zijn toegepast op de huidige instantie."
+
+msgctxt "The server has multiple options for the requested resource."
+msgid "The server has multiple options for the requested resource."
+msgstr "De server heeft meerdere opties voor de opgevraagde bron."
+
+msgctxt "The requested resource has been permanently moved to a new location."
+msgid "The requested resource has been permanently moved to a new location."
+msgstr "De opgevraagde bron is permanent verplaatst naar een nieuwe locatie."
+
+msgctxt "The requested resource has been found, but it has been temporarily moved to a different location."
+msgid "The requested resource has been found, but it has been temporarily moved to a different location."
+msgstr "De opgevraagde bron is gevonden, maar is tijdelijk verplaatst naar een andere locatie."
+
+msgctxt "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+msgid "The response to the request can be found under a different URI and should be retrieved using a GET method on that resource."
+msgstr "De reactie op het verzoek is te vinden onder een andere URI en moet worden opgehaald met een GET-methode voor die bron."
+
+msgctxt "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+msgid "The requested resource has not been modified since the last request. It is still valid from the server's cache."
+msgstr "De opgevraagde bron is sinds het laatste verzoek niet gewijzigd. Het is nog steeds geldig vanuit de cache van de server."
+
+msgctxt "The requested resource must be accessed through the proxy given by the Location field."
+msgid "The requested resource must be accessed through the proxy given by the Location field."
+msgstr "De opgevraagde bron moet worden benaderd via de proxy die wordt opgegeven in het locatieveld."
+
+msgctxt "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+msgid "The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests."
+msgstr "De opgevraagde bron is tijdelijk verplaatst naar een andere locatie, en de client moet dezelfde methode blijven gebruiken voor toekomstige verzoeken."
+
+msgctxt "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+msgid "The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests."
+msgstr "De opgevraagde bron is permanent verplaatst naar een andere locatie, en de client moet de nieuwe URI gebruiken voor alle toekomstige verzoeken."
+
+msgctxt "The server could not understand the request due to invalid syntax."
+msgid "The server could not understand the request due to invalid syntax."
+msgstr "De server kon het verzoek niet begrijpen vanwege ongeldige syntaxis."
+
+msgctxt "The request requires user authentication."
+msgid "The request requires user authentication."
+msgstr "Het verzoek vereist gebruikersauthenticatie."
+
+msgctxt "Payment is required to fulfill the request."
+msgid "Payment is required to fulfill the request."
+msgstr "Betaling is vereist om het verzoek te voltooien."
+
+msgctxt "Access to the requested resource is forbidden."
+msgid "Access to the requested resource is forbidden."
+msgstr "Toegang tot de opgevraagde bron is verboden."
+
+msgctxt "The server could not find the requested resource."
+msgid "The server could not find the requested resource."
+msgstr "De server kon de opgevraagde bron niet vinden."
+
+msgctxt "The request method is not allowed for the requested resource."
+msgid "The request method is not allowed for the requested resource."
+msgstr "De verzoekmethode is niet toegestaan voor de opgevraagde bron."
+
+msgctxt "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+msgid "The server cannot generate content that is acceptable according to the Accept headers sent in the request."
+msgstr "De server kan geen inhoud genereren die acceptabel is volgens de Accept-headers die in het verzoek zijn verzonden."
+
+msgctxt "Proxy authentication is required to access the requested resource."
+msgid "Proxy authentication is required to access the requested resource."
+msgstr "Proxy-authenticatie is vereist om toegang te krijgen tot de opgevraagde bron."
+
+msgctxt "The server timed out waiting for the request."
+msgid "The server timed out waiting for the request."
+msgstr "De server heeft de tijdsduur voor het wachten op het verzoek overschreden."
+
+msgctxt "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+msgid "Conflict detected. The request could not be completed due to a conflict with the current state of the resource."
+msgstr "Conflict gedetecteerd. Het verzoek kon niet worden voltooid vanwege een conflict met de huidige status van de bron."
+
+msgctxt "Gone. The requested resource is no longer available and will not be available again."
+msgid "Gone. The requested resource is no longer available and will not be available again."
+msgstr "Verdwenen. De opgevraagde bron is niet langer beschikbaar en zal niet opnieuw beschikbaar zijn."
+
+msgctxt "Length required. The server requires a Content-Length header to be included in the request."
+msgid "Length required. The server requires a Content-Length header to be included in the request."
+msgstr "Lengte vereist. De server vereist dat een Content-Length-header in het verzoek wordt opgenomen."
+
+msgctxt "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+msgid "Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server."
+msgstr "Voorwaarde mislukt. Een of meer voorwaarden die in de verzoekheaders zijn gespecificeerd, werden als onwaar beoordeeld bij het testen op de server."
+
+msgctxt "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+msgid "Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process."
+msgstr "Lading te groot. De server weigert het verzoek te verwerken omdat de lading groter is dan de server bereid of in staat is te verwerken."
+
+msgctxt "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+msgid "URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret."
+msgstr "URI te lang. De server weigert het verzoek te verwerken omdat de URI langer is dan de server wil interpreteren."
+
+msgctxt "Unsupported media type. The server refuses to process the request because the media type is not supported."
+msgid "Unsupported media type. The server refuses to process the request because the media type is not supported."
+msgstr "Niet-ondersteund mediatype. De server weigert het verzoek te verwerken omdat het mediatype niet wordt ondersteund."
+
+msgctxt "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+msgid "Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided."
+msgstr "Bereik niet bevredigend. De server kan het verzoek niet inwilligen omdat de client om een deel van het bestand heeft gevraagd dat niet kan worden geleverd."
+
+msgctxt "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+msgid "Expectation failed. The server is unable to meet the requirements specified by the Expect request header field."
+msgstr "Verwachting mislukt. De server kan niet voldoen aan de vereisten die zijn gespecificeerd in het veld Expect-verzoekheader."
+
+msgctxt "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+msgid "I'm a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot."
+msgstr "Ik ben een theepot. De server weigert koffie te zetten omdat het permanent en opzettelijk een theepot is."
+
+msgctxt "Misdirected request. The request was directed at a server that is not able to produce a response."
+msgid "Misdirected request. The request was directed at a server that is not able to produce a response."
+msgstr "Verkeerd gericht verzoek. Het verzoek was gericht aan een server die niet in staat is een reactie te geven."
+
+msgctxt "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+msgid "Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions."
+msgstr "Niet-verwerkbare entiteit. De server begrijpt het inhoudstype van de verzoekentiteit, maar kan de daarin opgenomen instructies niet verwerken."
+
+msgctxt "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+msgid "Locked. The requested resource is locked and can only be accessed by the client that locked it."
+msgstr "Vergrendeld. De gevraagde bron is vergrendeld en kan alleen worden geopend door de client die het heeft vergrendeld."
+
+msgctxt "Failed dependency. The request failed because it depended on another request and that request failed."
+msgid "Failed dependency. The request failed because it depended on another request and that request failed."
+msgstr "Afhankelijke fout. Het verzoek is mislukt omdat het afhankelijk was van een ander verzoek en dat verzoek is mislukt."
+
+msgctxt "Too early. The server is unwilling to risk processing a request that might be replayed."
+msgid "Too early. The server is unwilling to risk processing a request that might be replayed."
+msgstr "Te vroeg. De server is niet bereid het risico te nemen om een verzoek te verwerken dat mogelijk opnieuw wordt afgespeeld."
+
+msgctxt "Upgrade required. The client should switch to a different protocol."
+msgid "Upgrade required. The client should switch to a different protocol."
+msgstr "Upgrade vereist. De client moet overschakelen naar een ander protocol."
+
+msgctxt "Precondition required. The origin server requires the request to be conditional."
+msgid "Precondition required. The origin server requires the request to be conditional."
+msgstr "Voorwaarde vereist. De oorspronkelijke server vereist dat het verzoek voorwaardelijk is."
+
+msgctxt "Too many requests. The user has sent too many requests in a given amount of time."
+msgid "Too many requests. The user has sent too many requests in a given amount of time."
+msgstr "Te veel verzoeken. De gebruiker heeft te veel verzoeken verzonden in een bepaalde periode."
+
+msgctxt "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+msgid "Request header fields too large. The server is unwilling to process the request because its header fields are too large."
+msgstr "Verzoekheader-velden te groot. De server weigert het verzoek te verwerken omdat de header-velden te groot zijn."
+
+msgctxt "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+msgid "Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand."
+msgstr "Niet beschikbaar om juridische redenen. De server weigert toegang tot de bron als gevolg van een juridische eis."
+
+msgctxt "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+msgid "Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request."
+msgstr "Interne serverfout. De server heeft een onverwachte toestand ondervonden die het onmogelijk maakte om het verzoek in te willigen."
+
+msgctxt "Not Implemented. The server does not support the functionality required to fulfill the request."
+msgid "Not Implemented. The server does not support the functionality required to fulfill the request."
+msgstr "Niet geïmplementeerd. De server ondersteunt de functionaliteit die vereist is om het verzoek te voltooien niet."
+
+msgctxt "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+msgid "Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."
+msgstr "Bad Gateway. De server, die fungeert als gateway of proxy, ontving een ongeldige reactie van de upstream-server die hij benaderde bij het proberen het verzoek te vervullen."
+
+msgctxt "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+msgid "Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server."
+msgstr "Service niet beschikbaar. De server is momenteel niet in staat om het verzoek te verwerken vanwege tijdelijke overbelasting of onderhoud van de server."
+
+msgctxt "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+msgid "Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request."
+msgstr "Gateway-time-out. De server, die fungeert als gateway of proxy, ontving niet tijdig een reactie van de upstream-server die hij benaderde bij het proberen het verzoek te vervullen."
+
+msgctxt "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+msgid "HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request."
+msgstr "HTTP-versie niet ondersteund. De server ondersteunt de HTTP-protocolversie die in het verzoek is gebruikt niet."
+
+msgctxt "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+msgid "Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference."
+msgstr "Variant onderhandelt ook. Transparante inhoudsonderhandeling voor het verzoek resulteert in een cirkelverwijzing."
+
+msgctxt "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+msgid "Insufficient Storage. The server is unable to store the representation needed to complete the request."
+msgstr "Onvoldoende opslag. De server kan de representatie die nodig is om het verzoek te voltooien, niet opslaan."
+
+msgctxt "Loop Detected. The server detected an infinite loop while processing the request."
+msgid "Loop Detected. The server detected an infinite loop while processing the request."
+msgstr "Lus gedetecteerd. De server detecteerde een oneindige lus tijdens het verwerken van het verzoek."
+
+msgctxt "Not Extended. Further extensions to the request are required for the server to fulfill it."
+msgid "Not Extended. Further extensions to the request are required for the server to fulfill it."
+msgstr "Niet uitgebreid. Verdere uitbreidingen van het verzoek zijn vereist voor de server om het te vervullen."
+
+msgctxt "Network Authentication Required. The client needs to authenticate to gain network access."
+msgid "Network Authentication Required. The client needs to authenticate to gain network access."
+msgstr "Netwerkverificatie vereist. De client moet zich authenticeren om toegang te krijgen tot het netwerk."
+
+msgctxt "Edit or review"
+msgid "Edit or review"
+msgstr "Bewerken of beoordelen"
+
+msgctxt "Improve Writing"
+msgid "Improve Writing"
+msgstr "Schrijven verbeteren"
+
+msgctxt "Make Shorter"
+msgid "Make Shorter"
+msgstr "Maak korter"
+
+msgctxt "Make Longer"
+msgid "Make Longer"
+msgstr "Maak langer"
+
+msgctxt "Simplify Language"
+msgid "Simplify Language"
+msgstr "Vereenvoudig taal"
+
+msgctxt "Generate from selection"
+msgid "Generate from selection"
+msgstr "Genereren uit selectie"
+
+msgctxt "Summarize"
+msgid "Summarize"
+msgstr "Samenvatten"
+
+msgctxt "Continue"
+msgid "Continue"
+msgstr "Doorgaan"
+
+msgctxt "Style & Tone"
+msgid "Style & Tone"
+msgstr "Stijl en toon"
+
+msgctxt "Make Professional"
+msgid "Make Professional"
+msgstr "Maak professioneel"
+
+msgctxt "Make Casual"
+msgid "Make Casual"
+msgstr "Maak informeel"
+
+msgctxt "Make Technical"
+msgid "Make Technical"
+msgstr "Maak technisch"
+
+msgctxt "Enhance Content"
+msgid "Enhance Content"
+msgstr "Inhoud verbeteren"
+
+msgctxt "Add Examples"
+msgid "Add Examples"
+msgstr "Voorbeelden toevoegen"
+
+msgctxt "Add Statistics"
+msgid "Add Statistics"
+msgstr "Statistieken toevoegen"
+
+msgctxt "Expand Details"
+msgid "Expand Details"
+msgstr "Details uitbreiden"

@@ -7,6 +7,7 @@ import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
 import { ALL_MODERATION_FLAGS, MODERATION_URL } from './const.js';
+import { getStatusMessage } from 'http-status-message';
 
 export default class AiAgentService {
 	private editor: Editor;
@@ -188,13 +189,14 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 
 			if ( !response.ok ) {
-				throw new Error( `HTTP error! status: ${ response.status }` );
+				const error = await this.getError( response );
+				throw new Error( error );
 			}
 
 			const data = await response.json() as ModerationResponse;
 
 			if ( !data?.results?.[ 0 ] ) {
-				throw new Error( 'Invalid moderation response format' );
+				throw new Error( t( 'Invalid moderation response format' ) );
 			}
 
 			const flags = ALL_MODERATION_FLAGS.filter( flag => !this.disableFlags.includes( flag ) );
@@ -219,17 +221,23 @@ export default class AiAgentService {
 			}
 
 			return true;
-		} catch ( error ) {
+		} catch ( error: any ) {
 			console.error( 'Moderation error:', error );
-
-			// Handle specific error cases
-			if ( error instanceof TypeError ) {
-				aiAgentContext.showError( t( 'Network error during content moderation' ) );
-			} else if ( error instanceof DOMException && error.name === 'AbortError' ) {
-				aiAgentContext.showError( t( 'Content moderation timed out' ) );
+			let errorMessage: string = t(
+				'We couldn\'t connect to the AI. Please check your internet'
+			);
+			const jsonMessage = this.isValidJSON( error?.message );
+			if ( jsonMessage ) {
+				const errorObj = JSON.parse( error?.message );
+				const status = errorObj.status;
+				errorMessage = t( getStatusMessage( status, 'formal' ).message );
 			} else {
-				aiAgentContext.showError( t( 'Error in content moderation' ) );
+				errorMessage = error?.message?.trim();
+				if ( errorMessage === 'ReadableStream not supported' ) {
+					errorMessage = t( 'Browser does not support readable streams' );
+				}
 			}
+			aiAgentContext.showError( errorMessage );
 
 			// Fail open for moderation errors
 			return true;
@@ -288,7 +296,8 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 
 			if ( !response.ok ) {
-				throw new Error( 'Fetch failed' );
+				const error = await this.getError( response );
+				throw new Error( error );
 			}
 
 			aiAgentContext.hideLoader();
@@ -380,7 +389,6 @@ export default class AiAgentService {
 					}
 				}
 			}
-
 			this.processCompleted( blockID );
 		} catch ( error: any ) {
 			if ( this.abortGeneration ) {
@@ -388,42 +396,45 @@ export default class AiAgentService {
 			}
 
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
-			const errorIdentifier =
-				( error?.message || '' ).trim() || ( error?.name || '' ).trim();
-			const isRetryableError = [
-				'AbortError',
-				'ReadableStream not supported',
-				'AiAgent: Fetch failed'
-			].includes( errorIdentifier );
-			if ( retries > 0 && isRetryableError ) {
-				console.warn( `Retrying... (${ retries } attempts left)` );
-				return await this.fetchAndProcessGptResponse(
-					prompt,
-					parent,
-					retries - 1
-				);
-			}
-			let errorMessage: string;
-			switch ( error?.name || error?.message?.trim() ) {
-				case 'ReadableStream not supported':
-					errorMessage = t(
-						'Browser does not support readable streams'
+			let errorMessage: string = t(
+				'We couldn\'t connect to the AI. Please check your internet'
+			);
+
+			const jsonMessage = this.isValidJSON( error?.message );
+			if ( jsonMessage ) {
+				const errorObj = JSON.parse( error?.message );
+				const status = errorObj.status;
+				errorMessage = t( getStatusMessage( status, 'formal' ).message );
+				if ( retries > 0 ) {
+					console.warn( `Retrying... (${ retries } attempts left)` );
+					return await this.fetchAndProcessGptResponse(
+						prompt,
+						parent,
+						retries - 1
 					);
-					break;
-				case 'AiAgent: Fetch failed':
-					errorMessage = t(
-						'We couldn\'t connect to the AI. Please check your internet'
-					);
-					break;
-				default:
-					errorMessage = t(
-						'We couldn\'t connect to the AI. Please check your internet'
-					);
+				}
+			} else {
+				errorMessage = error?.message?.trim();
 			}
 
 			aiAgentContext.showError( errorMessage );
 		} finally {
 			this.editor.disableReadOnlyMode( this.aiAgentFeatureLockId );
+		}
+	}
+
+	/**
+	 * Checks if a given string is a valid JSON format.
+	 *
+	 * @param str - The string to be validated as JSON.
+	 * @returns True if the string is valid JSON, otherwise false.
+	 */
+	private isValidJSON( str: string ): boolean {
+		try {
+			JSON.parse( str );
+			return true;
+		} catch ( error ) {
+			return false;
 		}
 	}
 
@@ -442,11 +453,11 @@ export default class AiAgentService {
 		let label = t( 'Cancel Generation' );
 
 		if ( env.isMac ) {
-			label = t( '\u2318 + \u232B Cancel Generation' );
+			label = `\u2318 + \u232B ${ t( 'Cancel Generation' ) }`;
 		}
 
 		if ( env.isWindows ) {
-			label = t( 'Ctrl + \u232B Cancel Generation' );
+			label = `Ctrl + \u232B ${ t( 'Cancel Generation' ) }`;
 		}
 
 		view.set( {
@@ -729,5 +740,31 @@ export default class AiAgentService {
 			console.error( error );
 			return null;
 		}
+	}
+
+	/**
+	 * Retrieves and formats the error message from the response object.
+	 *
+	 * @param response - The response object from the fetch request.
+	 * @returns A promise that resolves to a JSON string containing the status and error message.
+	 * The error message is extracted based on the content type of the response, which can be
+	 * in JSON, HTML, or plain text format.
+	 */
+	private async getError( response: Response ) {
+		let errorData = '';
+		const contentType = response.headers.get( 'content-type' );
+		if ( contentType && contentType.includes( 'application/json' ) ) {
+			errorData = JSON.stringify( await response.json() );
+		} else if ( contentType && contentType.includes( 'text/html' ) ) {
+			errorData = await response.text();
+		} else if ( contentType && contentType.includes( 'text/plain' ) ) {
+			errorData = await response.text();
+		}
+
+		const error = {
+			status: response.status,
+			error: errorData
+		};
+		return JSON.stringify( error );
 	}
 }

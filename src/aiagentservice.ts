@@ -17,7 +17,6 @@ export default class AiAgentService {
 	private timeOutDuration: number;
 	private maxTokens: number;
 	private retryAttempts: number;
-	private streamContent: boolean;
 	private stopSequences: Array<string>;
 	private aiAgentFeatureLockId = Symbol( 'ai-agent-feature' );
 	private promptHelper: PromptHelper;
@@ -50,7 +49,6 @@ export default class AiAgentService {
 		this.maxTokens = config.maxOutputTokens ?? config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
-		this.streamContent = config.streamContent ?? true;
 		this.moderationKey = config.moderation?.key ?? '';
 		this.moderationEnable = config.moderation?.enable ?? false;
 		this.disableFlags = config.moderation?.disableFlags ?? [];
@@ -611,15 +609,9 @@ export default class AiAgentService {
 				const position = this.editor.model.document.selection.getLastPosition();
 				const tempParagraph: HTMLElement = document.createElement( 'div' );
 				tempParagraph.innerHTML = content;
-				await this.htmlParser.insertAsText( tempParagraph || '', position ?? undefined, this.streamContent );
+				await this.htmlParser.insertAsText( tempParagraph || '', position ?? undefined );
 			} else {
-				if ( this.streamContent ) {
-					// Existing complex content processing logic
-					await this.proceedHtmlResponse( content );
-				} else {
-					// Use the simple HTML insertion method
-					await this.htmlParser.insertSimpleHtml( content );
-				}
+				await this.proceedHtmlResponse( content );
 			}
 
 			console.log( '--- End of processContent ---' );

@@ -132,7 +132,6 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
 | `endpointUrl` | `string?` | - | The URL of the AI endpoint to use for generating content |
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
-| `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
 | `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |
 | `moderation.enable` | `boolean?` | `false` | Enables content moderation for AI responses |
 | `moderation.key` | `string?` | - | API key for content moderation service |

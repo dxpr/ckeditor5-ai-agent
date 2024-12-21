@@ -233,12 +233,12 @@ export default class AiAgentUI extends Plugin {
 			labeledFieldView.label = t( 'Search AI command' );
 
 			// Create a wrapper div for the icon and input
-			const wrapper = document.createElement( 'div' );
-			wrapper.className = 'ck-input-icon-wrapper';
+			const wrapper = document.createElement( 'span' );
+			wrapper.className = 'ck-input-icon-wrapper ck-reset_all-excluded';
 
 			// Create and add the icon
 			const iconSpan = document.createElement( 'span' );
-			iconSpan.className = 'ck-input-search-icon';
+			iconSpan.className = 'ck-input-search-icon ck-reset_all-excluded';
 			iconSpan.innerHTML = searchIcon;
 			wrapper.appendChild( iconSpan );
 

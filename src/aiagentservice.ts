@@ -299,8 +299,6 @@ export default class AiAgentService {
 			this.clearParentContent( parent );
 			// this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
 
-			let insertParent = true;
-
 			this.cancelGenerationButton( blockID, controller );
 
 			editor.model.change( writer => {
@@ -314,27 +312,9 @@ export default class AiAgentService {
 					const aiTag = writer.createElement( 'ai-tag', {
 						id: blockID
 					} );
-					const parent = position.parent as Element;
-					if ( parent ) {
-						if ( parent.parent?.name === 'tableCell' ) {
-							insertParent = false;
-						} else if ( parent.getAttribute( 'listType' ) === 'bulleted' ) {
-							insertParent = false;
-						}
-					}
 
-					let parentContent = '';
-					for ( const child of parent.getChildren() ) {
-						if ( child.is( '$text' ) ) {
-							parentContent += child.data;
-						}
-					}
-
-					const nextLinePosition = parentContent ?
-						writer.createPositionAt( position.parent, 'after' ) :
-						writer.createPositionAt( position.parent, 'before' );
-
-					writer.insert( aiTag, insertParent ? nextLinePosition : position );
+					const nextLinePosition = writer.createPositionAt( position.parent, 'after' );
+					writer.insert( aiTag, nextLinePosition );
 					const newPosition = writer.createPositionAt( aiTag, 'end' );
 					writer.setSelection( newPosition );
 				}

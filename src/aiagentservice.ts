@@ -315,6 +315,11 @@ export default class AiAgentService {
 			editor.model.change( writer => {
 				const position = editor.model.document.selection.getLastPosition();
 				if ( position ) {
+					const aiTagInline = writer.createElement( 'ai-tag', {
+						id: `${ blockID }-inline`
+					} );
+					writer.insert( aiTagInline, position );
+
 					const aiTag = writer.createElement( 'ai-tag', {
 						id: blockID
 					} );
@@ -372,6 +377,10 @@ export default class AiAgentService {
 							const content = data.choices[ 0 ]?.delta?.content;
 							if ( content !== null && content !== undefined ) {
 								contentBuffer += content;
+								// if ( this.htmlParser.isCompleteHtmlChunk( contentBuffer ) ) {
+								// 	await this.processContent( contentBuffer );
+								// 	contentBuffer = '';
+								// }
 							}
 							await this.updateContent( contentBuffer, blockID );
 						} catch ( parseError ) {
@@ -502,7 +511,10 @@ export default class AiAgentService {
 		}
 
 		const editorData = editor.getData();
-		let editorContent = editorData.replace( /<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '' );
+		let editorContent = editorData.replace( new RegExp( `<ai-tag id="${ blockID }-inline">&nbsp;</ai-tag>`, 'g' ), '' );
+		editorContent = editorContent.replace( new RegExp( `<ai-tag id="${ blockID }">&nbsp;</ai-tag>`, 'g' ), '' );
+		editorContent = editorContent.replace( /<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '' );
+		editorContent = editorContent.replace( `<ai-tag id="${ blockID }-inline">`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
 		editor.setData( editorContent );
 	}
@@ -540,23 +552,57 @@ export default class AiAgentService {
 	 */
 	private async updateContent( newHtml: string, blockID: string ): Promise<void> {
 		const editor = this.editor;
-		editor.model.change( writer => {
-			const root = editor.model.document.getRoot();
-			if ( root ) {
-				const childrens = this.getViewChildrens( root, blockID );
-				const targetElement = childrens.length ? childrens[ 0 ] : null;
+		const tempParagraph: HTMLElement = document.createElement( 'div' );
+		tempParagraph.innerHTML = newHtml;
+		let textContent = '';
 
-				if ( targetElement ) {
-					const range = editor.model.createRangeIn( targetElement );
-					writer.remove( range );
-
-					const viewFragment = editor.data.processor.toView( newHtml );
-					const modelFragment = editor.data.toModel( viewFragment );
-
-					writer.insert( modelFragment, targetElement, 'end' );
-				}
+		const firstChild = tempParagraph.firstElementChild;
+		if ( firstChild ) {
+			const tagName = firstChild?.tagName;
+			if ( tagName !== 'UL' && tagName !== 'TABLE' ) {
+				textContent = firstChild.textContent ?? '';
+				tempParagraph.removeChild( firstChild );
 			}
-		} );
+		} else {
+			textContent = tempParagraph.innerHTML;
+			tempParagraph.innerHTML = '';
+		}
+		if ( textContent ) {
+			editor.model.change( writer => {
+				const root = editor.model.document.getRoot();
+				if ( root ) {
+					const childrens = this.getViewChildrens( root, `${ blockID }-inline` );
+					const targetElement = childrens.length ? childrens[ 0 ] : null;
+
+					if ( targetElement ) {
+						const range = editor.model.createRangeIn( targetElement );
+						writer.remove( range );
+						writer.insertText( textContent, targetElement, 'end' );
+					}
+				}
+			} );
+		}
+
+		if ( tempParagraph.innerHTML ) {
+			editor.model.change( writer => {
+				const root = editor.model.document.getRoot();
+				if ( root ) {
+					const childrens = this.getViewChildrens( root, blockID );
+					const targetElement = childrens.length ? childrens[ 0 ] : null;
+
+					if ( targetElement ) {
+						const range = editor.model.createRangeIn( targetElement );
+						writer.remove( range );
+
+						const viewFragment = editor.data.processor.toView( tempParagraph.innerHTML );
+						const modelFragment = editor.data.toModel( viewFragment );
+
+						writer.insert( modelFragment, targetElement, 'end' );
+					}
+				}
+			} );
+		}
+
 		await new Promise( resolve => setTimeout( resolve ) );
 	}
 

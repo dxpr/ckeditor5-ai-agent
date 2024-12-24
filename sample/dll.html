@@ -87,15 +87,29 @@
 <script src="../node_modules/@ckeditor/ckeditor5-media-embed/build/media-embed.js"></script>
 <script src="../node_modules/@ckeditor/ckeditor5-list/build/list.js"></script>
 <script src="../node_modules/@ckeditor/ckeditor5-table/build/table.js"></script>
-<script src="../node_modules/@ckeditor/ckeditor5-table/build/translations/es.js"></script>
-<script src="../node_modules/@ckeditor/ckeditor5-table/build/translations/hi.js"></script>
 
-
-<!-- The "@dxpr/ckeditor5-ai-agent" package DLL build is served from the `build/` directory -->
+<!-- The "@dxpr/ckeditor5-ai-agent" package DLL build -->
 <script src="../build/ai-agent.js"></script>
-<script src="../build/translations/hi.js"></script>
+
+<!-- Heading translations for format dropdown -->
+<script src="../node_modules/@ckeditor/ckeditor5-heading/build/translations/ar.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-heading/build/translations/es.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-heading/build/translations/hi.js"></script>
+
+<!-- Basic styles translations -->
+<script src="../node_modules/@ckeditor/ckeditor5-basic-styles/build/translations/ar.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-basic-styles/build/translations/es.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-basic-styles/build/translations/hi.js"></script>
+
+<!-- Block quote translations -->
+<script src="../node_modules/@ckeditor/ckeditor5-block-quote/build/translations/ar.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-block-quote/build/translations/es.js"></script>
+<script src="../node_modules/@ckeditor/ckeditor5-block-quote/build/translations/hi.js"></script>
+
+<!-- Your AI Agent translations -->
+<script src="../build/translations/ar.js"></script>
 <script src="../build/translations/es.js"></script>
-<script src="../build/translations/nl.js"></script>
+<script src="../build/translations/hi.js"></script>
 
 <script>
 	console.log( 'Objects exported by the DLL build:', CKEditor5[ 'aiAgent' ] );
@@ -170,9 +184,10 @@
 				apiKey: 'YOUR_API_KEY'
 			},
 			language: {
-				content:'en',
-				ui:'es'
-			}
+				content:'ar',
+				ui:'ar'
+			}	
+
 		} )
 		.then( editor => {
 			window.editor = editor;

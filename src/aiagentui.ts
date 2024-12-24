@@ -13,24 +13,25 @@ import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import aiAgentIcon from '../theme/icons/ai-agent.svg';
 import searchIcon from '../theme/icons/search.svg';
 import { aiAgentContext } from './aiagentcontext.js';
-import { AI_AGENT_DROPDOWN_MENU, SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
+import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 import { env } from 'ckeditor5/src/utils.js';
 import AiAgentService from './aiagentservice.js';
+import { getDefaultAiAgentDropdownMenu } from './util/translations.js';
 
 export default class AiAgentUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
 	public GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
 	public GPT_RESPONSE_ERROR_ID = 'gpt-error';
 	private showErrorDuration: number = SHOW_ERROR_DURATION;
-	private commandsDropdown = AI_AGENT_DROPDOWN_MENU;
+	private commandsDropdown = getDefaultAiAgentDropdownMenu( this.editor );
 
 	constructor( editor: Editor ) {
 		super( editor );
 
 		const config = editor.config.get( 'aiAgent' );
 		this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
-		this.commandsDropdown = config?.commandsDropdown ?? AI_AGENT_DROPDOWN_MENU;
+		this.commandsDropdown = config?.commandsDropdown ?? getDefaultAiAgentDropdownMenu( editor );
 	}
 
 	public static get pluginName() {
@@ -276,7 +277,7 @@ export default class AiAgentUI extends Plugin {
 				const titleView = new MenuBarMenuListItemView( locale, menuView );
 				const titleButton = new MenuBarMenuListItemButtonView( locale );
 				titleButton.set( {
-					label: t( group.title ),
+					label: group.title,
 					class: 'ck-menu-group-title',
 					isEnabled: false
 				} );
@@ -287,7 +288,7 @@ export default class AiAgentUI extends Plugin {
 					const listItemView = new MenuBarMenuListItemView( locale, menuView );
 					const buttonView = new MenuBarMenuListItemButtonView( locale );
 					buttonView.set( {
-						label: t( item.title ),
+						label: item.title,
 						class: 'ck-menu-item',
 						isEnabled: false
 					} );

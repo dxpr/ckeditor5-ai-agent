@@ -114,11 +114,23 @@ export default class AiAgentUI extends Plugin {
 		this.addGptErrorToolTip();
 		this.addAiAgentButton();
 
-		editor.accessibility.addKeystrokeInfos( {
+		editor.accessibility.addKeystrokeInfoGroup( {
+			id: 'ai-agent',
+			categoryId: 'navigation',
+			label: t( 'AI Agent' ),
 			keystrokes: [
 				{
-					label: t( 'Insert slash command (AI Agent)' ),
-					keystroke: 'Ctrl + /'
+					label: t( 'Slash Command: Open the AI Command Menu in an Empty Field' ),
+					keystroke: '/'
+				},
+				{
+					// eslint-disable-next-line max-len
+					label: t( 'Force Insert Slash Command: Add a Slash Command Within Existing Text' ),
+					keystroke: env.isMac ? 'Cmd + /' : 'Ctrl + /'
+				},
+				{
+					label: t( 'Cancel AI Generation' ),
+					keystroke: env.isMac ? 'Cmd + Backspace' : 'Ctrl + Backspace'
 				}
 			]
 		} );
@@ -134,22 +146,6 @@ export default class AiAgentUI extends Plugin {
 		editor.model.schema.extend( '$block', { allowIn: 'ai-tag' } );
 
 		this.addCustomTagConversions();
-		let keystroke = '';
-		if ( env.isMac ) {
-			keystroke = 'Cmd + Backspace';
-		}
-
-		if ( env.isWindows ) {
-			keystroke = 'Ctrl + Backspace';
-		}
-		editor.accessibility.addKeystrokeInfos( {
-			keystrokes: [
-				{
-					label: t( 'Cancel AI Generation' ),
-					keystroke
-				}
-			]
-		} );
 	}
 
 	private addCustomTagConversions(): void {
@@ -310,7 +306,7 @@ export default class AiAgentUI extends Plugin {
 		} );
 
 		editor.editing.view.document.on( 'keydown', ( event, data ) => {
-			if ( data.ctrlKey && data.keyCode === 191 ) {
+			if ( ( data.ctrlKey || data.metaKey ) && data.keyCode === 191 ) {
 				executeCommand();
 			}
 		} );

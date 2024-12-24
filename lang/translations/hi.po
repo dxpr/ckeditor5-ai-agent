@@ -333,35 +333,3 @@ msgstr "सारांशित करें"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "जारी रखें"
-
-msgctxt "Style & Tone"
-msgid "Style & Tone"
-msgstr "शैली और स्वर"
-
-msgctxt "Make Professional"
-msgid "Make Professional"
-msgstr "पेशेवर बनाएं"
-
-msgctxt "Make Casual"
-msgid "Make Casual"
-msgstr "आम बनाएं"
-
-msgctxt "Make Technical"
-msgid "Make Technical"
-msgstr "तकनीकी बनाएं"
-
-msgctxt "Enhance Content"
-msgid "Enhance Content"
-msgstr "सामग्री को बेहतर बनाएं"
-
-msgctxt "Add Examples"
-msgid "Add Examples"
-msgstr "उदाहरण जोड़ें"
-
-msgctxt "Add Statistics"
-msgid "Add Statistics"
-msgstr "सांख्यिकी जोड़ें"
-
-msgctxt "Expand Details"
-msgid "Expand Details"
-msgstr "विवरण बढ़ाएं"

@@ -7,7 +7,7 @@ import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
 import { ALL_MODERATION_FLAGS, MODERATION_URL } from './const.js';
-import { getStatusMessage } from 'http-status-message';
+import { getErrorMessages } from './util/translations.js';
 
 export default class AiAgentService {
 	private editor: Editor;
@@ -230,7 +230,7 @@ export default class AiAgentService {
 			if ( jsonMessage ) {
 				const errorObj = JSON.parse( error?.message );
 				const status = errorObj.status;
-				errorMessage = t( getStatusMessage( status, 'formal' ).message );
+				errorMessage = getErrorMessages( status, editor );
 			} else {
 				errorMessage = error?.message?.trim();
 				if ( errorMessage === 'ReadableStream not supported' ) {
@@ -404,7 +404,7 @@ export default class AiAgentService {
 			if ( jsonMessage ) {
 				const errorObj = JSON.parse( error?.message );
 				const status = errorObj.status;
-				errorMessage = t( getStatusMessage( status, 'formal' ).message );
+				errorMessage = getErrorMessages( status, editor );
 				if ( retries > 0 ) {
 					console.warn( `Retrying... (${ retries } attempts left)` );
 					return await this.fetchAndProcessGptResponse(

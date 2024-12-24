@@ -333,35 +333,3 @@ msgstr "Samenvatten"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Doorgaan"
-
-msgctxt "Style & Tone"
-msgid "Style & Tone"
-msgstr "Stijl en toon"
-
-msgctxt "Make Professional"
-msgid "Make Professional"
-msgstr "Maak professioneel"
-
-msgctxt "Make Casual"
-msgid "Make Casual"
-msgstr "Maak informeel"
-
-msgctxt "Make Technical"
-msgid "Make Technical"
-msgstr "Maak technisch"
-
-msgctxt "Enhance Content"
-msgid "Enhance Content"
-msgstr "Inhoud verbeteren"
-
-msgctxt "Add Examples"
-msgid "Add Examples"
-msgstr "Voorbeelden toevoegen"
-
-msgctxt "Add Statistics"
-msgid "Add Statistics"
-msgstr "Statistieken toevoegen"
-
-msgctxt "Expand Details"
-msgid "Expand Details"
-msgstr "Details uitbreiden"

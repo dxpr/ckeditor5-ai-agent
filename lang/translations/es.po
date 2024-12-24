@@ -333,35 +333,3 @@ msgstr "Resumir"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Continuar"
-
-msgctxt "Style & Tone"
-msgid "Style & Tone"
-msgstr "Estilo y tono"
-
-msgctxt "Make Professional"
-msgid "Make Professional"
-msgstr "Hacer profesional"
-
-msgctxt "Make Casual"
-msgid "Make Casual"
-msgstr "Hacer informal"
-
-msgctxt "Make Technical"
-msgid "Make Technical"
-msgstr "Hacer técnico"
-
-msgctxt "Enhance Content"
-msgid "Enhance Content"
-msgstr "Mejorar el contenido"
-
-msgctxt "Add Examples"
-msgid "Add Examples"
-msgstr "Añadir ejemplos"
-
-msgctxt "Add Statistics"
-msgid "Add Statistics"
-msgstr "Añadir estadísticas"
-
-msgctxt "Expand Details"
-msgid "Expand Details"
-msgstr "Expandir detalles"

@@ -50,9 +50,13 @@ msgctxt "Cancel AI Generation"
 msgid "Cancel AI Generation"
 msgstr "AI-generatie annuleren"
 
-msgctxt "Search AI command"
-msgid "Search AI command"
-msgstr "Zoek AI-commando"
+msgctxt "Submit"
+msgid "Submit"
+msgstr "Indienen"
+
+msgctxt "Ask AI to edit"
+msgid "Ask AI to edit"
+msgstr "Vraag AI om te bewerken"
 
 msgctxt "Continue: The server has received the request headers and the client should proceed to send the request body."
 msgid "Continue: The server has received the request headers and the client should proceed to send the request body."

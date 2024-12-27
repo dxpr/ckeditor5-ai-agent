@@ -327,16 +327,7 @@ export default class AiAgentService {
 						}
 					}
 
-					let parentContent = '';
-					for ( const child of parent.getChildren() ) {
-						if ( child.is( '$text' ) ) {
-							parentContent += child.data;
-						}
-					}
-
-					const nextLinePosition = parentContent ?
-						writer.createPositionAt( position.parent, 'after' ) :
-						writer.createPositionAt( position.parent, 'before' );
+					const nextLinePosition = writer.createPositionAt( position.parent, 'after' );
 
 					writer.insert( aiTag, insertParent ? nextLinePosition : position );
 					const newPosition = writer.createPositionAt( aiTag, 'end' );

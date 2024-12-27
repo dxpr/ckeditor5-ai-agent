@@ -7,11 +7,13 @@ import {
 	SplitButtonView,
 	LabeledFieldView,
 	ListSeparatorView,
-	createLabeledInputText
+	createLabeledInputText,
+	ButtonView,
+	type InputTextView
 } from 'ckeditor5/src/ui.js';
 import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import aiAgentIcon from '../theme/icons/ai-agent.svg';
-import searchIcon from '../theme/icons/search.svg';
+import arrowIcon from '../theme/icons/arrow.svg';
 import { aiAgentContext } from './aiagentcontext.js';
 import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
@@ -202,6 +204,16 @@ export default class AiAgentUI extends Plugin {
 		const model = this.editor.model;
 		const viewDocument = this.editor.editing.view.document;
 
+		const executeAiAgentCommand = ( labeledFieldView: LabeledFieldView<InputTextView>, listView: MenuBarMenuListView ): void => {
+			if ( labeledFieldView.fieldView.element ) {
+				const aiAgentService = new AiAgentService( this.editor );
+				this.editor.editing.view.focus();
+				aiAgentService.handleSlashCommand( labeledFieldView.fieldView.element.value );
+				labeledFieldView.isEnabled = false;
+				this.aiAgentListItemUpdate( listView, false );
+			}
+		};
+
 		this.editor.ui.componentFactory.add( 'aiAgentButton', locale => {
 			const dropdownView = createDropdown( locale, SplitButtonView );
 			dropdownView.class = 'ck-ai-commands-list';
@@ -228,27 +240,49 @@ export default class AiAgentUI extends Plugin {
 			} );
 			const menuView = new MenuBarMenuView( locale );
 			const listView = new MenuBarMenuListView( locale );
+
 			const searchContainer = new MenuBarMenuListItemView( locale, menuView );
 
 			const labeledFieldView = new LabeledFieldView( locale, createLabeledInputText );
-			labeledFieldView.label = t( 'Search AI command' );
+			labeledFieldView.label = t( 'Ask AI to edit' );
+			labeledFieldView.isEnabled = false;
 
-			// Create a wrapper div for the icon and input
-			const wrapper = document.createElement( 'div' );
-			wrapper.className = 'ck-input-icon-wrapper';
+			const button = new ButtonView( locale );
 
-			// Create and add the icon
-			const iconSpan = document.createElement( 'span' );
-			iconSpan.className = 'ck-input-search-icon';
-			iconSpan.innerHTML = searchIcon;
-			wrapper.appendChild( iconSpan );
+			button.set( {
+				label: t( 'Submit' ),
+				icon: arrowIcon,
+				tooltip: true,
+				class: 'ck-ask-ai-to-edit-button',
+				isEnabled: false
+			} );
+
+			// Execute a command when the button is clicked.
+			button.on( 'execute', () => {
+				executeAiAgentCommand( labeledFieldView, listView );
+			} );
 
 			labeledFieldView.fieldView.on( 'input', () => {
 				if ( labeledFieldView?.fieldView?.element ) {
-					const search = labeledFieldView.fieldView.element.value.toLowerCase();
-					this.aiAgentListItemUpdate( listView, 'search', search );
+					if ( labeledFieldView.fieldView.element.value ) {
+						button.isEnabled = true;
+					} else {
+						button.isEnabled = false;
+					}
 				}
 			} );
+			labeledFieldView.fieldView.render();
+
+			// Add keydown event listener for Enter key
+			if ( labeledFieldView.fieldView.element ) {
+				labeledFieldView.fieldView.element.addEventListener( 'keydown', event => {
+					if ( event.key === 'Enter' ) {
+						event.preventDefault();
+						executeAiAgentCommand( labeledFieldView, listView );
+					}
+				} );
+			}
+
 			// Listen for selection changes in the editor
 			viewDocument.on( 'selectionChange', () => {
 				const selection = model.document.selection;
@@ -259,16 +293,14 @@ export default class AiAgentUI extends Plugin {
 						.join( '' );
 
 					const isTextSelected = !!selectedText;
-					this.aiAgentListItemUpdate( listView, 'enable', isTextSelected );
+					labeledFieldView.isEnabled = isTextSelected;
+					this.aiAgentListItemUpdate( listView, isTextSelected );
 				}
 			} );
 
 			searchContainer.children.add( labeledFieldView );
+			searchContainer.children.add( button );
 			listView.items.add( searchContainer );
-
-			if ( labeledFieldView.element ) {
-				labeledFieldView.element.appendChild( wrapper );
-			}
 
 			for ( const group of this.commandsDropdown ) {
 				const separatorView = new ListSeparatorView( locale );
@@ -294,9 +326,7 @@ export default class AiAgentUI extends Plugin {
 					} );
 					buttonView.delegate( 'execute' ).to( menuView );
 					buttonView.on( 'execute', () => {
-						const aiAgentService = new AiAgentService( this.editor );
-						this.editor.editing.view.focus();
-						aiAgentService.handleSlashCommand( item.command );
+						executeAiAgentCommand( labeledFieldView, listView );
 					} );
 					listItemView.children.add( buttonView );
 					listView.items.add( listItemView );
@@ -320,24 +350,16 @@ export default class AiAgentUI extends Plugin {
 	 * @param data - The search string for filtering items when type is 'search', or a boolean indicating
 	 *               whether to enable or disable items when type is 'enable'.
 	 */
-	private aiAgentListItemUpdate( listView: MenuBarMenuListView, type: 'search' | 'enable', data: string | boolean ) {
+	private aiAgentListItemUpdate( listView: MenuBarMenuListView, isEnabled: boolean ) {
 		listView.items.map( itemView => {
 			const element = itemView as any;
 			if ( element.children?.first ) {
 				const button = element.children.first;
 				if ( button.class ) {
 					const isTitle = button.class.includes( 'ck-menu-group-title' );
-					const isSearchInout = button.class.includes( 'ck-ai-search-input' );
-					const isSeparator = !button.label;
-					if ( !isTitle && !isSeparator && !isSearchInout ) {
-						const label = button.label.toLowerCase();
-						if ( type === 'search' ) {
-							element.isVisible = !data || label.includes( data );
-						}
-						if ( type === 'enable' ) {
-							element.isEnabled = data;
-							button.isEnabled = data;
-						}
+					if ( !isTitle ) {
+						element.isEnabled = isEnabled;
+						button.isEnabled = isEnabled;
 					}
 				}
 			}

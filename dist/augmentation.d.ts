@@ -29,7 +29,6 @@ declare module '@ckeditor/ckeditor5-core' {
             timeOutDuration?: number;
             endpointUrl?: string;
             promptSettings?: PromptSettings;
-            streamContent?: boolean;
             debugMode?: boolean;
             showErrorDuration?: number;
             moderation?: {

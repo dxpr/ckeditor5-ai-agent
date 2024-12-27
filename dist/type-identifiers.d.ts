@@ -23,7 +23,6 @@ export interface AiAgentConfig {
     timeOutDuration?: number;
     endpointUrl?: string;
     promptSettings?: PromptSettings;
-    streamContent?: boolean;
     debugMode?: boolean;
 }
 export interface MarkdownContent {

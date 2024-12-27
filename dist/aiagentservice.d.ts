@@ -8,7 +8,6 @@ export default class AiAgentService {
     private timeOutDuration;
     private maxTokens;
     private retryAttempts;
-    private streamContent;
     private stopSequences;
     private aiAgentFeatureLockId;
     private promptHelper;

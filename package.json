@@ -1,6 +1,6 @@
 {
   "name": "@dxpr/ckeditor5-ai-agent",
-  "version": "1.0.0-beta6",
+  "version": "1.0.0-beta8",
   "description": "A plugin for CKEditor 5.",
   "keywords": [
     "ckeditor",
@@ -104,6 +104,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-core": "^43.3.1",
     "@ckeditor/ckeditor5-utils": "^43.0.0",
+    "http-status-message": "^1.2.4",
     "sbd": "^1.0.19"
   }
 }

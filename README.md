@@ -120,15 +120,15 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `apiKey` | `string` | - | Your Open_AI key for authenticate |
 | `model` | `AiModel?` | `'gpt-4o'` | The AI model to use |
 | `temperature` | `number?` | - | Controls the randomness of the AI output. Must be between 0 and 2 |
-| `maxOutputTokens` | `number?` | Model's max output token limit | Maximum number of tokens the AI can generate in its response |
-| `maxInputTokens` | `number?` | Model's max context window limit | Maximum number of tokens allowed in the combined prompt and context |
+| `maxOutputTokens` | `number?` | - | Maximum number of tokens the AI can generate in its response. If not set, uses model's maximum output limit |
+| `maxInputTokens` | `number?` | - | Maximum number of tokens allowed in the combined prompt and context. If not set, uses model's maximum context window limit |
 | `stopSequences` | `Array<string>?` | - | An array of stop sequences that will end the generation of content when encountered |
 | `retryAttempts` | `number?` | - | The number of times to retry fetching the AI response if the initial request fails |
 | `promptSettings` | `object?` | - | Customize prompt components through `overrides` and `additions`. See [Prompt Components](#prompt-components) for available components |
 | `promptSettings.overrides` | `Record<PromptComponentKey, string>?` | - | Replace default rules for specific components |
 | `promptSettings.additions` | `Record<PromptComponentKey, string>?` | - | Add additional rules to specific components |
 | `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
-| `contextSize` | `number?` | `75%` of model's max input token limit | Extracts text symmetrically around the cursor position. For default model (gpt-4o) this is 96000 tokens (128000 * 0.75) |
+| `contextSize` | `number?` | - | Maximum context window size in tokens. If not set, defaults to 75% of model's maximum input token limit |
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
 | `endpointUrl` | `string?` | - | The URL of the AI endpoint to use for generating content |
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |

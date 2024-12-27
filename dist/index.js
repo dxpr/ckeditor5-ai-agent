@@ -8,7 +8,7 @@ var ckeditor = "<svg width='68' height='64' viewBox='0 0 68 64' xmlns='http://ww
 
 var aiAgentIcon = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M4.00815 5.01816H19.3851V10.9145H21.1594V3.2439H2.23389V22.1694H12.3955V20.3951H4.00815V5.01816Z\" fill=\"#222330\"/>\n    <path d=\"M15.1908 20.046L20.9028 12.7065L22.9998 14.3385L17.2878 21.678L15.0341 22.755C14.8582 22.8391 14.6619 22.6862 14.7002 22.4951L15.1908 20.046Z\" fill=\"#222330\"/>\n    <path d=\"M16.1211 8.43794V15.7494H14.5753V8.43794H16.1211Z\" fill=\"#222330\"/>\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.31458 15.7495H6.65807L9.18211 8.43804H11.1742L13.6947 15.7495H12.0382L11.4968 14.0823H8.85696L8.31458 15.7495ZM10.2067 10.1088L11.1051 12.8756H9.24951L10.1496 10.1088H10.2067Z\" fill=\"#222330\"/>\n</svg>";
 
-var searchIcon = "<svg class=\"svg-icon\" style=\"width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;\" viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M679.039688 749.379825a29.25665 29.25665 0 0 1 46.225506-35.927166l204.796548 263.309847a29.25665 29.25665 0 0 1-46.225507 35.927166l-204.796547-263.309847zM482.727568 789.929541C264.589988 789.929541 87.762798 613.102351 87.762798 394.964771S264.589988 0 482.727568 0 877.692339 176.827191 877.692339 394.964771 700.865148 789.929541 482.727568 789.929541z m0-58.513299C668.53655 731.416242 819.17904 580.773753 819.17904 394.964771S668.53655 58.513299 482.727568 58.513299 146.276097 209.155789 146.276097 394.964771 296.918586 731.416242 482.727568 731.416242z\" fill=\"#7F7F7F\" /></svg>";
+var arrowIcon = "<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M15.875 4.419a.75.75 0 0 0-1.5 0v7.25H6.818l2.33-1.955a.75.75 0 0 0-.963-1.15l-3.792 3.182a.75.75 0 0 0-.17.945c.046.11.118.208.21.284l3.788 3.18a.75.75 0 1 0 .965-1.149l-2.19-1.837h7.629c.69 0 1.25-.56 1.25-1.25v-7.5Z\"></path>\n</svg>";
 
 /**
  * The AiAgentContext class provides a context for the AI Agent plugin,
@@ -89,48 +89,6 @@ const ALL_MODERATION_FLAGS = [
     'violence/graphic'
 ];
 const SHOW_ERROR_DURATION = 5000;
-const AI_AGENT_DROPDOWN_MENU = [
-    {
-        title: 'Edit or review',
-        items: [
-            {
-                title: 'Improve Writing',
-                command: `Fix spelling mistakes, use proper grammar and apply good writing practices.
-					Do not lose the original meaning.\nYou must keep the text formatting.`
-            },
-            {
-                title: 'Make Shorter',
-                command: `Remove any repetitive, redundant, or non-essential writing in this
-					content without changing the meaning or losing any key information.`
-            },
-            {
-                title: 'Make Longer',
-                command: `Improve this content by using descriptive language and inserting
-					more information and more detailed explanations.\nYou must keep the text formatting.`
-            },
-            {
-                title: 'Simplify Language',
-                command: `Simplify the writing style of this content and reduce the complexity,
-					so that the content is easy to understand.\nYou must keep the text formatting`
-            }
-        ]
-    },
-    {
-        title: 'Generate from selection',
-        items: [
-            {
-                title: 'Summarize',
-                command: `Summarize this content into one paragraph of text. Include only the key ideas and conclusions.
-					Keep it short. Do not keep original text formatting`
-            },
-            {
-                title: 'Continue',
-                command: `Start with the provided content and write at the end of it continuing this topic.
-					Keep the added part short.\nYou must keep the text formatting`
-            }
-        ]
-    }
-];
 
 // Map of CKEditor nodes to HTML tags
 const nodeToHtmlMap = {
@@ -746,6 +704,134 @@ class HtmlParser {
     }
 }
 
+function getErrorMessages(status, editor) {
+    const t = editor.t;
+    const messages = {
+        100: t('Continue: The server has received the request headers and the client should proceed to send the request body.'),
+        101: t('Switching Protocols: The server is switching protocols according to the Upgrade header.'),
+        102: t('Processing: The server has received and is processing the request, but no response is available yet.'),
+        103: t('Early Hints: Used to return some response headers before final HTTP message.'),
+        200: t('The request has succeeded.'),
+        201: t('The request has been fulfilled and resulted in a new resource being created.'),
+        202: t('The request has been accepted for processing, but the processing has not been completed.'),
+        203: t('The server successfully processed the request, but is returning information from another source.'),
+        204: t('The server successfully processed the request, but is not returning any content.'),
+        // eslint-disable-next-line max-len
+        205: t('The server successfully processed the request, but is not returning any content. The user agent should reset the document view.'),
+        206: t('The server has fulfilled the partial GET request for the resource.'),
+        207: t('The response from the server contains multiple status codes, each with its own set of headers and body.'),
+        208: t('The server has encountered a previous condition and is applying it to this current request.'),
+        // eslint-disable-next-line max-len
+        226: t('The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance.'),
+        300: t('The server has multiple options for the requested resource.'),
+        301: t('The requested resource has been permanently moved to a new location.'),
+        302: t('The requested resource has been found, but it has been temporarily moved to a different location.'),
+        // eslint-disable-next-line max-len
+        303: t('The response to the request can be found under a different URI and should be retrieved using a GET method on that resource.'),
+        304: t('The requested resource has not been modified since the last request. It is still valid from the server\'s cache.'),
+        305: t('The requested resource must be accessed through the proxy given by the Location field.'),
+        // eslint-disable-next-line max-len
+        307: t('The requested resource has been temporarily moved to a different location, and the client should continue to use the same method for future requests.'),
+        // eslint-disable-next-line max-len
+        308: t('The requested resource has been permanently moved to a different location, and the client should use the new URI for all future requests.'),
+        400: t('The server could not understand the request due to invalid syntax.'),
+        401: t('The request requires user authentication.'),
+        402: t('Payment is required to fulfill the request.'),
+        403: t('Access to the requested resource is forbidden.'),
+        404: t('The server could not find the requested resource.'),
+        405: t('The request method is not allowed for the requested resource.'),
+        406: t('The server cannot generate content that is acceptable according to the Accept headers sent in the request.'),
+        407: t('Proxy authentication is required to access the requested resource.'),
+        408: t('The server timed out waiting for the request.'),
+        409: t('Conflict detected. The request could not be completed due to a conflict with the current state of the resource.'),
+        410: t('Gone. The requested resource is no longer available and will not be available again.'),
+        411: t('Length required. The server requires a Content-Length header to be included in the request.'),
+        // eslint-disable-next-line max-len
+        412: t('Precondition failed. One or more conditions specified in the request headers evaluated to false when tested on the server.'),
+        // eslint-disable-next-line max-len
+        413: t('Payload too large. The server refuses to process the request because the payload is larger than the server is willing or able to process.'),
+        // eslint-disable-next-line max-len
+        414: t('URI too long. The server refuses to process the request because the URI is longer than the server is willing to interpret.'),
+        415: t('Unsupported media type. The server refuses to process the request because the media type is not supported.'),
+        // eslint-disable-next-line max-len
+        416: t('Range not satisfiable. The server cannot fulfill the request because the client has asked for a portion of the file that cannot be provided.'),
+        417: t('Expectation failed. The server is unable to meet the requirements specified by the Expect request header field.'),
+        418: t('I\'m a teapot. The server refuses to brew coffee because it is, permanently and intentionally, a teapot.'),
+        421: t('Misdirected request. The request was directed at a server that is not able to produce a response.'),
+        // eslint-disable-next-line max-len
+        422: t('Unprocessable entity. The server understands the content type of the request entity but cannot process the contained instructions.'),
+        423: t('Locked. The requested resource is locked and can only be accessed by the client that locked it.'),
+        424: t('Failed dependency. The request failed because it depended on another request and that request failed.'),
+        425: t('Too early. The server is unwilling to risk processing a request that might be replayed.'),
+        426: t('Upgrade required. The client should switch to a different protocol.'),
+        428: t('Precondition required. The origin server requires the request to be conditional.'),
+        429: t('Too many requests. The user has sent too many requests in a given amount of time.'),
+        // eslint-disable-next-line max-len
+        431: t('Request header fields too large. The server is unwilling to process the request because its header fields are too large.'),
+        451: t('Unavailable for legal reasons. The server is denying access to the resource as a consequence of a legal demand.'),
+        500: t('Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.'),
+        501: t('Not Implemented. The server does not support the functionality required to fulfill the request.'),
+        // eslint-disable-next-line max-len
+        502: t('Bad Gateway. The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request.'),
+        // eslint-disable-next-line max-len
+        503: t('Service Unavailable. The server is currently unable to handle the request due to temporary overloading or maintenance of the server.'),
+        // eslint-disable-next-line max-len
+        504: t('Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server it accessed in attempting to fulfill the request.'),
+        505: t('HTTP Version Not Supported. The server does not support the HTTP protocol version used in the request.'),
+        506: t('Variant Also Negotiates. Transparent content negotiation for the request results in a circular reference.'),
+        507: t('Insufficient Storage. The server is unable to store the representation needed to complete the request.'),
+        508: t('Loop Detected. The server detected an infinite loop while processing the request.'),
+        510: t('Not Extended. Further extensions to the request are required for the server to fulfill it.'),
+        511: t('Network Authentication Required. The client needs to authenticate to gain network access.')
+    };
+    return messages[status] ?? '';
+}
+function getDefaultAiAgentDropdownMenu(editor) {
+    const t = editor.t;
+    return [
+        {
+            title: t('Edit or review'),
+            items: [
+                {
+                    title: t('Improve Writing'),
+                    command: `Fix spelling mistakes, use proper grammar and apply good writing practices.
+                        Do not lose the original meaning.\nYou must keep the text formatting.`
+                },
+                {
+                    title: t('Make Shorter'),
+                    command: `Remove any repetitive, redundant, or non-essential writing in this
+					    content without changing the meaning or losing any key information.`
+                },
+                {
+                    title: t('Make Longer'),
+                    command: `Improve this content by using descriptive language and inserting
+					    more information and more detailed explanations.\nYou must keep the text formatting.`
+                },
+                {
+                    title: t('Simplify Language'),
+                    command: `Simplify the writing style of this content and reduce the complexity,
+					    so that the content is easy to understand.\nYou must keep the text formatting`
+                }
+            ]
+        },
+        {
+            title: t('Generate from selection'),
+            items: [
+                {
+                    title: t('Summarize'),
+                    command: `Summarize this content into one paragraph of text. Include only the key ideas and conclusions.
+					    Keep it short. Do not keep original text formatting`
+                },
+                {
+                    title: t('Continue'),
+                    command: `Start with the provided content and write at the end of it continuing this topic.
+					    Keep the added part short.\nYou must keep the text formatting`
+                }
+            ]
+        }
+    ];
+}
+
 class AiAgentService {
     editor;
     aiModel;
@@ -901,11 +987,12 @@ class AiAgentService {
             });
             clearTimeout(timeoutId);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = await this.getError(response);
+                throw new Error(error);
             }
             const data = await response.json();
             if (!data?.results?.[0]) {
-                throw new Error('Invalid moderation response format');
+                throw new Error(t('Invalid moderation response format'));
             }
             const flags = ALL_MODERATION_FLAGS.filter((flag)=>!this.disableFlags.includes(flag));
             if (data.results[0].flagged) {
@@ -928,14 +1015,19 @@ class AiAgentService {
             return true;
         } catch (error) {
             console.error('Moderation error:', error);
-            // Handle specific error cases
-            if (error instanceof TypeError) {
-                aiAgentContext.showError(t('Network error during content moderation'));
-            } else if (error instanceof DOMException && error.name === 'AbortError') {
-                aiAgentContext.showError(t('Content moderation timed out'));
+            let errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
+            const jsonMessage = this.isValidJSON(error?.message);
+            if (jsonMessage) {
+                const errorObj = JSON.parse(error?.message);
+                const status = errorObj.status;
+                errorMessage = getErrorMessages(status, editor);
             } else {
-                aiAgentContext.showError(t('Error in content moderation'));
+                errorMessage = error?.message?.trim();
+                if (errorMessage === 'ReadableStream not supported') {
+                    errorMessage = t('Browser does not support readable streams');
+                }
             }
+            aiAgentContext.showError(errorMessage);
             // Fail open for moderation errors
             return true;
         } finally{
@@ -986,7 +1078,8 @@ class AiAgentService {
             });
             clearTimeout(timeoutId);
             if (!response.ok) {
-                throw new Error('Fetch failed');
+                const error = await this.getError(response);
+                throw new Error(error);
             }
             aiAgentContext.hideLoader();
             const reader = response.body.getReader();
@@ -1009,13 +1102,7 @@ class AiAgentService {
                             insertParent = false;
                         }
                     }
-                    let parentContent = '';
-                    for (const child of parent.getChildren()){
-                        if (child.is('$text')) {
-                            parentContent += child.data;
-                        }
-                    }
-                    const nextLinePosition = parentContent ? writer.createPositionAt(position.parent, 'after') : writer.createPositionAt(position.parent, 'before');
+                    const nextLinePosition = writer.createPositionAt(position.parent, 'after');
                     writer.insert(aiTag, insertParent ? nextLinePosition : position);
                     const newPosition = writer.createPositionAt(aiTag, 'end');
                     writer.setSelection(newPosition);
@@ -1061,30 +1148,35 @@ class AiAgentService {
                 return;
             }
             console.error('Error in fetchAndProcessGptResponse:', error);
-            const errorIdentifier = (error?.message || '').trim() || (error?.name || '').trim();
-            const isRetryableError = [
-                'AbortError',
-                'ReadableStream not supported',
-                'AiAgent: Fetch failed'
-            ].includes(errorIdentifier);
-            if (retries > 0 && isRetryableError) {
-                console.warn(`Retrying... (${retries} attempts left)`);
-                return await this.fetchAndProcessGptResponse(prompt, parent, retries - 1);
-            }
-            let errorMessage;
-            switch(error?.name || error?.message?.trim()){
-                case 'ReadableStream not supported':
-                    errorMessage = t('Browser does not support readable streams');
-                    break;
-                case 'AiAgent: Fetch failed':
-                    errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
-                    break;
-                default:
-                    errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
+            let errorMessage = t('We couldn\'t connect to the AI. Please check your internet');
+            const jsonMessage = this.isValidJSON(error?.message);
+            if (jsonMessage) {
+                const errorObj = JSON.parse(error?.message);
+                const status = errorObj.status;
+                errorMessage = getErrorMessages(status, editor);
+                if (retries > 0) {
+                    console.warn(`Retrying... (${retries} attempts left)`);
+                    return await this.fetchAndProcessGptResponse(prompt, parent, retries - 1);
+                }
+            } else {
+                errorMessage = error?.message?.trim();
             }
             aiAgentContext.showError(errorMessage);
         } finally{
             this.editor.disableReadOnlyMode(this.aiAgentFeatureLockId);
+        }
+    }
+    /**
+	 * Checks if a given string is a valid JSON format.
+	 *
+	 * @param str - The string to be validated as JSON.
+	 * @returns True if the string is valid JSON, otherwise false.
+	 */ isValidJSON(str) {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (error) {
+            return false;
         }
     }
     /**
@@ -1099,10 +1191,10 @@ class AiAgentService {
         const view = new ButtonView();
         let label = t('Cancel Generation');
         if (env.isMac) {
-            label = t('\u2318 + \u232B Cancel Generation');
+            label = `\u2318 + \u232B ${t('Cancel Generation')}`;
         }
         if (env.isWindows) {
-            label = t('Ctrl + \u232B Cancel Generation');
+            label = `Ctrl + \u232B ${t('Cancel Generation')}`;
         }
         view.set({
             label,
@@ -1311,6 +1403,29 @@ class AiAgentService {
             return null;
         }
     }
+    /**
+	 * Retrieves and formats the error message from the response object.
+	 *
+	 * @param response - The response object from the fetch request.
+	 * @returns A promise that resolves to a JSON string containing the status and error message.
+	 * The error message is extracted based on the content type of the response, which can be
+	 * in JSON, HTML, or plain text format.
+	 */ async getError(response) {
+        let errorData = '';
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            errorData = JSON.stringify(await response.json());
+        } else if (contentType && contentType.includes('text/html')) {
+            errorData = await response.text();
+        } else if (contentType && contentType.includes('text/plain')) {
+            errorData = await response.text();
+        }
+        const error = {
+            status: response.status,
+            error: errorData
+        };
+        return JSON.stringify(error);
+    }
 }
 
 class AiAgentUI extends Plugin {
@@ -1318,12 +1433,12 @@ class AiAgentUI extends Plugin {
     GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
     GPT_RESPONSE_ERROR_ID = 'gpt-error';
     showErrorDuration = SHOW_ERROR_DURATION;
-    commandsDropdown = AI_AGENT_DROPDOWN_MENU;
+    commandsDropdown = getDefaultAiAgentDropdownMenu(this.editor);
     constructor(editor){
         super(editor);
         const config = editor.config.get('aiAgent');
         this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
-        this.commandsDropdown = config?.commandsDropdown ?? AI_AGENT_DROPDOWN_MENU;
+        this.commandsDropdown = config?.commandsDropdown ?? getDefaultAiAgentDropdownMenu(editor);
     }
     static get pluginName() {
         return 'AiAgentUI';
@@ -1482,6 +1597,15 @@ class AiAgentUI extends Plugin {
         const t = this.editor.t;
         const model = this.editor.model;
         const viewDocument = this.editor.editing.view.document;
+        const executeAiAgentCommand = (labeledFieldView, listView)=>{
+            if (labeledFieldView.fieldView.element) {
+                const aiAgentService = new AiAgentService(this.editor);
+                this.editor.editing.view.focus();
+                aiAgentService.handleSlashCommand(labeledFieldView.fieldView.element.value);
+                labeledFieldView.isEnabled = false;
+                this.aiAgentListItemUpdate(listView, false);
+            }
+        };
         this.editor.ui.componentFactory.add('aiAgentButton', (locale)=>{
             const dropdownView = createDropdown(locale, SplitButtonView);
             dropdownView.class = 'ck-ai-commands-list';
@@ -1511,21 +1635,39 @@ class AiAgentUI extends Plugin {
             const listView = new MenuBarMenuListView(locale);
             const searchContainer = new MenuBarMenuListItemView(locale, menuView);
             const labeledFieldView = new LabeledFieldView(locale, createLabeledInputText);
-            labeledFieldView.label = t('Search AI command');
-            // Create a wrapper div for the icon and input
-            const wrapper = document.createElement('div');
-            wrapper.className = 'ck-input-icon-wrapper';
-            // Create and add the icon
-            const iconSpan = document.createElement('span');
-            iconSpan.className = 'ck-input-search-icon';
-            iconSpan.innerHTML = searchIcon;
-            wrapper.appendChild(iconSpan);
+            labeledFieldView.label = t('Ask AI to edit');
+            labeledFieldView.isEnabled = false;
+            const button = new ButtonView(locale);
+            button.set({
+                label: t('Submit'),
+                icon: arrowIcon,
+                tooltip: true,
+                class: 'ck-ask-ai-to-edit-button',
+                isEnabled: false
+            });
+            // Execute a command when the button is clicked.
+            button.on('execute', ()=>{
+                executeAiAgentCommand(labeledFieldView, listView);
+            });
             labeledFieldView.fieldView.on('input', ()=>{
                 if (labeledFieldView?.fieldView?.element) {
-                    const search = labeledFieldView.fieldView.element.value.toLowerCase();
-                    this.aiAgentListItemUpdate(listView, 'search', search);
+                    if (labeledFieldView.fieldView.element.value) {
+                        button.isEnabled = true;
+                    } else {
+                        button.isEnabled = false;
+                    }
                 }
             });
+            labeledFieldView.fieldView.render();
+            // Add keydown event listener for Enter key
+            if (labeledFieldView.fieldView.element) {
+                labeledFieldView.fieldView.element.addEventListener('keydown', (event)=>{
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        executeAiAgentCommand(labeledFieldView, listView);
+                    }
+                });
+            }
             // Listen for selection changes in the editor
             viewDocument.on('selectionChange', ()=>{
                 const selection = model.document.selection;
@@ -1533,14 +1675,13 @@ class AiAgentUI extends Plugin {
                 if (range) {
                     const selectedText = Array.from(range.getItems()).map((item)=>item.data).join('');
                     const isTextSelected = !!selectedText;
-                    this.aiAgentListItemUpdate(listView, 'enable', isTextSelected);
+                    labeledFieldView.isEnabled = isTextSelected;
+                    this.aiAgentListItemUpdate(listView, isTextSelected);
                 }
             });
             searchContainer.children.add(labeledFieldView);
+            searchContainer.children.add(button);
             listView.items.add(searchContainer);
-            if (labeledFieldView.element) {
-                labeledFieldView.element.appendChild(wrapper);
-            }
             for (const group of this.commandsDropdown){
                 const separatorView = new ListSeparatorView(locale);
                 listView.items.add(separatorView);
@@ -1548,7 +1689,7 @@ class AiAgentUI extends Plugin {
                 const titleView = new MenuBarMenuListItemView(locale, menuView);
                 const titleButton = new MenuBarMenuListItemButtonView(locale);
                 titleButton.set({
-                    label: t(group.title),
+                    label: group.title,
                     class: 'ck-menu-group-title',
                     isEnabled: false
                 });
@@ -1559,15 +1700,13 @@ class AiAgentUI extends Plugin {
                     const listItemView = new MenuBarMenuListItemView(locale, menuView);
                     const buttonView = new MenuBarMenuListItemButtonView(locale);
                     buttonView.set({
-                        label: t(item.title),
+                        label: item.title,
                         class: 'ck-menu-item',
                         isEnabled: false
                     });
                     buttonView.delegate('execute').to(menuView);
                     buttonView.on('execute', ()=>{
-                        const aiAgentService = new AiAgentService(this.editor);
-                        this.editor.editing.view.focus();
-                        aiAgentService.handleSlashCommand(item.command);
+                        executeAiAgentCommand(labeledFieldView, listView);
                     });
                     listItemView.children.add(buttonView);
                     listView.items.add(listItemView);
@@ -1589,24 +1728,16 @@ class AiAgentUI extends Plugin {
 	 *               to enable/disable items based on selection state.
 	 * @param data - The search string for filtering items when type is 'search', or a boolean indicating
 	 *               whether to enable or disable items when type is 'enable'.
-	 */ aiAgentListItemUpdate(listView, type, data) {
+	 */ aiAgentListItemUpdate(listView, isEnabled) {
         listView.items.map((itemView)=>{
             const element = itemView;
             if (element.children?.first) {
                 const button = element.children.first;
                 if (button.class) {
                     const isTitle = button.class.includes('ck-menu-group-title');
-                    const isSearchInout = button.class.includes('ck-ai-search-input');
-                    const isSeparator = !button.label;
-                    if (!isTitle && !isSeparator && !isSearchInout) {
-                        const label = button.label.toLowerCase();
-                        if (type === 'search') {
-                            element.isVisible = !data || label.includes(data);
-                        }
-                        if (type === 'enable') {
-                            element.isEnabled = data;
-                            button.isEnabled = data;
-                        }
+                    if (!isTitle) {
+                        element.isEnabled = isEnabled;
+                        button.isEnabled = isEnabled;
                     }
                 }
             }

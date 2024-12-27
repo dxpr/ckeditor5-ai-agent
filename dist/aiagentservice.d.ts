@@ -55,6 +55,13 @@ export default class AiAgentService {
      */
     private fetchAndProcessGptResponse;
     /**
+     * Checks if a given string is a valid JSON format.
+     *
+     * @param str - The string to be validated as JSON.
+     * @returns True if the string is valid JSON, otherwise false.
+     */
+    private isValidJSON;
+    /**
      * Creates and configures a cancel generation button with keyboard shortcut support.
      *
      * @param blockID - Unique identifier for the AI generation block
@@ -121,4 +128,13 @@ export default class AiAgentService {
      * @returns A promise that resolves to the generated GPT prompt string or null if an error occurs.
     */
     private generateGptPromptBasedOnUserPrompt;
+    /**
+     * Retrieves and formats the error message from the response object.
+     *
+     * @param response - The response object from the fetch request.
+     * @returns A promise that resolves to a JSON string containing the status and error message.
+     * The error message is extracted based on the content type of the response, which can be
+     * in JSON, HTML, or plain text format.
+     */
+    private getError;
 }

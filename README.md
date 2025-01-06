@@ -119,16 +119,16 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 |--------|------|---------|-------------|
 | `apiKey` | `string` | - | Your Open_AI key for authenticate |
 | `model` | `AiModel?` | `'gpt-4o'` | The AI model to use |
-| `temperature` | `number?` | - | Controls the randomness of the AI output. Must be between 0 and 2 |
-| `maxOutputTokens` | `number?` | - | Maximum number of tokens the AI can generate in its response. If not set, uses model's maximum output limit |
-| `maxInputTokens` | `number?` | - | Maximum number of tokens allowed in the combined prompt and context. If not set, uses model's maximum context window limit |
-| `stopSequences` | `Array<string>?` | - | An array of stop sequences that will end the generation of content when encountered |
-| `retryAttempts` | `number?` | - | The number of times to retry fetching the AI response if the initial request fails |
-| `promptSettings` | `object?` | - | Customize prompt components through `overrides` and `additions`. See [Prompt Components](#prompt-components) for available components |
+| `temperature` | `number?` | `0.7` | Controls the randomness of the AI output. Must be between 0 and 2 |
+| `maxOutputTokens` | `number?` | Model specific default from TOKEN_LIMITS | Maximum number of tokens the AI can generate in its response |
+| `maxInputTokens` | `number?` | Model specific default from TOKEN_LIMITS | Maximum number of tokens allowed in the combined prompt and context |
+| `stopSequences` | `Array<string>?` | `[]` | An array of stop sequences that will end the generation of content when encountered |
+| `retryAttempts` | `number?` | `1` | The number of times to retry fetching the AI response if the initial request fails |
+| `promptSettings` | `object?` | `{}` | Customize prompt components through `overrides` and `additions` |
 | `promptSettings.overrides` | `Record<PromptComponentKey, string>?` | - | Replace default rules for specific components |
 | `promptSettings.additions` | `Record<PromptComponentKey, string>?` | - | Add additional rules to specific components |
 | `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
-| `contextSize` | `number?` | - | Maximum context window size in tokens. If not set, defaults to 75% of model's maximum input token limit |
+| `contextSize` | `number?` | `75% of model's maxInputContextTokens` | Maximum context window size in tokens |
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
 | `endpointUrl` | `string?` | `'https://api.openai.com/v1/chat/completions'` | The URL of the AI endpoint to use for generating content |
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |

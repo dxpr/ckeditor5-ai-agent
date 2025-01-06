@@ -8,6 +8,7 @@
 	transition-property: opacity;
 	transition-timing-function: ease-in, ease-out;
 	margin: 0;
+	padding: 0 var(--ck-spacing-standard);
 }
 
 .show-place-holder {

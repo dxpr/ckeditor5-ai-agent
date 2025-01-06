@@ -116,11 +116,23 @@ export default class AiAgentUI extends Plugin {
 		this.addGptErrorToolTip();
 		this.addAiAgentButton();
 
-		editor.accessibility.addKeystrokeInfos( {
+		editor.accessibility.addKeystrokeInfoGroup( {
+			id: 'ai-agent',
+			categoryId: 'navigation',
+			label: t( 'AI Agent' ),
 			keystrokes: [
 				{
-					label: t( 'Insert slash command (AI Agent)' ),
+					label: t( 'Slash Command: Open the AI Command Menu in an Empty Field' ),
 					keystroke: '/'
+				},
+				{
+					// eslint-disable-next-line max-len
+					label: t( 'Force Insert Slash Command: Add a Slash Command Within Existing Text' ),
+					keystroke: env.isMac ? 'Cmd + /' : 'Ctrl + /'
+				},
+				{
+					label: t( 'Cancel AI Generation' ),
+					keystroke: env.isMac ? 'Cmd + Backspace' : 'Ctrl + Backspace'
 				}
 			]
 		} );
@@ -136,22 +148,6 @@ export default class AiAgentUI extends Plugin {
 		editor.model.schema.extend( '$block', { allowIn: 'ai-tag' } );
 
 		this.addCustomTagConversions();
-		let keystroke = '';
-		if ( env.isMac ) {
-			keystroke = 'Cmd + Backspace';
-		}
-
-		if ( env.isWindows ) {
-			keystroke = 'Ctrl + Backspace';
-		}
-		editor.accessibility.addKeystrokeInfos( {
-			keystrokes: [
-				{
-					label: t( 'Cancel AI Generation' ),
-					keystroke
-				}
-			]
-		} );
 	}
 
 	private addCustomTagConversions(): void {
@@ -200,9 +196,24 @@ export default class AiAgentUI extends Plugin {
 	 * usability.
 	 */
 	private addAiAgentButton(): void {
+		const editor = this.editor;
 		const t = this.editor.t;
 		const model = this.editor.model;
 		const viewDocument = this.editor.editing.view.document;
+
+		const executeCommand = () => {
+			this.editor.model.change( writer => {
+				const position = this.editor.model.document.selection.getLastPosition();
+				if ( position ) {
+					const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
+					writer.insertText( '/', inlineSlashContainer );
+					writer.insert( inlineSlashContainer, position );
+					const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
+					writer.setSelection( newPosition );
+				}
+			} );
+			this.editor.editing.view.focus();
+		};
 
 		const executeAiAgentCommand = ( labeledFieldView: LabeledFieldView<InputTextView>, listView: MenuBarMenuListView ): void => {
 			if ( labeledFieldView.fieldView.element ) {
@@ -224,20 +235,8 @@ export default class AiAgentUI extends Plugin {
 				tooltip: true
 			} );
 
-			// Add the functionality for the dropdown button's execute event
-			buttonView.on( 'execute', () => {
-				this.editor.model.change( writer => {
-					const position = this.editor.model.document.selection.getLastPosition();
-					if ( position ) {
-						const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
-						writer.insertText( '/', inlineSlashContainer );
-						writer.insert( inlineSlashContainer, position );
-						const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
-						writer.setSelection( newPosition );
-					}
-				} );
-				this.editor.editing.view.focus();
-			} );
+			buttonView.on( 'execute', executeCommand );
+
 			const menuView = new MenuBarMenuView( locale );
 			const listView = new MenuBarMenuListView( locale );
 
@@ -334,6 +333,12 @@ export default class AiAgentUI extends Plugin {
 			}
 			dropdownView.panelView.children.add( listView );
 			return dropdownView;
+		} );
+
+		editor.editing.view.document.on( 'keydown', ( event, data ) => {
+			if ( ( data.ctrlKey || data.metaKey ) && data.keyCode === 191 ) {
+				executeCommand();
+			}
 		} );
 	}
 

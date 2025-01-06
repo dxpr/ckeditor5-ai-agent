@@ -182,6 +182,8 @@
 
 .ck-ai-commands-list .ck.ck-reset.ck-list li:first-child {
 	padding: 1em;
+	display: flex;
+	gap: 5px;
 }
 
 .ck-ai-commands-list .ck-input-icon-wrapper {
@@ -190,8 +192,10 @@
 	left: 20px;
 }
 
-.ck-ai-commands-list .ck.ck-reset.ck-list li:first-child input {
-	padding-left: 25px;
+.ck-ai-commands-list .ck.ck-reset.ck-list li:first-child .ck-ask-ai-to-edit-button{
+	padding: 0px;
+	justify-content: center;
+	border-color: var(--ck-color-panel-border);
 }
 
 /*# sourceMappingURL=index.css.map */

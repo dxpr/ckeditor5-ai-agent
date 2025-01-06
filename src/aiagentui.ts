@@ -515,7 +515,6 @@ export default class AiAgentUI extends Plugin {
 		const isReadOnlyMode = this.editor.isReadOnly;
 		if ( ele && rect && !isReadOnlyMode ) {
 			ele.classList.add( 'show-place-holder' );
-			ele.style.left = `${ rect.left }px`;
 			ele.style.top = `${ rect.top }px`;
 		} else if ( ele ) {
 			ele.classList.remove( 'show-place-holder' );

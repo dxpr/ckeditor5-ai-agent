@@ -99,6 +99,7 @@ ClassicEditor
 		},
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
+			debugMode: true,
 			commandsDropdown: [
 				{
 					title: 'Style & Tone',
@@ -195,7 +196,8 @@ ClassicEditor
 			]
 		},
 		aiAgent: {
-			apiKey: 'YOUR_API_KEY'
+			apiKey: 'YOUR_API_KEY',
+			debugMode: true
 		},
 		language: {
 			content: 'en',

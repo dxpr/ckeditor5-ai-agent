@@ -6,7 +6,7 @@ import sbd from 'sbd';
 
 var ckeditor = "<svg width='68' height='64' viewBox='0 0 68 64' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><path d='M43.71 11.025a11.508 11.508 0 0 0-1.213 5.159c0 6.42 5.244 11.625 11.713 11.625.083 0 .167 0 .25-.002v16.282a5.464 5.464 0 0 1-2.756 4.739L30.986 60.7a5.548 5.548 0 0 1-5.512 0L4.756 48.828A5.464 5.464 0 0 1 2 44.089V20.344c0-1.955 1.05-3.76 2.756-4.738L25.474 3.733a5.548 5.548 0 0 1 5.512 0l12.724 7.292z' fill='#FFF'/><path d='M45.684 8.79a12.604 12.604 0 0 0-1.329 5.65c0 7.032 5.744 12.733 12.829 12.733.091 0 .183-.001.274-.003v17.834a5.987 5.987 0 0 1-3.019 5.19L31.747 63.196a6.076 6.076 0 0 1-6.037 0L3.02 50.193A5.984 5.984 0 0 1 0 45.003V18.997c0-2.14 1.15-4.119 3.019-5.19L25.71.804a6.076 6.076 0 0 1 6.037 0L45.684 8.79zm-29.44 11.89c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h25.489c.833 0 1.51-.67 1.51-1.498v-.715c0-.827-.677-1.498-1.51-1.498h-25.49.001zm0 9.227c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h18.479c.833 0 1.509-.67 1.509-1.498v-.715c0-.827-.676-1.498-1.51-1.498H16.244zm0 9.227c-.834 0-1.51.671-1.51 1.498v.715c0 .828.676 1.498 1.51 1.498h25.489c.833 0 1.51-.67 1.51-1.498v-.715c0-.827-.677-1.498-1.51-1.498h-25.49.001zm41.191-14.459c-5.835 0-10.565-4.695-10.565-10.486 0-5.792 4.73-10.487 10.565-10.487C63.27 3.703 68 8.398 68 14.19c0 5.791-4.73 10.486-10.565 10.486v-.001z' fill='#1EBC61' fill-rule='nonzero'/><path d='M60.857 15.995c0-.467-.084-.875-.251-1.225a2.547 2.547 0 0 0-.686-.88 2.888 2.888 0 0 0-1.026-.531 4.418 4.418 0 0 0-1.259-.175c-.134 0-.283.006-.447.018-.15.01-.3.034-.446.07l.075-1.4h3.587v-1.8h-5.462l-.214 5.06c.319-.116.682-.21 1.089-.28.406-.071.77-.107 1.088-.107.218 0 .437.021.655.063.218.041.413.114.585.218s.313.244.422.419c.109.175.163.391.163.65 0 .424-.132.745-.396.961a1.434 1.434 0 0 1-.938.325c-.352 0-.656-.1-.912-.3-.256-.2-.43-.453-.523-.762l-1.925.588c.1.35.258.664.472.943.214.279.47.514.767.706.298.191.63.339.995.443.365.104.749.156 1.151.156.437 0 .86-.064 1.272-.193.41-.13.778-.323 1.1-.581a2.8 2.8 0 0 0 .775-.981c.193-.396.29-.864.29-1.405h-.001z' fill='#FFF' fill-rule='nonzero'/></g></svg>\n";
 
-var aiAgentIcon = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M4.00815 5.01816H19.3851V10.9145H21.1594V3.2439H2.23389V22.1694H12.3955V20.3951H4.00815V5.01816Z\" fill=\"#222330\"/>\n    <path d=\"M15.1908 20.046L20.9028 12.7065L22.9998 14.3385L17.2878 21.678L15.0341 22.755C14.8582 22.8391 14.6619 22.6862 14.7002 22.4951L15.1908 20.046Z\" fill=\"#222330\"/>\n    <path d=\"M16.1211 8.43794V15.7494H14.5753V8.43794H16.1211Z\" fill=\"#222330\"/>\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.31458 15.7495H6.65807L9.18211 8.43804H11.1742L13.6947 15.7495H12.0382L11.4968 14.0823H8.85696L8.31458 15.7495ZM10.2067 10.1088L11.1051 12.8756H9.24951L10.1496 10.1088H10.2067Z\" fill=\"#222330\"/>\n</svg>";
+var aiAgentIcon = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M4.00815 5.01816H19.3851V10.9145H21.1594V3.2439H2.23389V22.1694H12.3955V20.3951H4.00815V5.01816Z\" />\n    <path d=\"M15.1908 20.046L20.9028 12.7065L22.9998 14.3385L17.2878 21.678L15.0341 22.755C14.8582 22.8391 14.6619 22.6862 14.7002 22.4951L15.1908 20.046Z\" />\n    <path d=\"M16.1211 8.43794V15.7494H14.5753V8.43794H16.1211Z\" />\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.31458 15.7495H6.65807L9.18211 8.43804H11.1742L13.6947 15.7495H12.0382L11.4968 14.0823H8.85696L8.31458 15.7495ZM10.2067 10.1088L11.1051 12.8756H9.24951L10.1496 10.1088H10.2067Z\" />\n</svg>";
 
 var arrowIcon = "<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n    <path d=\"M15.875 4.419a.75.75 0 0 0-1.5 0v7.25H6.818l2.33-1.955a.75.75 0 0 0-.963-1.15l-3.792 3.182a.75.75 0 0 0-.17.945c.046.11.118.208.21.284l3.788 3.18a.75.75 0 1 0 .965-1.149l-2.19-1.837h7.629c.69 0 1.25-.56 1.25-1.25v-7.5Z\"></path>\n</svg>";
 
@@ -1515,11 +1515,23 @@ class AiAgentUI extends Plugin {
         this.addLoader();
         this.addGptErrorToolTip();
         this.addAiAgentButton();
-        editor.accessibility.addKeystrokeInfos({
+        editor.accessibility.addKeystrokeInfoGroup({
+            id: 'ai-agent',
+            categoryId: 'navigation',
+            label: t('AI Agent'),
             keystrokes: [
                 {
-                    label: t('Insert slash command (AI Agent)'),
+                    label: t('Slash Command: Open the AI Command Menu in an Empty Field'),
                     keystroke: '/'
+                },
+                {
+                    // eslint-disable-next-line max-len
+                    label: t('Force Insert Slash Command: Add a Slash Command Within Existing Text'),
+                    keystroke: env.isMac ? 'Cmd + /' : 'Ctrl + /'
+                },
+                {
+                    label: t('Cancel AI Generation'),
+                    keystroke: env.isMac ? 'Cmd + Backspace' : 'Ctrl + Backspace'
                 }
             ]
         });
@@ -1536,21 +1548,6 @@ class AiAgentUI extends Plugin {
             allowIn: 'ai-tag'
         });
         this.addCustomTagConversions();
-        let keystroke = '';
-        if (env.isMac) {
-            keystroke = 'Cmd + Backspace';
-        }
-        if (env.isWindows) {
-            keystroke = 'Ctrl + Backspace';
-        }
-        editor.accessibility.addKeystrokeInfos({
-            keystrokes: [
-                {
-                    label: t('Cancel AI Generation'),
-                    keystroke
-                }
-            ]
-        });
     }
     addCustomTagConversions() {
         const editor = this.editor;
@@ -1594,9 +1591,25 @@ class AiAgentUI extends Plugin {
 	 * searching commands, and organizes the command menu into groups for better
 	 * usability.
 	 */ addAiAgentButton() {
+        const editor = this.editor;
         const t = this.editor.t;
         const model = this.editor.model;
         const viewDocument = this.editor.editing.view.document;
+        const executeCommand = ()=>{
+            this.editor.model.change((writer)=>{
+                const position = this.editor.model.document.selection.getLastPosition();
+                if (position) {
+                    const inlineSlashContainer = writer.createElement('inline-slash', {
+                        class: 'ck-slash'
+                    });
+                    writer.insertText('/', inlineSlashContainer);
+                    writer.insert(inlineSlashContainer, position);
+                    const newPosition = writer.createPositionAt(inlineSlashContainer, 'end');
+                    writer.setSelection(newPosition);
+                }
+            });
+            this.editor.editing.view.focus();
+        };
         const executeAiAgentCommand = (labeledFieldView, listView)=>{
             if (labeledFieldView.fieldView.element) {
                 const aiAgentService = new AiAgentService(this.editor);
@@ -1615,22 +1628,7 @@ class AiAgentUI extends Plugin {
                 icon: aiAgentIcon,
                 tooltip: true
             });
-            // Add the functionality for the dropdown button's execute event
-            buttonView.on('execute', ()=>{
-                this.editor.model.change((writer)=>{
-                    const position = this.editor.model.document.selection.getLastPosition();
-                    if (position) {
-                        const inlineSlashContainer = writer.createElement('inline-slash', {
-                            class: 'ck-slash'
-                        });
-                        writer.insertText('/', inlineSlashContainer);
-                        writer.insert(inlineSlashContainer, position);
-                        const newPosition = writer.createPositionAt(inlineSlashContainer, 'end');
-                        writer.setSelection(newPosition);
-                    }
-                });
-                this.editor.editing.view.focus();
-            });
+            buttonView.on('execute', executeCommand);
             const menuView = new MenuBarMenuView(locale);
             const listView = new MenuBarMenuListView(locale);
             const searchContainer = new MenuBarMenuListItemView(locale, menuView);
@@ -1714,6 +1712,11 @@ class AiAgentUI extends Plugin {
             }
             dropdownView.panelView.children.add(listView);
             return dropdownView;
+        });
+        editor.editing.view.document.on('keydown', (event, data)=>{
+            if ((data.ctrlKey || data.metaKey) && data.keyCode === 191) {
+                executeCommand();
+            }
         });
     }
     /**
@@ -1862,7 +1865,6 @@ class AiAgentUI extends Plugin {
         const isReadOnlyMode = this.editor.isReadOnly;
         if (ele && rect && !isReadOnlyMode) {
             ele.classList.add('show-place-holder');
-            ele.style.left = `${rect.left}px`;
             ele.style.top = `${rect.top}px`;
         } else if (ele) {
             ele.classList.remove('show-place-holder');

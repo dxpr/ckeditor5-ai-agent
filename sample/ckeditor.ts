@@ -58,6 +58,8 @@ ClassicEditor
 		toolbar: [
 			'aiAgentButton',
 			'|',
+			'undo', 'redo',
+			'|',
 			'heading',
 			'|',
 			'bold',
@@ -167,7 +169,10 @@ ClassicEditor
 		],
 		toolbar: [
 			'aiAgentButton',
-			'|', 'paragraph', 'heading1', 'heading2', 'heading3', 'heading4', 'heading5', 'heading6',
+			'|',
+			'undo', 'redo',
+			'|',
+			'paragraph', 'heading1', 'heading2', 'heading3', 'heading4', 'heading5', 'heading6',
 			'|',
 			'bold',
 			'italic',

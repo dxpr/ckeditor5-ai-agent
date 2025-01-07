@@ -1,6 +1,6 @@
 {
   "name": "@dxpr/ckeditor5-ai-agent",
-  "version": "1.0.0-beta9",
+  "version": "1.0.0-beta10",
   "description": "A plugin for CKEditor 5.",
   "keywords": [
     "ckeditor",
@@ -44,7 +44,6 @@
     "ckeditor5-metadata.json"
   ],
   "devDependencies": {
-    "@ckeditor/ckeditor5-core": "^43.3.1",
     "@ckeditor/ckeditor5-dev-build-tools": "42.0.1",
     "@ckeditor/ckeditor5-inspector": ">=4.1.0",
     "@ckeditor/ckeditor5-package-tools": "^2.1.0",
@@ -54,7 +53,7 @@
     "@types/sinon": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "~5.43.0",
     "@typescript-eslint/parser": "^5.18.0",
-    "ckeditor5": "latest",
+    "ckeditor5": "^43.0.0",
     "eslint": "^7.32.0",
     "eslint-config-ckeditor5": ">=6.0.0",
     "http-server": "^14.1.0",
@@ -67,7 +66,7 @@
     "typescript": "5.0.4"
   },
   "peerDependencies": {
-    "ckeditor5": ">=42.0.0 || ^0.0.0-nightly"
+    "ckeditor5": "^43.0.0"
   },
   "scripts": {
     "build:dist": "node ./scripts/build-dist.mjs",

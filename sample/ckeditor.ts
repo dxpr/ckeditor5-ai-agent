@@ -1,12 +1,13 @@
 declare global {
 	interface Window {
-		editor: ClassicEditor;
+		editors: Record<string, ClassicEditor | InlineEditor>;
 	}
 }
 
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
+import { InlineEditor } from '@ckeditor/ckeditor5-editor-inline';
 
 import { Autoformat } from '@ckeditor/ckeditor5-autoformat';
 import { Bold, Code, Italic } from '@ckeditor/ckeditor5-basic-styles';
@@ -143,37 +144,38 @@ ClassicEditor
 		}
 	} )
 	.then( editor => {
-		window.editor = editor;
+		window.editors.classic = editor;
 		CKEditorInspector.attach( editor );
-		window.console.log( 'CKEditor 5 is ready.', editor );
+		window.console.log( 'CKEditor 5 classic editor is ready.', editor );
 	} )
 	.catch( err => {
 		window.console.error( err.stack );
 	} );
 
-ClassicEditor
-	.create( document.getElementById( 'editor2' )!, {
-		plugins: [
-			AiAgent,
-			Essentials,
-			Autoformat,
-			BlockQuote,
-			Bold,
-			Heading,
-			HeadingButtonsUI,
-			Indent,
-			Italic,
-			List,
-			Paragraph,
-			ParagraphButtonUI,
-			SourceEditing
-		],
-		toolbar: [
+// Common configuration for inline editors
+const inlineEditorConfig = {
+	plugins: [
+		AiAgent,
+		Essentials,
+		Autoformat,
+		BlockQuote,
+		Bold,
+		Heading,
+		HeadingButtonsUI,
+		Indent,
+		Italic,
+		List,
+		Paragraph,
+		ParagraphButtonUI,
+		SourceEditing
+	],
+	toolbar: {
+		items: [
 			'aiAgentButton',
 			'|',
 			'undo', 'redo',
 			'|',
-			'paragraph', 'heading1', 'heading2', 'heading3', 'heading4', 'heading5', 'heading6',
+			'paragraph', 'heading1', 'heading2', 'heading3',
 			'|',
 			'bold',
 			'italic',
@@ -184,31 +186,31 @@ ClassicEditor
 			'|',
 			'sourceEditing'
 		],
-		heading: {
-			options: [
-				{ model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-				{ model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-				{ model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-				{ model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-				{ model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
-				{ model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
-				{ model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
-			]
-		},
-		aiAgent: {
-			apiKey: 'YOUR_API_KEY',
-			debugMode: true
-		},
-		language: {
-			content: 'en',
-			ui: 'en'
-		}
-	} )
-	.then( editor => {
-		window.editor = editor;
-		CKEditorInspector.attach( editor );
-		window.console.log( 'CKEditor 5 is ready.', editor );
-	} )
-	.catch( err => {
-		window.console.error( err.stack );
-	} );
+		shouldNotGroupWhenFull: true
+	},
+	aiAgent: {
+		apiKey: 'YOUR_API_KEY',
+		debugMode: true
+	},
+	language: {
+		content: 'en',
+		ui: 'en'
+	}
+};
+
+// Initialize window.editors object
+window.editors = {};
+
+// Initialize all inline editors
+[ 'editor1', 'editor2', 'editor3', 'editor4' ].forEach( editorId => {
+	InlineEditor
+		.create( document.getElementById( editorId )!, inlineEditorConfig )
+		.then( editor => {
+			window.editors[ editorId ] = editor;
+			CKEditorInspector.attach( editor );
+			window.console.log( `CKEditor 5 inline ${ editorId } is ready.`, editor );
+		} )
+		.catch( err => {
+			window.console.error( `Error initializing ${ editorId }:`, err.stack );
+		} );
+} );

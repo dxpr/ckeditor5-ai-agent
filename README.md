@@ -242,7 +242,7 @@ Generate requested percentage of content.
 ```typescript
 Context-Specific Rules:
 Replace "@@@cursor@@@" with contextually appropriate content.
-Replace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+Return ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
 NEVER copy or paraphrase context text.
 Verify zero phrase duplication.
 Analyze the CONTEXT section thoroughly 

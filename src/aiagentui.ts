@@ -201,6 +201,20 @@ export default class AiAgentUI extends Plugin {
 		const model = this.editor.model;
 		const viewDocument = this.editor.editing.view.document;
 
+		const executeAiAgentCommand = (
+			command: string,
+			labeledFieldView: LabeledFieldView<InputTextView>,
+			listView: MenuBarMenuListView
+		): void => {
+			if ( labeledFieldView.fieldView.element && command ) {
+				const aiAgentService = new AiAgentService( this.editor );
+				this.editor.editing.view.focus();
+				aiAgentService.handleSlashCommand( command );
+				labeledFieldView.isEnabled = false;
+				this.aiAgentListItemUpdate( listView, false );
+			}
+		};
+
 		const executeCommand = () => {
 			this.editor.model.change( writer => {
 				const position = this.editor.model.document.selection.getLastPosition();
@@ -213,16 +227,6 @@ export default class AiAgentUI extends Plugin {
 				}
 			} );
 			this.editor.editing.view.focus();
-		};
-
-		const executeAiAgentCommand = ( labeledFieldView: LabeledFieldView<InputTextView>, listView: MenuBarMenuListView ): void => {
-			if ( labeledFieldView.fieldView.element ) {
-				const aiAgentService = new AiAgentService( this.editor );
-				this.editor.editing.view.focus();
-				aiAgentService.handleSlashCommand( labeledFieldView.fieldView.element.value );
-				labeledFieldView.isEnabled = false;
-				this.aiAgentListItemUpdate( listView, false );
-			}
 		};
 
 		this.editor.ui.componentFactory.add( 'aiAgentButton', locale => {
@@ -258,7 +262,8 @@ export default class AiAgentUI extends Plugin {
 
 			// Execute a command when the button is clicked.
 			button.on( 'execute', () => {
-				executeAiAgentCommand( labeledFieldView, listView );
+				const command = labeledFieldView.fieldView?.element?.value ?? '';
+				executeAiAgentCommand( command, labeledFieldView, listView );
 			} );
 
 			labeledFieldView.fieldView.on( 'input', () => {
@@ -277,7 +282,8 @@ export default class AiAgentUI extends Plugin {
 				labeledFieldView.fieldView.element.addEventListener( 'keydown', event => {
 					if ( event.key === 'Enter' ) {
 						event.preventDefault();
-						executeAiAgentCommand( labeledFieldView, listView );
+						const command = labeledFieldView.fieldView?.element?.value ?? '';
+						executeAiAgentCommand( command, labeledFieldView, listView );
 					}
 				} );
 			}
@@ -325,7 +331,7 @@ export default class AiAgentUI extends Plugin {
 					} );
 					buttonView.delegate( 'execute' ).to( menuView );
 					buttonView.on( 'execute', () => {
-						executeAiAgentCommand( labeledFieldView, listView );
+						executeAiAgentCommand( item.command, labeledFieldView, listView );
 					} );
 					listItemView.children.add( buttonView );
 					listView.items.add( listItemView );

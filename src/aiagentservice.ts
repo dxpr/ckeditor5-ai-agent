@@ -1,5 +1,5 @@
 import type { Editor } from 'ckeditor5/src/core.js';
-import type { Element } from 'ckeditor5/src/engine.js';
+import type { Element, Item, Position } from 'ckeditor5/src/engine.js';
 import type { AiModel, MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
@@ -102,24 +102,19 @@ export default class AiAgentService {
 					}
 				}
 			} else if ( parentEquivalentHTML ) {
-				editor.model.change( writer => {
-					const endPosition = writer.createPositionAt( position.parent, 'end' );
-					writer.setSelection( endPosition );
-				} );
 				content = parentEquivalentHTML?.innerText;
 			}
 		}
 
 		if ( command ) {
-			content = command;
-			selectedContent = parentEquivalentHTML?.outerHTML;
 			const selection = model.document.selection;
-			const range = selection.getFirstRange();
-			if ( range ) {
-				model.change( writer => {
-					writer.setSelection( range.end );
-				} );
-			}
+			const selectedContentFragment = model.getSelectedContent( selection );
+
+			const viewFragment = editor.data.toView( selectedContentFragment );
+			const html = editor.data.processor.toData( viewFragment );
+
+			content = command;
+			selectedContent = html;
 		}
 
 		if ( this.moderationEnable ) {
@@ -141,7 +136,7 @@ export default class AiAgentService {
 				selectedContent
 			);
 			if ( parent && gptPrompt ) {
-				await this.fetchAndProcessGptResponse( gptPrompt, parent );
+				await this.fetchAndProcessGptResponse( !!command, gptPrompt, parent );
 			}
 		} catch ( error ) {
 			console.error( 'Error handling slash command:', error );
@@ -255,6 +250,7 @@ export default class AiAgentService {
 	 * @returns A promise that resolves when the response has been processed.
 	 */
 	private async fetchAndProcessGptResponse(
+		command: boolean,
 		prompt: string,
 		parent: Element,
 		retries: number = this.retryAttempts
@@ -305,35 +301,44 @@ export default class AiAgentService {
 			const reader = response.body!.getReader();
 			const decoder = new TextDecoder( 'utf-8' );
 
-			this.clearParentContent( parent );
 			// this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
 
-			let insertParent = true;
-
 			this.cancelGenerationButton( blockID, controller );
-
 			editor.model.change( writer => {
-				const position = editor.model.document.selection.getLastPosition();
+				const position = this.editor.model.document.selection.getLastPosition();
+				let newPosition: Position | undefined;
 				if ( position ) {
-					const aiTag = writer.createElement( 'ai-tag', {
-						id: blockID
-					} );
-					const parent = position.parent as Element;
-					if ( parent ) {
-						if ( parent.parent?.name === 'tableCell' ) {
-							insertParent = false;
-						} else if ( parent.getAttribute( 'listType' ) === 'bulleted' ) {
-							insertParent = false;
+					if ( position?.parent.name === 'inline-slash' ) {
+						if ( position?.parent?.parent ) {
+							newPosition = writer.createPositionAt( position.parent.parent, 'after' );
 						}
+						if ( position?.parent ) {
+							const parentJson = position?.parent?.parent?.toJSON() as any;
+							if ( parentJson.children.length > 1 ) {
+								const positionInline = writer.createPositionAt( position.parent, 'after' );
+								const aiTagInline = writer.createElement( 'ai-tag', {
+									id: `${ blockID }-inline`
+								} );
+								writer.insert( aiTagInline, positionInline );
+							}
+						}
+					} else {
+						const aiTagInline = writer.createElement( 'ai-tag', {
+							id: `${ blockID }-inline`
+						} );
+						writer.insert( aiTagInline, position );
+						newPosition = writer.createPositionAt( position.parent, 'after' );
 					}
-
-					const nextLinePosition = writer.createPositionAt( position.parent, 'after' );
-
-					writer.insert( aiTag, insertParent ? nextLinePosition : position );
-					const newPosition = writer.createPositionAt( aiTag, 'end' );
-					writer.setSelection( newPosition );
+					if ( newPosition ) {
+						const aiTag = writer.createElement( 'ai-tag', {
+							id: blockID
+						} );
+						writer.insert( aiTag, newPosition );
+					}
 				}
 			} );
+
+			this.clearParentContent( parent, command );
 
 			console.log( 'Starting to process response' );
 			for ( ;; ) {
@@ -390,6 +395,7 @@ export default class AiAgentService {
 				if ( retries > 0 ) {
 					console.warn( `Retrying... (${ retries } attempts left)` );
 					return await this.fetchAndProcessGptResponse(
+						command,
 						prompt,
 						parent,
 						retries - 1
@@ -493,7 +499,10 @@ export default class AiAgentService {
 		}
 
 		const editorData = editor.getData();
-		let editorContent = editorData.replace( /<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '' );
+		let editorContent = editorData.replace( new RegExp( `<ai-tag id="${ blockID }-inline">&nbsp;</ai-tag>`, 'g' ), '' );
+		editorContent = editorContent.replace( new RegExp( `<ai-tag id="${ blockID }">&nbsp;</ai-tag>`, 'g' ), '' );
+		editorContent = editorContent.replace( /<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '' );
+		editorContent = editorContent.replace( `<ai-tag id="${ blockID }-inline">`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
 		editor.setData( editorContent );
 	}
@@ -531,23 +540,53 @@ export default class AiAgentService {
 	 */
 	private async updateContent( newHtml: string, blockID: string ): Promise<void> {
 		const editor = this.editor;
-		editor.model.change( writer => {
-			const root = editor.model.document.getRoot();
-			if ( root ) {
-				const childrens = this.getViewChildrens( root, blockID );
-				const targetElement = childrens.length ? childrens[ 0 ] : null;
+		const tempParagraph: HTMLElement = document.createElement( 'div' );
+		tempParagraph.innerHTML = newHtml;
+		let textContent = '';
 
-				if ( targetElement ) {
-					const range = editor.model.createRangeIn( targetElement );
-					writer.remove( range );
-
-					const viewFragment = editor.data.processor.toView( newHtml );
-					const modelFragment = editor.data.toModel( viewFragment );
-
-					writer.insert( modelFragment, targetElement, 'end' );
+		const root = editor.model.document.getRoot();
+		if ( root ) {
+			const childrens = this.getViewChildrens( root, `${ blockID }-inline` );
+			if ( childrens.length ) {
+				if ( tempParagraph.querySelector( 'ul' ) === null && tempParagraph.querySelector( 'li' ) === null ) {
+					textContent = tempParagraph.textContent ?? '';
+					tempParagraph.innerHTML = '';
 				}
 			}
-		} );
+		}
+
+		if ( textContent ) {
+			editor.model.change( writer => {
+				const root = editor.model.document.getRoot();
+				if ( root ) {
+					const childrens = this.getViewChildrens( root, `${ blockID }-inline` );
+					const targetElement = childrens.length ? childrens[ 0 ] : null;
+					if ( targetElement ) {
+						const range = editor.model.createRangeIn( targetElement );
+						writer.remove( range );
+						writer.insertText( textContent, targetElement, 'end' );
+					}
+				}
+			} );
+		}
+		if ( tempParagraph.innerHTML ) {
+			editor.model.change( writer => {
+				const root = editor.model.document.getRoot();
+				if ( root ) {
+					const childrens = this.getViewChildrens( root, blockID );
+					const targetElement = childrens.length ? childrens[ 0 ] : null;
+
+					if ( targetElement ) {
+						const range = editor.model.createRangeIn( targetElement );
+						writer.remove( range );
+						const viewFragment = editor.data.processor.toView( tempParagraph.innerHTML );
+						const modelFragment = editor.data.toModel( viewFragment );
+						writer.insert( modelFragment, targetElement, 'end' );
+					}
+				}
+			} );
+		}
+
 		await new Promise( resolve => setTimeout( resolve ) );
 	}
 
@@ -625,22 +664,73 @@ export default class AiAgentService {
 	 *
 	 * @param parent - The parent element whose content will be cleared.
 	 */
-	private clearParentContent( parent: Element ): void {
+	private clearParentContent( parent: Element, command: boolean ): void {
 		const editor = this.editor;
 		const model = editor.model;
 		const root = model.document.getRoot();
-		const position = model.document.selection.getLastPosition();
-		const inlineSlash = Array.from( parent.getChildren() ).find( ( child: any ) => child.name === 'inline-slash' ) as Element;
+		const positionFirst = model.document.selection.getFirstPosition();
+		const positionLast = model.document.selection.getLastPosition();
 
-		if ( root && position ) {
+		if ( root && positionFirst && positionLast ) {
 			editor.model.change( writer => {
-				const startingPath = inlineSlash?.getPath() || parent.getPath();
-				const range = model.createRange(
-					model.createPositionFromPath( root, startingPath ),
-					model.createPositionFromPath( root, position.path )
-				);
-				writer.remove( range );
-				// writer.setSelection( model.createPositionFromPath( root, startingPath ) );
+				if ( command ) {
+					const range = model.createRange(
+						model.createPositionFromPath( root, positionFirst.path ),
+						model.createPositionFromPath( root, positionLast.path )
+					);
+					writer.remove( range );
+					const positionFirstAfterRemove = model.document.selection.getFirstPosition();
+					if ( positionFirstAfterRemove ) {
+						const positionParentFirst = positionFirstAfterRemove.parent as Item;
+						if ( positionFirstAfterRemove.parent.childCount === 0 ) {
+							writer.remove( positionParentFirst );
+						} else if ( positionFirstAfterRemove.parent.childCount === 1 ) {
+							const tag = positionFirstAfterRemove.parent?.getChild( 0 ) as Element;
+							if ( tag.name === 'ai-tag' && positionFirstAfterRemove.parent.name !== '$root' ) {
+								writer.remove( positionParentFirst );
+							}
+						}
+					}
+
+					const positionLastAfterRemove = model.document.selection.getLastPosition();
+					if ( positionLastAfterRemove ) {
+						const positionParentLast = positionLastAfterRemove.parent as Item;
+						if ( positionLastAfterRemove.parent.childCount === 0 ) {
+							writer.remove( positionParentLast );
+						} else if ( positionLastAfterRemove.parent.childCount === 1 ) {
+							const tag = positionLastAfterRemove.parent?.getChild( 0 ) as Element;
+							if ( tag.name === 'ai-tag' && positionLastAfterRemove.parent.name !== '$root' ) {
+								writer.remove( positionParentLast );
+							}
+						}
+					}
+				} else {
+					const startingPath = parent.getPath();
+					const range = model.createRange(
+						model.createPositionFromPath( root, startingPath ),
+						model.createPositionFromPath( root, positionLast.path )
+					);
+					writer.remove( range );
+
+					if ( parent.getPath() ) {
+						if ( parent.name === 'inline-slash' ) {
+							const position = model.document.selection.getLastPosition();
+							const positionParent = position?.parent as Item;
+							let lineEmpty = true;
+							if ( position?.parent ) {
+								if ( position?.parent?.getChildren().next().value ) {
+									lineEmpty = false;
+								}
+							}
+							if ( lineEmpty ) {
+								writer.remove( positionParent );
+							}
+						} else {
+							const positionParent = parent as Item;
+							writer.remove( positionParent );
+						}
+					}
+				}
 			} );
 		}
 	}

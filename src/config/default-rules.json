@@ -13,5 +13,5 @@
   
   "referenceGuidelines": "Use information from provided markdown to generate new text.\nDo not copy content verbatim.\nEnsure natural flow with existing context.\nAvoid markdown formatting in response.\nConsider whole markdown as single source.\nGenerate requested percentage of content.",
   
-  "contextRequirements": "Replace \"@@@cursor@@@\" with contextually appropriate content.\nReplace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNEVER copy or paraphrase context text.\nVerify zero phrase duplication.\nAnalyze the CONTEXT section thoroughly\nto understand the existing content and its style.\nGenerate a response that seamlessly integrates\nwith the existing content.\nDetermine the appropriate tone and style based\non the context. Ensure the response flows\nnaturally with the existing content."
+  "contextRequirements": "Replace \"@@@cursor@@@\" with contextually appropriate content.\nReturn ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNEVER copy or paraphrase context text.\nVerify zero phrase duplication.\nAnalyze the CONTEXT section thoroughly\nto understand the existing content and its style.\nGenerate a response that seamlessly integrates\nwith the existing content.\nDetermine the appropriate tone and style based\non the context. Ensure the response flows\nnaturally with the existing content."
 }

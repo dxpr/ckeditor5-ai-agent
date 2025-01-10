@@ -16,7 +16,7 @@
 
 ✍️ `AI Agent` is a CKEditor 5 plugin designed to integrate AI-assisted text generation within the CKEditor. The plugin allows users to interact with AI models like GPT-4o and many more to generate, modify, or enhance content directly within the editor.
 
-🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** to seamlessly integrate external web content into prompts.
+🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "wrong". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -98,6 +98,7 @@ Video of AI Agent rendering complex HTML structures fast, rendering tokens in re
 ### Advanced Features
 
 - **RAG-enabled retrieval:** Integrates web content into prompts dynamically.
+- **In-context learning:** Automatically adapts responses based on surrounding content.
 - **Context-aware prompts:** Auto-incorporates surrounding text for better response accuracy.
 - **Multilingual-ready:** Supports CKEditor 5 language settings.
 - **Real-time response streaming:** View generated content as it arrives.

@@ -164,15 +164,32 @@ export default class AiAgentUI extends Plugin {
     addAiAgentButton() {
         const editor = this.editor;
         const t = this.editor.t;
-        const model = this.editor.model;
         const viewDocument = this.editor.editing.view.document;
+        const manageDropdown = (labeledFieldView, listView) => {
+            const editorData = editor.getData();
+            const isTextSelected = editorData ? true : false;
+            labeledFieldView.isEnabled = isTextSelected;
+            this.aiAgentListItemUpdate(listView, isTextSelected);
+        };
         const executeAiAgentCommand = (command, labeledFieldView, listView) => {
             if (labeledFieldView.fieldView.element && command) {
                 const aiAgentService = new AiAgentService(this.editor);
                 this.editor.editing.view.focus();
+                const selection = this.editor.model.document.selection;
+                const selectedContentFragment = this.editor.model.getSelectedContent(selection);
+                const viewFragment = this.editor.data.toView(selectedContentFragment);
+                const html = this.editor.data.processor.toData(viewFragment);
+                if (!html) {
+                    this.editor.execute('selectAll');
+                }
                 aiAgentService.handleSlashCommand(command);
                 labeledFieldView.isEnabled = false;
-                this.aiAgentListItemUpdate(listView, false);
+                manageDropdown(labeledFieldView, listView);
+                if (labeledFieldView.fieldView) {
+                    labeledFieldView.fieldView.set({
+                        value: ''
+                    });
+                }
             }
         };
         const executeCommand = () => {
@@ -203,7 +220,6 @@ export default class AiAgentUI extends Plugin {
             const searchContainer = new MenuBarMenuListItemView(locale, menuView);
             const labeledFieldView = new LabeledFieldView(locale, createLabeledInputText);
             labeledFieldView.label = t('Ask AI to edit');
-            labeledFieldView.isEnabled = false;
             const button = new ButtonView(locale);
             button.set({
                 label: t('Submit'),
@@ -241,19 +257,6 @@ export default class AiAgentUI extends Plugin {
                     }
                 });
             }
-            // Listen for selection changes in the editor
-            viewDocument.on('selectionChange', () => {
-                const selection = model.document.selection;
-                const range = selection.getFirstRange();
-                if (range) {
-                    const selectedText = Array.from(range.getItems())
-                        .map(item => item.data)
-                        .join('');
-                    const isTextSelected = !!selectedText;
-                    labeledFieldView.isEnabled = isTextSelected;
-                    this.aiAgentListItemUpdate(listView, isTextSelected);
-                }
-            });
             searchContainer.children.add(labeledFieldView);
             searchContainer.children.add(button);
             listView.items.add(searchContainer);
@@ -265,8 +268,7 @@ export default class AiAgentUI extends Plugin {
                 const titleButton = new MenuBarMenuListItemButtonView(locale);
                 titleButton.set({
                     label: group.title,
-                    class: 'ck-menu-group-title',
-                    isEnabled: false
+                    class: 'ck-menu-group-title'
                 });
                 titleView.children.add(titleButton);
                 listView.items.add(titleView);
@@ -276,8 +278,7 @@ export default class AiAgentUI extends Plugin {
                     const buttonView = new MenuBarMenuListItemButtonView(locale);
                     buttonView.set({
                         label: item.title,
-                        class: 'ck-menu-item',
-                        isEnabled: false
+                        class: 'ck-menu-item'
                     });
                     buttonView.delegate('execute').to(menuView);
                     buttonView.on('execute', () => {
@@ -288,6 +289,12 @@ export default class AiAgentUI extends Plugin {
                 }
             }
             dropdownView.panelView.children.add(listView);
+            viewDocument.on('keyup', () => {
+                manageDropdown(labeledFieldView, listView);
+            });
+            setTimeout(function () {
+                manageDropdown(labeledFieldView, listView);
+            });
             return dropdownView;
         });
         editor.editing.view.document.on('keydown', (event, data) => {

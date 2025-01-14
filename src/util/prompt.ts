@@ -13,6 +13,7 @@ export class PromptHelper {
 	private promptSettings: PromptSettings;
 	private debugMode: boolean;
 	private editorContextRatio: number;
+	private contentScope: string;
 
 	constructor( editor: Editor, options: { editorContextRatio?: number } = {} ) {
 		this.editor = editor;
@@ -22,6 +23,7 @@ export class PromptHelper {
 		this.promptSettings = config.promptSettings ?? {};
 		this.debugMode = config.debugMode ?? false;
 		this.editorContextRatio = options.editorContextRatio ?? 0.3;
+		this.contentScope = config?.contentScope ?? '';
 	}
 
 	public getSystemPrompt( isInlineResponse: boolean = false ): string {
@@ -69,7 +71,13 @@ export class PromptHelper {
 		let contentAfterPrompt = '';
 		const splitText = promptContainerText ?? prompt;
 		const view = this.editor?.editing?.view?.domRoots?.get( 'main' );
-		const context = view?.innerText ?? '';
+		let context = view?.innerText ?? '';
+
+		if ( this.contentScope ) {
+			const activeEditorElement = this.editor.editing.view.getDomRoot();
+			const targetElement = activeEditorElement?.closest( this.contentScope );
+			context = targetElement?.innerHTML ?? '';
+		}
 
 		const matchIndex = context.indexOf( splitText );
 		const nextEnterIndex = context.indexOf( '\n', matchIndex );

@@ -139,6 +139,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `moderation.key` | `string?` | - | API key for content moderation service |
 | `moderation.disableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
 | `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
+| `contentScope`: | `string?` | CSS selector for determining the scope of content processing. Matches the closest ancestor element to the active editor. |
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

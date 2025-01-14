@@ -60,6 +60,7 @@ declare module '@ckeditor/ckeditor5-core' {
                     command: string;
                 }>;
             }>;
+            contentScope?: string;
         };
     }
 }

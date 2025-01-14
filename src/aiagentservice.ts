@@ -304,6 +304,27 @@ export default class AiAgentService {
 			// this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
 
 			this.cancelGenerationButton( blockID, controller );
+
+			const undoCommand = editor.commands.get( 'undo' );
+			if ( undoCommand ) {
+				undoCommand.on( 'execute', () => {
+					const editorData = editor.getData();
+					if ( editorData.indexOf( 'ai-tag' ) > -1 ) {
+						editor.execute( 'undo' );
+					}
+				} );
+			}
+
+			const redoCommand = editor.commands.get( 'redo' );
+			if ( redoCommand ) {
+				redoCommand.on( 'execute', () => {
+					const editorData = editor.getData();
+					if ( editorData.indexOf( 'ai-tag' ) > -1 ) {
+						editor.execute( 'redo' );
+					}
+				} );
+			}
+
 			editor.model.change( writer => {
 				const position = this.editor.model.document.selection.getLastPosition();
 				let newPosition: Position | undefined;
@@ -504,7 +525,11 @@ export default class AiAgentService {
 		editorContent = editorContent.replace( /<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }-inline">`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
-		editor.setData( editorContent );
+
+		editor.execute( 'selectAll' );
+		const viewFragment = editor.data.processor.toView( editorContent );
+		const modelFragment = editor.data.toModel( viewFragment );
+		editor.model.insertContent( modelFragment );
 	}
 
 	/**
@@ -556,7 +581,7 @@ export default class AiAgentService {
 		}
 
 		if ( textContent ) {
-			editor.model.change( writer => {
+			editor.model.enqueueChange( { isUndoable: false }, writer => {
 				const root = editor.model.document.getRoot();
 				if ( root ) {
 					const childrens = this.getViewChildrens( root, `${ blockID }-inline` );
@@ -570,7 +595,7 @@ export default class AiAgentService {
 			} );
 		}
 		if ( tempParagraph.innerHTML ) {
-			editor.model.change( writer => {
+			editor.model.enqueueChange( { isUndoable: false }, writer => {
 				const root = editor.model.document.getRoot();
 				if ( root ) {
 					const childrens = this.getViewChildrens( root, blockID );

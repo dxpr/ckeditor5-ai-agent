@@ -294,7 +294,7 @@ var tone = "Language and Tone Guidelines:\nMatch the formality level of the surr
 var inlineContent = "Inline Content Specific Rules:\nDetermine content type (list, table, or inline).\nFormat according to content type.\nEnsure seamless integration.\nPreserve existing content flow.\nMaintain proper nesting.";
 var imageHandling = "Image Element Requirements:\nEvery <img> must have src and alt attributes.\nFormat src URLs as: https://placehold.co/600x400?text=[alt_text].\nAlt text must be descriptive and meaningful.";
 var referenceGuidelines = "Use information from provided markdown to generate new text.\nDo not copy content verbatim.\nEnsure natural flow with existing context.\nAvoid markdown formatting in response.\nConsider whole markdown as single source.\nGenerate requested percentage of content.";
-var contextRequirements = "Replace \"@@@cursor@@@\" with contextually appropriate content.\nReplace ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNEVER copy or paraphrase context text.\nVerify zero phrase duplication.\nAnalyze the CONTEXT section thoroughly\nto understand the existing content and its style.\nGenerate a response that seamlessly integrates\nwith the existing content.\nDetermine the appropriate tone and style based\non the context. Ensure the response flows\nnaturally with the existing content.";
+var contextRequirements = "Replace \"@@@cursor@@@\" with contextually appropriate content.\nReturn ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNEVER copy or paraphrase context text.\nVerify zero phrase duplication.\nAnalyze the CONTEXT section thoroughly\nto understand the existing content and its style.\nGenerate a response that seamlessly integrates\nwith the existing content.\nDetermine the appropriate tone and style based\non the context. Ensure the response flows\nnaturally with the existing content.";
 var defaultRulesJson = {
 	responseRules: responseRules,
 	htmlFormatting: htmlFormatting,
@@ -321,6 +321,7 @@ class PromptHelper {
     promptSettings;
     debugMode;
     editorContextRatio;
+    contentScope;
     constructor(editor, options = {}){
         this.editor = editor;
         const config = editor.config.get('aiAgent');
@@ -328,6 +329,7 @@ class PromptHelper {
         this.promptSettings = config.promptSettings ?? {};
         this.debugMode = config.debugMode ?? false;
         this.editorContextRatio = options.editorContextRatio ?? 0.3;
+        this.contentScope = config?.contentScope ?? '';
     }
     getSystemPrompt(isInlineResponse = false) {
         const defaultComponents = getDefaultRules(this.editor);
@@ -363,7 +365,12 @@ class PromptHelper {
         let contentAfterPrompt = '';
         const splitText = promptContainerText ?? prompt;
         const view = this.editor?.editing?.view?.domRoots?.get('main');
-        const context = view?.innerText ?? '';
+        let context = view?.innerText ?? '';
+        if (this.contentScope) {
+            const activeEditorElement = this.editor.editing.view.getDomRoot();
+            const targetElement = activeEditorElement?.closest(this.contentScope);
+            context = targetElement?.innerHTML ?? '';
+        }
         const matchIndex = context.indexOf(splitText);
         const nextEnterIndex = context.indexOf('\n', matchIndex);
         const firstNewlineIndex = nextEnterIndex !== -1 ? nextEnterIndex : matchIndex + splitText.length;
@@ -912,23 +919,16 @@ class AiAgentService {
                     }
                 }
             } else if (parentEquivalentHTML) {
-                editor.model.change((writer)=>{
-                    const endPosition = writer.createPositionAt(position.parent, 'end');
-                    writer.setSelection(endPosition);
-                });
                 content = parentEquivalentHTML?.innerText;
             }
         }
         if (command) {
-            content = command;
-            selectedContent = parentEquivalentHTML?.outerHTML;
             const selection = model.document.selection;
-            const range = selection.getFirstRange();
-            if (range) {
-                model.change((writer)=>{
-                    writer.setSelection(range.end);
-                });
-            }
+            const selectedContentFragment = model.getSelectedContent(selection);
+            const viewFragment = editor.data.toView(selectedContentFragment);
+            const html = editor.data.processor.toData(viewFragment);
+            content = command;
+            selectedContent = html;
         }
         if (this.moderationEnable) {
             const moderateContent = await this.moderateContent(content ?? '');
@@ -943,7 +943,7 @@ class AiAgentService {
             aiAgentContext.showLoader(rect);
             const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(content ?? '', parentEquivalentHTML?.innerText, selectedContent);
             if (parent && gptPrompt) {
-                await this.fetchAndProcessGptResponse(gptPrompt, parent);
+                await this.fetchAndProcessGptResponse(!!command, gptPrompt, parent);
             }
         } catch (error) {
             console.error('Error handling slash command:', error);
@@ -1041,7 +1041,7 @@ class AiAgentService {
 	 * @param parent - The parent element in the editor where the response will be inserted.
 	 * @param retries - The number of retry attempts for the API call (default is the configured retry attempts).
 	 * @returns A promise that resolves when the response has been processed.
-	 */ async fetchAndProcessGptResponse(prompt, parent, retries = this.retryAttempts) {
+	 */ async fetchAndProcessGptResponse(command, prompt, parent, retries = this.retryAttempts) {
         console.log('Starting fetchAndProcessGptResponse');
         const editor = this.editor;
         const t = editor.t;
@@ -1084,30 +1084,60 @@ class AiAgentService {
             aiAgentContext.hideLoader();
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
-            this.clearParentContent(parent);
             // this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
-            let insertParent = true;
             this.cancelGenerationButton(blockID, controller);
-            editor.model.change((writer)=>{
-                const position = editor.model.document.selection.getLastPosition();
-                if (position) {
-                    const aiTag = writer.createElement('ai-tag', {
-                        id: blockID
-                    });
-                    const parent = position.parent;
-                    if (parent) {
-                        if (parent.parent?.name === 'tableCell') {
-                            insertParent = false;
-                        } else if (parent.getAttribute('listType') === 'bulleted') {
-                            insertParent = false;
-                        }
+            const undoCommand = editor.commands.get('undo');
+            if (undoCommand) {
+                undoCommand.on('execute', ()=>{
+                    const editorData = editor.getData();
+                    if (editorData.indexOf('ai-tag') > -1) {
+                        editor.execute('undo');
                     }
-                    const nextLinePosition = writer.createPositionAt(position.parent, 'after');
-                    writer.insert(aiTag, insertParent ? nextLinePosition : position);
-                    const newPosition = writer.createPositionAt(aiTag, 'end');
-                    writer.setSelection(newPosition);
+                });
+            }
+            const redoCommand = editor.commands.get('redo');
+            if (redoCommand) {
+                redoCommand.on('execute', ()=>{
+                    const editorData = editor.getData();
+                    if (editorData.indexOf('ai-tag') > -1) {
+                        editor.execute('redo');
+                    }
+                });
+            }
+            editor.model.change((writer)=>{
+                const position = this.editor.model.document.selection.getLastPosition();
+                let newPosition;
+                if (position) {
+                    if (position?.parent.name === 'inline-slash') {
+                        if (position?.parent?.parent) {
+                            newPosition = writer.createPositionAt(position.parent.parent, 'after');
+                        }
+                        if (position?.parent) {
+                            const parentJson = position?.parent?.parent?.toJSON();
+                            if (parentJson.children.length > 1) {
+                                const positionInline = writer.createPositionAt(position.parent, 'after');
+                                const aiTagInline = writer.createElement('ai-tag', {
+                                    id: `${blockID}-inline`
+                                });
+                                writer.insert(aiTagInline, positionInline);
+                            }
+                        }
+                    } else {
+                        const aiTagInline = writer.createElement('ai-tag', {
+                            id: `${blockID}-inline`
+                        });
+                        writer.insert(aiTagInline, position);
+                        newPosition = writer.createPositionAt(position.parent, 'after');
+                    }
+                    if (newPosition) {
+                        const aiTag = writer.createElement('ai-tag', {
+                            id: blockID
+                        });
+                        writer.insert(aiTag, newPosition);
+                    }
                 }
             });
+            this.clearParentContent(parent, command);
             console.log('Starting to process response');
             for(;;){
                 const { done, value } = await reader.read();
@@ -1156,7 +1186,7 @@ class AiAgentService {
                 errorMessage = getErrorMessages(status, editor);
                 if (retries > 0) {
                     console.warn(`Retrying... (${retries} attempts left)`);
-                    return await this.fetchAndProcessGptResponse(prompt, parent, retries - 1);
+                    return await this.fetchAndProcessGptResponse(command, prompt, parent, retries - 1);
                 }
             } else {
                 errorMessage = error?.message?.trim();
@@ -1240,9 +1270,15 @@ class AiAgentService {
             }
         }
         const editorData = editor.getData();
-        let editorContent = editorData.replace(/<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '');
+        let editorContent = editorData.replace(new RegExp(`<ai-tag id="${blockID}-inline">&nbsp;</ai-tag>`, 'g'), '');
+        editorContent = editorContent.replace(new RegExp(`<ai-tag id="${blockID}">&nbsp;</ai-tag>`, 'g'), '');
+        editorContent = editorContent.replace(/<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '');
+        editorContent = editorContent.replace(`<ai-tag id="${blockID}-inline">`, '');
         editorContent = editorContent.replace(`<ai-tag id="${blockID}">`, '');
-        editor.setData(editorContent);
+        editor.execute('selectAll');
+        const viewFragment = editor.data.processor.toView(editorContent);
+        const modelFragment = editor.data.toModel(viewFragment);
+        editor.model.insertContent(modelFragment);
     }
     /**
 	 * Recursively retrieves all child elements of a given view element that match the specified block ID.
@@ -1274,20 +1310,53 @@ class AiAgentService {
 	 * @private
 	 */ async updateContent(newHtml, blockID) {
         const editor = this.editor;
-        editor.model.change((writer)=>{
-            const root = editor.model.document.getRoot();
-            if (root) {
-                const childrens = this.getViewChildrens(root, blockID);
-                const targetElement = childrens.length ? childrens[0] : null;
-                if (targetElement) {
-                    const range = editor.model.createRangeIn(targetElement);
-                    writer.remove(range);
-                    const viewFragment = editor.data.processor.toView(newHtml);
-                    const modelFragment = editor.data.toModel(viewFragment);
-                    writer.insert(modelFragment, targetElement, 'end');
+        const tempParagraph = document.createElement('div');
+        tempParagraph.innerHTML = newHtml;
+        let textContent = '';
+        const root = editor.model.document.getRoot();
+        if (root) {
+            const childrens = this.getViewChildrens(root, `${blockID}-inline`);
+            if (childrens.length) {
+                if (tempParagraph.querySelector('ul') === null && tempParagraph.querySelector('li') === null) {
+                    textContent = tempParagraph.textContent ?? '';
+                    tempParagraph.innerHTML = '';
                 }
             }
-        });
+        }
+        if (textContent) {
+            editor.model.enqueueChange({
+                isUndoable: false
+            }, (writer)=>{
+                const root = editor.model.document.getRoot();
+                if (root) {
+                    const childrens = this.getViewChildrens(root, `${blockID}-inline`);
+                    const targetElement = childrens.length ? childrens[0] : null;
+                    if (targetElement) {
+                        const range = editor.model.createRangeIn(targetElement);
+                        writer.remove(range);
+                        writer.insertText(textContent, targetElement, 'end');
+                    }
+                }
+            });
+        }
+        if (tempParagraph.innerHTML) {
+            editor.model.enqueueChange({
+                isUndoable: false
+            }, (writer)=>{
+                const root = editor.model.document.getRoot();
+                if (root) {
+                    const childrens = this.getViewChildrens(root, blockID);
+                    const targetElement = childrens.length ? childrens[0] : null;
+                    if (targetElement) {
+                        const range = editor.model.createRangeIn(targetElement);
+                        writer.remove(range);
+                        const viewFragment = editor.data.processor.toView(tempParagraph.innerHTML);
+                        const modelFragment = editor.data.toModel(viewFragment);
+                        writer.insert(modelFragment, targetElement, 'end');
+                    }
+                }
+            });
+        }
         await new Promise((resolve)=>setTimeout(resolve));
     }
     /**
@@ -1359,18 +1428,64 @@ class AiAgentService {
 	 * Clears the content of the specified parent element in the editor.
 	 *
 	 * @param parent - The parent element whose content will be cleared.
-	 */ clearParentContent(parent) {
+	 */ clearParentContent(parent, command) {
         const editor = this.editor;
         const model = editor.model;
         const root = model.document.getRoot();
-        const position = model.document.selection.getLastPosition();
-        const inlineSlash = Array.from(parent.getChildren()).find((child)=>child.name === 'inline-slash');
-        if (root && position) {
+        const positionFirst = model.document.selection.getFirstPosition();
+        const positionLast = model.document.selection.getLastPosition();
+        if (root && positionFirst && positionLast) {
             editor.model.change((writer)=>{
-                const startingPath = inlineSlash?.getPath() || parent.getPath();
-                const range = model.createRange(model.createPositionFromPath(root, startingPath), model.createPositionFromPath(root, position.path));
-                writer.remove(range);
-            // writer.setSelection( model.createPositionFromPath( root, startingPath ) );
+                if (command) {
+                    const range = model.createRange(model.createPositionFromPath(root, positionFirst.path), model.createPositionFromPath(root, positionLast.path));
+                    writer.remove(range);
+                    const positionFirstAfterRemove = model.document.selection.getFirstPosition();
+                    if (positionFirstAfterRemove) {
+                        const positionParentFirst = positionFirstAfterRemove.parent;
+                        if (positionFirstAfterRemove.parent.childCount === 0) {
+                            writer.remove(positionParentFirst);
+                        } else if (positionFirstAfterRemove.parent.childCount === 1) {
+                            const tag = positionFirstAfterRemove.parent?.getChild(0);
+                            if (tag.name === 'ai-tag' && positionFirstAfterRemove.parent.name !== '$root') {
+                                writer.remove(positionParentFirst);
+                            }
+                        }
+                    }
+                    const positionLastAfterRemove = model.document.selection.getLastPosition();
+                    if (positionLastAfterRemove) {
+                        const positionParentLast = positionLastAfterRemove.parent;
+                        if (positionLastAfterRemove.parent.childCount === 0) {
+                            writer.remove(positionParentLast);
+                        } else if (positionLastAfterRemove.parent.childCount === 1) {
+                            const tag = positionLastAfterRemove.parent?.getChild(0);
+                            if (tag.name === 'ai-tag' && positionLastAfterRemove.parent.name !== '$root') {
+                                writer.remove(positionParentLast);
+                            }
+                        }
+                    }
+                } else {
+                    const startingPath = parent.getPath();
+                    const range = model.createRange(model.createPositionFromPath(root, startingPath), model.createPositionFromPath(root, positionLast.path));
+                    writer.remove(range);
+                    if (parent.getPath()) {
+                        if (parent.name === 'inline-slash') {
+                            const position = model.document.selection.getLastPosition();
+                            const positionParent = position?.parent;
+                            let lineEmpty = true;
+                            if (position?.parent) {
+                                if (position?.parent?.getChildren().next().value) {
+                                    lineEmpty = false;
+                                }
+                            }
+                            if (lineEmpty) {
+                                writer.remove(positionParent);
+                            }
+                        } else {
+                            const positionParent = parent;
+                            writer.remove(positionParent);
+                        }
+                    }
+                }
             });
         }
     }
@@ -1595,6 +1710,15 @@ class AiAgentUI extends Plugin {
         const t = this.editor.t;
         const model = this.editor.model;
         const viewDocument = this.editor.editing.view.document;
+        const executeAiAgentCommand = (command, labeledFieldView, listView)=>{
+            if (labeledFieldView.fieldView.element && command) {
+                const aiAgentService = new AiAgentService(this.editor);
+                this.editor.editing.view.focus();
+                aiAgentService.handleSlashCommand(command);
+                labeledFieldView.isEnabled = false;
+                this.aiAgentListItemUpdate(listView, false);
+            }
+        };
         const executeCommand = ()=>{
             this.editor.model.change((writer)=>{
                 const position = this.editor.model.document.selection.getLastPosition();
@@ -1609,15 +1733,6 @@ class AiAgentUI extends Plugin {
                 }
             });
             this.editor.editing.view.focus();
-        };
-        const executeAiAgentCommand = (labeledFieldView, listView)=>{
-            if (labeledFieldView.fieldView.element) {
-                const aiAgentService = new AiAgentService(this.editor);
-                this.editor.editing.view.focus();
-                aiAgentService.handleSlashCommand(labeledFieldView.fieldView.element.value);
-                labeledFieldView.isEnabled = false;
-                this.aiAgentListItemUpdate(listView, false);
-            }
         };
         this.editor.ui.componentFactory.add('aiAgentButton', (locale)=>{
             const dropdownView = createDropdown(locale, SplitButtonView);
@@ -1645,7 +1760,8 @@ class AiAgentUI extends Plugin {
             });
             // Execute a command when the button is clicked.
             button.on('execute', ()=>{
-                executeAiAgentCommand(labeledFieldView, listView);
+                const command = labeledFieldView.fieldView?.element?.value ?? '';
+                executeAiAgentCommand(command, labeledFieldView, listView);
             });
             labeledFieldView.fieldView.on('input', ()=>{
                 if (labeledFieldView?.fieldView?.element) {
@@ -1662,7 +1778,8 @@ class AiAgentUI extends Plugin {
                 labeledFieldView.fieldView.element.addEventListener('keydown', (event)=>{
                     if (event.key === 'Enter') {
                         event.preventDefault();
-                        executeAiAgentCommand(labeledFieldView, listView);
+                        const command = labeledFieldView.fieldView?.element?.value ?? '';
+                        executeAiAgentCommand(command, labeledFieldView, listView);
                     }
                 });
             }
@@ -1704,7 +1821,7 @@ class AiAgentUI extends Plugin {
                     });
                     buttonView.delegate('execute').to(menuView);
                     buttonView.on('execute', ()=>{
-                        executeAiAgentCommand(labeledFieldView, listView);
+                        executeAiAgentCommand(item.command, labeledFieldView, listView);
                     });
                     listItemView.children.add(buttonView);
                     listView.items.add(listItemView);

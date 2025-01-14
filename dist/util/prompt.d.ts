@@ -6,6 +6,7 @@ export declare class PromptHelper {
     private promptSettings;
     private debugMode;
     private editorContextRatio;
+    private contentScope;
     constructor(editor: Editor, options?: {
         editorContextRatio?: number;
     });

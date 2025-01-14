@@ -188,3 +188,8 @@
 	justify-content:center;
 	border-color:var(--ck-color-panel-border);
 }
+.ck [id^="ai-"].ck-widget.ck-widget_selected,
+.ck [id^="ai-"].ck-widget.ck-widget_selected:hover{
+	outline:none;
+	display:block;
+}

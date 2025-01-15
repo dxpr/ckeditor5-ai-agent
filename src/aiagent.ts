@@ -26,8 +26,7 @@ export default class AiAgent extends Plugin {
 			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxInputContextTokens * 0.75, // Default context size
 			stopSequences: [], // Default stop sequences
 			promptSettings: {},
-			debugMode: false, // Default debug mode
-			streamContent: true // Default streaming mode
+			debugMode: false // Default debug mode
 		};
 
 		const updatedConfig = { ...defaultConfig, ...config };

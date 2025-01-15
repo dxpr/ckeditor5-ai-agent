@@ -45,7 +45,6 @@ declare module '@ckeditor/ckeditor5-core' {
             promptSettings?: PromptSettings;
 
             // Behavior Settings
-            streamContent?: boolean;
             debugMode?: boolean;
             showErrorDuration?: number;
             moderation?: {

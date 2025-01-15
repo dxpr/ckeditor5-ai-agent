@@ -71,7 +71,6 @@ export class HtmlParser {
 	 *
 	 * @param content - The HTML element containing the text to be inserted.
 	 * @param position - The position at which to insert the text (optional).
-	 * @param stream - Indicates whether to insert text in a streaming manner (default is false).
 	 * @param shouldAddBreakAtEnd - Indicates whether to add a paragraph break at the end of the inserted content (default is false).
 	 * @returns A promise that resolves when the text has been inserted.
 	 *

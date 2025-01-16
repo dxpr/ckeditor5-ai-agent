@@ -287,20 +287,18 @@ const textAttributeToHtmlMap = {
     }
 }
 
-var responseRules = "Follow these step-by-step instructions to respond to user inputs:\nIdentify the specific requirements from the TASK section.\nDo not include any markdown syntax in the response.\nGenerate a response that seamlessly integrates with the existing content.\nFormat the response according to the HTML and structural requirements.\nVerify that the response meets all formatting and content guidelines.\nIf there is SELECTED_CONTENT I'll use only that content to answer\nthe user's request in the TASK section, ignoring any additional CONTEXT\nor prior knowledge.";
-var htmlFormatting = "HTML Formatting Requirements:\nGenerate valid HTML snippets only.\nUse only the following allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.\nEnsure proper tag nesting.\nAvoid empty elements.\nUse semantic HTML where appropriate.\nMaintain clean, readable HTML structure.\nFollow block-level element rules.\nProperly close all tags.\nNo inline styles unless specified.\nNo script or style tags.\nThe first word must be a valid HTML tag.\nBlock elements must not contain other block elements.";
-var contentStructure = "Content Structure Rules:\nOrganize information logically.\nUse appropriate paragraph breaks.\nMaintain consistent formatting.\nFollow document hierarchy.\nUse appropriate list structures when needed.\nEnsure proper content flow.\nRespect existing document structure.";
-var tone = "Language and Tone Guidelines:\nMatch the formality level of the surrounding content.\nMaintain a consistent voice throughout the response.\nUse appropriate technical terminology when relevant.\nEnsure proper grammar and punctuation.\nAvoid overly complex sentence structures.\nKeep the tone engaging and reader-friendly.\nAdapt style based on content type.";
-var inlineContent = "Inline Content Specific Rules:\nDetermine content type (list, table, or inline).\nFormat according to content type.\nEnsure seamless integration.\nPreserve existing content flow.\nMaintain proper nesting.";
-var imageHandling = "Image Element Requirements:\nEvery <img> must have src and alt attributes.\nFormat src URLs as: https://placehold.co/600x400?text=[alt_text].\nAlt text must be descriptive and meaningful.";
-var referenceGuidelines = "Use information from provided markdown to generate new text.\nDo not copy content verbatim.\nEnsure natural flow with existing context.\nAvoid markdown formatting in response.\nConsider whole markdown as single source.\nGenerate requested percentage of content.";
-var contextRequirements = "Replace \"@@@cursor@@@\" with contextually appropriate content.\nReturn ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNEVER copy or paraphrase context text.\nVerify zero phrase duplication.\nAnalyze the CONTEXT section thoroughly\nto understand the existing content and its style.\nGenerate a response that seamlessly integrates\nwith the existing content.\nDetermine the appropriate tone and style based\non the context. Ensure the response flows\nnaturally with the existing content.";
+var responseRules = "Follow these step-by-step instructions:\nIdentify the specific requirements from TASK.\nDo not include markdown syntax.\nGenerate a response that integrates with existing content.\nFormat according to HTML requirements.\nIf SELECTED_CONTENT exists, use only that content to answer\nthe request, ignoring additional CONTEXT.";
+var htmlFormatting = "HTML Formatting Requirements:\nUse only allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.\nEnsure proper tag nesting and closure.\nAvoid empty elements.\nUse semantic HTML.\nNo inline styles unless specified.\nNo script or style tags.\nFirst word must be HTML tag.\nBlock elements must not contain other block elements.";
+var contentStructure = "Content Structure Rules:\nOrganize information logically.\nUse appropriate paragraph breaks.\nMaintain consistent formatting.\nFollow document hierarchy.\nEnsure proper content flow.\nRespect existing structure.";
+var tone = "Language and Tone Guidelines:\nMatch formality of surrounding content.\nMaintain consistent voice.\nUse appropriate technical terminology.\nEnsure proper grammar.\nKeep tone engaging and reader-friendly.\nAdapt style to content type.";
+var imageHandling = "Image Requirements:\nEvery <img> needs src and alt attributes.\nFormat src as: https://placehold.co/600x400?text=[alt_text].\nAlt text must be descriptive.";
+var referenceGuidelines = "Use provided markdown to generate new text.\nDo not copy verbatim.\nEnsure natural flow with context.\nAvoid markdown in response.\nGenerate requested percentage.";
+var contextRequirements = "Replace \"@@@cursor@@@\" with appropriate content.\nReturn ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNever copy context text.\nVerify zero duplication.\nAnalyze CONTEXT thoroughly.\nEnsure response flows naturally.";
 var defaultRulesJson = {
 	responseRules: responseRules,
 	htmlFormatting: htmlFormatting,
 	contentStructure: contentStructure,
 	tone: tone,
-	inlineContent: inlineContent,
 	imageHandling: imageHandling,
 	referenceGuidelines: referenceGuidelines,
 	contextRequirements: contextRequirements

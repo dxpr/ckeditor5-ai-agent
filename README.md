@@ -160,31 +160,25 @@ Each component can be customized using either `overrides` (to replace default ru
 
 ##### Response Rules
 ```typescript
-Follow these step-by-step instructions to respond to user inputs:
-Identify the specific requirements from the TASK section.
-Do not include any markdown syntax in the response.
-Generate a response that seamlessly integrates with the existing content.
-Format the response according to the HTML and structural requirements.
-Verify that the response meets all formatting and content guidelines.
-If there is SELECTED_CONTENT I'll use only that content to answer
-the user's request in the TASK section, ignoring any additional CONTEXT
-or prior knowledge.
+Follow these step-by-step instructions:
+Identify the specific requirements from TASK.
+Do not include markdown syntax.
+Generate a response that integrates with existing content.
+Format according to HTML requirements.
+If SELECTED_CONTENT exists, use only that content to answer
+the request, ignoring additional CONTEXT.
 ```
 
 ##### HTML Formatting
 ```typescript
 HTML Formatting Requirements:
-Generate valid HTML snippets only.
-Use only the following allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.
-Ensure proper tag nesting.
+Use only allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.
+Ensure proper tag nesting and closure.
 Avoid empty elements.
-Use semantic HTML where appropriate.
-Maintain clean, readable HTML structure.
-Follow block-level element rules.
-Properly close all tags.
+Use semantic HTML.
 No inline styles unless specified.
 No script or style tags.
-The first word must be a valid HTML tag.
+First word must be HTML tag.
 Block elements must not contain other block elements.
 ```
 
@@ -195,65 +189,46 @@ Organize information logically.
 Use appropriate paragraph breaks.
 Maintain consistent formatting.
 Follow document hierarchy.
-Use appropriate list structures when needed.
 Ensure proper content flow.
-Respect existing document structure.
+Respect existing structure.
 ```
 
 ##### Tone Guidelines
 ```typescript
 Language and Tone Guidelines:
-Match the formality level of the surrounding content.
-Maintain a consistent voice throughout the response.
-Use appropriate technical terminology when relevant.
-Ensure proper grammar and punctuation.
-Avoid overly complex sentence structures.
-Keep the tone engaging and reader-friendly.
-Adapt style based on content type.
-```
-
-##### Inline Content
-```typescript
-Inline Content Specific Rules:
-Determine content type (list, table, or inline).
-Format according to content type.
-Ensure seamless integration.
-Maintain proper nesting.
+Match formality of surrounding content.
+Maintain consistent voice.
+Use appropriate technical terminology.
+Ensure proper grammar.
+Keep tone engaging and reader-friendly.
+Adapt style to content type.
 ```
 
 ##### Image Handling
 ```typescript
-Image Element Requirements:
-Every <img> must have src and alt attributes.
-Format src URLs as: https://placehold.co/600x400?text=[alt_text].
-Alt text must be descriptive and meaningful.
+Image Requirements:
+Every <img> needs src and alt attributes.
+Format src as: https://placehold.co/600x400?text=[alt_text].
+Alt text must be descriptive.
 ```
 
 ##### Reference Guidelines
 ```typescript
-Reference Content Rules:
-Use information from provided markdown to generate new text.
-Do not copy content verbatim.
-Ensure natural flow with existing context.
-Avoid markdown formatting in response.
-Consider whole markdown as single source.
-Generate requested percentage of content.
+Use provided markdown to generate new text.
+Do not copy verbatim.
+Ensure natural flow with context.
+Avoid markdown in response.
+Generate requested percentage.
 ```
 
 ##### Context Requirements
 ```typescript
-Context-Specific Rules:
-Replace "@@@cursor@@@" with contextually appropriate content.
+Replace "@@@cursor@@@" with appropriate content.
 Return ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
-NEVER copy or paraphrase context text.
-Verify zero phrase duplication.
-Analyze the CONTEXT section thoroughly 
-to understand the existing content and its style.
-Generate a response that seamlessly integrates 
-with the existing content.
-Determine the appropriate tone and style based
-on the context. Ensure the response flows 
-naturally with the existing content.
+Never copy context text.
+Verify zero duplication.
+Analyze CONTEXT thoroughly.
+Ensure response flows naturally.
 ```
 
 #### Customization Examples

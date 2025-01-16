@@ -287,13 +287,13 @@ const textAttributeToHtmlMap = {
     }
 }
 
-var responseRules = "Follow these step-by-step instructions:\nIdentify the specific requirements from TASK.\nDo not include markdown syntax.\nGenerate a response that integrates with existing content.\nFormat according to HTML requirements.\nIf SELECTED_CONTENT exists, use only that content to answer\nthe request, ignoring additional CONTEXT.";
-var htmlFormatting = "HTML Formatting Requirements:\nUse only allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.\nEnsure proper tag nesting and closure.\nAvoid empty elements.\nUse semantic HTML.\nNo inline styles unless specified.\nNo script or style tags.\nFirst word must be HTML tag.\nBlock elements must not contain other block elements.";
-var contentStructure = "Content Structure Rules:\nOrganize information logically.\nUse appropriate paragraph breaks.\nMaintain consistent formatting.\nFollow document hierarchy.\nEnsure proper content flow.\nRespect existing structure.";
-var tone = "Language and Tone Guidelines:\nMatch formality of surrounding content.\nMaintain consistent voice.\nUse appropriate technical terminology.\nEnsure proper grammar.\nKeep tone engaging and reader-friendly.\nAdapt style to content type.";
+var responseRules = "Generate a response that addresses the <TASK>\nIf <SELECTED_CONTENT> exists, use only that content to answer the <TASK>, ignoring additional <CONTEXT>.";
+var htmlFormatting = "HTML Requirements:\nUse only these tags: ${getAllowedHtmlTags(editor)}.\nEnsure proper tag nesting.\nUse semantic HTML.\nNo inline styles.\nFirst word must be HTML tag.";
+var contentStructure = "Organize information logically.\nUse paragraphs.\nMaintain consistent formatting.";
+var tone = "";
 var imageHandling = "Image Requirements:\nEvery <img> needs src and alt attributes.\nFormat src as: https://placehold.co/600x400?text=[alt_text].\nAlt text must be descriptive.";
-var referenceGuidelines = "Use provided markdown to generate new text.\nDo not copy verbatim.\nEnsure natural flow with context.\nAvoid markdown in response.\nGenerate requested percentage.";
-var contextRequirements = "Replace \"@@@cursor@@@\" with appropriate content.\nReturn ONLY @@@cursor@@@ - surrounding text is READ-ONLY.\nNever copy context text.\nVerify zero duplication.\nAnalyze CONTEXT thoroughly.\nEnsure response flows naturally.";
+var referenceGuidelines = "Generate new text that flows naturally with <CONTEXT>.\nEnsure requested percentage of new content.";
+var contextRequirements = "Replace @@@cursor@@@ with content for <TASK>.\nReturn ONLY text replacing @@@cursor@@@ - surrounding text is READ-ONLY.\nNever copy context text.\nVerify zero duplication.\nAnalyze CONTEXT thoroughly.\nEnsure response flows naturally.";
 var defaultRulesJson = {
 	responseRules: responseRules,
 	htmlFormatting: htmlFormatting,

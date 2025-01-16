@@ -160,48 +160,30 @@ Each component can be customized using either `overrides` (to replace default ru
 
 ##### Response Rules
 ```typescript
-Follow these step-by-step instructions:
-Identify the specific requirements from TASK.
-Do not include markdown syntax.
-Generate a response that integrates with existing content.
-Format according to HTML requirements.
-If SELECTED_CONTENT exists, use only that content to answer
-the request, ignoring additional CONTEXT.
+Generate a response that addresses the <TASK>
+If <SELECTED_CONTENT> exists, use only that content to answer the <TASK>, ignoring additional <CONTEXT>.
 ```
 
 ##### HTML Formatting
 ```typescript
-HTML Formatting Requirements:
-Use only allowed tags: ${getAllowedHtmlTags(editor).join(', ')}.
-Ensure proper tag nesting and closure.
-Avoid empty elements.
+HTML Requirements:
+Use only these tags: ${getAllowedHtmlTags(editor)}.
+Ensure proper tag nesting.
 Use semantic HTML.
-No inline styles unless specified.
-No script or style tags.
+No inline styles.
 First word must be HTML tag.
-Block elements must not contain other block elements.
 ```
 
 ##### Content Structure
 ```typescript
-Content Structure Rules:
 Organize information logically.
-Use appropriate paragraph breaks.
+Use paragraphs.
 Maintain consistent formatting.
-Follow document hierarchy.
-Ensure proper content flow.
-Respect existing structure.
 ```
 
-##### Tone Guidelines
+##### Tone
 ```typescript
-Language and Tone Guidelines:
-Match formality of surrounding content.
-Maintain consistent voice.
-Use appropriate technical terminology.
-Ensure proper grammar.
-Keep tone engaging and reader-friendly.
-Adapt style to content type.
+// No default tone rules - customizable through promptSettings
 ```
 
 ##### Image Handling
@@ -214,16 +196,13 @@ Alt text must be descriptive.
 
 ##### Reference Guidelines
 ```typescript
-Use provided markdown to generate new text.
-Do not copy verbatim.
-Ensure natural flow with context.
-Avoid markdown in response.
-Generate requested percentage.
+Generate new text that flows naturally with <CONTEXT>.
+Ensure requested percentage of new content.
 ```
 
 ##### Context Requirements
 ```typescript
-Replace "@@@cursor@@@" with appropriate content.
+Replace @@@cursor@@@ with content for <TASK>.
 Return ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
 Never copy context text.
 Verify zero duplication.
@@ -263,3 +242,7 @@ ClassicEditor.create(document.querySelector('#editor'), {
 Keep paragraphs under 100 words
 Start each section with a topic sentence
 Use descriptive headings`
+            }
+        }
+    }
+});

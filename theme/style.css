@@ -207,8 +207,41 @@
 	justify-content: center;
 	border-color: var(--ck-color-panel-border);
 }
+.ck [id^="ai-"].ck-widget,
+.ck [id^="ai-"].ck-widget:hover,
 .ck [id^="ai-"].ck-widget.ck-widget_selected,
-.ck [id^="ai-"].ck-widget.ck-widget_selected:hover {
+.ck [id^="ai-"].ck-widget.ck-widget_selected:hover,
+.ck .ck-loading-shimmer.ck-widget,
+.ck .ck-loading-shimmer.ck-widget:hover{
 	outline: none;
-	display: block;
+	outline-color: unset;
+	/* display: block; */
+}
+
+.ck-loading-shimmer {
+	-webkit-text-fill-color: transparent;
+	animation-delay: .5s;
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	animation-name: loading-shimmer;
+	background: hsl(0deg 0% 80.39%) gradient(linear, 100% 0, 0 0, from(hsl(0deg 0% 80.39%)), color-stop(.5, hsl(0deg 0% 5.1%)), to(hsl(0deg 0% 80.39%)));
+	background: hsl(0deg 0% 80.39%) -webkit-gradient(linear, 100% 0, 0 0, from(hsl(0deg 0% 80.39%)), color-stop(.5, hsl(0deg 0% 5.1%)), to(hsl(0deg 0% 80.39%)));
+	background-clip: text;
+	-webkit-background-clip: text;
+	background-repeat: no-repeat;
+	background-size: 50% 200%;
+	display: inline-block;
+	margin-top: var(--ck-spacing-large);
+	margin-bottom: var(--ck-spacing-large);
+	font-style: italic;
+}
+
+/* Animation */
+@keyframes loading-shimmer {
+	from {
+		background-position: -200% 0;
+	}
+	to {
+		background-position: 200% 0;
+	}
 }

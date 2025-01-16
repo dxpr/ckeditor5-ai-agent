@@ -120,13 +120,14 @@ export default class AiAgentUI extends Plugin {
         });
         editor.model.schema.extend('$block', { allowIn: 'ai-tag' });
         this.addCustomTagConversions();
+        this.addCustomTagAiAnimatedStatus();
     }
     addCustomTagConversions() {
         const editor = this.editor;
         editor.conversion.for('upcast').elementToElement({
             view: {
                 name: 'ai-tag',
-                attributes: ['id']
+                attributes: ['id', 'class']
             },
             model: (viewElement, { writer }) => {
                 return writer.createElement('ai-tag', {
@@ -146,7 +147,47 @@ export default class AiAgentUI extends Plugin {
             model: 'ai-tag',
             view: (modelElement, { writer }) => {
                 const customTag = writer.createContainerElement('ai-tag', {
-                    id: modelElement.getAttribute('id')
+                    id: modelElement.getAttribute('id'),
+                    class: modelElement.getAttribute('class')
+                });
+                return toWidget(customTag, writer);
+            }
+        });
+    }
+    addCustomTagAiAnimatedStatus() {
+        const editor = this.editor;
+        editor.model.schema.register('ai-animated-status', {
+            inheritAllFrom: '$block',
+            isInline: true,
+            isObject: true,
+            allowWhere: '$block',
+            allowAttributes: ['class']
+        });
+        editor.model.schema.extend('$block', { allowIn: 'ai-animated-status' });
+        editor.conversion.for('upcast').elementToElement({
+            view: {
+                name: 'ai-animated-status',
+                attributes: ['class']
+            },
+            model: (viewElement, { writer }) => {
+                return writer.createElement('ai-animated-status', {
+                    class: viewElement.getAttribute('class')
+                });
+            }
+        });
+        editor.conversion.for('dataDowncast').elementToElement({
+            model: 'ai-animated-status',
+            view: (modelElement, { writer }) => {
+                return writer.createContainerElement('ai-animated-status', {
+                    class: modelElement.getAttribute('class')
+                });
+            }
+        });
+        editor.conversion.for('editingDowncast').elementToElement({
+            model: 'ai-animated-status',
+            view: (modelElement, { writer }) => {
+                const customTag = writer.createContainerElement('ai-animated-status', {
+                    class: modelElement.getAttribute('class')
                 });
                 return toWidget(customTag, writer);
             }

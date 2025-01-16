@@ -386,11 +386,15 @@ export default class AiAgentService {
 
 						try {
 							const data = JSON.parse( jsonStr );
-							const content = data.choices[ 0 ]?.delta?.content;
-							if ( content !== null && content !== undefined ) {
-								contentBuffer += content;
+							if ( data.method === 'agent/status' ) {
+								await this.animatedStatusMessages( data.params.status, blockID );
+							} else {
+								const content = data.choices[ 0 ]?.delta?.content;
+								if ( content !== null && content !== undefined ) {
+									contentBuffer += content;
+								}
+								await this.updateContent( contentBuffer, blockID );
 							}
-							await this.updateContent( contentBuffer, blockID );
 						} catch ( parseError ) {
 							console.warn( 'Error parsing JSON:', parseError );
 						}
@@ -519,6 +523,18 @@ export default class AiAgentService {
 			}
 		}
 
+		const modelRoot = editor.model.document.getRoot();
+		if ( modelRoot ) {
+			const modelRange = editor.model.createRangeIn( modelRoot );
+			for ( const item of modelRange.getItems() ) {
+				if ( item.is( 'element', 'ai-animated-status' ) ) {
+					editor.model.change( writer => {
+						writer.remove( item );
+					} );
+				}
+			}
+		}
+
 		const editorData = editor.getData();
 		let editorContent = editorData.replace( new RegExp( `<ai-tag id="${ blockID }-inline">&nbsp;</ai-tag>`, 'g' ), '' );
 		editorContent = editorContent.replace( new RegExp( `<ai-tag id="${ blockID }">&nbsp;</ai-tag>`, 'g' ), '' );
@@ -552,6 +568,35 @@ export default class AiAgentService {
 			}
 		}
 		return results;
+	}
+
+	private async animatedStatusMessages( status: string, blockID: string ): Promise<void> {
+		const editor = this.editor;
+		const root = editor.model.document.getRoot();
+		let targetElement: any;
+		if ( root ) {
+			const inlineChildrens = this.getViewChildrens( root, `${ blockID }-inline` );
+			const childrens = this.getViewChildrens( root, blockID );
+			if ( inlineChildrens.length ) {
+				targetElement = inlineChildrens.length ? inlineChildrens[ 0 ] : null;
+			} else if ( childrens.length ) {
+				targetElement = childrens.length ? childrens[ 0 ] : null;
+			}
+
+			if ( targetElement ) {
+				editor.model.enqueueChange( { isUndoable: false }, writer => {
+					const range = editor.model.createRangeIn( targetElement );
+					writer.remove( range );
+
+					const aiAnimatedStatus = writer.createElement( 'ai-animated-status', {
+						class: 'ck-loading-shimmer'
+					} );
+					writer.insert( aiAnimatedStatus, targetElement );
+					writer.insertText( `${ status }...`, aiAnimatedStatus, 'end' );
+				} );
+			}
+		}
+		await new Promise( resolve => setTimeout( resolve ) );
 	}
 
 	/**

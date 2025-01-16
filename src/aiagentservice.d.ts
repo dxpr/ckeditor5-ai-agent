@@ -85,6 +85,7 @@ export default class AiAgentService {
      * @returns An array of matching child elements.
      */
     private getViewChildrens;
+    private animatedStatusMessages;
     /**
      * Updates the content of an AI-generated block in the editor.
      *

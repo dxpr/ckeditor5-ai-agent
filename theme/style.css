@@ -231,8 +231,6 @@
 	background-repeat: no-repeat;
 	background-size: 50% 200%;
 	display: inline-block;
-	margin-top: var(--ck-spacing-large);
-	margin-bottom: var(--ck-spacing-large);
 	font-style: italic;
 }
 

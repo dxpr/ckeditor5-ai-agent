@@ -19,6 +19,7 @@ export default class AiAgentUI extends Plugin {
      */
     private initializeUIComponents;
     private addCustomTagConversions;
+    private addCustomTagAiAnimatedStatus;
     /**
      * Adds the AI Agent button to the editor's UI, which includes a dropdown menu
      * for various AI commands. The button allows users to insert slash commands

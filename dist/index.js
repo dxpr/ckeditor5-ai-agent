@@ -1161,11 +1161,15 @@ class AiAgentService {
                         }
                         try {
                             const data = JSON.parse(jsonStr);
-                            const content = data.choices[0]?.delta?.content;
-                            if (content !== null && content !== undefined) {
-                                contentBuffer += content;
+                            if (data.method === 'agent/status') {
+                                await this.animatedStatusMessages(data.params.status, blockID);
+                            } else {
+                                const content = data.choices[0]?.delta?.content;
+                                if (content !== null && content !== undefined) {
+                                    contentBuffer += content;
+                                }
+                                await this.updateContent(contentBuffer, blockID);
                             }
-                            await this.updateContent(contentBuffer, blockID);
                         } catch (parseError) {
                             console.warn('Error parsing JSON:', parseError);
                         }
@@ -1269,6 +1273,17 @@ class AiAgentService {
                 cancelButton.remove();
             }
         }
+        const modelRoot = editor.model.document.getRoot();
+        if (modelRoot) {
+            const modelRange = editor.model.createRangeIn(modelRoot);
+            for (const item of modelRange.getItems()){
+                if (item.is('element', 'ai-animated-status')) {
+                    editor.model.change((writer)=>{
+                        writer.remove(item);
+                    });
+                }
+            }
+        }
         const editorData = editor.getData();
         let editorContent = editorData.replace(new RegExp(`<ai-tag id="${blockID}-inline">&nbsp;</ai-tag>`, 'g'), '');
         editorContent = editorContent.replace(new RegExp(`<ai-tag id="${blockID}">&nbsp;</ai-tag>`, 'g'), '');
@@ -1299,6 +1314,34 @@ class AiAgentService {
             }
         }
         return results;
+    }
+    async animatedStatusMessages(status, blockID) {
+        const editor = this.editor;
+        const root = editor.model.document.getRoot();
+        let targetElement;
+        if (root) {
+            const inlineChildrens = this.getViewChildrens(root, `${blockID}-inline`);
+            const childrens = this.getViewChildrens(root, blockID);
+            if (inlineChildrens.length) {
+                targetElement = inlineChildrens.length ? inlineChildrens[0] : null;
+            } else if (childrens.length) {
+                targetElement = childrens.length ? childrens[0] : null;
+            }
+            if (targetElement) {
+                editor.model.enqueueChange({
+                    isUndoable: false
+                }, (writer)=>{
+                    const range = editor.model.createRangeIn(targetElement);
+                    writer.remove(range);
+                    const aiAnimatedStatus = writer.createElement('ai-animated-status', {
+                        class: 'ck-loading-shimmer'
+                    });
+                    writer.insert(aiAnimatedStatus, targetElement);
+                    writer.insertText(`${status}...`, aiAnimatedStatus, 'end');
+                });
+            }
+        }
+        await new Promise((resolve)=>setTimeout(resolve));
     }
     /**
 	 * Updates the content of an AI-generated block in the editor.
@@ -1663,6 +1706,7 @@ class AiAgentUI extends Plugin {
             allowIn: 'ai-tag'
         });
         this.addCustomTagConversions();
+        this.addCustomTagAiAnimatedStatus();
     }
     addCustomTagConversions() {
         const editor = this.editor;
@@ -1670,7 +1714,8 @@ class AiAgentUI extends Plugin {
             view: {
                 name: 'ai-tag',
                 attributes: [
-                    'id'
+                    'id',
+                    'class'
                 ]
             },
             model: (viewElement, { writer })=>{
@@ -1691,7 +1736,53 @@ class AiAgentUI extends Plugin {
             model: 'ai-tag',
             view: (modelElement, { writer })=>{
                 const customTag = writer.createContainerElement('ai-tag', {
-                    id: modelElement.getAttribute('id')
+                    id: modelElement.getAttribute('id'),
+                    class: modelElement.getAttribute('class')
+                });
+                return toWidget(customTag, writer);
+            }
+        });
+    }
+    addCustomTagAiAnimatedStatus() {
+        const editor = this.editor;
+        editor.model.schema.register('ai-animated-status', {
+            inheritAllFrom: '$block',
+            isInline: true,
+            isObject: true,
+            allowWhere: '$block',
+            allowAttributes: [
+                'class'
+            ]
+        });
+        editor.model.schema.extend('$block', {
+            allowIn: 'ai-animated-status'
+        });
+        editor.conversion.for('upcast').elementToElement({
+            view: {
+                name: 'ai-animated-status',
+                attributes: [
+                    'class'
+                ]
+            },
+            model: (viewElement, { writer })=>{
+                return writer.createElement('ai-animated-status', {
+                    class: viewElement.getAttribute('class')
+                });
+            }
+        });
+        editor.conversion.for('dataDowncast').elementToElement({
+            model: 'ai-animated-status',
+            view: (modelElement, { writer })=>{
+                return writer.createContainerElement('ai-animated-status', {
+                    class: modelElement.getAttribute('class')
+                });
+            }
+        });
+        editor.conversion.for('editingDowncast').elementToElement({
+            model: 'ai-animated-status',
+            view: (modelElement, { writer })=>{
+                const customTag = writer.createContainerElement('ai-animated-status', {
+                    class: modelElement.getAttribute('class')
                 });
                 return toWidget(customTag, writer);
             }
@@ -1708,15 +1799,32 @@ class AiAgentUI extends Plugin {
 	 */ addAiAgentButton() {
         const editor = this.editor;
         const t = this.editor.t;
-        const model = this.editor.model;
         const viewDocument = this.editor.editing.view.document;
+        const manageDropdown = (labeledFieldView, listView)=>{
+            const editorData = editor.getData();
+            const isTextSelected = editorData ? true : false;
+            labeledFieldView.isEnabled = isTextSelected;
+            this.aiAgentListItemUpdate(listView, isTextSelected);
+        };
         const executeAiAgentCommand = (command, labeledFieldView, listView)=>{
             if (labeledFieldView.fieldView.element && command) {
                 const aiAgentService = new AiAgentService(this.editor);
                 this.editor.editing.view.focus();
+                const selection = this.editor.model.document.selection;
+                const selectedContentFragment = this.editor.model.getSelectedContent(selection);
+                const viewFragment = this.editor.data.toView(selectedContentFragment);
+                const html = this.editor.data.processor.toData(viewFragment);
+                if (!html) {
+                    this.editor.execute('selectAll');
+                }
                 aiAgentService.handleSlashCommand(command);
                 labeledFieldView.isEnabled = false;
-                this.aiAgentListItemUpdate(listView, false);
+                manageDropdown(labeledFieldView, listView);
+                if (labeledFieldView.fieldView) {
+                    labeledFieldView.fieldView.set({
+                        value: ''
+                    });
+                }
             }
         };
         const executeCommand = ()=>{
@@ -1749,7 +1857,6 @@ class AiAgentUI extends Plugin {
             const searchContainer = new MenuBarMenuListItemView(locale, menuView);
             const labeledFieldView = new LabeledFieldView(locale, createLabeledInputText);
             labeledFieldView.label = t('Ask AI to edit');
-            labeledFieldView.isEnabled = false;
             const button = new ButtonView(locale);
             button.set({
                 label: t('Submit'),
@@ -1783,17 +1890,6 @@ class AiAgentUI extends Plugin {
                     }
                 });
             }
-            // Listen for selection changes in the editor
-            viewDocument.on('selectionChange', ()=>{
-                const selection = model.document.selection;
-                const range = selection.getFirstRange();
-                if (range) {
-                    const selectedText = Array.from(range.getItems()).map((item)=>item.data).join('');
-                    const isTextSelected = !!selectedText;
-                    labeledFieldView.isEnabled = isTextSelected;
-                    this.aiAgentListItemUpdate(listView, isTextSelected);
-                }
-            });
             searchContainer.children.add(labeledFieldView);
             searchContainer.children.add(button);
             listView.items.add(searchContainer);
@@ -1805,8 +1901,7 @@ class AiAgentUI extends Plugin {
                 const titleButton = new MenuBarMenuListItemButtonView(locale);
                 titleButton.set({
                     label: group.title,
-                    class: 'ck-menu-group-title',
-                    isEnabled: false
+                    class: 'ck-menu-group-title'
                 });
                 titleView.children.add(titleButton);
                 listView.items.add(titleView);
@@ -1816,8 +1911,7 @@ class AiAgentUI extends Plugin {
                     const buttonView = new MenuBarMenuListItemButtonView(locale);
                     buttonView.set({
                         label: item.title,
-                        class: 'ck-menu-item',
-                        isEnabled: false
+                        class: 'ck-menu-item'
                     });
                     buttonView.delegate('execute').to(menuView);
                     buttonView.on('execute', ()=>{
@@ -1828,6 +1922,12 @@ class AiAgentUI extends Plugin {
                 }
             }
             dropdownView.panelView.children.add(listView);
+            viewDocument.on('keyup', ()=>{
+                manageDropdown(labeledFieldView, listView);
+            });
+            setTimeout(function() {
+                manageDropdown(labeledFieldView, listView);
+            });
             return dropdownView;
         });
         editor.editing.view.document.on('keydown', (event, data)=>{

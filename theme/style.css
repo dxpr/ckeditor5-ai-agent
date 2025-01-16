@@ -148,6 +148,7 @@
 	opacity: 0;
 	transition: opacity 300ms ease-in;
 	pointer-events: none;
+	border: 6px solid var(--ck-color-widget-hover-border);
 }
 
 .ck.ck-toolbar > .ck-toolbar__items > .ck.ck-cancel-request-button:last-child,
@@ -166,10 +167,10 @@
 	left: 0;
 	background: var(--ck-color-toolbar-background);
 	z-index: -1;
-	border-radius: var(--ck-border-radius);
 }
 .ck.ck-button.ck-cancel-request-button:hover {
 	background: var(--ck-color-button-default-hover-background);
+	border-color: var(--ck-color-focus-border);
 }
 
 .ck.ck-button.ck-cancel-request-button.visible {

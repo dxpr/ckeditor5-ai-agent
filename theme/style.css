@@ -145,7 +145,7 @@
 	transition: opacity 300ms ease-in;
 	pointer-events: none;
 	border: 6px solid var(--ck-color-widget-hover-border);
-	padding: 0.3125rem 0.625rem;
+	padding: 0.625rem 0.625rem !important;
 }
 
 .ck.ck-button.ck-cancel-request-button::before {

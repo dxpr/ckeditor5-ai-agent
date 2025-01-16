@@ -120,6 +120,7 @@
 	cursor:pointer;
 	position:absolute;
 	left:50%;
+	transform:translateX(-50%);
 	top:2.8125rem;
 	width:fit-content;
 	box-shadow:0px 2px 6px var(--ck-color-shadow-drop);
@@ -130,7 +131,7 @@
 	transition:opacity 300ms ease-in;
 	pointer-events:none;
 	border:6px solid var(--ck-color-widget-hover-border);
-	padding:0.3125rem 0.625rem;
+	padding:0.625rem 0.625rem !important;
 }
 
 .ck.ck-button.ck-cancel-request-button::before{

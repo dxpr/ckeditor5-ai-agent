@@ -496,8 +496,9 @@ export default class AiAgentService {
 			cancel();
 		} );
 
-		if ( editor.ui.view.element && view.element ) {
-			const panelContent = editor.ui.view.element.querySelector( '.ck-sticky-panel__content .ck-toolbar__items' );
+		const toolbarElement = ( editor.ui.view as any ).toolbar.element;
+		if ( toolbarElement && view.element ) {
+			const panelContent = toolbarElement.querySelector( '.ck-toolbar__items' );
 			if ( panelContent ) {
 				panelContent.append( view.element );
 			}

@@ -7,9 +7,8 @@ import {
 	SplitButtonView,
 	LabeledFieldView,
 	ListSeparatorView,
-	createLabeledInputText,
 	ButtonView,
-	type InputTextView
+	TextareaView
 } from 'ckeditor5/src/ui.js';
 import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import aiAgentIcon from '../theme/icons/ai-agent.svg';
@@ -249,7 +248,8 @@ export default class AiAgentUI extends Plugin {
 		const viewDocument = this.editor.editing.view.document;
 
 		const manageDropdown = (
-			labeledFieldView: LabeledFieldView<InputTextView>, listView: MenuBarMenuListView
+			labeledFieldView: LabeledFieldView<TextareaView>, 
+			listView: MenuBarMenuListView
 		) => {
 			const editorData = editor.getData();
 			const isTextSelected = editorData ? true : false;
@@ -259,10 +259,10 @@ export default class AiAgentUI extends Plugin {
 
 		const executeAiAgentCommand = (
 			command: string,
-			labeledFieldView: LabeledFieldView<InputTextView>,
+			labeledFieldView: LabeledFieldView<TextareaView>,
 			listView: MenuBarMenuListView
 		): void => {
-			if ( labeledFieldView.fieldView.element && command ) {
+			if ( (labeledFieldView.fieldView as TextareaView).element && command ) {
 				const aiAgentService = new AiAgentService( this.editor );
 				this.editor.editing.view.focus();
 
@@ -278,9 +278,7 @@ export default class AiAgentUI extends Plugin {
 				labeledFieldView.isEnabled = false;
 				manageDropdown( labeledFieldView, listView );
 				if ( labeledFieldView.fieldView ) {
-					labeledFieldView.fieldView.set( {
-						value: ''
-					} );
+					labeledFieldView.fieldView.value = '';
 				}
 			}
 		};
@@ -316,11 +314,7 @@ export default class AiAgentUI extends Plugin {
 
 			const searchContainer = new MenuBarMenuListItemView( locale, menuView );
 
-			const labeledFieldView = new LabeledFieldView( locale, createLabeledInputText );
-			labeledFieldView.label = t( 'Ask AI to edit' );
-
 			const button = new ButtonView( locale );
-
 			button.set( {
 				label: t( 'Submit' ),
 				icon: arrowIcon,
@@ -329,33 +323,38 @@ export default class AiAgentUI extends Plugin {
 				isEnabled: false
 			} );
 
-			// Execute a command when the button is clicked.
-			button.on( 'execute', () => {
-				const command = labeledFieldView.fieldView?.element?.value ?? '';
-				executeAiAgentCommand( command, labeledFieldView, listView );
-			} );
+			const labeledFieldView = new LabeledFieldView<TextareaView>( locale, ( labeledFieldView, viewUid, statusUid ) => {
+				const textareaView = new TextareaView( locale );
+				textareaView.set( {
+					id: viewUid,
+					ariaDescribedById: statusUid,
+					minRows: 1,
+					maxRows: 10,
+					resize: 'vertical',
+					placeholder: t( 'Ask AI to edit' )
+				} );
 
-			labeledFieldView.fieldView.on( 'input', () => {
-				if ( labeledFieldView?.fieldView?.element ) {
-					if ( labeledFieldView.fieldView.element.value ) {
-						button.isEnabled = true;
-					} else {
-						button.isEnabled = false;
-					}
-				}
-			} );
-			labeledFieldView.fieldView.render();
+				textareaView.on( 'input', () => {
+					button.isEnabled = !!textareaView.element?.value;
+				} );
 
-			// Add keydown event listener for Enter key
-			if ( labeledFieldView.fieldView.element ) {
-				labeledFieldView.fieldView.element.addEventListener( 'keydown', event => {
-					if ( event.key === 'Enter' ) {
-						event.preventDefault();
-						const command = labeledFieldView.fieldView?.element?.value ?? '';
+				textareaView.on( 'keydown', ( evt, data ) => {
+					if ( data.keyCode === 13 && !data.shiftKey && button.isEnabled ) {
+						evt.preventDefault();
+						const command = textareaView.element?.value || '';
 						executeAiAgentCommand( command, labeledFieldView, listView );
 					}
 				} );
-			}
+
+				return textareaView;
+			} );
+			labeledFieldView.label = '';
+
+			// Execute a command when the button is clicked
+			button.on( 'execute', () => {
+				const command = (labeledFieldView.fieldView as TextareaView).element?.value || '';
+				executeAiAgentCommand( command, labeledFieldView, listView );
+			} );
 
 			searchContainer.children.add( labeledFieldView );
 			searchContainer.children.add( button );

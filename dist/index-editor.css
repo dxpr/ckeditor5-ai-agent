@@ -175,16 +175,31 @@
 }
 
 .ck-ai-commands-list .ck.ck-reset.ck-list li:first-child{
-	padding:1em;
+	padding:1.2em;
 	display:flex;
-	gap:5px;
+	gap:8px;
+	flex-direction:row;
+	min-width:300px;
+	align-items:flex-start;
 }
 
 .ck-ai-commands-list .ck.ck-reset.ck-list li:first-child .ck-ask-ai-to-edit-button{
-	padding:0px;
-	justify-content:center;
-	border-color:var(--ck-color-panel-border);
+	padding:6px 12px;
+	align-self:flex-end;
 }
+
+.ck-ai-commands-list .ck.ck-labeled-field-view{
+	flex:1;
+}
+
+.ck-ai-commands-list .ck.ck-labeled-field-view .ck.ck-textarea{
+	min-height:4em;
+	font-size:calc(var(--ck-font-size-base) * 1.15);
+	line-height:1.5;
+	padding:8px;
+	resize:vertical;
+}
+
 .ck [id^="ai-"].ck-widget,
 .ck [id^="ai-"].ck-widget:hover,
 .ck [id^="ai-"].ck-widget.ck-widget_selected,
@@ -258,4 +273,8 @@
 		-webkit-text-fill-color:initial;
 		font-style:italic;
 	}
+}
+
+.ck-ai-commands-list .ck.ck-button.ck-ask-ai-to-edit-button{
+	margin-top:1.5em;
 }

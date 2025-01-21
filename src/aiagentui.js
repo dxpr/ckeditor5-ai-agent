@@ -257,6 +257,14 @@ export default class AiAgentUI extends Plugin {
             const menuView = new MenuBarMenuView(locale);
             const listView = new MenuBarMenuListView(locale);
             const searchContainer = new MenuBarMenuListItemView(locale, menuView);
+            const button = new ButtonView(locale);
+            button.set({
+                label: t('Submit'),
+                icon: arrowIcon,
+                tooltip: true,
+                class: 'ck-ask-ai-to-edit-button',
+                isEnabled: false
+            });
             const labeledFieldView = new LabeledFieldView(locale, (labeledFieldView, viewUid, statusUid) => {
                 const textareaView = new TextareaView(locale);
                 textareaView.set({
@@ -267,12 +275,10 @@ export default class AiAgentUI extends Plugin {
                     resize: 'vertical',
                     placeholder: t('Ask AI to edit')
                 });
-                // Update input handler for textarea
                 textareaView.on('input', () => {
                     var _a;
                     button.isEnabled = !!((_a = textareaView.element) === null || _a === void 0 ? void 0 : _a.value);
                 });
-                // Update keydown handler for textarea
                 textareaView.on('keydown', (evt, data) => {
                     var _a;
                     if (data.keyCode === 13 && !data.shiftKey && button.isEnabled) {
@@ -284,14 +290,6 @@ export default class AiAgentUI extends Plugin {
                 return textareaView;
             });
             labeledFieldView.label = '';
-            const button = new ButtonView(locale);
-            button.set({
-                label: t('Submit'),
-                icon: arrowIcon,
-                tooltip: true,
-                class: 'ck-ask-ai-to-edit-button',
-                isEnabled: false
-            });
             // Execute a command when the button is clicked
             button.on('execute', () => {
                 var _a;

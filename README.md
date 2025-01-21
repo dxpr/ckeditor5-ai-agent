@@ -167,7 +167,7 @@ If <SELECTED_CONTENT> exists, use only that content to answer the <TASK>, ignori
 ##### HTML Formatting
 ```typescript
 HTML Requirements:
-Use only these tags: ${getAllowedHtmlTags(editor)}.
+Use only these tags: {{ALLOWED_HTML_TAGS}}.
 Ensure proper tag nesting.
 Use semantic HTML.
 No inline styles.

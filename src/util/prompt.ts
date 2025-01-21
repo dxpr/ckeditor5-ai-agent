@@ -76,7 +76,13 @@ export class PromptHelper {
 		if ( this.contentScope ) {
 			const activeEditorElement = this.editor.editing.view.getDomRoot();
 			const targetElement = activeEditorElement?.closest( this.contentScope );
-			context = targetElement?.innerHTML ?? '';
+			const ckContents = targetElement?.querySelectorAll( '.ck-content' );
+			if ( ckContents?.length ) {
+				context = '';
+				Array.from( ckContents ).map( item => {
+					context += context ? `\n${ item.innerHTML }` : item.innerHTML;
+				} );
+			}
 		}
 
 		const matchIndex = context.indexOf( splitText );

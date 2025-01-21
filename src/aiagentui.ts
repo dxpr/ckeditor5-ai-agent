@@ -248,7 +248,7 @@ export default class AiAgentUI extends Plugin {
 		const viewDocument = this.editor.editing.view.document;
 
 		const manageDropdown = (
-			labeledFieldView: LabeledFieldView<TextareaView>, 
+			labeledFieldView: LabeledFieldView<TextareaView>,
 			listView: MenuBarMenuListView
 		) => {
 			const editorData = editor.getData();
@@ -262,7 +262,7 @@ export default class AiAgentUI extends Plugin {
 			labeledFieldView: LabeledFieldView<TextareaView>,
 			listView: MenuBarMenuListView
 		): void => {
-			if ( (labeledFieldView.fieldView as TextareaView).element && command ) {
+			if ( ( labeledFieldView.fieldView as TextareaView ).element && command ) {
 				const aiAgentService = new AiAgentService( this.editor );
 				this.editor.editing.view.focus();
 
@@ -338,11 +338,11 @@ export default class AiAgentUI extends Plugin {
 					button.isEnabled = !!textareaView.element?.value;
 				} );
 
-				textareaView.on( 'keydown', ( evt, data ) => {
+				textareaView.on( 'keydown', ( evt: any, data: any ) => {
 					if ( data.keyCode === 13 && !data.shiftKey && button.isEnabled ) {
-						evt.preventDefault();
+						data.preventDefault();
 						const command = textareaView.element?.value || '';
-						executeAiAgentCommand( command, labeledFieldView, listView );
+						executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
 					}
 				} );
 
@@ -352,8 +352,8 @@ export default class AiAgentUI extends Plugin {
 
 			// Execute a command when the button is clicked
 			button.on( 'execute', () => {
-				const command = (labeledFieldView.fieldView as TextareaView).element?.value || '';
-				executeAiAgentCommand( command, labeledFieldView, listView );
+				const command = ( labeledFieldView.fieldView as TextareaView ).element?.value || '';
+				executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
 			} );
 
 			searchContainer.children.add( labeledFieldView );

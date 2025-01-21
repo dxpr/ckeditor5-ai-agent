@@ -47,7 +47,7 @@ export class PromptHelper {
         return systemPrompt;
     }
     trimContext(prompt, promptContainerText = '') {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e;
         let contentBeforePrompt = '';
         let contentAfterPrompt = '';
         const splitText = promptContainerText !== null && promptContainerText !== void 0 ? promptContainerText : prompt;
@@ -56,7 +56,13 @@ export class PromptHelper {
         if (this.contentScope) {
             const activeEditorElement = this.editor.editing.view.getDomRoot();
             const targetElement = activeEditorElement === null || activeEditorElement === void 0 ? void 0 : activeEditorElement.closest(this.contentScope);
-            context = (_f = targetElement === null || targetElement === void 0 ? void 0 : targetElement.innerHTML) !== null && _f !== void 0 ? _f : '';
+            const ckContents = targetElement === null || targetElement === void 0 ? void 0 : targetElement.querySelectorAll('.ck-content');
+            if (ckContents === null || ckContents === void 0 ? void 0 : ckContents.length) {
+                context = '';
+                Array.from(ckContents).map(item => {
+                    context += context ? `\n${item.innerHTML}` : item.innerHTML;
+                });
+            }
         }
         const matchIndex = context.indexOf(splitText);
         const nextEnterIndex = context.indexOf('\n', matchIndex);

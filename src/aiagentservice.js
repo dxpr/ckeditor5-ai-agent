@@ -5,6 +5,7 @@ import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
 import { ALL_MODERATION_FLAGS, MODERATION_URL } from './const.js';
 import { getErrorMessages } from './util/translations.js';
+import { getAllowedHtmlTags } from './util/html-utils.js';
 export default class AiAgentService {
     /**
      * Initializes the AiAgentService with the provided editor and configuration settings.
@@ -231,7 +232,10 @@ export default class AiAgentService {
                     temperature: this.temperature,
                     max_tokens: this.maxTokens,
                     stop: this.stopSequences,
-                    stream: true
+                    stream: true,
+                    extra_body: {
+                        allowed_html_tags: getAllowedHtmlTags(this.editor)
+                    }
                 }),
                 signal: controller.signal
             });

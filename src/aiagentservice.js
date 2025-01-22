@@ -434,8 +434,9 @@ export default class AiAgentService {
      */
     processCompleted(blockID) {
         const editor = this.editor;
-        if (editor.ui.view.element) {
-            const cancelButton = editor.ui.view.element.querySelector('.ck-cancel-request-button');
+        const toolbarElement = editor.ui.view.toolbar.element;
+        if (toolbarElement) {
+            const cancelButton = toolbarElement.querySelector('.ck-cancel-request-button');
             if (cancelButton) {
                 cancelButton.remove();
             }

@@ -101,7 +101,6 @@ ClassicEditor
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
 			debugMode: true,
-			endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 			commandsDropdown: [
 				{
 					title: 'Style & Tone',
@@ -191,7 +190,6 @@ const inlineEditorConfig = {
 	},
 	aiAgent: {
 		apiKey: 'YOUR_API_KEY',
-		endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 		debugMode: true
 	},
 	language: {

@@ -1,0 +1,17 @@
+{
+  "plugins": [
+    {
+      "name": "Ai agent",
+      "className": "AiAgent",
+      "description": "Adds text to the editor.",
+      "path": "src/aiagent.ts",
+      "uiComponents": [
+        {
+          "name": "aiAgentButton",
+          "type": "Button",
+          "iconPath": "theme/icons/ckeditor.svg"
+        }
+      ]
+    }
+  ]
+}

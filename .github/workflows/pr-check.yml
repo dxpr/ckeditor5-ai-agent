@@ -1,0 +1,29 @@
+name: PR Check - Translations Collect
+
+on:
+    pull_request:
+      branches:
+        - 1.x  # Run this action for PRs targeting the `1.x` branch
+
+jobs:
+  translations-collect:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use the Node.js version your project requires
+
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn install
+
+      # Run the Command
+      - name: Run Translations Collect
+        run: yarn run translations:collect

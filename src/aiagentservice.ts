@@ -1,6 +1,7 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { Element, Item, Position } from 'ckeditor5/src/engine.js';
-import type { AiModel, MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
+import type { AiModel } from './type-ai-model.js';
+import type { MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';

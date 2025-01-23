@@ -85,7 +85,8 @@
     "postpublish": "yarn run ts:clear && ckeditor5-package-tools export-package-as-typescript",
     "translations:collect": "ckeditor5-package-tools translations:collect",
     "translations:download": "ckeditor5-package-tools translations:download",
-    "translations:upload": "ckeditor5-package-tools translations:upload"
+    "translations:upload": "ckeditor5-package-tools translations:upload",
+    "update-ai-models": "node ./scripts/update-ai-models.mjs"
   },
   "lint-staged": {
     "**/*.{js,ts}": [
@@ -103,6 +104,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-core": "^43.3.1",
     "@ckeditor/ckeditor5-utils": "^43.0.0",
+    "fs": "^0.0.1-security",
     "http-status-message": "^1.2.4",
     "sbd": "^1.0.19"
   }

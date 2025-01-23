@@ -1,11 +1,5 @@
 import type { ALL_MODERATION_FLAGS } from './const.js';
-
-// types
-export type AiModel =
-    'gpt-3.5-turbo' |
-    'gpt-4o' |
-    'gpt-4o-mini' |
-    'kavya-m1';
+import type { AiModel } from './type-ai-model.js';
 
 export type PromptComponentKey =
     | 'responseRules'
@@ -20,11 +14,6 @@ export type PromptComponentKey =
 export interface PromptSettings {
     overrides?: Partial<Record<PromptComponentKey, string>>;
     additions?: Partial<Record<PromptComponentKey, string>>;
-}
-export interface ModelTokenLimits {
-    minOutputTokens: number;
-    maxOutputTokens: number;
-    maxInputContextTokens: number;
 }
 
 export interface AiAgentConfig {

@@ -48,11 +48,12 @@ declare module '@ckeditor/ckeditor5-core' {
             streamContent?: boolean;
             debugMode?: boolean;
             showErrorDuration?: number;
-            moderation?: {
-                key: string;
-                enable: boolean;
-                disableFlags?: Array<ModerationFlagsTypes>;
-            };
+
+            // Moderation Settings
+            moderationKey?: string;
+            moderationEnable?: boolean;
+            moderationDisableFlags?: Array<ModerationFlagsTypes>;
+
             commandsDropdown?: Array<{
                 title: string;
                 items: Array<{

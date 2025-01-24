@@ -52,9 +52,9 @@ export default class AiAgentService {
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;
 		this.streamContent = config.streamContent ?? true;
-		this.moderationKey = config.moderation?.key ?? '';
-		this.moderationEnable = config.moderation?.enable ?? false;
-		this.disableFlags = config.moderation?.disableFlags ?? [];
+		this.moderationKey = config.moderationKey ?? '';
+		this.moderationEnable = config.moderationEnable ?? false;
+		this.disableFlags = config.moderationDisableFlags ?? [];
 	}
 
 	/**

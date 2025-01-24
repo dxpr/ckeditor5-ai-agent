@@ -135,9 +135,9 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
 | `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
 | `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |
-| `moderation.enable` | `boolean?` | `false` | Enables content moderation for AI responses |
-| `moderation.key` | `string?` | - | API key for content moderation service |
-| `moderation.disableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
+| `moderationEnable` | `boolean?` | `false` | Enables content moderation for AI responses |
+| `moderationKey` | `string?` | - | API key for content moderation service |
+| `moderationDisableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
 | `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 

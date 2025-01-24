@@ -42,6 +42,9 @@ export interface AiAgentConfig {
     promptSettings?: PromptSettings;
     streamContent?: boolean;
     debugMode?: boolean;
+    moderationKey?: string;
+    moderationEnable?: boolean;
+    moderationDisableFlags?: Array<ModerationFlagsTypes>;
 }
 
 export interface MarkdownContent {

@@ -7,7 +7,7 @@
   
   "tone": "",
   
-  "imageHandling": "Image Requirements:\nEvery <img> needs src and alt attributes.\nFormat src as: https://placehold.co/600x400?text=[alt_text].\nAlt text must be descriptive.",
+  "imageHandling": "Image Requirements:\nEvery <img> needs src and alt attributes.\nFormat src as: https://promptahuman.com/600x400@2x?bg_color=[color]&&title=[alt_text]&prompt=[creative_brief].\nRecommended bg_colors: ghostwhite, whitesmoke, aliceblue, seashell, mintcream, ivory, azure, floralwhite.\nAlt text must be descriptive.",
   
   "referenceGuidelines": "Generate new text that flows naturally with <CONTEXT>.\nEnsure requested percentage of new content.",
   

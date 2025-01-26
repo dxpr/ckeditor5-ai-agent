@@ -190,7 +190,8 @@ Maintain consistent formatting.
 ```typescript
 Image Requirements:
 Every <img> needs src and alt attributes.
-Format src as: https://placehold.co/600x400?text=[alt_text].
+Format src as: https://promptahuman.com/600x400@2x?bg_color=[color]&&title=[alt_text]&prompt=[creative_brief].
+Recommended bg_colors: ghostwhite, whitesmoke, aliceblue, seashell, mintcream, ivory, azure, floralwhite.
 Alt text must be descriptive.
 ```
 

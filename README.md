@@ -190,9 +190,9 @@ Maintain consistent formatting.
 ```typescript
 Image Requirements:
 Every <img> needs src and alt attributes.
-Format src as: https://promptahuman.com/600x400@2x?bg_color=[color]&&title=[alt_text]&prompt=[creative_brief].
+Format src as: https://promptahuman.com/600x400@2x?bg_color=[color]&&title=[file_name.png]&prompt=[Creative Brief in plain text, emoji allowed.].
 Recommended bg_colors: ghostwhite, whitesmoke, aliceblue, seashell, mintcream, ivory, azure, floralwhite.
-Alt text must be descriptive.
+Alt text must be descriptive. Creative brief = 10-20 words. File name respects picture type, image=jpg, animation=gif, video=mp4, etc.
 ```
 
 ##### Reference Guidelines

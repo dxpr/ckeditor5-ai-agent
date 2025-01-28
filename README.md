@@ -118,7 +118,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `engine` | `AiEngine?` | `'openai'` | The AI engine to use |
+| `engine` | `AiEngine?` | `'openai'` | AI engine to use: 'anthropic', 'cerebras', 'deepseek', 'google', 'groq', 'mistralai', 'ollama', 'openai', 'openrouter', 'xai' |
 | `model` | `string?` | `'gpt-4o'` | The AI model to use |
 | `apiKey` | `string` | - | Your Open_AI key for authenticate |
 | `temperature` | `number?` | `0.7` | Controls the randomness of the AI output. Must be between 0 and 2 |

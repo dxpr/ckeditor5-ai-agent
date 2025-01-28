@@ -272,11 +272,11 @@ export default class AiAgentService {
 			this.timeOutDuration
 		);
 
-		let contentBuffer = '';
 		const blockID = `ai-${ new Date().getTime() }`;
 		try {
 			let llm: LlmEngine | undefined;
-			let stream;
+			let response;
+
 			if ( AI_ENGINE.includes( this.aiEngine as any ) ) {
 				const config = {
 					apiKey: this.apiKey
@@ -292,20 +292,27 @@ export default class AiAgentService {
 					}
 				}
 				llm = igniteEngine( this.aiEngine, config as EngineCreateOpts );
-
-				// Let multi-llm-ts handle the message construction and model-specific behaviors
 				const messages = [
 					new Message( 'system', this.promptHelper.getSystemPrompt( this.isInlineInsertion ) ),
 					new Message( 'user', prompt )
 				];
-
-				// Pass only explicitly configured options
 				const completionOpts: LlmCompletionOpts = {
 					maxTokens: this.maxTokens,
 					...( this.temperature !== undefined && { temperature: this.temperature } )
 				};
 
-				stream = llm.generate( this.aiModel, messages, completionOpts );
+				if ( this.streamContent ) {
+					// Streaming path
+					const stream = llm.generate( this.aiModel, messages, completionOpts );
+					await this.handleStreamingResponse( stream, blockID, parent, command, controller, llm );
+				} else {
+					// Non-streaming path
+					const result = await llm.complete( this.aiModel, messages, completionOpts );
+					if ( !result.content ) {
+						throw new Error( t( 'Empty response from AI model' ) );
+					}
+					await this.handleNonStreamingResponse( result.content, blockID, parent, command );
+				}
 			} else {
 				const config = {
 					apiKey: this.apiKey,
@@ -316,7 +323,7 @@ export default class AiAgentService {
 					system: this.promptHelper.getSystemPrompt( this.isInlineInsertion ),
 					user: prompt
 				};
-				stream = llmCustom.fetchAIStream(
+				response = llmCustom.fetchAIStream(
 					this.aiModel as AiModel,
 					messages,
 					{
@@ -327,31 +334,8 @@ export default class AiAgentService {
 					controller,
 					retries
 				);
+				await this.handleStreamingResponse( response, blockID, parent, command, controller, llm );
 			}
-			console.log( 'Starting to process response' );
-			let isFirstChunk = true;
-			for await ( const c of stream ) {
-				if ( isFirstChunk ) {
-					clearTimeout( timeoutId );
-					aiAgentContext.hideLoader();
-					this.cancelGenerationButton( blockID, controller, llm, stream );
-					this.undoRedoHandler();
-					this.insertAiTag( blockID );
-					this.clearParentContent( parent, command );
-					isFirstChunk = false;
-				}
-				this.s = c;
-				const chunk = c as any;
-				if ( chunk.type === 'status' ) {
-					await this.animatedStatusMessages( chunk.text, blockID );
-				} else {
-					if ( chunk.type === 'content' ) {
-						contentBuffer += chunk.text;
-					}
-					await this.updateContent( contentBuffer, blockID );
-				}
-			}
-			this.processCompleted( blockID );
 		} catch ( error: any ) {
 			if ( this.abortGeneration ) {
 				return;
@@ -369,8 +353,58 @@ export default class AiAgentService {
 			aiAgentContext.showError( errorMessage );
 			this.processCompleted( blockID );
 		} finally {
+			clearTimeout( timeoutId );
 			this.editor.disableReadOnlyMode( this.aiAgentFeatureLockId );
 		}
+	}
+
+	private async handleStreamingResponse(
+		stream: any,
+		blockID: string,
+		parent: Element,
+		command: boolean,
+		controller: AbortController,
+		llm: LlmEngine | undefined
+	): Promise<void> {
+		let isFirstChunk = true;
+		let contentBuffer = '';
+
+		for await ( const c of stream ) {
+			if ( isFirstChunk ) {
+				aiAgentContext.hideLoader();
+				this.cancelGenerationButton( blockID, controller, llm, stream );
+				this.undoRedoHandler();
+				this.insertAiTag( blockID );
+				this.clearParentContent( parent, command );
+				isFirstChunk = false;
+			}
+
+			this.s = c;
+			const chunk = c as any;
+
+			if ( chunk.type === 'status' ) {
+				await this.animatedStatusMessages( chunk.text, blockID );
+			}
+
+			if ( chunk.type === 'content' ) {
+				contentBuffer += chunk.text;
+			}
+			await this.updateContent( contentBuffer, blockID );
+		}
+		this.processCompleted( blockID );
+	}
+
+	private async handleNonStreamingResponse(
+		content: string,
+		blockID: string,
+		parent: Element,
+		command: boolean
+	): Promise<void> {
+		aiAgentContext.hideLoader();
+		this.insertAiTag( blockID );
+		this.clearParentContent( parent, command );
+		await this.htmlParser.insertSimpleHtml( content );
+		this.processCompleted( blockID );
 	}
 
 	/**

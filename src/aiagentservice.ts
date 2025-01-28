@@ -8,7 +8,14 @@ import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
 import { ALL_MODERATION_FLAGS, MODERATION_URL, AI_ENGINE, AI_CUSTOM_ENGINE } from './const.js';
 import { getErrorMessages } from './util/translations.js';
-import { type EngineCreateOpts, type LlmEngine, igniteEngine, Message, loadModels } from 'multi-llm-ts/dist/index.js';
+import {
+	type EngineCreateOpts,
+	type LlmEngine,
+	type LlmCompletionOpts,
+	igniteEngine,
+	Message,
+	loadModels
+} from 'multi-llm-ts/dist/index.js';
 import { AIApi } from './util/ai-api.js';
 import CustomError, { getError } from './util/custom-error.js';
 
@@ -285,11 +292,20 @@ export default class AiAgentService {
 					}
 				}
 				llm = igniteEngine( this.aiEngine, config as EngineCreateOpts );
+
+				// Let multi-llm-ts handle the message construction and model-specific behaviors
 				const messages = [
 					new Message( 'system', this.promptHelper.getSystemPrompt( this.isInlineInsertion ) ),
 					new Message( 'user', prompt )
 				];
-				stream = llm.generate( this.aiModel, messages, { usage: true } );
+
+				// Pass only explicitly configured options
+				const completionOpts: LlmCompletionOpts = {
+					maxTokens: this.maxTokens,
+					...( this.temperature !== undefined && { temperature: this.temperature } )
+				};
+
+				stream = llm.generate( this.aiModel, messages, completionOpts );
 			} else {
 				const config = {
 					apiKey: this.apiKey,

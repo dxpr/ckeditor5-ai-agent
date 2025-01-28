@@ -1,6 +1,12 @@
 name: Update Supported Models
 
 on:
+  # Temporary trigger for testing
+  push:
+    branches: 
+      - 'syuzan/1.x/#109-refactor-ai-agent-to-support-multiple-llm-providers-using-multi-llm-ts/fix'
+  
+  # Final triggers
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
   workflow_dispatch:  # Allows manual triggering

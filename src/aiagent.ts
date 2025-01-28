@@ -38,10 +38,17 @@ export default class AiAgent extends Plugin {
 				contextSize: maxInputTokens * 0.75
 			};
 		}
-		const updatedConfig = {
+
+		// First merge defaults with user config to preserve user settings
+		const mergedConfig = {
 			...defaultConfig,
-			...tokenLimits,
 			...config
+		};
+
+		// Then add token limits if needed
+		const updatedConfig = {
+			...mergedConfig,
+			...tokenLimits
 		};
 
 		// Set the merged config back to the editor

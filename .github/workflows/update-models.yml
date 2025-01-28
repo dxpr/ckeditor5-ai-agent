@@ -1,0 +1,101 @@
+name: Update Supported Models
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:  # Allows manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  update-models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 1
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '22'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm install -g npm@latest
+          npm ci multi-llm-ts@latest
+        
+      - name: Update Models List
+        id: update-models
+        env:
+          GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+        run: |
+          node -e '
+          const { loadModels } = require("multi-llm-ts");
+          const fs = require("fs").promises;
+          const path = require("path");
+          
+          const ENGINE_CONFIGS = {
+            google: { apiKey: process.env.GOOGLE_GEMINI_API_KEY },
+            openai: { apiKey: process.env.OPENAI_API_KEY },
+            anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
+            mistralai: { apiKey: process.env.MISTRAL_API_KEY },
+            groq: { apiKey: process.env.GROQ_API_KEY },
+            xai: { apiKey: process.env.XAI_API_KEY },
+            openrouter: { }
+          };
+          
+          async function updateModels() {
+            const modelsList = {};
+            
+            for (const [engine, config] of Object.entries(ENGINE_CONFIGS)) {
+              try {
+                const models = await loadModels(engine, config);
+                if (models?.chat?.length) {
+                  modelsList[engine] = models.chat.map(m => m.id);
+                }
+              } catch (error) {
+                console.warn(`Error loading ${engine} models:`, error.message);
+              }
+            }
+            
+            const filePath = "./SUPPORTED_MODELS.json";
+            let shouldUpdate = true;
+            
+            try {
+              const existingContent = await fs.readFile(filePath, "utf8");
+              const existing = JSON.parse(existingContent);
+              shouldUpdate = JSON.stringify(modelsList) !== JSON.stringify(existing);
+            } catch (error) {
+              // File doesn't exist or can't be read, will create new
+            }
+            
+            if (shouldUpdate) {
+              await fs.writeFile(filePath, JSON.stringify(modelsList, null, 2) + "\n");
+              console.log(`models_updated=${shouldUpdate}`);
+            } else {
+              console.log(`models_updated=${shouldUpdate}`);
+            }
+          }
+          
+          updateModels().catch(console.error);
+          '
+          
+      - name: Commit and push if changed
+        if: steps.update-models.outputs.models_updated == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add SUPPORTED_MODELS.json
+          git commit -m "chore: update supported models [skip ci]"
+          git push

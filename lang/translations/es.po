@@ -341,7 +341,3 @@ msgstr "Resumir"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Continuar"
-
-msgctxt "Pls add the right model, example:"
-msgid "Pls add the right model, example:"
-msgstr "Por favor agregue el modelo correcto, ejemplo:"

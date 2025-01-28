@@ -341,7 +341,3 @@ msgstr "Samenvatten"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Doorgaan"
-
-msgctxt "Pls add the right model, example:"
-msgid "Pls add the right model, example:"
-msgstr "Voeg het juiste model toe, bijvoorbeeld:"

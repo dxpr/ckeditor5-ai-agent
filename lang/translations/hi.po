@@ -341,7 +341,3 @@ msgstr "सारांशित करें"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "जारी रखें"
-
-msgctxt "Pls add the right model, example:"
-msgid "Pls add the right model, example:"
-msgstr "कृपया सही मॉडल जोड़ें, उदाहरण:"

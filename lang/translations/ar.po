@@ -341,3 +341,7 @@ msgstr "تلخيص"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "متابعة"
+
+msgctxt "Pls add the right model, example:"
+msgid "Pls add the right model, example:"
+msgstr "يرجى إضافة النموذج الصحيح، على سبيل المثال:"

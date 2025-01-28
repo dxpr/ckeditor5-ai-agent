@@ -1,17 +1,21 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { Element, Item, Position } from 'ckeditor5/src/engine.js';
-import type { AiModel, MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
+import type { AiModel, AiEngine, MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
-import { ALL_MODERATION_FLAGS, MODERATION_URL } from './const.js';
+import { ALL_MODERATION_FLAGS, MODERATION_URL, AI_ENGINE } from './const.js';
 import { getErrorMessages } from './util/translations.js';
+import { type EngineCreateOpts, type LlmEngine, igniteEngine, Message, loadModels } from 'multi-llm-ts/dist/index.js';
+import { AIApi } from './util/ai-api.js';
+import CustomError, { getError } from './util/custom-error.js';
 
 export default class AiAgentService {
 	private editor: Editor;
-	private aiModel: AiModel;
+	private aiEngine: AiEngine;
+	private aiModel: string;
 	private apiKey: string | undefined;
 	private endpointUrl: string;
 	private temperature: number | undefined;
@@ -24,13 +28,12 @@ export default class AiAgentService {
 	private promptHelper: PromptHelper;
 	private htmlParser: HtmlParser;
 
-	private buffer = '';
-	private openTags: Array<string> = [];
 	private isInlineInsertion: boolean = false;
 	private abortGeneration: boolean = false;
 	private moderationKey: string;
 	private moderationEnable: boolean;
 	private disableFlags: Array<ModerationFlagsTypes> = [];
+	private s: any;
 
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
@@ -45,6 +48,7 @@ export default class AiAgentService {
 
 		this.aiModel = config.model!;
 		this.apiKey = config.apiKey;
+		this.aiEngine = config.engine!;
 		this.endpointUrl = config.endpointUrl!;
 		this.temperature = config.temperature;
 		this.timeOutDuration = config.timeOutDuration ?? 45000;
@@ -184,8 +188,8 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 
 			if ( !response.ok ) {
-				const error = await this.getError( response );
-				throw new Error( error );
+				const { error, status } = await getError( response );
+				throw new CustomError( error, status );
 			}
 
 			const data = await response.json() as ModerationResponse;
@@ -221,11 +225,8 @@ export default class AiAgentService {
 			let errorMessage: string = t(
 				'We couldn\'t connect to the AI. Please check your internet'
 			);
-			const jsonMessage = this.isValidJSON( error?.message );
-			if ( jsonMessage ) {
-				const errorObj = JSON.parse( error?.message );
-				const status = errorObj.status;
-				errorMessage = getErrorMessages( status, editor );
+			if ( error.status ) {
+				errorMessage = getErrorMessages( error.status, editor );
 			} else {
 				errorMessage = error?.message?.trim();
 				if ( errorMessage === 'ReadableStream not supported' ) {
@@ -264,141 +265,74 @@ export default class AiAgentService {
 			this.timeOutDuration
 		);
 
-		let buffer = '';
 		let contentBuffer = '';
 		const blockID = `ai-${ new Date().getTime() }`;
-
 		try {
-			const response = await fetch( this.endpointUrl, {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${ this.apiKey }`,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify( {
-					model: this.aiModel,
-					messages: [
-						{ role: 'system', content: this.promptHelper.getSystemPrompt( this.isInlineInsertion ) },
-						{ role: 'user', content: prompt }
-					],
-					temperature: this.temperature,
-					max_tokens: this.maxTokens,
-					stop: this.stopSequences,
-					stream: true
-				} ),
-				signal: controller.signal
-			} );
-
-			clearTimeout( timeoutId );
-
-			if ( !response.ok ) {
-				const error = await this.getError( response );
-				throw new Error( error );
-			}
-
-			aiAgentContext.hideLoader();
-
-			const reader = response.body!.getReader();
-			const decoder = new TextDecoder( 'utf-8' );
-
-			// this.editor.enableReadOnlyMode( this.aiAgentFeatureLockId );
-
-			this.cancelGenerationButton( blockID, controller );
-
-			const undoCommand = editor.commands.get( 'undo' );
-			if ( undoCommand ) {
-				undoCommand.on( 'execute', () => {
-					const editorData = editor.getData();
-					if ( editorData.indexOf( 'ai-tag' ) > -1 ) {
-						editor.execute( 'undo' );
-					}
-				} );
-			}
-
-			const redoCommand = editor.commands.get( 'redo' );
-			if ( redoCommand ) {
-				redoCommand.on( 'execute', () => {
-					const editorData = editor.getData();
-					if ( editorData.indexOf( 'ai-tag' ) > -1 ) {
-						editor.execute( 'redo' );
-					}
-				} );
-			}
-
-			editor.model.change( writer => {
-				const position = this.editor.model.document.selection.getLastPosition();
-				let newPosition: Position | undefined;
-				if ( position ) {
-					if ( position?.parent.name === 'inline-slash' ) {
-						if ( position?.parent?.parent ) {
-							newPosition = writer.createPositionAt( position.parent.parent, 'after' );
-						}
-						if ( position?.parent ) {
-							const parentJson = position?.parent?.parent?.toJSON() as any;
-							if ( parentJson.children.length > 1 ) {
-								const positionInline = writer.createPositionAt( position.parent, 'after' );
-								const aiTagInline = writer.createElement( 'ai-tag', {
-									id: `${ blockID }-inline`
-								} );
-								writer.insert( aiTagInline, positionInline );
-							}
-						}
-					} else {
-						const aiTagInline = writer.createElement( 'ai-tag', {
-							id: `${ blockID }-inline`
-						} );
-						writer.insert( aiTagInline, position );
-						newPosition = writer.createPositionAt( position.parent, 'after' );
-					}
-					if ( newPosition ) {
-						const aiTag = writer.createElement( 'ai-tag', {
-							id: blockID
-						} );
-						writer.insert( aiTag, newPosition );
+			let llm: LlmEngine | undefined;
+			let stream;
+			if ( AI_ENGINE.includes( this.aiEngine as any ) ) {
+				const config = {
+					apiKey: this.apiKey
+				};
+				const models = await loadModels( this.aiEngine, config as EngineCreateOpts );
+				if ( models ) {
+					const chat = models.chat;
+					const model = chat.find( ( model: any ) => model.id === this.aiModel );
+					if ( !model ) {
+						const modelsList = chat.map( model => model.id ).join( ' | ' );
+						aiAgentContext.showError( ` ${ t( 'Pls add the right model, example:' ) } ${ modelsList }` );
+						return;
 					}
 				}
-			} );
-
-			this.clearParentContent( parent, command );
-
+				llm = igniteEngine( this.aiEngine, config as EngineCreateOpts );
+				const messages = [
+					new Message( 'system', this.promptHelper.getSystemPrompt( this.isInlineInsertion ) ),
+					new Message( 'user', prompt )
+				];
+				stream = llm.generate( 'gpt-4o', messages, { usage: true } );
+			} else {
+				const config = {
+					apiKey: this.apiKey,
+					baseURL: this.endpointUrl
+				};
+				const llmCustom = new AIApi( config );
+				const messages = {
+					system: this.promptHelper.getSystemPrompt( this.isInlineInsertion ),
+					user: prompt
+				};
+				stream = llmCustom.fetchAIStream(
+					this.aiModel as AiModel,
+					messages,
+					{
+						temperature: this.temperature,
+						max_tokens: this.maxTokens,
+						stop: this.stopSequences
+					},
+					controller,
+					retries
+				);
+			}
 			console.log( 'Starting to process response' );
-			for ( ;; ) {
-				const { done, value } = await reader.read();
-				if ( done ) {
-					console.log( 'Finished reading response' );
-					break;
+			let isFirstChunk = true;
+			for await ( const c of stream ) {
+				if ( isFirstChunk ) {
+					clearTimeout( timeoutId );
+					aiAgentContext.hideLoader();
+					this.cancelGenerationButton( blockID, controller, llm, stream );
+					this.undoRedoHandler();
+					this.insertAiTag( blockID );
+					this.clearParentContent( parent, command );
+					isFirstChunk = false;
 				}
-
-				const chunk = decoder.decode( value, { stream: true } );
-				buffer += chunk;
-
-				let newlineIndex;
-				while ( ( newlineIndex = buffer.indexOf( '\n' ) ) !== -1 ) {
-					const line = buffer.slice( 0, newlineIndex ).trim();
-					buffer = buffer.slice( newlineIndex + 1 );
-
-					if ( line.startsWith( 'data: ' ) ) {
-						const jsonStr = line.slice( 5 ).trim();
-						if ( jsonStr === '[DONE]' ) {
-							console.log( 'Received [DONE] signal' );
-							break;
-						}
-
-						try {
-							const data = JSON.parse( jsonStr );
-							if ( data.method === 'agent/status' ) {
-								await this.animatedStatusMessages( data.params.status, blockID );
-							} else {
-								const content = data.choices[ 0 ]?.delta?.content;
-								if ( content !== null && content !== undefined ) {
-									contentBuffer += content;
-								}
-								await this.updateContent( contentBuffer, blockID );
-							}
-						} catch ( parseError ) {
-							console.warn( 'Error parsing JSON:', parseError );
-						}
+				this.s = c;
+				const chunk = c as any;
+				if ( chunk.type === 'status' ) {
+					await this.animatedStatusMessages( chunk.text, blockID );
+				} else {
+					if ( chunk.type === 'content' ) {
+						contentBuffer += chunk.text;
 					}
+					await this.updateContent( contentBuffer, blockID );
 				}
 			}
 			this.processCompleted( blockID );
@@ -406,48 +340,20 @@ export default class AiAgentService {
 			if ( this.abortGeneration ) {
 				return;
 			}
-
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
 			let errorMessage: string = t(
 				'We couldn\'t connect to the AI. Please check your internet'
 			);
-
-			const jsonMessage = this.isValidJSON( error?.message );
-			if ( jsonMessage ) {
-				const errorObj = JSON.parse( error?.message );
-				const status = errorObj.status;
-				errorMessage = getErrorMessages( status, editor );
-				if ( retries > 0 ) {
-					console.warn( `Retrying... (${ retries } attempts left)` );
-					return await this.fetchAndProcessGptResponse(
-						command,
-						prompt,
-						parent,
-						retries - 1
-					);
-				}
+			if ( error?.status ) {
+				errorMessage = getErrorMessages( error.status, editor );
 			} else {
 				errorMessage = error?.message?.trim();
 			}
 
 			aiAgentContext.showError( errorMessage );
+			this.processCompleted( blockID );
 		} finally {
 			this.editor.disableReadOnlyMode( this.aiAgentFeatureLockId );
-		}
-	}
-
-	/**
-	 * Checks if a given string is a valid JSON format.
-	 *
-	 * @param str - The string to be validated as JSON.
-	 * @returns True if the string is valid JSON, otherwise false.
-	 */
-	private isValidJSON( str: string ): boolean {
-		try {
-			JSON.parse( str );
-			return true;
-		} catch ( error ) {
-			return false;
 		}
 	}
 
@@ -458,7 +364,7 @@ export default class AiAgentService {
      * @param controller - AbortController to cancel the ongoing AI generation
      * @private
      */
-	private cancelGenerationButton( blockID: string, controller: AbortController ) {
+	private cancelGenerationButton( blockID: string, controller: AbortController, llm: LlmEngine | undefined, stream: any ) {
 		const editor = this.editor;
 		const t = editor.t;
 
@@ -481,7 +387,11 @@ export default class AiAgentService {
 
 		view.on( 'execute', () => {
 			this.abortGeneration = true;
-			controller.abort();
+			if ( llm ) {
+				llm.stop( llm );
+			} else {
+				controller.abort();
+			}
 			this.processCompleted( blockID );
 		} );
 
@@ -490,7 +400,11 @@ export default class AiAgentService {
 		editor.keystrokes.set( 'Ctrl+Backspace', ( keyEvtData, cancel ) => {
 			if ( keyEvtData.ctrlKey || keyEvtData.metaKey ) {
 				this.abortGeneration = true;
-				controller.abort();
+				if ( llm ) {
+					llm.stop( stream );
+				} else {
+					controller.abort();
+				}
 				this.processCompleted( blockID );
 			}
 			cancel();
@@ -849,28 +763,82 @@ export default class AiAgentService {
 	}
 
 	/**
-	 * Retrieves and formats the error message from the response object.
+	 * Handles the undo and redo commands for the editor.
 	 *
-	 * @param response - The response object from the fetch request.
-	 * @returns A promise that resolves to a JSON string containing the status and error message.
-	 * The error message is extracted based on the content type of the response, which can be
-	 * in JSON, HTML, or plain text format.
+	 * This function adds event listeners to the undo and redo commands.
+	 * If the editor's data contains any AI tags, executing the undo or redo command
+	 * will trigger the respective command, allowing for proper management of AI-generated content.
+	 *
+	 * @returns void
 	 */
-	private async getError( response: Response ) {
-		let errorData = '';
-		const contentType = response.headers.get( 'content-type' );
-		if ( contentType && contentType.includes( 'application/json' ) ) {
-			errorData = JSON.stringify( await response.json() );
-		} else if ( contentType && contentType.includes( 'text/html' ) ) {
-			errorData = await response.text();
-		} else if ( contentType && contentType.includes( 'text/plain' ) ) {
-			errorData = await response.text();
+	private undoRedoHandler() {
+		const editor = this.editor;
+		const undoCommand = editor.commands.get( 'undo' );
+		if ( undoCommand ) {
+			undoCommand.on( 'execute', () => {
+				const editorData = editor.getData();
+				if ( editorData.indexOf( 'ai-tag' ) > -1 ) {
+					editor.execute( 'undo' );
+				}
+			} );
 		}
 
-		const error = {
-			status: response.status,
-			error: errorData
-		};
-		return JSON.stringify( error );
+		const redoCommand = editor.commands.get( 'redo' );
+		if ( redoCommand ) {
+			redoCommand.on( 'execute', () => {
+				const editorData = editor.getData();
+				if ( editorData.indexOf( 'ai-tag' ) > -1 ) {
+					editor.execute( 'redo' );
+				}
+			} );
+		}
+	}
+
+	/**
+	 * Inserts AI tags into the editor at the current selection position.
+	 *
+	 * This function creates two AI tags: one inline tag and one block tag.
+	 * The inline tag is inserted immediately after the current selection,
+	 * while the block tag is inserted after the parent element of the selection.
+	 *
+	 * @param blockID - The unique identifier for the AI block, used to set the ID of the tags.
+	 *
+	 * @returns A Promise that resolves when the tags have been successfully inserted.
+	 */
+	private async insertAiTag( blockID: string ) {
+		const editor = this.editor;
+		editor.model.change( writer => {
+			const position = this.editor.model.document.selection.getLastPosition();
+			let newPosition: Position | undefined;
+			if ( position ) {
+				if ( position?.parent.name === 'inline-slash' ) {
+					if ( position?.parent?.parent ) {
+						newPosition = writer.createPositionAt( position.parent.parent, 'after' );
+					}
+					if ( position?.parent ) {
+						const parentJson = position?.parent?.parent?.toJSON() as any;
+						if ( parentJson.children.length > 1 ) {
+							const positionInline = writer.createPositionAt( position.parent, 'after' );
+							const aiTagInline = writer.createElement( 'ai-tag', {
+								id: `${ blockID }-inline`
+							} );
+							writer.insert( aiTagInline, positionInline );
+						}
+					}
+				} else {
+					const aiTagInline = writer.createElement( 'ai-tag', {
+						id: `${ blockID }-inline`
+					} );
+					writer.insert( aiTagInline, position );
+					newPosition = writer.createPositionAt( position.parent, 'after' );
+				}
+				if ( newPosition ) {
+					const aiTag = writer.createElement( 'ai-tag', {
+						id: blockID
+					} );
+					writer.insert( aiTag, newPosition );
+				}
+			}
+		} );
 	}
 }

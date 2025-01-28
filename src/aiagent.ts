@@ -2,35 +2,47 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import AiAgentUI from './aiagentui.js';
 import AiAgentEditing from './aiagentediting.js';
 import type { Editor } from 'ckeditor5';
-import type { AiModel, AiAgentConfig } from './type-identifiers.js';
-import { TOKEN_LIMITS } from './const.js';
+import type { AiEngine, AiModel, AiAgentConfig } from './type-identifiers.js';
+import { TOKEN_LIMITS, AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
 import '../theme/style.css';
 export default class AiAgent extends Plugin {
+	public DEFAULT_GPT_ENGINE = 'openai' as AiEngine;
 	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
-	public DEFAULT_AI_END_POINT = 'https://api.openai.com/v1/chat/completions';
 
 	constructor( editor: Editor ) {
 		super( editor );
 
-		const config = editor.config.get( 'aiAgent' ) || {};
+		const config = editor.config.get( 'aiAgent' ) as AiAgentConfig || {};
 		// Set default values and merge with provided config
 		const defaultConfig = {
+			engine: this.DEFAULT_GPT_ENGINE, // Default AI model
 			model: this.DEFAULT_GPT_MODEL, // Default AI model
 			apiKey: '', // Default OpenAI key
-			endpointUrl: this.DEFAULT_AI_END_POINT, // Default endpoint URL
+			endpointUrl: '', // Default endpoint URL
 			temperature: 0.7, // Add default temperature
 			timeOutDuration: 45000, // Default timeout duration
-			maxOutputTokens: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxOutputTokens,
-			maxInputTokens: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxInputContextTokens,
 			retryAttempts: 1, // Default retry attempts
-			contextSize: TOKEN_LIMITS[ this.DEFAULT_GPT_MODEL ].maxInputContextTokens * 0.75, // Default context size
 			stopSequences: [], // Default stop sequences
 			promptSettings: {},
 			debugMode: false, // Default debug mode
 			streamContent: true // Default streaming mode
 		};
 
-		const updatedConfig = { ...defaultConfig, ...config };
+		let tokenLimits = {};
+		if ( config.model && AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
+			const maxOutputTokens = TOKEN_LIMITS[ config.model as keyof typeof TOKEN_LIMITS ]?.maxOutputTokens ?? 0;
+			const maxInputTokens = TOKEN_LIMITS[ config.model as keyof typeof TOKEN_LIMITS ]?.maxOutputTokens ?? 0;
+			tokenLimits = {
+				maxOutputTokens,
+				maxInputTokens,
+				contextSize: maxInputTokens * 0.75
+			};
+		}
+		const updatedConfig = {
+			...defaultConfig,
+			...tokenLimits,
+			...config
+		};
 
 		// Set the merged config back to the editor
 		editor.config.set( 'aiAgent', updatedConfig );
@@ -48,6 +60,16 @@ export default class AiAgent extends Plugin {
 	}
 
 	private validateConfiguration( config: AiAgentConfig ): void {
+		if ( AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
+			if ( !AI_CUSTOM_MODEL.includes( config.model as any ) ) {
+				throw new Error( `AiAgent: model is not allowed for ${ config.engine }` );
+			}
+
+			if ( !config.endpointUrl ) {
+				throw new Error( 'AiAgent: endpointUrl is required for custom engine.' );
+			}
+		}
+
 		if ( !config.apiKey ) {
 			throw new Error( 'AiAgent: apiKey is required.' );
 		}

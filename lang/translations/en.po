@@ -329,3 +329,7 @@ msgstr "Summarize"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Continue"
+
+msgctxt "Pls add the right model, example:"
+msgid "Pls add the right model, example:"
+msgstr "Pls add the right model, example:"

@@ -1,11 +1,7 @@
-import type { ALL_MODERATION_FLAGS } from './const.js';
+import type { ALL_MODERATION_FLAGS, AI_ENGINE, AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
 
-// types
-export type AiModel =
-    'gpt-3.5-turbo' |
-    'gpt-4o' |
-    'gpt-4o-mini' |
-    'kavya-m1';
+export type AiEngine = typeof AI_ENGINE[number] | typeof AI_CUSTOM_ENGINE[number];
+export type AiModel = typeof AI_CUSTOM_MODEL[number];
 
 export type PromptComponentKey =
     | 'responseRules'
@@ -28,23 +24,48 @@ export interface ModelTokenLimits {
 }
 
 export interface AiAgentConfig {
-    model?: AiModel;
+    engine?: AiEngine;
+    model?: string;
     apiKey: string;
+
+    // Temperature Setting
     temperature?: number;
+
+    // Token Configuration
     maxOutputTokens?: number;
     maxInputTokens?: number;
-    maxTokens?: number; // deprecated
+    maxTokens?: number;
+
+    // Sequence Control
     stopSequences?: Array<string>;
     retryAttempts?: number;
+
+    // Context Configuration
     contextSize?: number;
     timeOutDuration?: number;
     endpointUrl?: string;
+
+    // Prompt Settings
     promptSettings?: PromptSettings;
+
+    // Behavior Settings
     streamContent?: boolean;
     debugMode?: boolean;
+    showErrorDuration?: number;
+
+    // Moderation Settings
     moderationKey?: string;
     moderationEnable?: boolean;
     moderationDisableFlags?: Array<ModerationFlagsTypes>;
+
+    commandsDropdown?: Array<{
+        title: string;
+        items: Array<{
+            title: string;
+            command: string;
+        }>;
+    }>;
+    contentScope?: string;
 }
 
 export interface MarkdownContent {

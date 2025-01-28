@@ -118,8 +118,9 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
+| `engine` | `AiEngine?` | `'openai'` | The AI engine to use |
+| `model` | `string?` | `'gpt-4o'` | The AI model to use |
 | `apiKey` | `string` | - | Your Open_AI key for authenticate |
-| `model` | `AiModel?` | `'gpt-4o'` | The AI model to use |
 | `temperature` | `number?` | `0.7` | Controls the randomness of the AI output. Must be between 0 and 2 |
 | `maxOutputTokens` | `number?` | Model specific default from TOKEN_LIMITS | Maximum number of tokens the AI can generate in its response |
 | `maxInputTokens` | `number?` | Model specific default from TOKEN_LIMITS | Maximum number of tokens allowed in the combined prompt and context |

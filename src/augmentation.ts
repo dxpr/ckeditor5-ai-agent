@@ -2,7 +2,7 @@ import type AiAgentCommand from './aiagentcommand.js';
 import type AiAgentEditing from './aiagentediting.js';
 import type AiAgentUI from './aiagentui.js';
 import type { AiAgent } from './index.js';
-import type { AiModel, PromptSettings, ModerationFlagsTypes } from './type-identifiers.js';
+import type { AiAgentConfig } from './type-identifiers.js';
 
 declare module '@ckeditor/ckeditor5-core' {
 	interface CommandsMap {
@@ -20,48 +20,6 @@ declare module '@ckeditor/ckeditor5-core' {
     }
 
 	interface EditorConfig {
-        aiAgent?: {
-            model?: AiModel;
-            apiKey: string;
-
-            // Temperature Setting
-            temperature?: number;
-
-            // Token Configuration
-            maxOutputTokens?: number;
-            maxInputTokens?: number;
-            maxTokens?: number;
-
-            // Sequence Control
-            stopSequences?: Array<string>;
-            retryAttempts?: number;
-
-            // Context Configuration
-            contextSize?: number;
-            timeOutDuration?: number;
-            endpointUrl?: string;
-
-            // Prompt Settings
-            promptSettings?: PromptSettings;
-
-            // Behavior Settings
-            streamContent?: boolean;
-            debugMode?: boolean;
-            showErrorDuration?: number;
-
-            // Moderation Settings
-            moderationKey?: string;
-            moderationEnable?: boolean;
-            moderationDisableFlags?: Array<ModerationFlagsTypes>;
-
-            commandsDropdown?: Array<{
-                title: string;
-                items: Array<{
-                    title: string;
-                    command: string;
-                }>;
-            }>;
-            contentScope?: string;
-        };
+        aiAgent?: AiAgentConfig;
     }
 }

@@ -50,24 +50,24 @@ jobs:
             const fs = require("fs").promises;
             const path = require("path");
             
-            const ENGINE_CONFIGS = {
-              google: { apiKey: process.env.GOOGLE_GEMINI_API_KEY },
-              openai: { apiKey: process.env.OPENAI_API_KEY },
-              anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
-              mistralai: { apiKey: process.env.MISTRAL_API_KEY },
-              groq: { apiKey: process.env.GROQ_API_KEY },
-              xai: { apiKey: process.env.XAI_API_KEY },
-              openrouter: { }
-            };
-            
             async function updateModels() {
               const modelsList = {};
+              let totalModels = 0;
               
-              for (const [engine, config] of Object.entries(ENGINE_CONFIGS)) {
+              for (const [engine, config] of Object.entries({
+                google: { apiKey: process.env.GOOGLE_GEMINI_API_KEY },
+                openai: { apiKey: process.env.OPENAI_API_KEY },
+                anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
+                mistralai: { apiKey: process.env.MISTRAL_API_KEY },
+                groq: { apiKey: process.env.GROQ_API_KEY },
+                xai: { apiKey: process.env.XAI_API_KEY },
+                openrouter: { }
+              })) {
                 try {
                   const models = await loadModels(engine, config);
                   if (models?.chat?.length) {
                     modelsList[engine] = models.chat.map(m => m.id);
+                    totalModels += models.chat.length;
                   }
                 } catch (error) {
                   console.warn(`Error loading ${engine} models:`, error.message);
@@ -87,13 +87,27 @@ jobs:
               
               if (shouldUpdate) {
                 await fs.writeFile(filePath, JSON.stringify(modelsList, null, 2) + "\n");
-                console.log("::set-output name=models_updated::true");
+                
+                // Update only the model count in README.md
+                const readmePath = "./README.md";
+                let readme = await fs.readFile(readmePath, "utf8");
+                readme = readme.replace(
+                  /<!-- BEGIN_MODEL_COUNT -->\d+<!-- END_MODEL_COUNT -->/,
+                  `<!-- BEGIN_MODEL_COUNT -->${totalModels}<!-- END_MODEL_COUNT -->`
+                );
+                await fs.writeFile(readmePath, readme);
+                
+                // Use GitHub Actions output syntax
+                console.log(`::set-output name=models_updated::true`);
               } else {
-                console.log("::set-output name=models_updated::false");
+                console.log(`::set-output name=models_updated::false`);
               }
             }
             
-            updateModels().catch(console.error);
+            updateModels().catch(error => {
+              console.error(error);
+              process.exit(1);
+            });
           '
           
       - name: Commit and push if changed

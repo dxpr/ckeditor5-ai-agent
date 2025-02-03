@@ -67,6 +67,12 @@ export default class AiAgent extends Plugin {
 	}
 
 	private async validateConfiguration( config: AiAgentConfig ): Promise<void> {
+		// 1. First check if API key exists since it's required for all engines
+		if ( !config.apiKey ) {
+			throw new Error( 'AiAgent: apiKey is required.' );
+		}
+
+		// 2. Check engine-specific requirements
 		if ( AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
 			if ( !AI_CUSTOM_MODEL.includes( config.model as any ) ) {
 				throw new Error( `AiAgent: model is not allowed for ${ config.engine }` );
@@ -76,47 +82,57 @@ export default class AiAgent extends Plugin {
 				throw new Error( 'AiAgent: endpointUrl is required for custom engine.' );
 			}
 		} else if ( config.engine ) {
-			const models = await loadModels( config.engine, { apiKey: config.apiKey } );
-			if ( models ) {
-				const chat = models.chat;
-				const model = chat.find( ( model: any ) => model.id === config.model );
+			try {
+				const models = await loadModels( config.engine, { apiKey: config.apiKey } );
+				// If models fails to load, it's likely an API key issue
+				if ( !models?.chat?.length ) {
+					throw new Error( `Unable to load models - please verify your ${ config.engine } API key` );
+				}
+
+				const model = models.chat.find( ( model: any ) => model.id === config.model );
 				if ( !model ) {
-					const modelsList = chat.map( model => model.id ).join( ' | ' );
+					const modelsList = models.chat.map( model => model.id ).join( ' | ' );
 					throw new Error(
-						`Invalid AI model specified. Please select one of the supported models: ${ modelsList }`
+						`Invalid AI model specified. Available models: ${ modelsList }`
 					);
 				}
+			} catch ( error: any ) {
+				// Prioritize API key errors
+				if ( error.status === 401 || error.code === 'invalid_api_key' ||
+					error.message?.toLowerCase().includes( 'api key' ) ) {
+					throw new Error( `Invalid ${ config.engine } API key - please check your configuration` );
+				}
+				throw error; // Let other errors propagate normally
 			}
 		}
 
-		if ( !config.apiKey ) {
-			throw new Error( 'AiAgent: apiKey is required.' );
-		}
-
+		// 3. Validate common settings
 		if ( config.temperature && ( config.temperature < 0 || config.temperature > 2 ) ) {
 			throw new Error( 'AiAgent: Temperature must be a number between 0 and 2.' );
 		}
 
 		const limits = TOKEN_LIMITS[ config.model as AiModel ];
 
-		// Validate output tokens
-		if ( config.maxOutputTokens !== undefined ) {
-			if ( config.maxOutputTokens < limits.minOutputTokens ||
-				config.maxOutputTokens > limits.maxOutputTokens ) {
+		if ( limits ) {
+			// Validate output tokens
+			if ( config.maxOutputTokens !== undefined ) {
+				if ( config.maxOutputTokens < limits.minOutputTokens ||
+					config.maxOutputTokens > limits.maxOutputTokens ) {
+					throw new Error(
+						`AiAgent: maxOutputTokens must be between ${ limits.minOutputTokens } ` +
+						`and ${ limits.maxOutputTokens } for ${ config.model }`
+					);
+				}
+			}
+
+			// Validate input tokens
+			if ( config.maxInputTokens !== undefined &&
+				config.maxInputTokens > limits.maxInputContextTokens ) {
 				throw new Error(
-					`AiAgent: maxOutputTokens must be between ${ limits.minOutputTokens } ` +
-					`and ${ limits.maxOutputTokens } for ${ config.model }`
+					`AiAgent: maxInputTokens cannot exceed ${ limits.maxInputContextTokens } ` +
+					`for ${ config.model }`
 				);
 			}
-		}
-
-		// Validate input tokens
-		if ( config.maxInputTokens !== undefined &&
-			config.maxInputTokens > limits.maxInputContextTokens ) {
-			throw new Error(
-				`AiAgent: maxInputTokens cannot exceed ${ limits.maxInputContextTokens } ` +
-				`for ${ config.model }`
-			);
 		}
 	}
 

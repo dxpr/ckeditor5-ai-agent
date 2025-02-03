@@ -97,10 +97,9 @@ jobs:
                 );
                 await fs.writeFile(readmePath, readme);
                 
-                // Use GitHub Actions output syntax
-                console.log(`echo "models_updated=true" >> $GITHUB_OUTPUT`);
+                console.log("::set-output name=models_updated::true");
               } else {
-                console.log(`::set-output name=models_updated::false`);
+                console.log("::set-output name=models_updated::false");
               }
             }
             

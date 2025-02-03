@@ -341,3 +341,4 @@ msgstr "تلخيص"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "متابعة"
+

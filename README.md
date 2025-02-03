@@ -19,7 +19,7 @@
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
-Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "wrong". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
+Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
 
 ## Table of Contents
 
@@ -118,8 +118,9 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
+| `engine` | `AiEngine?` | `'openai'` | AI engine to use: 'anthropic', 'cerebras', 'deepseek', 'google', 'groq', 'mistralai', 'ollama', 'openai', 'openrouter', 'xai' |
+| `model` | `string?` | `'gpt-4o'` | The AI model to use |
 | `apiKey` | `string` | - | Your Open_AI key for authenticate |
-| `model` | `AiModel?` | `'gpt-4o'` | The AI model to use |
 | `temperature` | `number?` | `0.7` | Controls the randomness of the AI output. Must be between 0 and 2 |
 | `maxOutputTokens` | `number?` | Model specific default from TOKEN_LIMITS | Maximum number of tokens the AI can generate in its response |
 | `maxInputTokens` | `number?` | Model specific default from TOKEN_LIMITS | Maximum number of tokens allowed in the combined prompt and context |

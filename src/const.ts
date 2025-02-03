@@ -1,23 +1,24 @@
-import type { AiModel, ModelTokenLimits } from './type-identifiers.js';
+import type { ModelTokenLimits, AiModel } from './type-identifiers.js';
 
-// const
+export const AI_ENGINE = [
+	'anthropic',
+	'cerebras',
+	'deepseek',
+	'google',
+	'groq',
+	'mistralai',
+	'ollama',
+	'openai',
+	'openrouter',
+	'xai'
+] as const;
+
+export const AI_CUSTOM_ENGINE = [ 'kavya' ] as const;
+
+export const AI_CUSTOM_MODEL = [ 'gpt-4o' ] as const;
+
 export const TOKEN_LIMITS: Record<AiModel, ModelTokenLimits> = {
-	'gpt-3.5-turbo': {
-		minOutputTokens: 1,
-		maxOutputTokens: 4096,
-		maxInputContextTokens: 16385
-	},
 	'gpt-4o': {
-		minOutputTokens: 0,
-		maxOutputTokens: 16384,
-		maxInputContextTokens: 128000
-	},
-	'gpt-4o-mini': {
-		minOutputTokens: 1,
-		maxOutputTokens: 16384,
-		maxInputContextTokens: 128000
-	},
-	'kavya-m1': {
 		minOutputTokens: 0,
 		maxOutputTokens: 16384,
 		maxInputContextTokens: 128000

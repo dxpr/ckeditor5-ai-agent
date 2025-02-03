@@ -329,3 +329,7 @@ msgstr "Summarize"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Continue"
+
+msgctxt "Error message shown when the AI model returns an empty response"
+msgid "Empty response from AI model"
+msgstr "Empty response from AI model"

@@ -36,6 +36,7 @@ jobs:
           npm install multi-llm-ts@latest
         
       - name: Update models
+        id: update-models
         env:
           GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -86,9 +87,9 @@ jobs:
               
               if (shouldUpdate) {
                 await fs.writeFile(filePath, JSON.stringify(modelsList, null, 2) + "\n");
-                console.log(`models_updated=${shouldUpdate}`);
+                console.log("::set-output name=models_updated::true");
               } else {
-                console.log(`models_updated=${shouldUpdate}`);
+                console.log("::set-output name=models_updated::false");
               }
             }
             

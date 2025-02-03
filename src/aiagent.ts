@@ -5,6 +5,7 @@ import type { Editor } from 'ckeditor5';
 import type { AiEngine, AiModel, AiAgentConfig } from './type-identifiers.js';
 import { TOKEN_LIMITS, AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
 import '../theme/style.css';
+import { loadModels } from 'multi-llm-ts/dist/index.js';
 export default class AiAgent extends Plugin {
 	public DEFAULT_GPT_ENGINE = 'openai' as AiEngine;
 	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
@@ -65,7 +66,7 @@ export default class AiAgent extends Plugin {
 		return 'AiAgent' as const;
 	}
 
-	private validateConfiguration( config: AiAgentConfig ): void {
+	private async validateConfiguration( config: AiAgentConfig ): Promise<void> {
 		if ( AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
 			if ( !AI_CUSTOM_MODEL.includes( config.model as any ) ) {
 				throw new Error( `AiAgent: model is not allowed for ${ config.engine }` );
@@ -73,6 +74,16 @@ export default class AiAgent extends Plugin {
 
 			if ( !config.endpointUrl ) {
 				throw new Error( 'AiAgent: endpointUrl is required for custom engine.' );
+			}
+		} else if ( config.engine ) {
+			const models = await loadModels( config.engine, { apiKey: config.apiKey } );
+			if ( models ) {
+				const chat = models.chat;
+				const model = chat.find( ( model: any ) => model.id === config.model );
+				if ( !model ) {
+					const modelsList = chat.map( model => model.id ).join( ' | ' );
+					throw new Error( `Pls add the right model, example: ${ modelsList }` );
+				}
 			}
 		}
 

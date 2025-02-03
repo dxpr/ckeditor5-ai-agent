@@ -281,16 +281,6 @@ export default class AiAgentService {
 				const config = {
 					apiKey: this.apiKey
 				};
-				const models = await loadModels( this.aiEngine, config as EngineCreateOpts );
-				if ( models && AI_CUSTOM_ENGINE.includes( this.aiEngine as any ) ) {
-					const chat = models.chat;
-					const model = chat.find( ( model: any ) => model.id === this.aiModel );
-					if ( !model ) {
-						const modelsList = chat.map( model => model.id ).join( ' | ' );
-						aiAgentContext.showError( ` ${ t( 'Pls add the right model, example:' ) } ${ modelsList }` );
-						return;
-					}
-				}
 				llm = igniteEngine( this.aiEngine, config as EngineCreateOpts );
 				const messages = [
 					new Message( 'system', this.promptHelper.getSystemPrompt( this.isInlineInsertion ) ),

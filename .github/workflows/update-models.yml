@@ -98,7 +98,7 @@ jobs:
                 await fs.writeFile(readmePath, readme);
                 
                 // Use GitHub Actions output syntax
-                console.log(`::set-output name=models_updated::true`);
+                console.log(`echo "models_updated=true" >> $GITHUB_OUTPUT`);
               } else {
                 console.log(`::set-output name=models_updated::false`);
               }
@@ -115,6 +115,6 @@ jobs:
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add SUPPORTED_MODELS.json
-          git commit -m "chore: update supported models [skip ci]"
+          git add SUPPORTED_MODELS.json README.md
+          git commit -m "chore: update supported models and readme [skip ci]"
           git push

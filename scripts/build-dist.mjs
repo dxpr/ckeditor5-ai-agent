@@ -34,6 +34,9 @@ function dist( path ) {
 		external: [
 			'ckeditor5',
 			'ckeditor5-premium-features',
+			'@anthropic-ai/sdk',
+			'openai',
+			'groq-sdk',
 			...Object.keys( {
 				...pkg.dependencies,
 				...pkg.peerDependencies
@@ -59,7 +62,15 @@ function dist( path ) {
 		name: 'AiAgent',
 		external: [
 			'ckeditor5',
-			'ckeditor5-premium-features'
-		]
+			'ckeditor5-premium-features',
+			'@anthropic-ai/sdk',
+			'openai',
+			'groq-sdk'
+		],
+		globals: {
+			'@anthropic-ai/sdk': 'AnthropicAI',
+			'openai': 'OpenAI',
+			'groq-sdk': 'GroqSDK'
+		}
 	} );
 } )();

@@ -82,7 +82,9 @@ export default class AiAgent extends Plugin {
 				const model = chat.find( ( model: any ) => model.id === config.model );
 				if ( !model ) {
 					const modelsList = chat.map( model => model.id ).join( ' | ' );
-					throw new Error( `Pls add the right model, example: ${ modelsList }` );
+					throw new Error(
+						`Invalid AI model specified. Please select one of the supported models: ${ modelsList }`
+					);
 				}
 			}
 		}

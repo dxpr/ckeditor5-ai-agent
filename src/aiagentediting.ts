@@ -2,6 +2,7 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import AiAgentCommand from './aiagentcommand.js';
 import type { Element } from 'ckeditor5';
 import AiAgentService from './aiagentservice.js';
+import { AI_KEYBOARD } from './const.js';
 
 export default class AiAgentEditing extends Plugin {
 	public static get pluginName() {
@@ -31,6 +32,8 @@ export default class AiAgentEditing extends Plugin {
 		const model = editor.model;
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
+		const config = editor.config.get( 'aiAgent' );
+		const aiKeyboard = config?.aiKeyboard ?? AI_KEYBOARD;
 
 		editor.keystrokes.set( 'enter', async ( _, cancel ) => {
 			const position = model.document.selection.getFirstPosition();
@@ -45,7 +48,7 @@ export default class AiAgentEditing extends Plugin {
 							equivalentView
 						)?.innerText;
 				}
-				if ( ( typeof content === 'string' && content.startsWith( '/' ) ) || inlineSlash ) {
+				if ( ( typeof content === 'string' && content.startsWith( aiKeyboard ) ) || inlineSlash ) {
 					cancel();
 					await editor.execute( 'aiAgent' );
 				}

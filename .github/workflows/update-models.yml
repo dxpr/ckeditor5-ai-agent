@@ -97,9 +97,11 @@ jobs:
                 );
                 await fs.writeFile(readmePath, readme);
                 
-                console.log("::set-output name=models_updated::true");
+                // IMPORTANT: Do not change this syntax! The newer `$GITHUB_OUTPUT` syntax breaks the workflow
+                // This specific syntax is required for the commit step condition to work
+                console.log(`::set-output name=models_updated::true`);
               } else {
-                console.log("::set-output name=models_updated::false");
+                console.log(`::set-output name=models_updated::false`);
               }
             }
             

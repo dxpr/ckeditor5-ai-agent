@@ -73,6 +73,13 @@ export class PromptHelper {
 		const view = this.editor?.editing?.view?.domRoots?.get( 'main' );
 		let context = view?.innerText ?? '';
 
+		if ( this.debugMode ) {
+			console.log( '[Context]', {
+				contextSize: this.contextSize,
+				editorContextRatio: this.editorContextRatio
+			} );
+		}
+
 		if ( this.contentScope ) {
 			const activeEditorElement = this.editor.editing.view.getDomRoot();
 			const targetElement = activeEditorElement?.closest( this.contentScope );
@@ -93,6 +100,15 @@ export class PromptHelper {
 		const contextParts = [ beforeNewline, afterNewline ];
 
 		const allocatedEditorContextToken = Math.floor( this.contextSize * this.editorContextRatio );
+
+		if ( this.debugMode ) {
+			console.log( '[Context Size]', {
+				allocatedTokens: allocatedEditorContextToken,
+				beforeLength: contextParts[ 0 ].length,
+				afterLength: contextParts[ 1 ].length
+			} );
+		}
+
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
 				contentBeforePrompt = extractEditorContent(

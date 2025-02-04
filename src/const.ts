@@ -1,5 +1,5 @@
-import type { ModelTokenLimits, AiModel } from './type-identifiers.js';
-
+// These are just examples of model names - actual model names come from SUPPORTED_MODELS.json
+// The token limits are determined by pattern matching in prompt.ts
 export const AI_ENGINE = [
 	'anthropic',
 	'cerebras',
@@ -15,15 +15,15 @@ export const AI_ENGINE = [
 
 export const AI_CUSTOM_ENGINE = [ 'kavya' ] as const;
 
-export const AI_CUSTOM_MODEL = [ 'gpt-4o' ] as const;
-
-export const TOKEN_LIMITS: Record<AiModel, ModelTokenLimits> = {
-	'gpt-4o': {
-		minOutputTokens: 0,
-		maxOutputTokens: 16384,
-		maxInputContextTokens: 128000
-	}
-};
+export const AI_CUSTOM_MODEL = [
+	'gpt-4o',
+	'o1',
+	'claude-3',
+	'gemini-1.5',
+	'mistral-large',
+	'deepseek-r1',
+	'grok-beta'
+] as const;
 
 export const SUPPORTED_LANGUAGES = [ 'en', 'es', 'hi', 'nl' ];
 

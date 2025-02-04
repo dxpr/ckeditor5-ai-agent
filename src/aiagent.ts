@@ -3,9 +3,11 @@ import AiAgentUI from './aiagentui.js';
 import AiAgentEditing from './aiagentediting.js';
 import type { Editor } from 'ckeditor5';
 import type { AiEngine, AiModel, AiAgentConfig } from './type-identifiers.js';
-import { TOKEN_LIMITS, AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
+import { AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
+import { getModelTokenLimits } from './util/prompt.js';
 import '../theme/style.css';
 import { loadModels } from 'multi-llm-ts/dist/index.js';
+
 export default class AiAgent extends Plugin {
 	public DEFAULT_GPT_ENGINE = 'openai' as AiEngine;
 	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
@@ -29,13 +31,13 @@ export default class AiAgent extends Plugin {
 		};
 
 		let tokenLimits = {};
-		if ( config.model && AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
-			const maxOutputTokens = TOKEN_LIMITS[ config.model as keyof typeof TOKEN_LIMITS ]?.maxOutputTokens ?? 0;
-			const maxInputTokens = TOKEN_LIMITS[ config.model as keyof typeof TOKEN_LIMITS ]?.maxOutputTokens ?? 0;
+		const model = config.model ?? defaultConfig.model;
+		if ( model && AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
+			const { maxInputContextTokens } = getModelTokenLimits( model );
 			tokenLimits = {
-				maxOutputTokens,
-				maxInputTokens,
-				contextSize: maxInputTokens * 0.75
+				maxOutputTokens: 16384, // Default max output tokens
+				maxInputTokens: maxInputContextTokens,
+				contextSize: maxInputContextTokens * 0.75
 			};
 		}
 
@@ -111,28 +113,29 @@ export default class AiAgent extends Plugin {
 			throw new Error( 'AiAgent: Temperature must be a number between 0 and 2.' );
 		}
 
-		const limits = TOKEN_LIMITS[ config.model as AiModel ];
+		const model = config.model ?? this.DEFAULT_GPT_MODEL;
+		const { maxInputContextTokens } = getModelTokenLimits( model );
+		const DEFAULT_MAX_OUTPUT_TOKENS = 16384;
+		const DEFAULT_MIN_OUTPUT_TOKENS = 0;
 
-		if ( limits ) {
-			// Validate output tokens
-			if ( config.maxOutputTokens !== undefined ) {
-				if ( config.maxOutputTokens < limits.minOutputTokens ||
-					config.maxOutputTokens > limits.maxOutputTokens ) {
-					throw new Error(
-						`AiAgent: maxOutputTokens must be between ${ limits.minOutputTokens } ` +
-						`and ${ limits.maxOutputTokens } for ${ config.model }`
-					);
-				}
-			}
-
-			// Validate input tokens
-			if ( config.maxInputTokens !== undefined &&
-				config.maxInputTokens > limits.maxInputContextTokens ) {
+		// Validate output tokens
+		if ( config.maxOutputTokens !== undefined ) {
+			if ( config.maxOutputTokens < DEFAULT_MIN_OUTPUT_TOKENS ||
+				config.maxOutputTokens > DEFAULT_MAX_OUTPUT_TOKENS ) {
 				throw new Error(
-					`AiAgent: maxInputTokens cannot exceed ${ limits.maxInputContextTokens } ` +
-					`for ${ config.model }`
+					`AiAgent: maxOutputTokens must be between ${ DEFAULT_MIN_OUTPUT_TOKENS } ` +
+					`and ${ DEFAULT_MAX_OUTPUT_TOKENS } for ${ config.model }`
 				);
 			}
+		}
+
+		// Validate input tokens
+		if ( config.maxInputTokens !== undefined &&
+			config.maxInputTokens > maxInputContextTokens ) {
+			throw new Error(
+				`AiAgent: maxInputTokens cannot exceed ${ maxInputContextTokens } ` +
+				`for ${ config.model }`
+			);
 		}
 	}
 

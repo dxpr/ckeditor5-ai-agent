@@ -190,6 +190,7 @@ const inlineEditorConfig = {
 	},
 	aiAgent: {
 		apiKey: 'YOUR_API_KEY',
+		contentScope: '.page-builder-container',
 		debugMode: true
 	},
 	language: {

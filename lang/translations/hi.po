@@ -341,3 +341,12 @@ msgstr "सारांशित करें"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "जारी रखें"
+
+msgctxt "Error message shown when the AI model returns an empty response"
+msgid "Empty response from AI model"
+msgstr "AI मॉडल से खाली प्रतिक्रिया"
+
+msgctxt "Invalid AI model specified. Available models"
+msgid "Invalid AI model specified. Available models"
+msgstr "अमान्य AI मॉडल निर्दिष्ट किया गया। उपलब्ध मॉडल"
+

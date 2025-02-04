@@ -82,5 +82,6 @@
 	"Generate from selection": "Generate from selection",
 	"Summarize": "Summarize",
 	"Continue": "Continue",
-	"Empty response from AI model": "Error message shown when the AI model returns an empty response"
+	"Empty response from AI model": "Error message shown when the AI model returns an empty response",
+	"Invalid AI model specified. Available models": "Invalid AI model specified. Available models"
 }

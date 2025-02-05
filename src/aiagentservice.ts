@@ -42,6 +42,8 @@ export default class AiAgentService {
 	private disableFlags: Array<ModerationFlagsTypes> = [];
 	private s: any;
 
+	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
+
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
 	 *
@@ -370,20 +372,15 @@ export default class AiAgentService {
 		success: boolean;
 		error?: string;
 	}> {
-		const key = `${ engine }_models`;
-		let models = this.getCachedModels( key );
+		const models = this.getCachedModels( engine );
 		if ( !models.length ) {
 			const apiModels = await loadModels( engine, { apiKey } );
 			if ( !apiModels?.chat?.length ) {
 				throw new Error( `Unable to load models - please verify your ${ engine } API key` );
 			}
-			models = apiModels.chat.map( model => model.id );
-			const now = new Date();
-			const x = {
-				expiry: now.getTime() + 24 * 60 * 60 * 1000,
-				models
-			};
-			localStorage.setItem( key, JSON.stringify( x ) );
+			const modelIds = apiModels.chat.map( model => model.id );
+			this.cacheModels( engine, modelIds );
+			models.push( ...modelIds );
 		}
 
 		const modelExists = models.find( ( item: string ) => item === model );
@@ -404,10 +401,11 @@ export default class AiAgentService {
 	 * Retrieves cached models from local storage based on the provided key.
 	 * If the cached models are expired, they are removed from local storage.
 	 *
-	 * @param key - The key used to access the cached models in local storage.
+	 * @param engine - The key used to access the cached models in local storage.
 	 * @returns An array of model identifiers retrieved from local storage, or an empty array if no valid models are found.
 	 */
-	private getCachedModels( key: string ) {
+	private getCachedModels( engine: string ) {
+		const key = `${ this.STORAGE_PREFIX }:${ engine }_models`;
 		let models = [];
 		const localStorageModels = localStorage.getItem( key );
 		const now = new Date();
@@ -420,6 +418,16 @@ export default class AiAgentService {
 			}
 		}
 		return models;
+	}
+
+	private cacheModels( engine: string, models: Array<string> ) {
+		const key = `${ this.STORAGE_PREFIX }:${ engine }_models`;
+		const now = new Date();
+		const data = {
+			expiry: now.getTime() + 24 * 60 * 60 * 1000, // 24 hours
+			models
+		};
+		localStorage.setItem( key, JSON.stringify( data ) );
 	}
 
 	private async handleStreamingResponse(

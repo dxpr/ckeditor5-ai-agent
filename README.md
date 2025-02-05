@@ -134,7 +134,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
 | `contextSize` | `number?` | `75% of model's maxInputContextTokens` | Maximum context window size in tokens |
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
-| `endpointUrl` | `string?` | `'https://api.openai.com/v1/chat/completions'` | The URL of the AI endpoint to use for generating content |
+| `endpointUrl` | `string?` | - | The URL of the AI endpoint (only required when using custom engines or proxies) |
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
 | `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
 | `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |

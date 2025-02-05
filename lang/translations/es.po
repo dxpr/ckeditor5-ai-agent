@@ -341,3 +341,11 @@ msgstr "Resumir"
 msgctxt "Continue"
 msgid "Continue"
 msgstr "Continuar"
+
+msgctxt "Error message shown when the AI model returns an empty response"
+msgid "Empty response from AI model"
+msgstr "Respuesta vacía del modelo de IA"
+
+msgctxt "Invalid AI model specified. Available models"
+msgid "Invalid AI model specified. Available models"
+msgstr "Modelo de IA especificado no válido. Modelos disponibles"

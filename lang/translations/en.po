@@ -333,3 +333,7 @@ msgstr "Continue"
 msgctxt "Error message shown when the AI model returns an empty response"
 msgid "Empty response from AI model"
 msgstr "Empty response from AI model"
+
+msgctxt "Invalid AI model specified. Available models"
+msgid "Invalid AI model specified. Available models"
+msgstr "Invalid AI model specified. Available models"

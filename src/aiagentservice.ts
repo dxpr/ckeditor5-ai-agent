@@ -6,7 +6,7 @@ import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
-import { ALL_MODERATION_FLAGS, MODERATION_URL, AI_ENGINE, AI_CUSTOM_ENGINE } from './const.js';
+import { ALL_MODERATION_FLAGS, MODERATION_URL, AI_ENGINE } from './const.js';
 import { getErrorMessages } from './util/translations.js';
 import {
 	type EngineCreateOpts,
@@ -41,6 +41,8 @@ export default class AiAgentService {
 	private moderationEnable: boolean;
 	private disableFlags: Array<ModerationFlagsTypes> = [];
 	private s: any;
+
+	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
 
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
@@ -281,6 +283,11 @@ export default class AiAgentService {
 				const config = {
 					apiKey: this.apiKey
 				};
+				const { success, error } = await this.checkModel( this.aiEngine, this.aiModel, this.apiKey );
+				if ( !success ) {
+					aiAgentContext.showError( `${ t( 'Invalid AI model specified. Available models' ) }: ${ error } ` );
+					return;
+				}
 				llm = igniteEngine( this.aiEngine, config as EngineCreateOpts );
 				const messages = [
 					new Message( 'system', this.promptHelper.getSystemPrompt( this.isInlineInsertion ) ),
@@ -346,6 +353,81 @@ export default class AiAgentService {
 			clearTimeout( timeoutId );
 			this.editor.disableReadOnlyMode( this.aiAgentFeatureLockId );
 		}
+	}
+
+	/**
+	 * Checks if the specified AI model exists for the given engine.
+	 * If the models are not cached, it fetches them from the API and caches them.
+	 *
+	 * @param engine - The AI engine to check the model against.
+	 * @param model - The model identifier to verify.
+	 * @param apiKey - Optional API key for authentication with the AI engine.
+	 * @returns A promise that resolves to an object containing:
+	 * - `success`: A boolean indicating whether the model exists.
+	 * - `error`: An optional string containing error details if the model is invalid.
+	 *
+	 * @throws Will throw an error if unable to load models from the API.
+	 */
+	private async checkModel( engine: AiEngine, model: string, apiKey?: string ): Promise<{
+		success: boolean;
+		error?: string;
+	}> {
+		const models = this.getCachedModels( engine );
+		if ( !models.length ) {
+			const apiModels = await loadModels( engine, { apiKey } );
+			if ( !apiModels?.chat?.length ) {
+				throw new Error( `Unable to load models - please verify your ${ engine } API key` );
+			}
+			const modelIds = apiModels.chat.map( model => model.id );
+			this.cacheModels( engine, modelIds );
+			models.push( ...modelIds );
+		}
+
+		const modelExists = models.find( ( item: string ) => item === model );
+		if ( !modelExists ) {
+			console.error( 'Invalid AI model specified. Available models:', models );
+			return {
+				success: false,
+				error: models.join( ' | ' )
+			};
+		}
+
+		return {
+			success: true
+		};
+	}
+
+	/**
+	 * Retrieves cached models from local storage based on the provided key.
+	 * If the cached models are expired, they are removed from local storage.
+	 *
+	 * @param engine - The key used to access the cached models in local storage.
+	 * @returns An array of model identifiers retrieved from local storage, or an empty array if no valid models are found.
+	 */
+	private getCachedModels( engine: string ) {
+		const key = `${ this.STORAGE_PREFIX }:${ engine }_models`;
+		let models = [];
+		const localStorageModels = localStorage.getItem( key );
+		const now = new Date();
+		if ( localStorageModels ) {
+			const item = JSON.parse( localStorageModels );
+			if ( now.getTime() <= item.expiry ) {
+				models = item.models;
+			} else {
+				localStorage.removeItem( key );
+			}
+		}
+		return models;
+	}
+
+	private cacheModels( engine: string, models: Array<string> ) {
+		const key = `${ this.STORAGE_PREFIX }:${ engine }_models`;
+		const now = new Date();
+		const data = {
+			expiry: now.getTime() + 24 * 60 * 60 * 1000, // 24 hours
+			models
+		};
+		localStorage.setItem( key, JSON.stringify( data ) );
 	}
 
 	private async handleStreamingResponse(

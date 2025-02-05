@@ -6,7 +6,6 @@ import type { AiEngine, AiModel, AiAgentConfig } from './type-identifiers.js';
 import { AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
 import { getModelTokenLimits } from './util/prompt.js';
 import '../theme/style.css';
-import { loadModels } from 'multi-llm-ts/dist/index.js';
 
 export default class AiAgent extends Plugin {
 	public DEFAULT_GPT_ENGINE = 'openai' as AiEngine;
@@ -82,29 +81,6 @@ export default class AiAgent extends Plugin {
 
 			if ( !config.endpointUrl ) {
 				throw new Error( 'AiAgent: endpointUrl is required for custom engine.' );
-			}
-		} else if ( config.engine ) {
-			try {
-				const models = await loadModels( config.engine, { apiKey: config.apiKey } );
-				// If models fails to load, it's likely an API key issue
-				if ( !models?.chat?.length ) {
-					throw new Error( `Unable to load models - please verify your ${ config.engine } API key` );
-				}
-
-				const model = models.chat.find( ( model: any ) => model.id === config.model );
-				if ( !model ) {
-					const modelsList = models.chat.map( model => model.id ).join( ' | ' );
-					throw new Error(
-						`Invalid AI model specified. Available models: ${ modelsList }`
-					);
-				}
-			} catch ( error: any ) {
-				// Prioritize API key errors
-				if ( error.status === 401 || error.code === 'invalid_api_key' ||
-					error.message?.toLowerCase().includes( 'api key' ) ) {
-					throw new Error( `Invalid ${ config.engine } API key - please check your configuration` );
-				}
-				throw error; // Let other errors propagate normally
 			}
 		}
 

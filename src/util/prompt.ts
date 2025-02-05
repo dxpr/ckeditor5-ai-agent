@@ -1,11 +1,74 @@
 import type { Editor } from 'ckeditor5/src/core.js';
-import type { MarkdownContent, PromptComponentKey, PromptSettings } from '../type-identifiers.js';
+import type { MarkdownContent, PromptComponentKey, PromptSettings, AiModel } from '../type-identifiers.js';
 import { aiAgentContext } from '../aiagentcontext.js';
 import { removeLeadingSpaces, extractEditorContent, trimMultilineString } from './text-utils.js';
 import { countTokens, trimLLMContentByTokens } from './token-utils.js';
 import { fetchUrlContent } from './url-utils.js';
 import { getDefaultRules } from './default-rules.js';
 import { getAllowedHtmlTags } from './html-utils.js';
+
+// Default token limits if no specific match is found
+const DEFAULT_MAX_INPUT_TOKENS = 128000;
+
+export interface ModelTokenLimits {
+	maxInputContextTokens: number;
+}
+
+export function getModelTokenLimits( model: string ): ModelTokenLimits {
+	// OpenAI models
+	if ( model.includes( 'o1' ) ) {
+		return { maxInputContextTokens: 200000 };
+	}
+	if ( model.includes( 'o3-mini' ) ) {
+		return { maxInputContextTokens: 200000 };
+	}
+	if ( model.includes( 'gpt-4o' ) ) {
+		return { maxInputContextTokens: 128000 };
+	}
+
+	// Anthropic models
+	if ( model.includes( 'claude-2.0' ) ) {
+		return { maxInputContextTokens: 100000 };
+	}
+	if ( model.includes( 'claude' ) ) {
+		return { maxInputContextTokens: 200000 };
+	}
+
+	// Google models
+	if ( model.includes( 'gemini-1.5-pro' ) ) {
+		return { maxInputContextTokens: 2000000 };
+	}
+	if ( model.includes( 'gemini' ) && model.includes( 'flash' ) ) {
+		return { maxInputContextTokens: 1000000 };
+	}
+	if ( model.includes( 'gemma' ) ) {
+		return { maxInputContextTokens: 8192 };
+	}
+
+	// Mistral models
+	if ( model.includes( 'codestral-mamba' ) ) {
+		return { maxInputContextTokens: 256000 };
+	}
+	if ( model.includes( 'mixtral-8x22b' ) ) {
+		return { maxInputContextTokens: 65000 };
+	}
+	if ( model.includes( 'mixtral-8x7b-32768' ) ) {
+		return { maxInputContextTokens: 32768 };
+	}
+	if ( model.includes( 'mixtral' ) ||
+		model.includes( 'mistral-medium' ) ||
+		model.includes( 'mistral-small' ) ||
+		model.includes( 'mistral-tiny' )
+	) {
+		return { maxInputContextTokens: 33000 };
+	}
+	if ( model.includes( 'mistral-large' ) || model.includes( 'ministral' ) ) {
+		return { maxInputContextTokens: 128000 };
+	}
+
+	// Default for all other models
+	return { maxInputContextTokens: DEFAULT_MAX_INPUT_TOKENS };
+}
 
 export class PromptHelper {
 	private editor: Editor;
@@ -18,12 +81,26 @@ export class PromptHelper {
 	constructor( editor: Editor, options: { editorContextRatio?: number } = {} ) {
 		this.editor = editor;
 		const config = editor.config.get( 'aiAgent' )!;
+		const model = ( config.model ?? 'gpt-4o' ) as AiModel;
 
-		this.contextSize = config.contextSize!;
+		// Get model's maxInputContextTokens based on pattern matching
+		const { maxInputContextTokens } = getModelTokenLimits( model );
+
+		this.contextSize = config.contextSize ?? Math.floor( maxInputContextTokens * 0.75 );
 		this.promptSettings = config.promptSettings ?? {};
 		this.debugMode = config.debugMode ?? false;
 		this.editorContextRatio = options.editorContextRatio ?? 0.3;
 		this.contentScope = config?.contentScope ?? '';
+
+		if ( this.debugMode ) {
+			console.log( '[Context Init]', {
+				model,
+				maxInputContextTokens,
+				defaultContextSize: Math.floor( maxInputContextTokens * 0.75 ),
+				configuredContextSize: config.contextSize,
+				finalContextSize: this.contextSize
+			} );
+		}
 	}
 
 	public getSystemPrompt( isInlineResponse: boolean = false ): string {
@@ -73,6 +150,13 @@ export class PromptHelper {
 		const view = this.editor?.editing?.view?.domRoots?.get( 'main' );
 		let context = view?.innerText ?? '';
 
+		if ( this.debugMode ) {
+			console.log( '[Context]', {
+				contextSize: this.contextSize,
+				editorContextRatio: this.editorContextRatio
+			} );
+		}
+
 		if ( this.contentScope ) {
 			const activeEditorElement = this.editor.editing.view.getDomRoot();
 			const targetElement = activeEditorElement?.closest( this.contentScope );
@@ -93,6 +177,15 @@ export class PromptHelper {
 		const contextParts = [ beforeNewline, afterNewline ];
 
 		const allocatedEditorContextToken = Math.floor( this.contextSize * this.editorContextRatio );
+
+		if ( this.debugMode ) {
+			console.log( '[Context Size]', {
+				allocatedTokens: allocatedEditorContextToken,
+				beforeLength: contextParts[ 0 ].length,
+				afterLength: contextParts[ 1 ].length
+			} );
+		}
+
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
 				contentBeforePrompt = extractEditorContent(

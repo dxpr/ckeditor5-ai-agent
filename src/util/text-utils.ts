@@ -71,7 +71,9 @@ export function extractEditorContent(
 
 	for ( const sentence of iterator ) {
 		const sentenceLength = sentence.length;
-		if ( ( charCount + sentenceLength ) / 4 <= contextSize ) {
+		const wouldExceedLimit = charCount + sentenceLength > contextSize;
+
+		if ( !wouldExceedLimit ) {
 			trimmedContent = reverse ?
 				sentence + trimmedContent :
 				trimmedContent + sentence;

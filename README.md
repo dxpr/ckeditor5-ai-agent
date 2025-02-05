@@ -18,7 +18,7 @@
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->352<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->354<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -134,7 +134,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
 | `contextSize` | `number?` | `75% of model's maxInputContextTokens` | Maximum context window size in tokens |
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
-| `endpointUrl` | `string?` | `'https://api.openai.com/v1/chat/completions'` | The URL of the AI endpoint to use for generating content |
+| `endpointUrl` | `string?` | - | The URL of the AI endpoint (only required when using custom engines or proxies) |
 | `debugMode` | `boolean?` | `false` | Enables debug mode for detailed logging |
 | `streamContent` | `boolean?` | `true` | Enables streaming mode for responses |
 | `showErrorDuration` | `number?` | `5000` | Duration in milliseconds for error message display |

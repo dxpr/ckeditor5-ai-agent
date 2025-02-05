@@ -37,6 +37,8 @@ function dist( path ) {
 			'@anthropic-ai/sdk',
 			'openai',
 			'groq-sdk',
+			'zod',
+			'zod-to-json-schema',
 			...Object.keys( {
 				...pkg.dependencies,
 				...pkg.peerDependencies
@@ -65,12 +67,16 @@ function dist( path ) {
 			'ckeditor5-premium-features',
 			'@anthropic-ai/sdk',
 			'openai',
-			'groq-sdk'
+			'groq-sdk',
+			'zod',
+			'zod-to-json-schema'
 		],
 		globals: {
 			'@anthropic-ai/sdk': 'AnthropicAI',
 			'openai': 'OpenAI',
-			'groq-sdk': 'GroqSDK'
+			'groq-sdk': 'GroqSDK',
+			'zod': 'Zod',
+			'zod-to-json-schema': 'ZodToJsonSchema'
 		}
 	} );
 } )();

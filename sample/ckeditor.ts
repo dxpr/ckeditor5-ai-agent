@@ -197,7 +197,7 @@ const inlineEditorConfig = {
 		content: 'en',
 		ui: 'en'
 	}
-};
+} as any;
 
 // Initialize window.editors object
 window.editors = {};

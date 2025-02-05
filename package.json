@@ -1,6 +1,6 @@
 {
   "name": "@dxpr/ckeditor5-ai-agent",
-  "version": "1.0.0-beta24",
+  "version": "1.0.0-beta25",
   "description": "A plugin for CKEditor 5.",
   "keywords": [
     "ckeditor",
@@ -65,7 +65,8 @@
     "stylelint-config-ckeditor5": ">=6.0.0",
     "ts-node": "^10.9.1",
     "typescript": "5.0.4",
-    "webpack": "^4.47.0"
+    "webpack": "^4.47.0",
+    "zod": "^3.24.1"
   },
   "peerDependencies": {
     "ckeditor5": "^43.0.0"

@@ -112,12 +112,12 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "mixtral-8x7b-32768",
     "llama3-70b-8192",
+    "mixtral-8x7b-32768",
     "gemma2-9b-it",
-    "llama-3.1-8b-instant",
     "llama3-8b-8192",
-    "llama-guard-3-8b"
+    "llama-guard-3-8b",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-2-1212",
@@ -345,6 +345,7 @@
     "qwen/qwen-turbo",
     "qwen/qwq-32b-preview",
     "raifle/sorcererlm-8x22b",
+    "sao10k/fimbulvetr-11b-v2",
     "sao10k/l3-euryale-70b",
     "sao10k/l3-lunaris-8b",
     "sao10k/l3.1-70b-hanami-x1",

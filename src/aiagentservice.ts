@@ -321,7 +321,9 @@ export default class AiAgentService {
 			} else {
 				const config = {
 					apiKey: this.apiKey,
-					baseURL: this.endpointUrl
+					baseURL: this.endpointUrl,
+					engine: this.aiEngine,
+					editor: this.editor
 				};
 				const llmCustom = new AIApi( config );
 				const messages = {

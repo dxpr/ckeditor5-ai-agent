@@ -1,15 +1,19 @@
-import type { AiModel } from '../type-identifiers.js';
+import type { AiModel, AiEngine, AIApiConfig } from '../type-identifiers.js';
 import CustomError, { getError } from './custom-error.js';
+import { getAllowedHtmlTags } from './html-utils.js';
+import type { Editor } from 'ckeditor5/src/core.js';
+
 export class AIApi {
 	private apiKey: string | undefined;
 	private baseURL: string;
+	private engine: AiEngine;
+	private editor: Editor;
 
-	constructor( config: {
-		apiKey: string | undefined;
-		baseURL: string;
-	} ) {
+	constructor( config: AIApiConfig ) {
 		this.apiKey = config.apiKey ?? '';
 		this.baseURL = config.baseURL;
+		this.engine = config.engine;
+		this.editor = config.editor;
 	}
 
 	/**
@@ -60,21 +64,29 @@ export class AIApi {
 		controller: AbortController,
 		retries: number
 	): Promise<Response> {
+		const requestBody: any = {
+			model: aiModel,
+			messages: [
+				{ role: 'system', content: messages.system },
+				{ role: 'user', content: messages.user }
+			],
+			stream: true,
+			...config
+		};
+
+		// Add allowed_html_tags only for Kavya engine
+		if ( this.engine === 'kavya' ) {
+			const allowedTags = getAllowedHtmlTags( this.editor );
+			requestBody.allowed_html_tags = allowedTags.join( ', ' );
+		}
+
 		const response = await fetch( this.baseURL, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${ this.apiKey }` // Add your API key here
+				Authorization: `Bearer ${ this.apiKey }`
 			},
-			body: JSON.stringify( {
-				model: aiModel,
-				messages: [
-					{ role: 'system', content: messages.system },
-					{ role: 'user', content: messages.user }
-				],
-				stream: true,
-				...config
-			} ),
+			body: JSON.stringify( requestBody ),
 			signal: controller.signal
 		} );
 

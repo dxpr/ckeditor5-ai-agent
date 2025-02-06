@@ -269,10 +269,18 @@ export default class AiAgentService {
 		const editor = this.editor;
 		const t = editor.t;
 		const controller = new AbortController();
-		const timeoutId = setTimeout(
-			() => controller.abort(),
-			this.timeOutDuration
-		);
+
+		// Create a timeout that can be reset
+		let timeoutId: ReturnType<typeof setTimeout> | undefined;
+		const resetTimeout = () => {
+			if ( timeoutId ) {
+				clearTimeout( timeoutId );
+			}
+			timeoutId = setTimeout( () => controller.abort(), this.timeOutDuration );
+		};
+
+		// Set initial timeout
+		resetTimeout();
 
 		const blockID = `ai-${ new Date().getTime() }`;
 		try {
@@ -301,7 +309,7 @@ export default class AiAgentService {
 				if ( this.streamContent ) {
 					// Streaming path
 					const stream = llm.generate( this.aiModel, messages, completionOpts );
-					await this.handleStreamingResponse( stream, blockID, parent, command, controller, llm );
+					await this.handleStreamingResponse( stream, blockID, parent, command, controller, llm, resetTimeout );
 				} else {
 					// Non-streaming path
 					const result = await llm.complete( this.aiModel, messages, completionOpts );
@@ -331,7 +339,7 @@ export default class AiAgentService {
 					controller,
 					retries
 				);
-				await this.handleStreamingResponse( response, blockID, parent, command, controller, llm );
+				await this.handleStreamingResponse( response, blockID, parent, command, controller, llm, resetTimeout );
 			}
 		} catch ( error: any ) {
 			if ( this.abortGeneration ) {
@@ -350,7 +358,9 @@ export default class AiAgentService {
 			aiAgentContext.showError( errorMessage );
 			this.processCompleted( blockID );
 		} finally {
-			clearTimeout( timeoutId );
+			if ( timeoutId ) {
+				clearTimeout( timeoutId );
+			}
 			this.editor.disableReadOnlyMode( this.aiAgentFeatureLockId );
 		}
 	}
@@ -436,7 +446,8 @@ export default class AiAgentService {
 		parent: Element,
 		command: boolean,
 		controller: AbortController,
-		llm: LlmEngine | undefined
+		llm: LlmEngine | undefined,
+		resetTimeout: () => void
 	): Promise<void> {
 		let isFirstChunk = true;
 		let contentBuffer = '';
@@ -462,6 +473,9 @@ export default class AiAgentService {
 				contentBuffer += chunk.text;
 			}
 			await this.updateContent( contentBuffer, blockID );
+
+			// Reset timeout when data is received
+			resetTimeout();
 		}
 		this.processCompleted( blockID );
 	}

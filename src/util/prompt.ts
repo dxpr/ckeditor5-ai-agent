@@ -130,8 +130,11 @@ export class PromptHelper {
 				content += '\n' + this.promptSettings.additions[ componentId ];
 			}
 
-			// Add the component to the system prompt
-			systemPrompt += trimMultilineString( content ) + ( '\n\n' );
+			// Convert componentId to uppercase for XML tag
+			const xmlTag = componentId.replace( /([A-Z])/g, '_$1' ).toUpperCase();
+
+			// Add the component to the system prompt with XML tags
+			systemPrompt += `<${ xmlTag }>\n${ trimMultilineString( content ) }\n</${ xmlTag }>\n\n`;
 		}
 
 		if ( this.debugMode ) {

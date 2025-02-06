@@ -186,7 +186,7 @@ Maintain consistent formatting.
 
 ##### Tone
 ```typescript
-// No default tone rules - customizable through promptSettings
+Professional, Clear
 ```
 
 ##### Image Handling

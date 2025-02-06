@@ -39,6 +39,10 @@ function dist( path ) {
 			'groq-sdk',
 			'zod',
 			'zod-to-json-schema',
+			'@google/generative-ai',
+			'@mistralai/mistralai',
+			'ollama',
+			'minimatch',
 			...Object.keys( {
 				...pkg.dependencies,
 				...pkg.peerDependencies
@@ -69,14 +73,22 @@ function dist( path ) {
 			'openai',
 			'groq-sdk',
 			'zod',
-			'zod-to-json-schema'
+			'zod-to-json-schema',
+			'@google/generative-ai',
+			'@mistralai/mistralai',
+			'ollama',
+			'minimatch'
 		],
 		globals: {
 			'@anthropic-ai/sdk': 'AnthropicAI',
 			'openai': 'OpenAI',
 			'groq-sdk': 'GroqSDK',
 			'zod': 'Zod',
-			'zod-to-json-schema': 'ZodToJsonSchema'
+			'zod-to-json-schema': 'ZodToJsonSchema',
+			'@google/generative-ai': 'GoogleGenerativeAI',
+			'@mistralai/mistralai': 'MistralAI',
+			'ollama': 'Ollama',
+			'minimatch': 'Minimatch'
 		}
 	} );
 } )();

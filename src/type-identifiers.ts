@@ -1,4 +1,4 @@
-import type { ALL_MODERATION_FLAGS, AI_ENGINE, AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL } from './const.js';
+import type { ALL_MODERATION_FLAGS, AI_ENGINE, AI_CUSTOM_ENGINE, AI_CUSTOM_MODEL, AI_KEYBOARDS } from './const.js';
 
 export type AiEngine = typeof AI_ENGINE[number] | typeof AI_CUSTOM_ENGINE[number];
 export type AiModel = typeof AI_CUSTOM_MODEL[number];
@@ -22,6 +22,8 @@ export interface ModelTokenLimits {
     maxOutputTokens: number;
     maxInputContextTokens: number;
 }
+
+export type AiKeyboardTypes = typeof AI_KEYBOARDS[number];
 
 export interface AiAgentConfig {
     engine?: AiEngine;
@@ -66,6 +68,7 @@ export interface AiAgentConfig {
         }>;
     }>;
     contentScope?: string;
+    aiKeyboard?: AiKeyboardTypes;
 }
 
 export interface MarkdownContent {

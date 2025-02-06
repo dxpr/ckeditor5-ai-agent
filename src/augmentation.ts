@@ -3,7 +3,6 @@ import type AiAgentEditing from './aiagentediting.js';
 import type AiAgentUI from './aiagentui.js';
 import type { AiAgent } from './index.js';
 import type { AiAgentConfig } from './type-identifiers.js';
-
 declare module '@ckeditor/ckeditor5-core' {
 	interface CommandsMap {
         aiAgent: AiAgentCommand;

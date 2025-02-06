@@ -14,7 +14,7 @@ import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import aiAgentIcon from '../theme/icons/ai-agent.svg';
 import arrowIcon from '../theme/icons/arrow.svg';
 import { aiAgentContext } from './aiagentcontext.js';
-import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
+import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION, AI_KEYBOARD, AI_KEYBOARD_CODS } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 import { env } from 'ckeditor5/src/utils.js';
 import AiAgentService from './aiagentservice.js';
@@ -26,6 +26,7 @@ export default class AiAgentUI extends Plugin {
 	public GPT_RESPONSE_ERROR_ID = 'gpt-error';
 	private showErrorDuration: number = SHOW_ERROR_DURATION;
 	private commandsDropdown = getDefaultAiAgentDropdownMenu( this.editor );
+	private aiKeyboard = AI_KEYBOARD;
 
 	constructor( editor: Editor ) {
 		super( editor );
@@ -33,6 +34,7 @@ export default class AiAgentUI extends Plugin {
 		const config = editor.config.get( 'aiAgent' );
 		this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
 		this.commandsDropdown = config?.commandsDropdown ?? getDefaultAiAgentDropdownMenu( editor );
+		this.aiKeyboard = config?.aiKeyboard ?? AI_KEYBOARD;
 	}
 
 	public static get pluginName() {
@@ -121,13 +123,13 @@ export default class AiAgentUI extends Plugin {
 			label: t( 'AI Agent' ),
 			keystrokes: [
 				{
-					label: t( 'Slash Command: Open the AI Command Menu in an Empty Field' ),
-					keystroke: '/'
+					label: t( 'Open the AI Command Menu in an Empty Field' ),
+					keystroke: this.aiKeyboard
 				},
 				{
 					// eslint-disable-next-line max-len
-					label: t( 'Force Insert Slash Command: Add a Slash Command Within Existing Text' ),
-					keystroke: env.isMac ? 'Cmd + /' : 'Ctrl + /'
+					label: t( 'Add an AI Command within the Existing Text' ),
+					keystroke: env.isMac ? `Cmd + ${ this.aiKeyboard }` : `Ctrl + ${ this.aiKeyboard }`
 				},
 				{
 					label: t( 'Cancel AI Generation' ),
@@ -288,7 +290,7 @@ export default class AiAgentUI extends Plugin {
 				const position = this.editor.model.document.selection.getLastPosition();
 				if ( position ) {
 					const inlineSlashContainer = writer.createElement( 'inline-slash', { class: 'ck-slash' } );
-					writer.insertText( '/', inlineSlashContainer );
+					writer.insertText( this.aiKeyboard, inlineSlashContainer );
 					writer.insert( inlineSlashContainer, position );
 					const newPosition = writer.createPositionAt( inlineSlashContainer, 'end' );
 					writer.setSelection( newPosition );
@@ -401,7 +403,8 @@ export default class AiAgentUI extends Plugin {
 		} );
 
 		editor.editing.view.document.on( 'keydown', ( event, data ) => {
-			if ( ( data.ctrlKey || data.metaKey ) && data.keyCode === 191 ) {
+			const keyCode = AI_KEYBOARD_CODS[ this.aiKeyboard as keyof typeof AI_KEYBOARD_CODS ];
+			if ( ( data.ctrlKey || data.metaKey ) && data.keyCode === keyCode ) {
 				executeCommand();
 			}
 		} );

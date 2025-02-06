@@ -8,7 +8,7 @@ import { getDefaultRules } from './default-rules.js';
 import { getAllowedHtmlTags } from './html-utils.js';
 
 // Default token limits if no specific match is found
-const DEFAULT_MAX_INPUT_TOKENS = 128000;
+const DEFAULT_MAX_INPUT_TOKENS = 1000000;
 
 export interface ModelTokenLimits {
 	maxInputContextTokens: number;

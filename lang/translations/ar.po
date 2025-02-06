@@ -314,8 +314,8 @@ msgctxt "Edit or review"
 msgid "Edit or review"
 msgstr "تحرير أو مراجعة"
 
-msgctxt "Improve Writing"
-msgid "Improve Writing"
+msgctxt "Fix Mistakes"
+msgid "Fix Mistakes"
 msgstr "تحسين الكتابة"
 
 msgctxt "Make Shorter"
@@ -349,3 +349,7 @@ msgstr "استجابة فارغة من نموذج الذكاء الاصطناع�
 msgctxt "Invalid AI model specified. Available models"
 msgid "Invalid AI model specified. Available models"
 msgstr "تم تحديد نموذج AI غير صالح. النماذج المتاحة"
+
+msgctxt "Improve Tone of Voice"
+msgid "Improve Tone of Voice"
+msgstr "تحسين نبرة الصوت"

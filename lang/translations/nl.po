@@ -314,8 +314,8 @@ msgctxt "Edit or review"
 msgid "Edit or review"
 msgstr "Bewerken of beoordelen"
 
-msgctxt "Improve Writing"
-msgid "Improve Writing"
+msgctxt "Fix Mistakes"
+msgid "Fix Mistakes"
 msgstr "Schrijven verbeteren"
 
 msgctxt "Make Shorter"
@@ -349,3 +349,7 @@ msgstr "Lege respons van AI-model"
 msgctxt "Invalid AI model specified. Available models"
 msgid "Invalid AI model specified. Available models"
 msgstr "Ongeldig AI-model opgegeven. Beschikbare modellen"
+
+msgctxt "Improve Tone of Voice"
+msgid "Improve Tone of Voice"
+msgstr "Toon verbeteren"

@@ -94,28 +94,34 @@ export function getDefaultAiAgentDropdownMenu(
 			title: t( 'Edit or review' ),
 			items: [
 				{
-					title: t( 'Improve Writing' ),
+					title: t( 'Fix Mistakes' ),
 					command:
-                        `Fix spelling mistakes, use proper grammar and apply good writing practices.
-                        Do not lose the original meaning.\nYou must keep the text formatting.`
+						`Fix spelling mistakes, use proper grammar and apply good writing practices.
+						Do not lose the original meaning.\nYou must keep the text formatting.`
+				},
+				{
+					title: t( 'Improve Tone of Voice' ),
+					command:
+						`Rewrite the content to match the <TONE> while preserving the key message and meaning.
+						Ensure the writing style is consistent.\nYou must keep the text formatting.`
 				},
 				{
 					title: t( 'Make Shorter' ),
 					command:
-                        `Remove any repetitive, redundant, or non-essential writing in this
-					    content without changing the meaning or losing any key information.`
+						`Remove any repetitive, redundant, or non-essential writing in this
+						content without changing the meaning or losing any key information.`
 				},
 				{
 					title: t( 'Make Longer' ),
 					command:
-                        `Improve this content by using descriptive language and inserting
-					    more information and more detailed explanations.\nYou must keep the text formatting.`
+						`Improve this content by using descriptive language and inserting
+						more information and more detailed explanations.\nYou must keep the text formatting.`
 				},
 				{
 					title: t( 'Simplify Language' ),
 					command:
-                       `Simplify the writing style of this content and reduce the complexity,
-					    so that the content is easy to understand.\nYou must keep the text formatting`
+						`Simplify the writing style of this content and reduce the complexity,
+						so that the content is easy to understand.\nYou must keep the text formatting`
 				}
 			]
 		},
@@ -125,14 +131,14 @@ export function getDefaultAiAgentDropdownMenu(
 				{
 					title: t( 'Summarize' ),
 					command:
-                        `Summarize this content into one paragraph of text. Include only the key ideas and conclusions.
-					    Keep it short. Do not keep original text formatting`
+						`Summarize this content into one paragraph of text. Include only the key ideas and conclusions.
+						Keep it short. Do not keep original text formatting`
 				},
 				{
 					title: t( 'Continue' ),
 					command:
-                       `Start with the provided content and write at the end of it continuing this topic.
-					    Keep the added part short.\nYou must keep the text formatting`
+						`Start with the provided content and write at the end of it continuing this topic.
+						Keep the added part short.\nYou must keep the text formatting`
 				}
 			]
 		}

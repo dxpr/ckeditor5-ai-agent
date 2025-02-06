@@ -314,8 +314,8 @@ msgctxt "Edit or review"
 msgid "Edit or review"
 msgstr "संपादित करें या समीक्षा करें"
 
-msgctxt "Improve Writing"
-msgid "Improve Writing"
+msgctxt "Fix Mistakes"
+msgid "Fix Mistakes"
 msgstr "लेखन में सुधार करें"
 
 msgctxt "Make Shorter"
@@ -349,4 +349,8 @@ msgstr "AI मॉडल से खाली प्रतिक्रिया"
 msgctxt "Invalid AI model specified. Available models"
 msgid "Invalid AI model specified. Available models"
 msgstr "अमान्य AI मॉडल निर्दिष्ट किया गया। उपलब्ध मॉडल"
+
+msgctxt "Improve Tone of Voice"
+msgid "Improve Tone of Voice"
+msgstr "स्वर का लहजा सुधारें"
 

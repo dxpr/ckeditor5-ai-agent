@@ -75,7 +75,7 @@
 	"Not Extended. Further extensions to the request are required for the server to fulfill it.": "Not Extended. Further extensions to the request are required for the server to fulfill it.",
 	"Network Authentication Required. The client needs to authenticate to gain network access.": "Network Authentication Required. The client needs to authenticate to gain network access.",
 	"Edit or review": "Edit or review",
-	"Improve Writing": "Improve Writing",
+	"Fix Mistakes": "Fix Mistakes",
 	"Make Shorter": "Make Shorter",
 	"Make Longer": "Make Longer",
 	"Simplify Language": "Simplify Language",
@@ -83,5 +83,6 @@
 	"Summarize": "Summarize",
 	"Continue": "Continue",
 	"Empty response from AI model": "Error message shown when the AI model returns an empty response",
-	"Invalid AI model specified. Available models": "Invalid AI model specified. Available models"
+	"Invalid AI model specified. Available models": "Invalid AI model specified. Available models",
+	"Improve Tone of Voice": "Option to enhance and adjust the tone/voice of the content"
 }

@@ -314,8 +314,8 @@ msgctxt "Edit or review"
 msgid "Edit or review"
 msgstr "Editar o revisar"
 
-msgctxt "Improve Writing"
-msgid "Improve Writing"
+msgctxt "Fix Mistakes"
+msgid "Fix Mistakes"
 msgstr "Mejorar la escritura"
 
 msgctxt "Make Shorter"
@@ -349,3 +349,7 @@ msgstr "Respuesta vacía del modelo de IA"
 msgctxt "Invalid AI model specified. Available models"
 msgid "Invalid AI model specified. Available models"
 msgstr "Modelo de IA especificado no válido. Modelos disponibles"
+
+msgctxt "Improve Tone of Voice"
+msgid "Improve Tone of Voice"
+msgstr "Mejorar el tono de voz"

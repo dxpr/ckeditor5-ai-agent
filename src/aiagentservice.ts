@@ -483,8 +483,7 @@ export default class AiAgentService {
 
 				// Filter out markdown code blocks and normalize content
 				const filteredText = chunk.text
-					.replace( this.FILTERED_STRINGS, '' )
-					.trim();
+					.replace( this.FILTERED_STRINGS, '' );
 
 				if ( chunk.type === 'content' ) {
 					contentBuffer += filteredText;
@@ -514,8 +513,7 @@ export default class AiAgentService {
 
 		// Filter out markdown code blocks and normalize content
 		const filteredContent = content
-			.replace( this.FILTERED_STRINGS, '' )
-			.trim();
+			.replace( this.FILTERED_STRINGS, '' );
 
 		if ( filteredContent ) {
 			await this.htmlParser.insertSimpleHtml( filteredContent );
@@ -711,7 +709,7 @@ export default class AiAgentService {
 
 		if ( textContent ) {
 			// Filter out markdown code blocks and empty content
-			const filteredText = textContent.replace( this.FILTERED_STRINGS, '' ).trim();
+			const filteredText = textContent.replace( this.FILTERED_STRINGS, '' );
 			if ( !filteredText ) {
 				return;
 			}
@@ -775,7 +773,7 @@ export default class AiAgentService {
 			}
 
 			// Filter out markdown code blocks
-			const filteredContent = content.replace( this.FILTERED_STRINGS, '' ).trim();
+			const filteredContent = content.replace( this.FILTERED_STRINGS, '' );
 			if ( !filteredContent ) {
 				return;
 			}

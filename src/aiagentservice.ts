@@ -43,6 +43,7 @@ export default class AiAgentService {
 	private s: any;
 
 	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
+	private readonly FILTERED_STRINGS = /```html|```/g;
 
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
@@ -471,10 +472,17 @@ export default class AiAgentService {
 				await this.animatedStatusMessages( chunk.text, blockID );
 			}
 
-			if ( chunk.type === 'content' ) {
-				contentBuffer += chunk.text;
+			if ( chunk.type === 'content' && chunk.text?.trim() ) {
+				// Filter out markdown code blocks and normalize content
+				const filteredText = chunk.text
+					.replace( this.FILTERED_STRINGS, '' )
+					.trim();
+
+				if ( filteredText ) {
+					contentBuffer += filteredText;
+					await this.updateContent( contentBuffer, blockID );
+				}
 			}
-			await this.updateContent( contentBuffer, blockID );
 
 			// Reset timeout when data is received
 			resetTimeout();
@@ -491,7 +499,15 @@ export default class AiAgentService {
 		aiAgentContext.hideLoader();
 		this.insertAiTag( blockID );
 		this.clearParentContent( parent, command );
-		await this.htmlParser.insertSimpleHtml( content );
+
+		// Filter out markdown code blocks and normalize content
+		const filteredContent = content
+			.replace( this.FILTERED_STRINGS, '' )
+			.trim();
+
+		if ( filteredContent ) {
+			await this.htmlParser.insertSimpleHtml( filteredContent );
+		}
 		this.processCompleted( blockID );
 	}
 
@@ -657,7 +673,6 @@ export default class AiAgentService {
 	 *
 	 * @param newHtml - The new HTML content to insert
 	 * @param blockID - The unique identifier of the AI block to update
-	 * @param insertParent - Whether to insert at parent level or child level
 	 * @returns Promise that resolves when the update is complete
 	 * @private
 	 */
@@ -678,7 +693,18 @@ export default class AiAgentService {
 			}
 		}
 
+		// Skip empty content
+		if ( !textContent?.trim() && !tempParagraph.innerHTML?.trim() ) {
+			return;
+		}
+
 		if ( textContent ) {
+			// Filter out markdown code blocks and empty content
+			const filteredText = textContent.replace( this.FILTERED_STRINGS, '' ).trim();
+			if ( !filteredText ) {
+				return;
+			}
+
 			editor.model.enqueueChange( { isUndoable: false }, writer => {
 				const root = editor.model.document.getRoot();
 				if ( root ) {
@@ -687,12 +713,18 @@ export default class AiAgentService {
 					if ( targetElement ) {
 						const range = editor.model.createRangeIn( targetElement );
 						writer.remove( range );
-						writer.insertText( textContent, targetElement, 'end' );
+						writer.insertText( filteredText, targetElement, 'end' );
 					}
 				}
 			} );
 		}
 		if ( tempParagraph.innerHTML ) {
+			// Filter out markdown code blocks from HTML content
+			const filteredHtml = tempParagraph.innerHTML.replace( this.FILTERED_STRINGS, '' ).trim();
+			if ( !filteredHtml ) {
+				return;
+			}
+
 			editor.model.enqueueChange( { isUndoable: false }, writer => {
 				const root = editor.model.document.getRoot();
 				if ( root ) {
@@ -702,7 +734,7 @@ export default class AiAgentService {
 					if ( targetElement ) {
 						const range = editor.model.createRangeIn( targetElement );
 						writer.remove( range );
-						const viewFragment = editor.data.processor.toView( tempParagraph.innerHTML );
+						const viewFragment = editor.data.processor.toView( filteredHtml );
 						const modelFragment = editor.data.toModel( viewFragment );
 						writer.insert( modelFragment, targetElement, 'end' );
 					}
@@ -725,18 +757,30 @@ export default class AiAgentService {
 		try {
 			console.log( '--- Start of processContent ---' );
 			console.log( 'Processing content:', content, this.isInlineInsertion );
+
+			// Skip empty content early
+			if ( !content?.trim() ) {
+				return;
+			}
+
+			// Filter out markdown code blocks
+			const filteredContent = content.replace( this.FILTERED_STRINGS, '' ).trim();
+			if ( !filteredContent ) {
+				return;
+			}
+
 			if ( this.isInlineInsertion ) {
 				const position = this.editor.model.document.selection.getLastPosition();
 				const tempParagraph: HTMLElement = document.createElement( 'div' );
-				tempParagraph.innerHTML = content;
+				tempParagraph.innerHTML = filteredContent;
 				await this.htmlParser.insertAsText( tempParagraph || '', position ?? undefined, this.streamContent );
 			} else {
 				if ( this.streamContent ) {
 					// Existing complex content processing logic
-					await this.proceedHtmlResponse( content );
+					await this.proceedHtmlResponse( filteredContent );
 				} else {
 					// Use the simple HTML insertion method
-					await this.htmlParser.insertSimpleHtml( content );
+					await this.htmlParser.insertSimpleHtml( filteredContent );
 				}
 			}
 

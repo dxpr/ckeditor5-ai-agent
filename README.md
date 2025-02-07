@@ -175,6 +175,7 @@ Ensure proper tag nesting.
 Use semantic HTML.
 No inline styles.
 First word must be HTML tag.
+Output raw HTML without markdown code blocks (no ```html or ``` wrapping).
 ```
 
 ##### Content Structure

@@ -3,7 +3,7 @@ import type { MarkdownContent, PromptComponentKey, PromptSettings, AiModel } fro
 import { aiAgentContext } from '../aiagentcontext.js';
 import { removeLeadingSpaces, extractEditorContent, trimMultilineString } from './text-utils.js';
 import { countTokens, trimLLMContentByTokens } from './token-utils.js';
-import { fetchUrlContent } from './url-utils.js';
+import { fetchMultipleUrls } from './url-utils.js';
 import { getDefaultRules } from './default-rules.js';
 import { getAllowedHtmlTags } from './html-utils.js';
 
@@ -317,23 +317,18 @@ export class PromptHelper {
 
 	public async generateMarkDownForUrls( urls: Array<string> ): Promise<Array<MarkdownContent>> {
 		try {
+			const results = await fetchMultipleUrls( urls );
 			const markdownContents: Array<MarkdownContent> = [];
 
-			for ( const url of urls ) {
-				try {
-					const content = await fetchUrlContent( url );
-					if ( content ) {
-						markdownContents.push( {
-							content,
-							url,
-							tokenCount: countTokens( content )
-						} );
-					}
-				} catch ( error ) {
-					if ( this.debugMode ) {
-						console.error( `Failed to fetch content from ${ url }:`, error );
-					}
-					aiAgentContext.showError( `Failed to fetch content from ${ url }` );
+			for ( const result of results ) {
+				if ( result.content && !result.error ) {
+					markdownContents.push( {
+						content: result.content,
+						url: result.url,
+						tokenCount: countTokens( result.content )
+					} );
+				} else if ( this.debugMode ) {
+					console.error( `Failed to fetch content from ${ result.url }:`, result.error );
 				}
 			}
 

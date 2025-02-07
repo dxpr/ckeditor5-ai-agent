@@ -100,9 +100,6 @@ ClassicEditor
 		},
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
-			engine: 'kavya',
-			model: 'gemini/gemini-2.0-flash-lite-preview-02-05',
-			endpointUrl: 'http://0.0.0.0:8091/v1/chat/completions',
 			debugMode: true,
 			commandsDropdown: [
 				{
@@ -193,9 +190,6 @@ const inlineEditorConfig = {
 	},
 	aiAgent: {
 		apiKey: 'YOUR_API_KEY',
-		engine: 'kavya',
-		model: 'gemini/gemini-2.0-flash-001',
-		endpointUrl: 'https://kavya.dxpr.com/v1/chat/completions',
 		contentScope: '.page-builder-container',
 		debugMode: true
 	},

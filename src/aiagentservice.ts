@@ -44,7 +44,7 @@ export default class AiAgentService {
 	private writesPerSecond: number;
 
 	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
-	private readonly FILTERED_STRINGS = /```html|```|html\n/g;
+	private readonly FILTERED_STRINGS = /```html|```|html\n|@@@cursor@@@/g;
 
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
@@ -729,7 +729,7 @@ export default class AiAgentService {
 		}
 		if ( tempParagraph.innerHTML ) {
 			// Filter out markdown code blocks from HTML content
-			const filteredHtml = tempParagraph.innerHTML.replace( this.FILTERED_STRINGS, '' ).trim();
+			const filteredHtml = tempParagraph.innerHTML.replace( this.FILTERED_STRINGS, '' );
 			if ( !filteredHtml ) {
 				return;
 			}

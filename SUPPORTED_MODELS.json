@@ -112,12 +112,12 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama3-70b-8192",
     "gemma2-9b-it",
-    "llama3-8b-8192",
-    "llama-guard-3-8b",
     "mixtral-8x7b-32768",
-    "llama-3.1-8b-instant"
+    "llama-guard-3-8b",
+    "llama3-8b-8192",
+    "llama-3.1-8b-instant",
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-2-1212",
@@ -131,6 +131,9 @@
     "ai21/jamba-1-5-large",
     "ai21/jamba-1-5-mini",
     "ai21/jamba-instruct",
+    "aion-labs/aion-1.0",
+    "aion-labs/aion-1.0-mini",
+    "aion-labs/aion-rp-llama-3.1-8b",
     "alpindale/goliath-120b",
     "alpindale/magnum-72b",
     "amazon/nova-lite-v1",

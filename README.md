@@ -210,11 +210,12 @@ Ensure requested percentage of new content.
 ##### Context Requirements
 ```typescript
 Replace @@@cursor@@@ with content for <TASK>.
-Return ONLY @@@cursor@@@ - surrounding text is READ-ONLY.
+Return ONLY text replacing @@@cursor@@@ - surrounding text is READ-ONLY.
 Never copy context text.
 Verify zero duplication.
 Analyze CONTEXT thoroughly.
 Ensure response flows naturally.
+Never include the string `@@@cursor@@@` in your response.
 ```
 
 #### Customization Examples

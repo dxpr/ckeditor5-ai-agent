@@ -11,5 +11,5 @@
   
   "referenceGuidelines": "Generate new text that flows naturally with <CONTEXT>.\nEnsure requested percentage of new content.",
   
-  "contextRequirements": "Replace @@@cursor@@@ with content for <TASK>.\nReturn ONLY text replacing @@@cursor@@@ - surrounding text is READ-ONLY.\nNever copy context text.\nVerify zero duplication.\nAnalyze CONTEXT thoroughly.\nEnsure response flows naturally."
+  "contextRequirements": "Replace @@@cursor@@@ with content for <TASK>.\nReturn ONLY text replacing @@@cursor@@@ - surrounding text is READ-ONLY.\nNever copy context text.\nVerify zero duplication.\nAnalyze CONTEXT thoroughly.\nEnsure response flows naturally.\nNever include the string `@@@cursor@@@` in your response."
 }

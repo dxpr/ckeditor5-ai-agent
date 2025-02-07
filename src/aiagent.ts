@@ -75,8 +75,9 @@ export default class AiAgent extends Plugin {
 
 		// 2. Check engine-specific requirements
 		if ( AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
+			// TODO: Chooses models to support in production
 			if ( !AI_CUSTOM_MODEL.includes( config.model as any ) ) {
-				throw new Error( `AiAgent: model is not allowed for ${ config.engine }` );
+			// 	throw new Error( `AiAgent: model is not allowed for ${ config.engine }` );
 			}
 
 			if ( !config.endpointUrl ) {

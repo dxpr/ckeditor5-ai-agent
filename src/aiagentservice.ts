@@ -40,7 +40,8 @@ export default class AiAgentService {
 	private moderationKey: string;
 	private moderationEnable: boolean;
 	private disableFlags: Array<ModerationFlagsTypes> = [];
-	private s: any;
+	private stream: any;
+	private writesPerSecond: number;
 
 	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
 	private readonly FILTERED_STRINGS = /```html|```/g;
@@ -69,6 +70,7 @@ export default class AiAgentService {
 		this.moderationKey = config.moderationKey ?? '';
 		this.moderationEnable = config.moderationEnable ?? false;
 		this.disableFlags = config.moderationDisableFlags ?? [];
+		this.writesPerSecond = config.writesPerSecond ?? 10;
 	}
 
 	/**
@@ -309,7 +311,7 @@ export default class AiAgentService {
 
 				if ( this.streamContent ) {
 					// Streaming path
-					const stream = llm.generate( this.aiModel, messages, completionOpts );
+					const stream = this.generate( llm, this.aiModel, messages, completionOpts );
 					await this.handleStreamingResponse( stream, blockID, parent, command, controller, llm, resetTimeout );
 				} else {
 					// Non-streaming path
@@ -454,38 +456,48 @@ export default class AiAgentService {
 	): Promise<void> {
 		let isFirstChunk = true;
 		let contentBuffer = '';
+		const updateInterval = 1000 / this.writesPerSecond; // Calculate interval in ms
 
-		for await ( const c of stream ) {
-			if ( isFirstChunk ) {
-				aiAgentContext.hideLoader();
-				this.cancelGenerationButton( blockID, controller, llm, stream );
-				this.undoRedoHandler();
-				this.insertAiTag( blockID );
-				this.clearParentContent( parent, command );
-				isFirstChunk = false;
+		const updateContent = async () => {
+			if ( contentBuffer ) {
+				await this.updateContent( contentBuffer, blockID );
 			}
+		};
 
-			this.s = c;
-			const chunk = c as any;
+		const updateContentTimer = setInterval( updateContent, updateInterval );
+		try {
+			for await ( const c of stream ) {
+				if ( isFirstChunk ) {
+					aiAgentContext.hideLoader();
+					this.cancelGenerationButton( blockID, controller, llm );
+					this.undoRedoHandler();
+					this.insertAiTag( blockID );
+					this.clearParentContent( parent, command );
+					isFirstChunk = false;
+				}
+				const chunk = c as any;
 
-			if ( chunk.type === 'status' ) {
-				await this.animatedStatusMessages( chunk.text, blockID );
-			}
+				if ( chunk.type === 'status' ) {
+					await this.animatedStatusMessages( chunk.text, blockID );
+				}
 
-			if ( chunk.type === 'content' && chunk.text?.trim() ) {
 				// Filter out markdown code blocks and normalize content
 				const filteredText = chunk.text
 					.replace( this.FILTERED_STRINGS, '' )
 					.trim();
 
-				if ( filteredText ) {
+				if ( chunk.type === 'content' ) {
 					contentBuffer += filteredText;
-					await this.updateContent( contentBuffer, blockID );
 				}
-			}
 
-			// Reset timeout when data is received
-			resetTimeout();
+				// Reset timeout when data is received
+				resetTimeout();
+			}
+		} finally {
+			clearInterval( updateContentTimer );
+			await updateContent();
+			this.processCompleted( blockID );
+			contentBuffer = '';
 		}
 		this.processCompleted( blockID );
 	}
@@ -518,7 +530,7 @@ export default class AiAgentService {
      * @param controller - AbortController to cancel the ongoing AI generation
      * @private
      */
-	private cancelGenerationButton( blockID: string, controller: AbortController, llm: LlmEngine | undefined, stream: any ) {
+	private cancelGenerationButton( blockID: string, controller: AbortController, llm: LlmEngine | undefined ) {
 		const editor = this.editor;
 		const t = editor.t;
 
@@ -542,7 +554,7 @@ export default class AiAgentService {
 		view.on( 'execute', () => {
 			this.abortGeneration = true;
 			if ( llm ) {
-				llm.stop( llm );
+				llm.stop( this.stream );
 			} else {
 				controller.abort();
 			}
@@ -555,7 +567,7 @@ export default class AiAgentService {
 			if ( keyEvtData.ctrlKey || keyEvtData.metaKey ) {
 				this.abortGeneration = true;
 				if ( llm ) {
-					llm.stop( stream );
+					llm.stop( this.stream );
 				} else {
 					controller.abort();
 				}
@@ -571,7 +583,6 @@ export default class AiAgentService {
 				panelContent.append( view.element );
 			}
 		}
-
 		setTimeout( () => view.set( { class: 'ck-cancel-request-button visible' } ), 2000 );
 	}
 
@@ -1022,5 +1033,35 @@ export default class AiAgentService {
 				}
 			}
 		} );
+	}
+
+	/**
+	 * Generates a stream of messages from the specified language model (LLM) based on the provided input thread.
+	 * This method handles the streaming of responses, yielding each message as it is received.
+	 *
+	 * @param llm - The language model instance used for generating responses.
+	 * @param model - The identifier of the model to be used for generation.
+	 * @param thread - An array of messages that form the context for the generation.
+	 * @param opts - Options for the LLM completion, such as max tokens and temperature.
+	 * @returns An async generator that yields messages from the LLM as they are received.
+	 *
+	 * @throws Will throw an error if the streaming process fails or if the model is invalid.
+	 */
+	private async* generate( llm: any, model: string, thread: Array<Message>, opts: LlmCompletionOpts ): any {
+		this.stream = await llm.stream( model, thread, opts );
+		while ( this.stream != null ) {
+			let stream2 = null;
+			for await ( const chunk of this.stream ) {
+				const stream3 = llm.nativeChunkToLlmChunk( chunk );
+				for await ( const msg of stream3 ) {
+					if ( msg.type === 'stream' ) {
+						stream2 = msg.stream;
+					} else {
+						yield msg;
+					}
+				}
+			}
+			this.stream = stream2;
+		}
 	}
 }

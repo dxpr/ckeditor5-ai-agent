@@ -143,6 +143,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `moderationDisableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
 | `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
+| `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

@@ -57,6 +57,19 @@ export function extractEditorContent(
 	reverse: boolean = false,
 	editor: Editor
 ): string {
+	// Check if content contains HTML
+	if ( /<[^>]*>/g.test( contentAfterPrompt ) ) {
+		// For HTML content, preserve tags and just trim by length
+		if ( contentAfterPrompt.length <= contextSize ) {
+			return contentAfterPrompt;
+		}
+
+		return reverse ?
+			contentAfterPrompt.slice( -contextSize ) :
+			contentAfterPrompt.slice( 0, contextSize );
+	}
+
+	// For plain text, use existing sentence-based logic
 	let trimmedContent = '';
 	let charCount = 0;
 

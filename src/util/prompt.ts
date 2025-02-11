@@ -151,13 +151,11 @@ export class PromptHelper {
 		let contentAfterPrompt = '';
 		const splitText = promptContainerText ?? prompt;
 		const view = this.editor?.editing?.view?.domRoots?.get( 'main' );
-		let context = view?.innerText ?? '';
+		let context = view?.innerHTML ?? '';
 
 		if ( this.debugMode ) {
-			console.log( '[Context]', {
-				contextSize: this.contextSize,
-				editorContextRatio: this.editorContextRatio
-			} );
+			console.group( 'HTML Content Debug' );
+			console.log( '1. Initial HTML context:', context );
 		}
 
 		if ( this.contentScope ) {
@@ -169,6 +167,9 @@ export class PromptHelper {
 				Array.from( ckContents ).map( item => {
 					context += context ? `\n${ item.innerHTML }` : item.innerHTML;
 				} );
+				if ( this.debugMode ) {
+					console.log( '2. Content scope HTML:', context );
+				}
 			}
 		}
 
@@ -179,15 +180,14 @@ export class PromptHelper {
 		const afterNewline = context.substring( firstNewlineIndex + 1 );
 		const contextParts = [ beforeNewline, afterNewline ];
 
-		const allocatedEditorContextToken = Math.floor( this.contextSize * this.editorContextRatio );
-
 		if ( this.debugMode ) {
-			console.log( '[Context Size]', {
-				allocatedTokens: allocatedEditorContextToken,
-				beforeLength: contextParts[ 0 ].length,
-				afterLength: contextParts[ 1 ].length
+			console.log( '3. Split context parts:', {
+				beforeNewline,
+				afterNewline
 			} );
 		}
+
+		const allocatedEditorContextToken = Math.floor( this.contextSize * this.editorContextRatio );
 
 		if ( contextParts.length > 1 ) {
 			if ( contextParts[ 0 ].length < contextParts[ 1 ].length ) {
@@ -219,12 +219,25 @@ export class PromptHelper {
 			}
 		}
 
+		if ( this.debugMode ) {
+			console.log( '4. After extractEditorContent:', {
+				contentBeforePrompt,
+				contentAfterPrompt
+			} );
+		}
+
 		// Combine the trimmed context with the cursor placeholder
 		const escapedPrompt = prompt.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ); // Escapes special characters
 		contentBeforePrompt = contentBeforePrompt.trim()
 			.replace( new RegExp( escapedPrompt.slice( 1 ) ), '@@@cursor@@@' )
 			.replace( '/@@@cursor@@@', '@@@cursor@@@' ); // Remove forward slash if present
 		const trimmedContext = `${ contentBeforePrompt }\n${ contentAfterPrompt }`;
+
+		if ( this.debugMode ) {
+			console.log( '5. Final trimmed context:', trimmedContext );
+			console.groupEnd();
+		}
+
 		return trimmedContext.trim();
 	}
 
@@ -238,7 +251,7 @@ export class PromptHelper {
 		if ( this.debugMode ) {
 			console.group( 'formatFinalPrompt Debug' );
 			console.log( 'Request:', request );
-			console.log( 'Context:', context );
+			console.log( 'Context received:', context );
 			console.log( 'MarkDownContents:', markDownContents );
 			console.log( 'IsEditorEmpty:', isEditorEmpty );
 		}
@@ -254,13 +267,17 @@ export class PromptHelper {
 		// Context Section
 		if ( context?.length && !selectedContent ) {
 			corpus.push( '\n<CONTEXT>' );
+			corpus.push( '<![CDATA[' );
 			corpus.push( context );
+			corpus.push( ']]>' );
 			corpus.push( '</CONTEXT>' );
 		}
 
 		if ( selectedContent ) {
 			corpus.push( '<SELECTED_CONTENT>' );
+			corpus.push( '<![CDATA[' );
 			corpus.push( selectedContent );
+			corpus.push( ']]>' );
 			corpus.push( '</SELECTED_CONTENT>' );
 		}
 

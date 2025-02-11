@@ -6,6 +6,8 @@ import { countTokens, trimLLMContentByTokens } from './token-utils.js';
 import { fetchMultipleUrls } from './url-utils.js';
 import { getDefaultRules } from './default-rules.js';
 import { getAllowedHtmlTags } from './html-utils.js';
+import { DEFAULT_HTML_CLEANUP_CONFIG } from '../types/html-cleanup.js';
+import { HtmlCleanupService } from './html-cleanup.js';
 
 // Default token limits if no specific match is found
 const DEFAULT_MAX_INPUT_TOKENS = 1000000;
@@ -77,6 +79,7 @@ export class PromptHelper {
 	private debugMode: boolean;
 	private editorContextRatio: number;
 	private contentScope: string;
+	private htmlCleanup: HtmlCleanupService;
 
 	constructor( editor: Editor, options: { editorContextRatio?: number } = {} ) {
 		this.editor = editor;
@@ -101,6 +104,8 @@ export class PromptHelper {
 				finalContextSize: this.contextSize
 			} );
 		}
+
+		this.htmlCleanup = new HtmlCleanupService( { editor, config: DEFAULT_HTML_CLEANUP_CONFIG } );
 	}
 
 	public getSystemPrompt( isInlineResponse: boolean = false ): string {
@@ -150,25 +155,33 @@ export class PromptHelper {
 		let contentBeforePrompt = '';
 		let contentAfterPrompt = '';
 		const splitText = promptContainerText ?? prompt;
-		const view = this.editor?.editing?.view?.domRoots?.get( 'main' );
-		let context = view?.innerHTML ?? '';
+		let context = '';
 
 		if ( this.debugMode ) {
 			console.group( 'HTML Content Debug' );
-			console.log( '1. Initial HTML context:', context );
+			console.log( '1. Initial context:', context );
 		}
 
+		// First get raw HTML content
 		if ( this.contentScope ) {
 			const activeEditorElement = this.editor.editing.view.getDomRoot();
 			const targetElement = activeEditorElement?.closest( this.contentScope );
-			const ckContents = targetElement?.querySelectorAll( '.ck-content' );
-			if ( ckContents?.length ) {
-				context = '';
-				Array.from( ckContents ).map( item => {
-					context += context ? `\n${ item.innerHTML }` : item.innerHTML;
-				} );
+			if ( targetElement ) {
+				// Clean the HTML before any processing
+				context = this.htmlCleanup.clean( targetElement.innerHTML );
+
 				if ( this.debugMode ) {
-					console.log( '2. Content scope HTML:', context );
+					console.log( '2. Content scope HTML (cleaned):', context );
+					console.log( '3. Character count before splitting:', context.length );
+				}
+
+				// Ensure we don't exceed limits from the start
+				const maxChars = Math.floor( this.contextSize * this.editorContextRatio ) * 4;
+				if ( context.length > maxChars ) {
+					context = context.substring( 0, maxChars );
+					if ( this.debugMode ) {
+						console.log( '3a. Content trimmed to length limit:', context );
+					}
 				}
 			}
 		}
@@ -181,9 +194,11 @@ export class PromptHelper {
 		const contextParts = [ beforeNewline, afterNewline ];
 
 		if ( this.debugMode ) {
-			console.log( '3. Split context parts:', {
+			console.log( '4. Split context parts:', {
 				beforeNewline,
-				afterNewline
+				afterNewline,
+				beforeLength: beforeNewline.length,
+				afterLength: afterNewline.length
 			} );
 		}
 
@@ -220,9 +235,12 @@ export class PromptHelper {
 		}
 
 		if ( this.debugMode ) {
-			console.log( '4. After extractEditorContent:', {
+			console.log( '5. After extractEditorContent:', {
 				contentBeforePrompt,
-				contentAfterPrompt
+				contentAfterPrompt,
+				beforeLength: contentBeforePrompt.length,
+				afterLength: contentAfterPrompt.length,
+				totalLength: contentBeforePrompt.length + contentAfterPrompt.length
 			} );
 		}
 
@@ -234,7 +252,8 @@ export class PromptHelper {
 		const trimmedContext = `${ contentBeforePrompt }\n${ contentAfterPrompt }`;
 
 		if ( this.debugMode ) {
-			console.log( '5. Final trimmed context:', trimmedContext );
+			console.log( '6. Final trimmed context:', trimmedContext );
+			console.log( 'Final character count:', trimmedContext.length );
 			console.groupEnd();
 		}
 

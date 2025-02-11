@@ -162,27 +162,33 @@ export class PromptHelper {
 			console.log( '1. Initial context:', context );
 		}
 
-		// First get raw HTML content
+		// Get raw HTML content based on configuration
 		if ( this.contentScope ) {
+			// Use contentScope if configured
 			const activeEditorElement = this.editor.editing.view.getDomRoot();
 			const targetElement = activeEditorElement?.closest( this.contentScope );
 			if ( targetElement ) {
-				// Clean the HTML before any processing
 				context = this.htmlCleanup.clean( targetElement.innerHTML );
+			}
+		} else {
+			// Otherwise get content directly from editor
+			const editorElement = this.editor.editing.view.getDomRoot();
+			if ( editorElement ) {
+				context = this.htmlCleanup.clean( editorElement.innerHTML );
+			}
+		}
 
-				if ( this.debugMode ) {
-					console.log( '2. Content scope HTML (cleaned):', context );
-					console.log( '3. Character count before splitting:', context.length );
-				}
+		if ( this.debugMode ) {
+			console.log( '2. Editor HTML (cleaned):', context );
+			console.log( '3. Character count before splitting:', context.length );
+		}
 
-				// Ensure we don't exceed limits from the start
-				const maxChars = Math.floor( this.contextSize * this.editorContextRatio ) * 4;
-				if ( context.length > maxChars ) {
-					context = context.substring( 0, maxChars );
-					if ( this.debugMode ) {
-						console.log( '3a. Content trimmed to length limit:', context );
-					}
-				}
+		// Ensure we don't exceed limits from the start
+		const maxChars = Math.floor( this.contextSize * this.editorContextRatio ) * 4;
+		if ( context.length > maxChars ) {
+			context = context.substring( 0, maxChars );
+			if ( this.debugMode ) {
+				console.log( '3a. Content trimmed to length limit:', context );
 			}
 		}
 

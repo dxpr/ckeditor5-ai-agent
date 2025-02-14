@@ -116,7 +116,6 @@
     "deepseek-r1-distill-qwen-32b",
     "qwen-2.5-32b",
     "deepseek-r1-distill-llama-70b",
-    "allam-2-7b",
     "llama-3.3-70b-specdec",
     "llama-3.3-70b-versatile",
     "llama-3.2-90b-vision-preview",
@@ -125,10 +124,10 @@
     "llama-3.2-1b-preview",
     "llama-3.1-8b-instant",
     "mixtral-8x7b-32768",
+    "llama3-8b-8192",
     "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama-guard-3-8b",
-    "llama3-8b-8192"
+    "llama-guard-3-8b"
   ],
   "xai": [
     "grok-2-1212",
@@ -175,6 +174,8 @@
     "anthropic/claude-3.5-sonnet:beta",
     "cognitivecomputations/dolphin-mixtral-8x22b",
     "cognitivecomputations/dolphin-mixtral-8x7b",
+    "cognitivecomputations/dolphin3.0-mistral-24b:free",
+    "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
     "cohere/command",
     "cohere/command-r",
     "cohere/command-r-03-2024",

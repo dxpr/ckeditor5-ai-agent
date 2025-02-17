@@ -267,17 +267,13 @@ export class PromptHelper {
 		// Context Section
 		if ( context?.length && !selectedContent ) {
 			corpus.push( '\n<CONTEXT>' );
-			corpus.push( '<![CDATA[' );
 			corpus.push( context );
-			corpus.push( ']]>' );
 			corpus.push( '</CONTEXT>' );
 		}
 
 		if ( selectedContent ) {
 			corpus.push( '<SELECTED_CONTENT>' );
-			corpus.push( '<![CDATA[' );
 			corpus.push( selectedContent );
-			corpus.push( ']]>' );
 			corpus.push( '</SELECTED_CONTENT>' );
 		}
 

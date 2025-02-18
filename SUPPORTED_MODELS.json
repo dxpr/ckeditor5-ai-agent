@@ -17,6 +17,7 @@
     "gemini-pro"
   ],
   "openai": [
+    "chatgpt-4o-latest",
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-0125",
     "gpt-3.5-turbo-1106",
@@ -89,6 +90,8 @@
     "mistral-medium-latest",
     "mistral-moderation-2411",
     "mistral-moderation-latest",
+    "mistral-saba-2502",
+    "mistral-saba-latest",
     "mistral-small",
     "mistral-small-2312",
     "mistral-small-2402",
@@ -124,11 +127,11 @@
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
     "mixtral-8x7b-32768",
-    "gemma2-9b-it",
+    "llama-3.1-8b-instant",
     "llama-guard-3-8b",
-    "llama3-8b-8192",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant"
+    "gemma2-9b-it",
+    "llama3-8b-8192"
   ],
   "xai": [
     "grok-2-1212",
@@ -271,6 +274,7 @@
     "mistralai/mistral-medium",
     "mistralai/mistral-nemo",
     "mistralai/mistral-nemo:free",
+    "mistralai/mistral-saba",
     "mistralai/mistral-small",
     "mistralai/mistral-small-24b-instruct-2501",
     "mistralai/mistral-small-24b-instruct-2501:free",

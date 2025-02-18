@@ -74,8 +74,8 @@ export class AIApi {
 			...config
 		};
 
-		// Add allowed_html_tags only for Kavya engine
-		if ( this.engine === 'kavya' ) {
+		// Add allowed_html_tags only for DXAI engine
+		if ( this.engine === 'dxai' ) {
 			const allowedTags = getAllowedHtmlTags( this.editor );
 			requestBody.allowed_html_tags = allowedTags.join( ', ' );
 		}

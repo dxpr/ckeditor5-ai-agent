@@ -51,8 +51,14 @@ jobs:
             const path = require("path");
             
             async function updateModels() {
-              const modelsList = {};
-              let totalModels = 0;
+              const modelsList = {
+                // DXAI models are added manually as they are not part of multi-llm-ts
+                dxai: [
+                  'kavya-m1',
+                  'kavya-m1-eu'
+                ]
+              };
+              let totalModels = modelsList.dxai.length;
               
               for (const [engine, config] of Object.entries({
                 google: { apiKey: process.env.GOOGLE_GEMINI_API_KEY },

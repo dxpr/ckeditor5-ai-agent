@@ -1,6 +1,6 @@
 {
   "name": "@dxpr/ckeditor5-ai-agent",
-  "version": "1.0.0-beta33",
+  "version": "1.0.0-beta36",
   "description": "A plugin for CKEditor 5.",
   "keywords": [
     "ckeditor",
@@ -12,7 +12,7 @@
     "ckeditor5-package-generator"
   ],
   "type": "module",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",

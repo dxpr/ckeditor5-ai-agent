@@ -368,5 +368,9 @@
     "x-ai/grok-beta",
     "x-ai/grok-vision-beta",
     "xwin-lm/xwin-lm-70b"
+  ],
+  "dxai": [
+    "kavya-m1",
+    "kavya-m1-eu"
   ]
 }

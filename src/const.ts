@@ -13,7 +13,7 @@ export const AI_ENGINE = [
 	'xai'
 ] as const;
 
-export const AI_CUSTOM_ENGINE = [ 'kavya' ] as const;
+export const AI_CUSTOM_ENGINE = [ 'dxai' ] as const;
 
 export const AI_CUSTOM_MODEL = [
 	'gpt-4o',

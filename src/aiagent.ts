@@ -29,6 +29,16 @@ export default class AiAgent extends Plugin {
 			streamContent: true // Default streaming mode
 		};
 
+		// Set default endpoint URL for DXAI engine
+		if ( config.engine === 'dxai' ) {
+			if ( !config.endpointUrl ) {
+				config.endpointUrl = 'https://kavya.dxpr.com/v1/chat/completions';
+			}
+			if ( !config.model ) {
+				config.model = 'kavya-m1';
+			}
+		}
+
 		let tokenLimits = {};
 		const model = config.model ?? defaultConfig.model;
 		if ( model && AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {

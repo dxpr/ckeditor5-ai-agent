@@ -131,7 +131,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `promptSettings` | `object?` | `{}` | Customize prompt components through `overrides` and `additions` |
 | `promptSettings.overrides` | `Record<PromptComponentKey, string>?` | - | Replace default rules for specific components |
 | `promptSettings.additions` | `Record<PromptComponentKey, string>?` | - | Add additional rules to specific components |
-| `timeOutDuration` | `number?` | `45000` | The duration in milliseconds to wait before timing out the request |
+| `timeOutDuration` | `number?` | `120000` | The duration in milliseconds to wait before timing out the request |
 | `contextSize` | `number?` | `75% of model's maxInputContextTokens` | Maximum context window size in tokens |
 | `editorContextRatio` | `number?` | `0.3` | Upper limit of what portion of the context size is allocated for editor content |
 | `endpointUrl` | `string?` | - | The URL of the AI endpoint (only required when using custom engines or proxies) |

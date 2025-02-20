@@ -21,7 +21,7 @@ export default class AiAgent extends Plugin {
 			model: this.DEFAULT_GPT_MODEL, // Default AI model
 			apiKey: '', // Default OpenAI key
 			endpointUrl: '', // Default endpoint URL
-			timeOutDuration: 45000, // Default timeout duration
+			timeOutDuration: 120000, // Default timeout duration
 			retryAttempts: 1, // Default retry attempts
 			stopSequences: [], // Default stop sequences
 			promptSettings: {},

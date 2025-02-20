@@ -62,7 +62,7 @@ export default class AiAgentService {
 		this.aiEngine = config.engine!;
 		this.endpointUrl = config.endpointUrl!;
 		this.temperature = config.temperature;
-		this.timeOutDuration = config.timeOutDuration ?? 45000;
+		this.timeOutDuration = config.timeOutDuration ?? 120000;
 		this.maxTokens = config.maxOutputTokens ?? config.maxTokens!;
 		this.retryAttempts = config.retryAttempts!;
 		this.stopSequences = config.stopSequences!;

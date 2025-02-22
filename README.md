@@ -142,6 +142,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `moderationKey` | `string?` | - | API key for content moderation service |
 | `moderationDisableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
 | `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
+| `tonesDropdown` | `Array<{ title: string; command: string; }>?` | - | Specifies the available tones for content generation, allowing users to select the desired tone for the AI's responses. Each tone can be associated with a specific command to adjust the AI's output style. |
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 | `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
 

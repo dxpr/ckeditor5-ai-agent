@@ -84,6 +84,7 @@ export default class AiAgentService {
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
 		const root = model.document.getRoot();
+		const tone = editor.commands.get( 'aiAgentTone' )?.value as string;
 
 		let content: string | undefined;
 		let selectedContent: string | undefined;
@@ -149,7 +150,8 @@ export default class AiAgentService {
 			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
 				content ?? '',
 				parentEquivalentHTML?.innerText,
-				selectedContent
+				selectedContent,
+				tone
 			);
 			if ( parent && gptPrompt ) {
 				await this.fetchAndProcessGptResponse( !!command, gptPrompt, parent );
@@ -923,7 +925,8 @@ export default class AiAgentService {
 	private async generateGptPromptBasedOnUserPrompt(
 		prompt: string,
 		promptContainerText?: string,
-		selectedContent?: string
+		selectedContent?: string,
+		tone?: string
 	): Promise<string | null> {
 		try {
 			const context = this.promptHelper.trimContext( prompt, promptContainerText );
@@ -945,7 +948,8 @@ export default class AiAgentService {
 				context,
 				selectedContent,
 				markDownContents,
-				isEditorEmpty
+				isEditorEmpty,
+				tone
 			);
 		} catch ( error ) {
 			console.error( error );

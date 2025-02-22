@@ -84,5 +84,13 @@
 	"Continue": "Continue",
 	"Empty response from AI model": "Error message shown when the AI model returns an empty response",
 	"Invalid AI model specified. Available models": "Invalid AI model specified. Available models",
-	"Improve Tone of Voice": "Option to enhance and adjust the tone/voice of the content"
+	"Improve Tone of Voice": "Option to enhance and adjust the tone/voice of the content",
+	"AI Agent Tone": "AI Agent Tone",
+	"Default values": "Default values",
+	"Patient-Friendly": "Patient-Friendly",
+	"Professional": "Professional",
+	"Encouraging": "Encouraging",
+	"Neutral": "Neutral",
+	"Conversational": "Conversational",
+	"Authoritative": "Authoritative"
 }

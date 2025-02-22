@@ -246,7 +246,8 @@ export class PromptHelper {
 		context?: string,
 		selectedContent?: string,
 		markDownContents?: Array<MarkdownContent>,
-		isEditorEmpty: boolean = false
+		isEditorEmpty: boolean = false,
+		tone?: string
 	): string {
 		if ( this.debugMode ) {
 			console.group( 'formatFinalPrompt Debug' );
@@ -275,6 +276,12 @@ export class PromptHelper {
 			corpus.push( '<SELECTED_CONTENT>' );
 			corpus.push( selectedContent );
 			corpus.push( '</SELECTED_CONTENT>' );
+		}
+
+		if ( tone ) {
+			corpus.push( '<TONE>' );
+			corpus.push( tone );
+			corpus.push( '</TONE>' );
 		}
 
 		// Markdown Content Section

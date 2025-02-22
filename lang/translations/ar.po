@@ -353,3 +353,35 @@ msgstr "تم تحديد نموذج AI غير صالح. النماذج المتا
 msgctxt "Improve Tone of Voice"
 msgid "Improve Tone of Voice"
 msgstr "تحسين نبرة الصوت"
+
+msgctxt "AI Agent Tone"
+msgid "AI Agent Tone"
+msgstr "نبرة وكيل الذكاء الاصطناعي"
+
+msgctxt "Default values"
+msgid "Default values"
+msgstr "القيم الافتراضية"
+
+msgctxt "Patient-Friendly"
+msgid "Patient-Friendly"
+msgstr "ملائم للمرضى"
+
+msgctxt "Professional"
+msgid "Professional"
+msgstr "احترافي"
+
+msgctxt "Encouraging"
+msgid "Encouraging"
+msgstr "مشجع"
+
+msgctxt "Neutral"
+msgid "Neutral"
+msgstr "محايد"
+
+msgctxt "Conversational"
+msgid "Conversational"
+msgstr "غير رسمي"
+
+msgctxt "Authoritative"
+msgid "Authoritative"
+msgstr "موثوق"

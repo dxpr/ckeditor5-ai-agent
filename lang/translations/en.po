@@ -341,3 +341,35 @@ msgstr "Invalid AI model specified. Available models"
 msgctxt "Improve Tone of Voice"
 msgid "Improve Tone of Voice"
 msgstr "Improve Tone of Voice"
+
+msgctxt "AI Agent Tone"
+msgid "AI Agent Tone"
+msgstr "AI Agent Tone"
+
+msgctxt "Default values"
+msgid "Default values"
+msgstr "Default values"
+
+msgctxt "Patient-Friendly"
+msgid "Patient-Friendly"
+msgstr "Patient-Friendly"
+
+msgctxt "Professional"
+msgid "Professional"
+msgstr "Professional"
+
+msgctxt "Encouraging"
+msgid "Encouraging"
+msgstr "Encouraging"
+
+msgctxt "Neutral"
+msgid "Neutral"
+msgstr "Neutral"
+
+msgctxt "Conversational"
+msgid "Conversational"
+msgstr "Conversational"
+
+msgctxt "Authoritative"
+msgid "Authoritative"
+msgstr "Authoritative"

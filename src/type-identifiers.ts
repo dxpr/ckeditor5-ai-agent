@@ -68,6 +68,11 @@ export interface AiAgentConfig {
             command: string;
         }>;
     }>;
+
+    tonesDropdown?: Array<{
+        title: string;
+        command: string;
+    }>;
     contentScope?: string;
     writesPerSecond?: WritesPerSecond;
 }

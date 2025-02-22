@@ -8,17 +8,21 @@ import {
 	LabeledFieldView,
 	ListSeparatorView,
 	ButtonView,
-	TextareaView
+	TextareaView,
+	IconView,
+	View
 } from 'ckeditor5/src/ui.js';
 import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import aiAgentIcon from '../theme/icons/ai-agent.svg';
+import aiAgentToneIcon from '../theme/icons/ai-agent-tone.svg';
 import arrowIcon from '../theme/icons/arrow.svg';
+import checkIcon from '../theme/icons/check.svg';
 import { aiAgentContext } from './aiagentcontext.js';
 import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
 import { Widget, toWidget } from 'ckeditor5/src/widget.js';
 import { env } from 'ckeditor5/src/utils.js';
 import AiAgentService from './aiagentservice.js';
-import { getDefaultAiAgentDropdownMenu } from './util/translations.js';
+import { getDefaultAiAgentDropdownMenu, getDefaultAiAgentToneDropdownMenu } from './util/translations.js';
 
 export default class AiAgentUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
@@ -26,6 +30,7 @@ export default class AiAgentUI extends Plugin {
 	public GPT_RESPONSE_ERROR_ID = 'gpt-error';
 	private showErrorDuration: number = SHOW_ERROR_DURATION;
 	private commandsDropdown = getDefaultAiAgentDropdownMenu( this.editor );
+	private tonesDropdown = getDefaultAiAgentToneDropdownMenu( this.editor );
 
 	constructor( editor: Editor ) {
 		super( editor );
@@ -33,6 +38,8 @@ export default class AiAgentUI extends Plugin {
 		const config = editor.config.get( 'aiAgent' );
 		this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
 		this.commandsDropdown = config?.commandsDropdown ?? getDefaultAiAgentDropdownMenu( editor );
+		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
+		this.tonesDropdown = config?.tonesDropdown ? [ defaultTones[ 0 ], ...config?.tonesDropdown ] : defaultTones;
 	}
 
 	public static get pluginName() {
@@ -114,6 +121,7 @@ export default class AiAgentUI extends Plugin {
 		this.addLoader();
 		this.addGptErrorToolTip();
 		this.addAiAgentButton();
+		this.addAiAgentToneButton();
 
 		editor.accessibility.addKeystrokeInfoGroup( {
 			id: 'ai-agent',
@@ -404,6 +412,78 @@ export default class AiAgentUI extends Plugin {
 			if ( ( data.ctrlKey || data.metaKey ) && data.keyCode === 191 ) {
 				executeCommand();
 			}
+		} );
+	}
+
+	/**
+	 * Adds the AI Agent Tone button to the editor's UI, which includes a dropdown menu
+	 * for selecting various AI tones. The button allows users to apply different tones
+	 * to the AI-generated content and provides visual feedback for the selected tone.
+	 *
+	 * This method sets up the button's execute event, handles user input for selecting
+	 * tones, and organizes the tone menu into a list for better usability.
+	 */
+	private addAiAgentToneButton(): void {
+		const editor = this.editor;
+		const t = editor.t;
+
+		editor.ui.componentFactory.add( 'aiAgentToneButton', locale => {
+			const dropdownView = createDropdown( locale );
+			dropdownView.class = 'ck-ai-tone-list';
+			const buttonView = dropdownView.buttonView;
+			buttonView.set( {
+				label: t( 'AI Agent Tone' ),
+				icon: aiAgentToneIcon,
+				tooltip: true
+			} );
+
+			const menuView = new MenuBarMenuView( locale );
+			const listView = new MenuBarMenuListView( locale );
+			const checkIcons: Array<IconView> = [];
+
+			for ( const item of this.tonesDropdown ) {
+				const listItemView = new MenuBarMenuListItemView( locale, menuView );
+				const buttonView = new MenuBarMenuListItemButtonView( locale );
+				const checkIconView = new IconView();
+				checkIconView.set( {
+					content: checkIcon
+				} );
+				checkIconView.isVisible = item.command === '' ? true : false;
+				checkIcons.push( checkIconView );
+
+				const spanView = new View( locale );
+				spanView.setTemplate( {
+					tag: 'span',
+					attributes: {
+						class: 'ck ck-list-item-button__check-holder ck-ai-agent-tone'
+					},
+					children: [ checkIconView ]
+				} );
+				spanView.render();
+
+				buttonView.children.add( spanView );
+				buttonView.set( {
+					label: item.title,
+					class: 'ck-menu-item'
+				} );
+				buttonView.delegate( 'execute' ).to( menuView );
+
+				listItemView.children.add( buttonView );
+				listView.items.add( listItemView );
+				buttonView.on( 'execute', () => {
+					checkIcons.forEach( iconView => {
+						iconView.isVisible = false;
+					} );
+					checkIconView.isVisible = true;
+					editor.execute( 'aiAgentTone', {
+						value: item.command
+					} );
+					editor.editing.view.focus();
+				} );
+			}
+
+			dropdownView.panelView.children.add( listView );
+			return dropdownView;
 		} );
 	}
 

@@ -353,3 +353,35 @@ msgstr "Ongeldig AI-model opgegeven. Beschikbare modellen"
 msgctxt "Improve Tone of Voice"
 msgid "Improve Tone of Voice"
 msgstr "Toon verbeteren"
+
+msgctxt "AI Agent Tone"
+msgid "AI Agent Tone"
+msgstr "AI-agent Toon"
+
+msgctxt "Default values"
+msgid "Default values"
+msgstr "Standaardwaarden"
+
+msgctxt "Patient-Friendly"
+msgid "Patient-Friendly"
+msgstr "Patiëntvriendelijk"
+
+msgctxt "Professional"
+msgid "Professional"
+msgstr "Professioneel"
+
+msgctxt "Encouraging"
+msgid "Encouraging"
+msgstr "Bemoedigend"
+
+msgctxt "Neutral"
+msgid "Neutral"
+msgstr "Neutraal"
+
+msgctxt "Conversational"
+msgid "Conversational"
+msgstr "Converserend"
+
+msgctxt "Authoritative"
+msgid "Authoritative"
+msgstr "Autoritair"

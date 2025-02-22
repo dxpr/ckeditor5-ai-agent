@@ -310,3 +310,7 @@
 .ck-ai-commands-list .ck.ck-button.ck-ask-ai-to-edit-button {
 	margin-top: 1.5em;
 }
+
+.ck.ck-list-item-button .ck-ai-agent-tone {
+	height: 100%;
+}

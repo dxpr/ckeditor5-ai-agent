@@ -1,4 +1,8 @@
 {
+  "dxai": [
+    "kavya-m1",
+    "kavya-m1-eu"
+  ],
   "google": [
     "learnlm-1.5-pro-experimental",
     "gemini-2.0-flash-thinking-exp",
@@ -82,7 +86,6 @@
     "mistral-large-2402",
     "mistral-large-2407",
     "mistral-large-2411",
-    "mistral-large-2502-15-1-rc2",
     "mistral-large-latest",
     "mistral-large-pixtral-2411",
     "mistral-medium",
@@ -126,12 +129,12 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "mixtral-8x7b-32768",
-    "llama-3.1-8b-instant",
     "llama-guard-3-8b",
-    "llama3-70b-8192",
+    "mixtral-8x7b-32768",
     "gemma2-9b-it",
-    "llama3-8b-8192"
+    "llama3-70b-8192",
+    "llama3-8b-8192",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-2-1212",
@@ -176,6 +179,7 @@
     "anthropic/claude-3.5-sonnet-20240620",
     "anthropic/claude-3.5-sonnet-20240620:beta",
     "anthropic/claude-3.5-sonnet:beta",
+    "cognitivecomputations/dolphin-mixtral-8x22b",
     "cognitivecomputations/dolphin-mixtral-8x7b",
     "cognitivecomputations/dolphin3.0-mistral-24b:free",
     "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
@@ -194,6 +198,7 @@
     "deepseek/deepseek-r1",
     "deepseek/deepseek-r1-distill-llama-70b",
     "deepseek/deepseek-r1-distill-llama-70b:free",
+    "deepseek/deepseek-r1-distill-llama-8b",
     "deepseek/deepseek-r1-distill-qwen-1.5b",
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
@@ -229,6 +234,7 @@
     "infermatic/mn-inferor-12b",
     "inflection/inflection-3-pi",
     "inflection/inflection-3-productivity",
+    "jondurbin/airoboros-l2-70b",
     "liquid/lfm-3b",
     "liquid/lfm-40b",
     "liquid/lfm-7b",
@@ -242,9 +248,11 @@
     "meta-llama/llama-3.1-405b-instruct",
     "meta-llama/llama-3.1-70b-instruct",
     "meta-llama/llama-3.1-8b-instruct",
+    "meta-llama/llama-3.1-8b-instruct:free",
     "meta-llama/llama-3.2-11b-vision-instruct",
     "meta-llama/llama-3.2-11b-vision-instruct:free",
     "meta-llama/llama-3.2-1b-instruct",
+    "meta-llama/llama-3.2-1b-instruct:free",
     "meta-llama/llama-3.2-3b-instruct",
     "meta-llama/llama-3.2-90b-vision-instruct",
     "meta-llama/llama-3.3-70b-instruct",
@@ -334,6 +342,7 @@
     "perplexity/llama-3.1-sonar-large-128k-online",
     "perplexity/llama-3.1-sonar-small-128k-chat",
     "perplexity/llama-3.1-sonar-small-128k-online",
+    "perplexity/r1-1776",
     "perplexity/sonar",
     "perplexity/sonar-reasoning",
     "pygmalionai/mythalion-13b",
@@ -357,7 +366,9 @@
     "sao10k/l3.1-70b-hanami-x1",
     "sao10k/l3.1-euryale-70b",
     "sao10k/l3.3-euryale-70b",
+    "sophosympatheia/midnight-rose-70b",
     "sophosympatheia/rogue-rose-103b-v0.2:free",
+    "teknium/openhermes-2.5-mistral-7b",
     "thedrummer/rocinante-12b",
     "thedrummer/unslopnemo-12b",
     "undi95/remm-slerp-l2-13b",
@@ -368,9 +379,5 @@
     "x-ai/grok-beta",
     "x-ai/grok-vision-beta",
     "xwin-lm/xwin-lm-70b"
-  ],
-  "dxai": [
-    "kavya-m1",
-    "kavya-m1-eu"
   ]
 }

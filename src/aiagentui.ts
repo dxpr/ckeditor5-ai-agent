@@ -49,6 +49,11 @@ export default class AiAgentUI extends Plugin {
 	 */
 	public init(): void {
 		try {
+			const aiAgentPlugin = this.editor.plugins.get( 'AiAgent' );
+			if ( !aiAgentPlugin.isEnabled ) {
+				return;
+			}
+
 			aiAgentContext.uiComponent = this;
 			// Initialize UI components like buttons, placeholders, loaders, etc.
 			this.initializeUIComponents();

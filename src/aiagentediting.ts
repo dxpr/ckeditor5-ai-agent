@@ -13,6 +13,12 @@ export default class AiAgentEditing extends Plugin {
 	 */
 	public init(): void {
 		const editor = this.editor;
+		const aiAgentPlugin = editor.plugins.get( 'AiAgent' );
+
+		if ( !aiAgentPlugin.isEnabled ) {
+			return;
+		}
+
 		const aiAgentService = new AiAgentService( editor );
 		editor.commands.add(
 			'aiAgent',

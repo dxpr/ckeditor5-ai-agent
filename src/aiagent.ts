@@ -46,7 +46,7 @@ export default class AiAgent extends Plugin {
 
 		let tokenLimits = {};
 		const model = config.model ?? defaultConfig.model;
-		if ( model && AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
+		if ( model && AI_CUSTOM_ENGINE.includes( config.engine as any ) && config.engine !== 'dxai' ) {
 			const { maxInputContextTokens } = getModelTokenLimits( model );
 			tokenLimits = {
 				maxOutputTokens: 16384, // Default max output tokens

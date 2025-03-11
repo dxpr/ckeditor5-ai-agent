@@ -263,3 +263,80 @@ Use descriptive headings`
         }
     }
 });
+```
+
+### Configuring Tone Options
+
+The `tonesDropdown` configuration option allows you to customize the available tones in the AI Agent tone dropdown menu. When configured, your custom tones will be added to the default "Default values" option.
+
+Example configuration:
+
+```typescript
+ClassicEditor
+    .create( document.querySelector( '#editor' ), {
+        plugins: [ AiAgent, ... ],
+        toolbar: [ 'aiAgentButton', 'aiAgentToneButton', ... ],
+        aiAgent: {
+            apiKey: 'YOUR_API_KEY',
+            tonesDropdown: [
+                {
+                    title: 'Technical',
+                    command: 'Use technical language with precise terminology and detailed explanations.'
+                },
+                {
+                    title: 'Casual',
+                    command: 'Write in a relaxed, conversational style using everyday language.'
+                },
+                {
+                    title: 'Academic',
+                    command: 'Use formal academic language with proper citations and structured arguments.'
+                }
+            ]
+        }
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+```
+
+When using the `tonesDropdown` configuration:
+
+1. Your custom tones will be added after the "Default values" option
+2. The default tones provided by the plugin will not be included
+3. When selecting a tone, it completely replaces the default tone ("Professional, Clear")
+4. Only one tone is active at a time - there is no tone mixing or combining
+5. The selected tone will be used in all subsequent AI Agent operations until changed
+
+> **Note:** The tone instructions are incorporated into the AI prompt and help guide the style and voice of the generated content.
+
+## Developing the package
+
+To develop the `AI Agent` plugin, follow these steps:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/dxpr/ckeditor5-ai-agent.git
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Build the package:
+
+   ```bash
+   npm run build
+   ```
+
+## Available scripts
+
+- `npm run build`: Build the package
+- `npm run test`: Run tests
+- `npm run lint`: Lint the code
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.

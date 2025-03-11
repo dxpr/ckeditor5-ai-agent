@@ -8,12 +8,14 @@ export class AIApi {
 	private baseURL: string;
 	private engine: AiEngine;
 	private editor: Editor;
+	private providers?: string;
 
 	constructor( config: AIApiConfig ) {
 		this.apiKey = config.apiKey ?? '';
 		this.baseURL = config.baseURL;
 		this.engine = config.engine;
 		this.editor = config.editor;
+		this.providers = config.providers;
 	}
 
 	/**
@@ -83,6 +85,11 @@ export class AIApi {
 			const allowedClasses = getAllowedHtmlClasses( this.editor );
 			if ( allowedClasses.length > 0 ) {
 				requestBody.allowed_html_classes = allowedClasses.join( ', ' );
+			}
+
+			// Add providers if available
+			if ( this.providers ) {
+				requestBody.providers = this.providers;
 			}
 		}
 

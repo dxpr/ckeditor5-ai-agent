@@ -101,6 +101,14 @@ export default class AiAgent extends Plugin {
 			if ( !config.endpointUrl ) {
 				throw new Error( 'AiAgent: endpointUrl is required for custom engine.' );
 			}
+
+			// Validate providers is only used with dxai engine
+			if ( config.providers && config.engine !== 'dxai' ) {
+				throw new Error( 'AiAgent: providers is only supported with the dxai engine.' );
+			}
+		} else if ( config.providers ) {
+			// If engine is not dxai but providers is set, throw an error
+			throw new Error( 'AiAgent: providers is only supported with the dxai engine.' );
 		}
 
 		// Validate common settings

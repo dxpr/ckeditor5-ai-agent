@@ -48,6 +48,9 @@ export interface AiAgentConfig {
     timeOutDuration?: number;
     endpointUrl?: string;
 
+    // Provider Fallbacks
+    providers?: string;
+
     // Prompt Settings
     promptSettings?: PromptSettings;
 
@@ -94,4 +97,5 @@ export interface AIApiConfig {
 	baseURL: string;
 	engine: AiEngine;
 	editor: Editor;
+	providers?: string;
 }

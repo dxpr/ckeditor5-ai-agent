@@ -10,22 +10,21 @@
      */
     "types": [],
     "lib": [
-      "ES2019", // Must match the "target".
-      "ES2020.String",
+      "ES2022", // Updated to more recent ECMAScript version
       "DOM",
       "DOM.Iterable"
     ],
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "strict": true,
-    "target": "es2019",
+    "target": "es2022", // Updated to match lib
     "sourceMap": true,
     "allowJs": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,  
 	"moduleDetection": "force",
-	"moduleResolution": "NodeNext",
-	"module": "NodeNext",
+	"moduleResolution": "node", // More compatible with existing tools
+	"module": "esnext",
 	"skipLibCheck": true,
     "typeRoots": [
       "typings",

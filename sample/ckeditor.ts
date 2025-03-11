@@ -25,6 +25,8 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
 import { AccessibilityHelp } from '@ckeditor/ckeditor5-ui';
+import { Style } from '@ckeditor/ckeditor5-style';
+import { GeneralHtmlSupport } from '@ckeditor/ckeditor5-html-support';
 
 import AiAgent from '../src/aiagent.js';
 
@@ -54,10 +56,14 @@ ClassicEditor
 			Code,
 			Base64UploadAdapter,
 			SourceEditing,
-			AccessibilityHelp
+			AccessibilityHelp,
+			GeneralHtmlSupport,
+			Style
 		],
 		toolbar: [
 			'aiAgentButton',
+			'|',
+			'style',
 			'|',
 			'undo', 'redo',
 			'|',
@@ -98,49 +104,73 @@ ClassicEditor
 				'mergeTableCells'
 			]
 		},
-		aiAgent: {
-			apiKey: 'YOUR_API_KEY',
-			debugMode: true,
-			commandsDropdown: [
+		style: {
+			definitions: [
 				{
-					title: 'Style & Tone',
-					items: [
-						{
-							title: 'Make Professional',
-							command: 'Improve using formal, and respectful language conveying expertise. Keep the text formatting.'
-						},
-						{
-							title: 'Make Casual',
-							command: 'Rewrite in a friendly, conversational tone while maintaining the key points and formatting'
-						},
-						{
-							title: 'Make Technical',
-							command: 'Rewrite using precise technical language and industry terminology while preserving structure'
-						}
-					]
+					name: 'Button Primary',
+					element: 'span',
+					classes: [ 'btn', 'btn-primary' ]
 				},
 				{
-					title: 'Enhance Content',
-					items: [
-						{
-							title: 'Add Examples',
-							command: 'Add relevant examples and use cases to illustrate the main points'
-						},
-						{
-							title: 'Add Statistics',
-							command: 'Enhance with relevant statistics and data points to support the content'
-						},
-						{
-							title: 'Expand Details',
-							command: 'Expand the current content with more detailed explanations and supporting information'
-						}
-					]
+					name: 'Button Secondary',
+					element: 'span',
+					classes: [ 'btn', 'btn-secondary' ]
+				},
+				{
+					name: 'Badge Primary',
+					element: 'span',
+					classes: [ 'badge', 'bg-primary' ]
+				},
+				{
+					name: 'Badge Secondary',
+					element: 'span',
+					classes: [ 'badge', 'bg-secondary' ]
 				}
 			]
+		},
+		aiAgent: {
+			apiKey: 'YOUR_API_KEY',
+			debugMode: true
 		},
 		language: {
 			content: 'en',
 			ui: 'en'
+		},
+		htmlSupport: {
+			allow: [
+				{
+					name: /^(span|div)$/,
+					classes: true,
+					attributes: true
+				},
+				{
+					name: 'div',
+					classes: [
+						'btn',
+						'btn-primary',
+						'btn-secondary',
+						'btn-link',
+						'badge',
+						'bg-primary',
+						'bg-secondary'
+					],
+					attributes: {
+						role: true
+					}
+				},
+				{
+					name: 'span',
+					classes: [
+						'btn',
+						'btn-primary',
+						'btn-secondary',
+						'btn-link',
+						'badge',
+						'bg-primary',
+						'bg-secondary'
+					]
+				}
+			]
 		}
 	} )
 	.then( editor => {

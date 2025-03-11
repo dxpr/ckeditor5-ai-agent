@@ -18,7 +18,7 @@
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->356<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->395<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -172,13 +172,22 @@ If <SELECTED_CONTENT> exists, use only that content to answer the <TASK>, ignori
 ##### HTML Formatting
 ```typescript
 HTML Requirements:
-Use only these tags: {{ALLOWED_HTML_TAGS}}.
+<ALLOWED_TAGS>Use only these tags: a, blockquote, code, em, figcaption, h1, h2, h3, img, li, ol, p, pre, strong, table, td, tr, ul.</ALLOWED_TAGS>
+<ALLOWED_CLASSES>Use only these classes: alert, alert-primary, card, badge, bg-primary.</ALLOWED_CLASSES>
 Ensure proper tag nesting.
 Use semantic HTML.
 No inline styles.
 First word must be HTML tag.
 Output raw HTML without markdown code blocks (no ```html or ``` wrapping).
 ```
+
+The `<ALLOWED_TAGS>` section is automatically populated with the list of HTML tags allowed in the editor, based on the editor's schema and the GeneralHtmlSupport configuration.
+
+The `<ALLOWED_CLASSES>` section is automatically populated with either:
+- A list of allowed CSS classes from the GeneralHtmlSupport configuration if any are defined
+- Or a message indicating that no CSS classes should be used
+
+These XML-like tags make it easier for the AI model to clearly identify the allowed elements and apply them correctly in the generated content.
 
 ##### Content Structure
 ```typescript

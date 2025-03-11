@@ -1,6 +1,6 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { Element, Item, Position } from 'ckeditor5/src/engine.js';
-import type { AiModel, AiEngine, MarkdownContent, ModerationResponse, ModerationFlagsTypes } from './type-identifiers.js';
+import type { AiModel, AiEngine, MarkdownContent, ModerationResponse, ModerationFlagsTypes, AIApiConfig } from './type-identifiers.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { PromptHelper } from './util/prompt.js';
 import { HtmlParser } from './util/htmlparser.js';
@@ -34,6 +34,7 @@ export default class AiAgentService {
 	private aiAgentFeatureLockId = Symbol( 'ai-agent-feature' );
 	private promptHelper: PromptHelper;
 	private htmlParser: HtmlParser;
+	private providers?: string;
 
 	private isInlineInsertion: boolean = false;
 	private abortGeneration: boolean = false;
@@ -71,6 +72,7 @@ export default class AiAgentService {
 		this.moderationEnable = config.moderationEnable ?? false;
 		this.disableFlags = config.moderationDisableFlags ?? [];
 		this.writesPerSecond = config.writesPerSecond ?? 10;
+		this.providers = config.providers;
 	}
 
 	/**
@@ -324,12 +326,18 @@ export default class AiAgentService {
 					await this.handleNonStreamingResponse( result.content, blockID, parent, command );
 				}
 			} else {
-				const config = {
+				const config: AIApiConfig = {
 					apiKey: this.apiKey,
 					baseURL: this.endpointUrl,
 					engine: this.aiEngine,
 					editor: this.editor
 				};
+
+				// Add providers if engine is dxai and providers is set
+				if ( this.aiEngine === 'dxai' && this.providers ) {
+					config.providers = this.providers;
+				}
+
 				const llmCustom = new AIApi( config );
 				const messages = {
 					system: this.promptHelper.getSystemPrompt( this.isInlineInsertion ),

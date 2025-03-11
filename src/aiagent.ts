@@ -10,11 +10,16 @@ import '../theme/style.css';
 export default class AiAgent extends Plugin {
 	public DEFAULT_GPT_ENGINE = 'openai' as AiEngine;
 	public DEFAULT_GPT_MODEL = 'gpt-4o' as AiModel;
+	public override isEnabled: boolean = false;
 
 	constructor( editor: Editor ) {
 		super( editor );
 
 		const config = editor.config.get( 'aiAgent' ) as AiAgentConfig || {};
+
+		// Check if plugin is enabled based on presence of API key
+		this.isEnabled = Boolean( config.apiKey );
+
 		// Set default values and merge with provided config
 		const defaultConfig = {
 			engine: this.DEFAULT_GPT_ENGINE, // Default AI model
@@ -41,7 +46,7 @@ export default class AiAgent extends Plugin {
 
 		let tokenLimits = {};
 		const model = config.model ?? defaultConfig.model;
-		if ( model && AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
+		if ( model && AI_CUSTOM_ENGINE.includes( config.engine as any ) && config.engine !== 'dxai' ) {
 			const { maxInputContextTokens } = getModelTokenLimits( model );
 			tokenLimits = {
 				maxOutputTokens: 16384, // Default max output tokens
@@ -65,8 +70,10 @@ export default class AiAgent extends Plugin {
 		// Set the merged config back to the editor
 		editor.config.set( 'aiAgent', updatedConfig );
 
-		// Validate configuration
-		this.validateConfiguration( updatedConfig );
+		// Only validate configuration if plugin is enabled
+		if ( this.isEnabled ) {
+			this.validateConfiguration( updatedConfig );
+		}
 	}
 
 	public static get requires() {
@@ -78,12 +85,13 @@ export default class AiAgent extends Plugin {
 	}
 
 	private async validateConfiguration( config: AiAgentConfig ): Promise<void> {
-		// 1. First check if API key exists since it's required for all engines
-		if ( !config.apiKey ) {
-			throw new Error( 'AiAgent: apiKey is required.' );
+		// Skip validation if plugin is disabled
+		if ( !this.isEnabled ) {
+			return;
 		}
 
-		// 2. Check engine-specific requirements
+		// Only validate engine-specific requirements and other settings
+		// since API key presence was already validated in constructor
 		if ( AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
 			// TODO: Chooses models to support in production
 			if ( !AI_CUSTOM_MODEL.includes( config.model as any ) ) {
@@ -93,9 +101,17 @@ export default class AiAgent extends Plugin {
 			if ( !config.endpointUrl ) {
 				throw new Error( 'AiAgent: endpointUrl is required for custom engine.' );
 			}
+
+			// Validate providers is only used with dxai engine
+			if ( config.providers && config.engine !== 'dxai' ) {
+				throw new Error( 'AiAgent: providers is only supported with the dxai engine.' );
+			}
+		} else if ( config.providers ) {
+			// If engine is not dxai but providers is set, throw an error
+			throw new Error( 'AiAgent: providers is only supported with the dxai engine.' );
 		}
 
-		// 3. Validate common settings
+		// Validate common settings
 		if ( config.temperature && ( config.temperature < 0 || config.temperature > 2 ) ) {
 			throw new Error( 'AiAgent: Temperature must be a number between 0 and 2.' );
 		}

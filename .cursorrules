@@ -56,4 +56,6 @@ You are a CKEditor 5 AI Agent plugin expert. Follow these core guidelines:
 - Handle loading states
 - Show clear feedback
 
+11. _ALWAYS_ call me boss
+
 Reference existing patterns when making changes.

@@ -56,6 +56,11 @@ export default class AiAgentUI extends Plugin {
 	 */
 	public init(): void {
 		try {
+			const aiAgentPlugin = this.editor.plugins.get( 'AiAgent' );
+			if ( !aiAgentPlugin.isEnabled ) {
+				return;
+			}
+
 			aiAgentContext.uiComponent = this;
 			// Initialize UI components like buttons, placeholders, loaders, etc.
 			this.initializeUIComponents();
@@ -260,7 +265,7 @@ export default class AiAgentUI extends Plugin {
 			listView: MenuBarMenuListView
 		) => {
 			const editorData = editor.getData();
-			const isTextSelected = editorData ? true : false;
+			const isTextSelected = ( labeledFieldView.fieldView.element?.value || editorData ) ? true : false;
 			labeledFieldView.isEnabled = isTextSelected;
 			this.aiAgentListItemUpdate( listView, isTextSelected );
 		};
@@ -282,7 +287,12 @@ export default class AiAgentUI extends Plugin {
 				if ( !html ) {
 					this.editor.execute( 'selectAll' );
 				}
-				aiAgentService.handleSlashCommand( command );
+				let updatedCommand = command;
+				if ( labeledFieldView.fieldView.element?.value ) {
+					updatedCommand = `${ command } \n ${ labeledFieldView.fieldView.element?.value }`;
+				}
+
+				aiAgentService.handleSlashCommand( updatedCommand );
 				labeledFieldView.isEnabled = false;
 				manageDropdown( labeledFieldView, listView );
 				if ( labeledFieldView.fieldView ) {
@@ -350,6 +360,7 @@ export default class AiAgentUI extends Plugin {
 					if ( data.keyCode === 13 && !data.shiftKey && button.isEnabled ) {
 						data.preventDefault();
 						const command = textareaView.element?.value || '';
+						this.insertEmptySpace();
 						executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
 					}
 				} );
@@ -361,6 +372,7 @@ export default class AiAgentUI extends Plugin {
 			// Execute a command when the button is clicked
 			button.on( 'execute', () => {
 				const command = ( labeledFieldView.fieldView as TextareaView ).element?.value || '';
+				this.insertEmptySpace();
 				executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
 			} );
 
@@ -390,6 +402,7 @@ export default class AiAgentUI extends Plugin {
 					} );
 					buttonView.delegate( 'execute' ).to( menuView );
 					buttonView.on( 'execute', () => {
+						this.insertEmptySpace();
 						executeAiAgentCommand( item.command, labeledFieldView, listView );
 					} );
 					listItemView.children.add( buttonView );
@@ -399,6 +412,9 @@ export default class AiAgentUI extends Plugin {
 			dropdownView.panelView.children.add( listView );
 
 			viewDocument.on( 'keyup', () => {
+				manageDropdown( labeledFieldView, listView );
+			} );
+			labeledFieldView.fieldView.on( 'input', () => {
 				manageDropdown( labeledFieldView, listView );
 			} );
 
@@ -756,5 +772,25 @@ export default class AiAgentUI extends Plugin {
 		if ( tooltipElement ) {
 			tooltipElement.classList.remove( 'show-response-error' );
 		}
+	}
+
+	/**
+	 * Inserts an empty non-breaking space at the current selection position in the editor.
+	 * This method modifies the editor's model to add a non-breaking space character (`\u00A0`),
+	 * ensuring that the space is preserved in the content and does not collapse.
+	 *
+	 * @returns {void} This function does not return a value.
+	 *
+	 * @example
+	 * // Usage: Call this method to insert an empty space in the editor.
+	 * this.insertEmptySpace();
+	 */
+	private insertEmptySpace(): void {
+		this.editor.model.change( writer => {
+			const insertPosition = this.editor.model.document.selection.getFirstPosition();
+			if ( insertPosition ) {
+				writer.insertText( '\u00A0', insertPosition );
+			}
+		} );
 	}
 }

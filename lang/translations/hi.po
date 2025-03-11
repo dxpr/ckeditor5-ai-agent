@@ -354,3 +354,34 @@ msgctxt "Improve Tone of Voice"
 msgid "Improve Tone of Voice"
 msgstr "स्वर का लहजा सुधारें"
 
+msgctxt "AI Agent Tone"
+msgid "AI Agent Tone"
+msgstr "एआई एजेंट का स्वर"
+
+msgctxt "Default values"
+msgid "Default values"
+msgstr "डिफ़ॉल्ट मान"
+
+msgctxt "Patient-Friendly"
+msgid "Patient-Friendly"
+msgstr "रोगी के अनुकूल"
+
+msgctxt "Professional"
+msgid "Professional"
+msgstr "पेशेवर"
+
+msgctxt "Encouraging"
+msgid "Encouraging"
+msgstr "प्रोत्साहित करने वाला"
+
+msgctxt "Neutral"
+msgid "Neutral"
+msgstr "तटस्थ"
+
+msgctxt "Conversational"
+msgid "Conversational"
+msgstr "वार्तालाप शैली"
+
+msgctxt "Authoritative"
+msgid "Authoritative"
+msgstr "प्रामाणिक"

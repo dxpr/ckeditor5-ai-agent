@@ -353,3 +353,35 @@ msgstr "Modelo de IA especificado no válido. Modelos disponibles"
 msgctxt "Improve Tone of Voice"
 msgid "Improve Tone of Voice"
 msgstr "Mejorar el tono de voz"
+
+msgctxt "AI Agent Tone"
+msgid "AI Agent Tone"
+msgstr "Tono del Agente de IA"
+
+msgctxt "Default values"
+msgid "Default values"
+msgstr "Valores predeterminados"
+
+msgctxt "Patient-Friendly"
+msgid "Patient-Friendly"
+msgstr "Amigable para el paciente"
+
+msgctxt "Professional"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "Encouraging"
+msgid "Encouraging"
+msgstr "Motivador"
+
+msgctxt "Neutral"
+msgid "Neutral"
+msgstr "Neutral"
+
+msgctxt "Conversational"
+msgid "Conversational"
+msgstr "Conversacional"
+
+msgctxt "Authoritative"
+msgid "Authoritative"
+msgstr "Autoritario"

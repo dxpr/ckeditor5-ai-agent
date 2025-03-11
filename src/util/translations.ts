@@ -144,3 +144,41 @@ export function getDefaultAiAgentDropdownMenu(
 		}
 	];
 }
+
+export function getDefaultAiAgentToneDropdownMenu(
+	editor: Editor
+): Array<{
+	title: string; command: string;
+}> {
+	const t = editor.t;
+	return [
+		{
+			title: t( 'Default tone' ),
+			command: ''
+		},
+		{
+			title: t( 'Patient-Friendly' ),
+			command: 'Write in a warm, clear, and simple way for patients to understand.'
+		},
+		{
+			title: t( 'Professional' ),
+			command: 'Use technical and formal language suitable for healthcare professionals.'
+		},
+		{
+			title: t( 'Encouraging' ),
+			command: 'Provide positive reinforcement and motivation.'
+		},
+		{
+			title: t( 'Neutral' ),
+			command: 'Maintain a balanced and neutral tone without bias.'
+		},
+		{
+			title: t( 'Conversational' ),
+			command: 'Write in a friendly and engaging manner, as if speaking directly to the reader.'
+		},
+		{
+			title: t( 'Authoritative' ),
+			command: 'Use a confident and knowledgeable voice, ideal for expert content.'
+		}
+	];
+}

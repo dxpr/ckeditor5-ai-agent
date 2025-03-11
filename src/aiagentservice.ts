@@ -86,6 +86,10 @@ export default class AiAgentService {
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
 		const root = model.document.getRoot();
+		const tone = editor.commands.get( 'aiAgentTone' )?.value as string;
+
+		// Only use tone if it's not empty
+		const effectiveTone = tone && tone.trim() !== '' ? tone : undefined;
 
 		let content: string | undefined;
 		let selectedContent: string | undefined;
@@ -148,13 +152,14 @@ export default class AiAgentService {
 			const rect = domRange.getBoundingClientRect();
 
 			aiAgentContext.showLoader( rect );
-			const gptPrompt = await this.generateGptPromptBasedOnUserPrompt(
-				content ?? '',
-				parentEquivalentHTML?.innerText,
-				selectedContent
+			const prompt = await this.generateGptPromptBasedOnUserPrompt(
+				content!,
+				parentEquivalentHTML?.innerHTML,
+				selectedContent,
+				effectiveTone
 			);
-			if ( parent && gptPrompt ) {
-				await this.fetchAndProcessGptResponse( !!command, gptPrompt, parent );
+			if ( parent && prompt ) {
+				await this.fetchAndProcessGptResponse( !!command, prompt, parent );
 			}
 		} catch ( error ) {
 			console.error( 'Error handling slash command:', error );
@@ -931,7 +936,8 @@ export default class AiAgentService {
 	private async generateGptPromptBasedOnUserPrompt(
 		prompt: string,
 		promptContainerText?: string,
-		selectedContent?: string
+		selectedContent?: string,
+		tone?: string
 	): Promise<string | null> {
 		try {
 			const context = this.promptHelper.trimContext( prompt, promptContainerText );
@@ -953,7 +959,8 @@ export default class AiAgentService {
 				context,
 				selectedContent,
 				markDownContents,
-				isEditorEmpty
+				isEditorEmpty,
+				tone
 			);
 		} catch ( error ) {
 			console.error( error );

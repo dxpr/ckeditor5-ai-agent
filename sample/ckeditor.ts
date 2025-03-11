@@ -62,6 +62,7 @@ ClassicEditor
 		],
 		toolbar: [
 			'aiAgentButton',
+			'aiAgentToneButton',
 			'|',
 			'style',
 			'|',
@@ -130,7 +131,17 @@ ClassicEditor
 		},
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
-			debugMode: true
+			debugMode: true,
+			tonesDropdown: [
+				{
+					title: 'Patient-Friendly',
+					command: 'Write in a warm, clear, and simple way for patients to understand.'
+				},
+				{
+					title: 'Professional',
+					command: 'Use technical and formal language suitable for healthcare professionals.'
+				}
+			]
 		},
 		language: {
 			content: 'en',

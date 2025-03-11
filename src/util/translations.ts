@@ -153,7 +153,7 @@ export function getDefaultAiAgentToneDropdownMenu(
 	const t = editor.t;
 	return [
 		{
-			title: t( 'Default values' ),
+			title: t( 'Default tone' ),
 			command: ''
 		},
 		{

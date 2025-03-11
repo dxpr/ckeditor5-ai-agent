@@ -447,10 +447,10 @@ export default class AiAgentUI extends Plugin {
 
 		editor.ui.componentFactory.add( 'aiAgentToneButton', locale => {
 			const dropdownView = createDropdown( locale );
-			dropdownView.class = 'ck-ai-tone-list';
+			dropdownView.class = 'ck-ai-commands-list';
 			const buttonView = dropdownView.buttonView;
 			buttonView.set( {
-				label: t( 'AI Agent Tone' ),
+				label: t( 'Tone of voice' ),
 				icon: aiAgentToneIcon,
 				tooltip: true
 			} );
@@ -458,6 +458,16 @@ export default class AiAgentUI extends Plugin {
 			const menuView = new MenuBarMenuView( locale );
 			const listView = new MenuBarMenuListView( locale );
 			const checkIcons: Array<IconView> = [];
+
+			// Add group title for Tone
+			const titleView = new MenuBarMenuListItemView( locale, menuView );
+			const titleButton = new MenuBarMenuListItemButtonView( locale );
+			titleButton.set( {
+				label: t( 'Tone' ),
+				class: 'ck-menu-group-title'
+			} );
+			titleView.children.add( titleButton );
+			listView.items.add( titleView );
 
 			for ( const item of this.tonesDropdown ) {
 				const listItemView = new MenuBarMenuListItemView( locale, menuView );
@@ -473,7 +483,7 @@ export default class AiAgentUI extends Plugin {
 				spanView.setTemplate( {
 					tag: 'span',
 					attributes: {
-						class: 'ck ck-list-item-button__check-holder ck-ai-agent-tone'
+						class: 'ck ck-list-item-button__check-holder ck-tone-of-voice'
 					},
 					children: [ checkIconView ]
 				} );

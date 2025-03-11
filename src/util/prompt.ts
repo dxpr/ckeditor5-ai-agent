@@ -107,12 +107,18 @@ export class PromptHelper {
 		const defaultComponents = getDefaultRules( this.editor );
 		let systemPrompt = '';
 
+		// Check if a custom tone is set
+		const toneCommand = this.editor.commands.get( 'aiAgentTone' );
+		const hasCustomTone = toneCommand && toneCommand.value;
+
 		// Process each component
 		for ( const [ id, defaultContent ] of Object.entries( defaultComponents ) ) {
 			// Skip components that are not allowed in the editor and not inline response
+			// Also skip the tone component if a custom tone is set
 			if (
 				( id === 'imageHandling' && !getAllowedHtmlTags( this.editor ).includes( 'img' ) ) ||
-				( id === 'inlineContent' && !isInlineResponse )
+				( id === 'inlineContent' && !isInlineResponse ) ||
+				( id === 'tone' && hasCustomTone )
 			) {
 				continue;
 			}
@@ -255,6 +261,7 @@ export class PromptHelper {
 			console.log( 'Context received:', context );
 			console.log( 'MarkDownContents:', markDownContents );
 			console.log( 'IsEditorEmpty:', isEditorEmpty );
+			console.log( 'Tone:', tone );
 		}
 
 		const contentLanguageCode = this.editor.locale.contentLanguage;
@@ -278,7 +285,8 @@ export class PromptHelper {
 			corpus.push( '</SELECTED_CONTENT>' );
 		}
 
-		if ( tone ) {
+		// Only include tone if it's provided and not empty
+		if ( tone && tone.trim() !== '' ) {
 			corpus.push( '<TONE>' );
 			corpus.push( tone );
 			corpus.push( '</TONE>' );

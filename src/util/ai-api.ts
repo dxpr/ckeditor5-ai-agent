@@ -1,6 +1,6 @@
 import type { AiModel, AiEngine, AIApiConfig } from '../type-identifiers.js';
 import CustomError, { getError } from './custom-error.js';
-import { getAllowedHtmlTags } from './html-utils.js';
+import { getAllowedHtmlTags, getAllowedHtmlClasses } from './html-utils.js';
 import type { Editor } from 'ckeditor5/src/core.js';
 
 export class AIApi {
@@ -74,10 +74,16 @@ export class AIApi {
 			...config
 		};
 
-		// Add allowed_html_tags only for DXAI engine
+		// Add allowed_html_tags and allowed_html_classes only for DXAI engine
 		if ( this.engine === 'dxai' ) {
 			const allowedTags = getAllowedHtmlTags( this.editor );
 			requestBody.allowed_html_tags = allowedTags.join( ', ' );
+
+			// Add allowed_html_classes if available
+			const allowedClasses = getAllowedHtmlClasses( this.editor );
+			if ( allowedClasses.length > 0 ) {
+				requestBody.allowed_html_classes = allowedClasses.join( ', ' );
+			}
 		}
 
 		const response = await fetch( this.baseURL, {

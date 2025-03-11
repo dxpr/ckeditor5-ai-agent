@@ -1,7 +1,7 @@
 {
   "responseRules": "Generate a response that addresses the <TASK>\nIf <SELECTED_CONTENT> exists, use only that content to answer the <TASK>, ignoring additional <CONTEXT>.",
   
-  "htmlFormatting": "HTML Requirements:\nUse only these tags: {{ALLOWED_HTML_TAGS}}.\nEnsure proper tag nesting.\nUse semantic HTML.\nNo inline styles.\nFirst word must be HTML tag.\nOutput raw HTML without markdown code blocks (no ```html or ``` wrapping).",
+  "htmlFormatting": "HTML Requirements:\n<ALLOWED_TAGS>{{ALLOWED_HTML_TAGS}}</ALLOWED_TAGS>\n<ALLOWED_CLASSES>{{ALLOWED_HTML_CLASSES}}</ALLOWED_CLASSES>\nEnsure proper tag nesting.\nUse semantic HTML.\nNo inline styles.\nFirst word must be HTML tag.\nOutput raw HTML without markdown code blocks (no ```html or ``` wrapping).",
   
   "contentStructure": "Organize information logically.\nUse paragraphs.\nMaintain consistent formatting.",
   

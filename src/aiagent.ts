@@ -90,12 +90,8 @@ export default class AiAgent extends Plugin {
 			return;
 		}
 
-		// 1. First check if API key exists since it's required for all engines
-		if ( !config.apiKey ) {
-			throw new Error( 'AiAgent: apiKey is required.' );
-		}
-
-		// 2. Check engine-specific requirements
+		// Only validate engine-specific requirements and other settings
+		// since API key presence was already validated in constructor
 		if ( AI_CUSTOM_ENGINE.includes( config.engine as any ) ) {
 			// TODO: Chooses models to support in production
 			if ( !AI_CUSTOM_MODEL.includes( config.model as any ) ) {
@@ -107,7 +103,7 @@ export default class AiAgent extends Plugin {
 			}
 		}
 
-		// 3. Validate common settings
+		// Validate common settings
 		if ( config.temperature && ( config.temperature < 0 || config.temperature > 2 ) ) {
 			throw new Error( 'AiAgent: Temperature must be a number between 0 and 2.' );
 		}

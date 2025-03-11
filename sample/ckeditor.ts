@@ -25,6 +25,8 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
 import { AccessibilityHelp } from '@ckeditor/ckeditor5-ui';
+import { Style } from '@ckeditor/ckeditor5-style';
+import { GeneralHtmlSupport } from '@ckeditor/ckeditor5-html-support';
 
 import AiAgent from '../src/aiagent.js';
 
@@ -54,10 +56,14 @@ ClassicEditor
 			Code,
 			Base64UploadAdapter,
 			SourceEditing,
-			AccessibilityHelp
+			AccessibilityHelp,
+			GeneralHtmlSupport,
+			Style
 		],
 		toolbar: [
 			'aiAgentButton',
+			'|',
+			'style',
 			'|',
 			'undo', 'redo',
 			'|',
@@ -98,10 +104,113 @@ ClassicEditor
 				'mergeTableCells'
 			]
 		},
+		style: {
+			definitions: [
+				{
+					name: 'Alert Primary',
+					element: 'div',
+					classes: [ 'alert', 'alert-primary' ]
+				},
+				{
+					name: 'Alert Success',
+					element: 'div',
+					classes: [ 'alert', 'alert-success' ]
+				},
+				{
+					name: 'Alert Warning',
+					element: 'div',
+					classes: [ 'alert', 'alert-warning' ]
+				},
+				{
+					name: 'Alert Danger',
+					element: 'div',
+					classes: [ 'alert', 'alert-danger' ]
+				},
+				{
+					name: 'Card',
+					element: 'div',
+					classes: [ 'card' ]
+				},
+				{
+					name: 'Card Header',
+					element: 'div',
+					classes: [ 'card-header' ]
+				},
+				{
+					name: 'Card Body',
+					element: 'div',
+					classes: [ 'card-body' ]
+				},
+				{
+					name: 'Card Footer',
+					element: 'div',
+					classes: [ 'card-footer' ]
+				},
+				{
+					name: 'Button Primary',
+					element: 'span',
+					classes: [ 'btn', 'btn-primary' ]
+				},
+				{
+					name: 'Button Secondary',
+					element: 'span',
+					classes: [ 'btn', 'btn-secondary' ]
+				},
+				{
+					name: 'Badge Primary',
+					element: 'span',
+					classes: [ 'badge', 'bg-primary' ]
+				},
+				{
+					name: 'Badge Secondary',
+					element: 'span',
+					classes: [ 'badge', 'bg-secondary' ]
+				},
+				{
+					name: 'List Group',
+					element: 'ul',
+					classes: [ 'list-group' ]
+				},
+				{
+					name: 'List Group Item',
+					element: 'li',
+					classes: [ 'list-group-item' ]
+				}
+			]
+		},
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
 			debugMode: true,
 			commandsDropdown: [
+				{
+					title: 'Bootstrap 5 Styles',
+					items: [
+						{
+							title: 'Alert',
+							command: 'Add Bootstrap 5 alert class and style to the selected text. ' +
+								'Use div with class="alert alert-primary" role="alert"'
+						},
+						{
+							title: 'Card',
+							command: 'Create a Bootstrap 5 card structure with class="card". ' +
+								'Include card-header, card-body with card-title and card-text, ' +
+								'and optionally card-footer'
+						},
+						{
+							title: 'Button',
+							command: 'Add Bootstrap 5 button classes (btn btn-primary). ' +
+								'For links use class="btn btn-link"'
+						},
+						{
+							title: 'Badge',
+							command: 'Add Bootstrap 5 badge class to the text (class="badge bg-secondary")'
+						},
+						{
+							title: 'List Group',
+							command: 'Create a Bootstrap 5 list group with class="list-group" and list-group-item for each item'
+						}
+					]
+				},
 				{
 					title: 'Style & Tone',
 					items: [
@@ -141,6 +250,53 @@ ClassicEditor
 		language: {
 			content: 'en',
 			ui: 'en'
+		},
+		htmlSupport: {
+			allow: [
+				{
+					name: /^(div|span|ul|li|button)$/,
+					styles: true,
+					classes: true,
+					attributes: true
+				},
+				{
+					name: 'div',
+					classes: [
+						'alert',
+						'alert-primary',
+						'alert-success',
+						'alert-warning',
+						'alert-danger',
+						'card',
+						'card-header',
+						'card-body',
+						'card-footer'
+					],
+					attributes: {
+						role: true
+					}
+				},
+				{
+					name: 'span',
+					classes: [
+						'btn',
+						'btn-primary',
+						'btn-secondary',
+						'btn-link',
+						'badge',
+						'bg-primary',
+						'bg-secondary'
+					]
+				},
+				{
+					name: 'ul',
+					classes: [ 'list-group' ]
+				},
+				{
+					name: 'li',
+					classes: [ 'list-group-item' ]
+				}
+			]
 		}
 	} )
 	.then( editor => {

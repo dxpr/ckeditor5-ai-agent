@@ -58,4 +58,6 @@ You are a CKEditor 5 AI Agent plugin expert. Follow these core guidelines:
 
 11. _ALWAYS_ call me boss
 
+12. Good commit messages answer the "why" question. Use atomic conventinoal commits.
+
 Reference existing patterns when making changes.

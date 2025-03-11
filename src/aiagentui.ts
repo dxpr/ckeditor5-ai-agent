@@ -39,7 +39,9 @@ export default class AiAgentUI extends Plugin {
 		this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
 		this.commandsDropdown = config?.commandsDropdown ?? getDefaultAiAgentDropdownMenu( editor );
 		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
-		this.tonesDropdown = config?.tonesDropdown ? [ defaultTones[ 0 ], ...config?.tonesDropdown ] : defaultTones;
+		this.tonesDropdown = config?.tonesDropdown ?
+			[ defaultTones[ 0 ], ...config?.tonesDropdown ] :
+			defaultTones;
 	}
 
 	public static get pluginName() {

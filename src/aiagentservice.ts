@@ -86,10 +86,6 @@ export default class AiAgentService {
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
 		const root = model.document.getRoot();
-		const tone = editor.commands.get( 'aiAgentTone' )?.value as string;
-
-		// Only use tone if it's not empty
-		const effectiveTone = tone && tone.trim() !== '' ? tone : undefined;
 
 		let content: string | undefined;
 		let selectedContent: string | undefined;
@@ -155,8 +151,7 @@ export default class AiAgentService {
 			const prompt = await this.generateGptPromptBasedOnUserPrompt(
 				content!,
 				parentEquivalentHTML?.innerHTML,
-				selectedContent,
-				effectiveTone
+				selectedContent
 			);
 			if ( parent && prompt ) {
 				await this.fetchAndProcessGptResponse( !!command, prompt, parent );
@@ -413,7 +408,7 @@ export default class AiAgentService {
 
 		const modelExists = models.find( ( item: string ) => item === model );
 		if ( !modelExists ) {
-			console.error( 'Invalid AI model specified. Available models:', models );
+			console.error( `Invalid AI model specified: "${ model }". Available models:`, models );
 			return {
 				success: false,
 				error: models.join( ' | ' )
@@ -936,8 +931,7 @@ export default class AiAgentService {
 	private async generateGptPromptBasedOnUserPrompt(
 		prompt: string,
 		promptContainerText?: string,
-		selectedContent?: string,
-		tone?: string
+		selectedContent?: string
 	): Promise<string | null> {
 		try {
 			const context = this.promptHelper.trimContext( prompt, promptContainerText );
@@ -959,8 +953,7 @@ export default class AiAgentService {
 				context,
 				selectedContent,
 				markDownContents,
-				isEditorEmpty,
-				tone
+				isEditorEmpty
 			);
 		} catch ( error ) {
 			console.error( error );

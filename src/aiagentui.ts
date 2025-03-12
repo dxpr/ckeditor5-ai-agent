@@ -390,7 +390,8 @@ export default class AiAgentUI extends Plugin {
 				const titleButton = new MenuBarMenuListItemButtonView( locale );
 				titleButton.set( {
 					label: group.title,
-					class: 'ck-menu-group-title'
+					class: 'ck-menu-group-title ck-list-item-button',
+					isEnabled: false
 				} );
 				titleView.children.add( titleButton );
 				listView.items.add( titleView );
@@ -447,7 +448,7 @@ export default class AiAgentUI extends Plugin {
 
 		editor.ui.componentFactory.add( 'aiAgentToneButton', locale => {
 			const dropdownView = createDropdown( locale );
-			dropdownView.class = 'ck-ai-commands-list';
+			dropdownView.class = 'ck-ai-tone-list';
 			const buttonView = dropdownView.buttonView;
 			buttonView.set( {
 				label: t( 'Tone of voice' ),
@@ -464,7 +465,8 @@ export default class AiAgentUI extends Plugin {
 			const titleButton = new MenuBarMenuListItemButtonView( locale );
 			titleButton.set( {
 				label: t( 'Tone' ),
-				class: 'ck-menu-group-title'
+				class: 'ck-menu-group-title ck-list-item-button',
+				isEnabled: false
 			} );
 			titleView.children.add( titleButton );
 			listView.items.add( titleView );

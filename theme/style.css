@@ -184,12 +184,14 @@
 	}
 }
 
-.ck-ai-commands-list .ck.ck-button.ck-list-item-button.ck-menu-group-title {
-	padding-left: 0.6em;
-	font-weight: 600;
+.ck-ai-commands-list .ck.ck-button.ck-list-item-button.ck-menu-group-title,
+.ck-ai-tone-list .ck.ck-button.ck-list-item-button.ck-menu-group-title {
+	/* padding-left: 0.6em; */
+	font-weight: bold !important;
 }
 
-.ck-ai-commands-list .ck.ck-button.ck-list-item-button.ck-menu-group-title .ck-button__label {
+.ck-ai-commands-list .ck.ck-button.ck-list-item-button.ck-menu-group-title .ck-button__label,
+.ck-ai-tone-list .ck.ck-button.ck-list-item-button.ck-menu-group-title .ck-button__label {
 	opacity: 1;
 }
 
@@ -202,7 +204,7 @@
 	align-items: flex-start;
 }
 
-.ck-ai-commands-list .ck.ck-reset.ck-list li:first-child .ck-ask-ai-to-edit-button{
+.ck-ai-commands-list .ck.ck-reset.ck-list li:first-child .ck-ask-ai-to-edit-button {
 	padding: 6px 12px;
 	align-self: flex-end;
 }

@@ -141,6 +141,29 @@ ClassicEditor
 					label: 'Professional',
 					tone: 'Use technical and formal language suitable for healthcare professionals.'
 				}
+			],
+			commandsDropdown: [
+				{
+					title: 'Transform Content',
+					items: [
+						{
+							title: 'Summarize',
+							command: 'Summarize this text in 3-5 bullet points'
+						},
+						{
+							title: 'Simplify Language',
+							command: 'Rewrite this text using simpler language while preserving the key information'
+						},
+						{
+							title: 'Fix Grammar & Style',
+							command: 'Correct any grammar, spelling, or style issues in this text'
+						},
+						{
+							title: 'Convert to Table',
+							command: 'Convert this content into a well-structured HTML table with appropriate headers'
+						}
+					]
+				}
 			]
 		},
 		language: {

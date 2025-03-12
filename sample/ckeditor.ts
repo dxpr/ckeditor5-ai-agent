@@ -134,12 +134,12 @@ ClassicEditor
 			debugMode: true,
 			tonesDropdown: [
 				{
-					title: 'Patient-Friendly',
-					command: 'Write in a warm, clear, and simple way for patients to understand.'
+					label: 'Patient-Friendly',
+					tone: 'Write in a warm, clear, and simple way for patients to understand.'
 				},
 				{
-					title: 'Professional',
-					command: 'Use technical and formal language suitable for healthcare professionals.'
+					label: 'Professional',
+					tone: 'Use technical and formal language suitable for healthcare professionals.'
 				}
 			]
 		},

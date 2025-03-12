@@ -478,7 +478,7 @@ export default class AiAgentUI extends Plugin {
 				checkIconView.set( {
 					content: checkIcon
 				} );
-				checkIconView.isVisible = item.command === '' ? true : false;
+				checkIconView.isVisible = item.tone === '' ? true : false;
 				checkIcons.push( checkIconView );
 
 				const spanView = new View( locale );
@@ -493,7 +493,7 @@ export default class AiAgentUI extends Plugin {
 
 				buttonView.children.add( spanView );
 				buttonView.set( {
-					label: item.title,
+					label: item.label,
 					class: 'ck-menu-item'
 				} );
 				buttonView.delegate( 'execute' ).to( menuView );
@@ -506,7 +506,7 @@ export default class AiAgentUI extends Plugin {
 					} );
 					checkIconView.isVisible = true;
 					editor.execute( 'aiAgentTone', {
-						value: item.command
+						value: item.tone
 					} );
 					editor.editing.view.focus();
 				} );

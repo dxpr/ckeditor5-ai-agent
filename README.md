@@ -313,6 +313,41 @@ ClassicEditor
     } );
 ```
 
+### Configuring Command Dropdown
+
+The `commandsDropdown` configuration option allows you to define preset commands for transforming selected content. These commands are primarily designed to edit, enhance, or reformat existing content rather than generating new content from scratch.
+
+Example configuration:
+
+```typescript
+ClassicEditor
+    .create( document.querySelector( '#editor' ), {
+        plugins: [ AiAgent, ... ],
+        toolbar: [ 'aiAgentButton', ... ],
+        aiAgent: {
+            apiKey: 'YOUR_API_KEY',
+            commandsDropdown: [
+                {
+                    title: 'Transform Content',
+                    items: [
+                        {
+                            title: 'Summarize',
+                            command: 'Summarize this text in 3 bullet points'
+                        },
+                        {
+                            title: 'Simplify',
+                            command: 'Rewrite this to be more concise and easier to understand'
+                        }
+                    ]
+                }
+            ]
+        }
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+```
+
 ## Development
 
 This package uses Yarn as the package manager. Here are the main commands available for development:

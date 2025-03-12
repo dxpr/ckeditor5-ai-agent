@@ -312,3 +312,33 @@ ClassicEditor
         console.error( error );
     } );
 ```
+
+## Development
+
+This package uses Yarn as the package manager. Here are the main commands available for development:
+
+### Building
+
+```bash
+# Build the distribution files
+yarn build:dist
+
+# Build TypeScript files
+yarn ts:build
+
+# Build DLL files
+yarn dll:build
+
+# Clear TypeScript generated files
+yarn ts:clear
+```
+
+### Development Server
+
+```bash
+# Start development server
+yarn start
+
+# Serve DLL sample
+yarn dll:serve
+```

@@ -270,7 +270,6 @@ export default class AiAgentService {
 		parent: Element,
 		retries: number = this.retryAttempts
 	): Promise<void> {
-		console.log( 'Starting fetchAndProcessGptResponse' );
 		const editor = this.editor;
 		const t = editor.t;
 		const controller = new AbortController();

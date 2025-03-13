@@ -93,16 +93,18 @@ export function getAllowedHtmlTags( editor: Editor ): Array<string> {
 }
 
 /**
- * Gets the allowed HTML classes from the GeneralHtmlSupport configuration.
+ * Gets the allowed HTML classes from the GeneralHtmlSupport configuration and Style plugin.
  *
  * @param editor - The CKEditor instance
- * @returns Array of allowed HTML class names
+ * @returns Object containing allowed classes and a flag indicating if any element allows all classes
  */
-export function getAllowedHtmlClasses( editor: Editor ): Array<string> {
+export function getAllowedHtmlClasses( editor: Editor ): { classes: Array<string>; allowsAllClasses: boolean } {
 	const allowedClasses = new Set<string>();
+	let allowsAllClasses = false;
 
 	// Add classes from GeneralHtmlSupport configuration if available
 	const htmlSupportConfig = editor.config.get( 'htmlSupport' );
+
 	if ( htmlSupportConfig && htmlSupportConfig.allow ) {
 		htmlSupportConfig.allow.forEach( ( rule: any ) => {
 			if ( rule.classes ) {
@@ -115,10 +117,109 @@ export function getAllowedHtmlClasses( editor: Editor ): Array<string> {
 					} );
 				}
 				// Handle true value (all classes allowed for this element)
-				// We don't add anything in this case as we can't enumerate all possible classes
+				else if ( rule.classes === true ) {
+					allowsAllClasses = true;
+				}
 			}
 		} );
 	}
 
-	return Array.from( allowedClasses ).sort();
+	// Add classes from Style plugin definitions if available
+	const styleConfig = editor.config.get( 'style' );
+	if ( styleConfig && styleConfig.definitions ) {
+		styleConfig.definitions.forEach( ( definition: any ) => {
+			if ( definition.classes && Array.isArray( definition.classes ) ) {
+				definition.classes.forEach( ( className: string ) => {
+					if ( typeof className === 'string' ) {
+						allowedClasses.add( className );
+					}
+				} );
+			}
+		} );
+	}
+
+	return {
+		classes: Array.from( allowedClasses ).sort(),
+		allowsAllClasses
+	};
+}
+
+/**
+ * Gets the allowed HTML styles from the GeneralHtmlSupport configuration.
+ *
+ * @param editor - The CKEditor instance
+ * @returns Object containing allowed styles and a flag indicating if any element allows all styles
+ */
+export function getAllowedHtmlStyles( editor: Editor ): { styles: Array<string>; allowsAllStyles: boolean } {
+	const allowedStyles = new Set<string>();
+	let allowsAllStyles = false;
+
+	// Add styles from GeneralHtmlSupport configuration if available
+	const htmlSupportConfig = editor.config.get( 'htmlSupport' );
+	if ( htmlSupportConfig && htmlSupportConfig.allow ) {
+		htmlSupportConfig.allow.forEach( ( rule: any ) => {
+			if ( rule.styles ) {
+				// Handle object with specific styles
+				if ( typeof rule.styles === 'object' && rule.styles !== null && !Array.isArray( rule.styles ) ) {
+					Object.entries( rule.styles ).forEach( ( [ styleName, styleValue ] ) => {
+						// If the style value is true (meaning any value is allowed) or a specific value
+						if ( styleValue === true ) {
+							allowedStyles.add( `${ styleName }: *` );
+						} else if ( typeof styleValue === 'string' ) {
+							allowedStyles.add( `${ styleName }: ${ styleValue }` );
+						}
+					} );
+				}
+				// Handle true value (all styles allowed for this element)
+				else if ( rule.styles === true ) {
+					allowsAllStyles = true;
+				}
+			}
+		} );
+	}
+
+	return {
+		styles: Array.from( allowedStyles ).sort(),
+		allowsAllStyles
+	};
+}
+
+/**
+ * Gets the allowed HTML attributes from the GeneralHtmlSupport configuration.
+ *
+ * @param editor - The CKEditor instance
+ * @returns Object containing allowed attributes and a flag indicating if any element allows all attributes
+ */
+export function getAllowedHtmlAttributes( editor: Editor ): { attributes: Array<string>; allowsAllAttributes: boolean } {
+	const allowedAttributes = new Set<string>();
+	let allowsAllAttributes = false;
+
+	// Add attributes from GeneralHtmlSupport configuration if available
+	const htmlSupportConfig = editor.config.get( 'htmlSupport' );
+	if ( htmlSupportConfig && htmlSupportConfig.allow ) {
+		htmlSupportConfig.allow.forEach( ( rule: any ) => {
+			if ( rule.attributes ) {
+				// Handle object with specific attributes
+				if ( typeof rule.attributes === 'object' && rule.attributes !== null && !Array.isArray( rule.attributes ) ) {
+					Object.entries( rule.attributes ).forEach( ( [ attrName, attrValue ] ) => {
+						// If the attribute value is true (meaning any value is allowed) or a specific value
+						if ( attrValue === true ) {
+							allowedAttributes.add( `${ attrName }="*"` );
+						} else if ( typeof attrValue === 'string' ) {
+							allowedAttributes.add( `${ attrName }="${ attrValue }"` );
+						}
+					} );
+				}
+				// Handle true value (all attributes allowed for this element)
+				else if ( rule.attributes === true ) {
+					allowsAllAttributes = true;
+				}
+			}
+		} );
+	}
+
+	return {
+		attributes: Array.from( allowedAttributes ).sort(),
+		allowsAllAttributes
+	};
 }

@@ -1,6 +1,6 @@
 import type { AiModel, AiEngine, AIApiConfig } from '../type-identifiers.js';
 import CustomError, { getError } from './custom-error.js';
-import { getAllowedHtmlTags, getAllowedHtmlClasses } from './html-utils.js';
+import { getAllowedHtmlTags, getAllowedHtmlClasses, getAllowedHtmlStyles, getAllowedHtmlAttributes } from './html-utils.js';
 import type { Editor } from 'ckeditor5/src/core.js';
 
 export class AIApi {
@@ -82,9 +82,42 @@ export class AIApi {
 			requestBody.allowed_html_tags = allowedTags.join( ', ' );
 
 			// Add allowed_html_classes if available
-			const allowedClasses = getAllowedHtmlClasses( this.editor );
+			const { classes: allowedClasses, allowsAllClasses } = getAllowedHtmlClasses( this.editor );
+
+			// If all classes are allowed, set a special flag
+			if ( allowsAllClasses ) {
+				requestBody.allows_all_html_classes = true;
+			}
+
+			// Always send the specific classes if available
 			if ( allowedClasses.length > 0 ) {
 				requestBody.allowed_html_classes = allowedClasses.join( ', ' );
+			}
+
+			// Add allowed_html_styles if available
+			const { styles: allowedStyles, allowsAllStyles } = getAllowedHtmlStyles( this.editor );
+
+			// If all styles are allowed, set a special flag
+			if ( allowsAllStyles ) {
+				requestBody.allows_all_html_styles = true;
+			}
+
+			// Always send the specific styles if available
+			if ( allowedStyles.length > 0 ) {
+				requestBody.allowed_html_styles = allowedStyles.join( ', ' );
+			}
+
+			// Add allowed_html_attributes if available
+			const { attributes: allowedAttributes, allowsAllAttributes } = getAllowedHtmlAttributes( this.editor );
+
+			// If all attributes are allowed, set a special flag
+			if ( allowsAllAttributes ) {
+				requestBody.allows_all_html_attributes = true;
+			}
+
+			// Always send the specific attributes if available
+			if ( allowedAttributes.length > 0 ) {
+				requestBody.allowed_html_attributes = allowedAttributes.join( ', ' );
 			}
 
 			// Add providers if available

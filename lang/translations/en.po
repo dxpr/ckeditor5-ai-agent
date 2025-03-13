@@ -373,3 +373,27 @@ msgstr "Conversational"
 msgctxt "Authoritative"
 msgid "Authoritative"
 msgstr "Authoritative"
+
+msgctxt "Default tone"
+msgid "Default tone"
+msgstr "Default tone"
+
+msgctxt "Educational"
+msgid "Educational"
+msgstr "Educational"
+
+msgctxt "Persuasive"
+msgid "Persuasive"
+msgstr "Persuasive"
+
+msgctxt "Approachable"
+msgid "Approachable"
+msgstr "Approachable"
+
+msgctxt "Formal"
+msgid "Formal"
+msgstr "Formal"
+
+msgctxt "Inspirational"
+msgid "Inspirational"
+msgstr "Inspirational"

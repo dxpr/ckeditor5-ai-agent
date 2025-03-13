@@ -145,12 +145,30 @@ ClassicEditor
 				{
 					label: 'Professional',
 					tone: 'Use technical and formal language suitable for healthcare professionals.'
+				},
+				{
+					label: 'Educational',
+					tone: 'Explain concepts clearly with an informative approach that helps readers understand complex topics.'
+				},
+				{
+					label: 'Persuasive',
+					tone: 'Use compelling language to convince readers and support arguments with strong reasoning.'
+				},
+				{
+					label: 'Inspirational',
+					tone: 'Use motivational language that encourages action and creates a sense of possibility.'
 				}
 			],
 			commandsDropdown: [
 				{
 					title: 'Transform Content',
 					items: [
+						{
+							title: 'Improve Tone of Voice',
+							command:
+								`Rewrite the content to match the TONE while preserving the key message and meaning.
+								Ensure the writing style is consistent.\nYou must keep the text formatting.`
+						},
 						{
 							title: 'Summarize',
 							command: 'Summarize this text in 3-5 bullet points'

@@ -87,11 +87,11 @@
 	"Improve Tone of Voice": "Option to enhance and adjust the tone/voice of the content",
 	"Tone of voice": "Label for the tone of voice dropdown menu",
 	"Tone": "Fixed header label for the tone dropdown menu",
-	"Default tone": "Default tone option in the tone dropdown menu",
-	"Patient-Friendly": "Patient-Friendly",
+	"Default tone": "Default tone",
 	"Professional": "Professional",
-	"Encouraging": "Encouraging",
-	"Neutral": "Neutral",
-	"Conversational": "Conversational",
-	"Authoritative": "Authoritative"
+	"Educational": "Educational",
+	"Persuasive": "Persuasive",
+	"Approachable": "Approachable",
+	"Formal": "Formal",
+	"Inspirational": "Inspirational"
 }

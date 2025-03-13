@@ -157,28 +157,28 @@ export function getDefaultAiAgentToneDropdownMenu(
 			tone: ''
 		},
 		{
-			label: t( 'Patient-Friendly' ),
-			tone: 'Write in a warm, clear, and simple way for patients to understand.'
-		},
-		{
 			label: t( 'Professional' ),
-			tone: 'Use technical and formal language suitable for healthcare professionals.'
+			tone: 'Use clear, concise language with a business-appropriate tone suitable for formal contexts.'
 		},
 		{
-			label: t( 'Encouraging' ),
-			tone: 'Provide positive reinforcement and motivation.'
+			label: t( 'Educational' ),
+			tone: 'Explain concepts clearly with an informative approach that helps readers understand complex topics.'
 		},
 		{
-			label: t( 'Neutral' ),
-			tone: 'Maintain a balanced and neutral tone without bias.'
+			label: t( 'Persuasive' ),
+			tone: 'Use compelling language to convince readers and support arguments with strong reasoning.'
 		},
 		{
-			label: t( 'Conversational' ),
-			tone: 'Write in a friendly and engaging manner, as if speaking directly to the reader.'
+			label: t( 'Approachable' ),
+			tone: 'Write in a friendly and accessible manner while maintaining professionalism.'
 		},
 		{
-			label: t( 'Authoritative' ),
-			tone: 'Use a confident and knowledgeable voice, ideal for expert content.'
+			label: t( 'Formal' ),
+			tone: 'Employ precise, structured language appropriate for official documentation and communications.'
+		},
+		{
+			label: t( 'Inspirational' ),
+			tone: 'Use motivational language that encourages action and creates a sense of possibility.'
 		}
 	];
 }

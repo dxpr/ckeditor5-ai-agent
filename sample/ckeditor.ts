@@ -126,6 +126,11 @@ ClassicEditor
 					name: 'Badge Secondary',
 					element: 'span',
 					classes: [ 'badge', 'bg-secondary' ]
+				},
+				{
+					name: 'Smurf test ',
+					element: 'span',
+					classes: [ 'smurf', 'smurf-test' ]
 				}
 			]
 		},
@@ -173,9 +178,10 @@ ClassicEditor
 		htmlSupport: {
 			allow: [
 				{
-					name: /^(span|div)$/,
+					name: /.*/,
+					attributes: true,
 					classes: true,
-					attributes: true
+					styles: true
 				},
 				{
 					name: 'div',

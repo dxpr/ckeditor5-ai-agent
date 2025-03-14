@@ -25,6 +25,10 @@ export default class AiAgentToneCommand extends Command {
 			[ defaultTones[ 0 ], ...config.tonesDropdown ] :
 			defaultTones;
 
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] Available tones:', this.availableTones );
+		}
+
 		// Initialize with the stored tone or default to empty string
 		this.value = this.loadToneSelection() || '';
 	}
@@ -37,6 +41,10 @@ export default class AiAgentToneCommand extends Command {
 	 * @param options - An object containing the tone value to set.
 	 */
 	public override async execute( { value }: { value: string } ): Promise<void> {
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] Execute method called with value:', value );
+		}
+
 		// Set the value directly, replacing any previous tone
 		this.value = value;
 		this.fire( 'change:value', { value } );
@@ -47,8 +55,19 @@ export default class AiAgentToneCommand extends Command {
 
 		// Find the label for the selected tone value and persist it to localStorage
 		const selectedTone = this.availableTones.find( item => item.tone === value );
+
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] Selected tone found:', !!selectedTone, selectedTone );
+		}
+
 		if ( selectedTone ) {
+			if ( this.debugMode ) {
+				console.log( '[TONE DEBUG] About to save tone selection:', selectedTone.label );
+			}
 			this.saveToneSelection( selectedTone.label );
+		} else if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] No matching tone found for value:', value );
+			console.log( '[TONE DEBUG] Available tones:', this.availableTones );
 		}
 	}
 
@@ -59,12 +78,20 @@ export default class AiAgentToneCommand extends Command {
 	 * @param toneLabel - The label of the selected tone to save.
 	 */
 	private saveToneSelection( toneLabel: string ): void {
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] saveToneSelection called with label:', toneLabel );
+		}
+
 		try {
 			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
 
 			// Compare with models endpoint cache key format
 			const modelsKey = `${ this.STORAGE_PREFIX }:openai_models`;
 			const hasModelsCache = localStorage.getItem( modelsKey ) !== null;
+
+			if ( this.debugMode ) {
+				console.log( '[TONE DEBUG] About to write to localStorage:', { key, toneLabel } );
+			}
 
 			localStorage.setItem( key, toneLabel );
 

@@ -15,6 +15,11 @@ export default class AiAgentToneCommand extends Command {
 		// Store available tones for validation when loading from storage
 		const config = editor.config.get( 'aiAgent' );
 		this.debugMode = !!config?.debugMode;
+
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] Debug mode enabled:', this.debugMode );
+		}
+
 		const defaultTones = this._getDefaultTones();
 		this.availableTones = config?.tonesDropdown ?
 			[ defaultTones[ 0 ], ...config.tonesDropdown ] :
@@ -35,6 +40,10 @@ export default class AiAgentToneCommand extends Command {
 		// Set the value directly, replacing any previous tone
 		this.value = value;
 		this.fire( 'change:value', { value } );
+
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] Tone selected:', value );
+		}
 
 		// Find the label for the selected tone value and persist it to localStorage
 		const selectedTone = this.availableTones.find( item => item.tone === value );
@@ -61,7 +70,7 @@ export default class AiAgentToneCommand extends Command {
 
 			if ( this.debugMode ) {
 				const savedValue = localStorage.getItem( key );
-				console.log( '[DEBUG] Tone localStorage:', {
+				console.log( '[TONE DEBUG] localStorage write:', {
 					key,
 					value: toneLabel,
 					savedValue,
@@ -70,8 +79,12 @@ export default class AiAgentToneCommand extends Command {
 				} );
 			}
 		} catch ( error ) {
-			// Fail silently if localStorage is not available
-			console.warn( 'Could not save tone to localStorage', error );
+			// Log errors only in debug mode, otherwise fail silently
+			if ( this.debugMode ) {
+				console.warn( '[TONE DEBUG] localStorage error:', error );
+			} else {
+				console.warn( 'Could not save tone to localStorage', error );
+			}
 		}
 	}
 
@@ -87,6 +100,13 @@ export default class AiAgentToneCommand extends Command {
 			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
 			const storedToneLabel = localStorage.getItem( key );
 
+			if ( this.debugMode ) {
+				console.log( '[TONE DEBUG] localStorage read:', {
+					key,
+					value: storedToneLabel
+				} );
+			}
+
 			if ( !storedToneLabel ) {
 				return null;
 			}
@@ -94,13 +114,26 @@ export default class AiAgentToneCommand extends Command {
 			// Find the tone description that matches the stored label
 			if ( this.availableTones.length ) {
 				const matchingTone = this.availableTones.find( item => item.label === storedToneLabel );
+
+				if ( this.debugMode ) {
+					console.log( '[TONE DEBUG] Matching tone:', {
+						storedLabel: storedToneLabel,
+						found: !!matchingTone,
+						availableTones: this.availableTones.map( t => t.label )
+					} );
+				}
+
 				return matchingTone ? matchingTone.tone : null;
 			}
 
 			return null;
 		} catch ( error ) {
-			// Fail silently if localStorage is not available
-			console.warn( 'Could not load tone from localStorage', error );
+			// Log errors only in debug mode, otherwise fail silently
+			if ( this.debugMode ) {
+				console.warn( '[TONE DEBUG] localStorage read error:', error );
+			} else {
+				console.warn( 'Could not load tone from localStorage', error );
+			}
 			return null;
 		}
 	}

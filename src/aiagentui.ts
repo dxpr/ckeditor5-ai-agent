@@ -446,6 +446,10 @@ export default class AiAgentUI extends Plugin {
 		const editor = this.editor;
 		const t = editor.t;
 
+		// Get the current tone value from the command (which may be loaded from localStorage)
+		const toneCommand = editor.commands.get( 'aiAgentTone' );
+		const currentToneValue = toneCommand?.value as string || '';
+
 		editor.ui.componentFactory.add( 'aiAgentToneButton', locale => {
 			const dropdownView = createDropdown( locale );
 			dropdownView.class = 'ck-ai-tone-list';
@@ -478,7 +482,10 @@ export default class AiAgentUI extends Plugin {
 				checkIconView.set( {
 					content: checkIcon
 				} );
-				checkIconView.isVisible = item.tone === '' ? true : false;
+
+				// Set initial visibility based on the current tone value from localStorage
+				// The command now loads the tone description based on the stored label
+				checkIconView.isVisible = item.tone === currentToneValue;
 				checkIcons.push( checkIconView );
 
 				const spanView = new View( locale );

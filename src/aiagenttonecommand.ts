@@ -17,12 +17,6 @@ export default class AiAgentToneCommand extends Command {
 		const config = editor.config.get( 'aiAgent' );
 		this.debugMode = !!config?.debugMode;
 
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] Debug mode enabled:', this.debugMode );
-			console.log( '[TONE DEBUG] Editor ID:', editor.id );
-			console.log( '[TONE DEBUG] AiAgentToneCommand constructor called' );
-		}
-
 		// Get default tones from the shared utility function
 		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
 
@@ -32,15 +26,16 @@ export default class AiAgentToneCommand extends Command {
 			defaultTones;
 
 		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] Available tones:', this.availableTones );
+			// CRITICAL DEBUG: Show what tones are available at initialization
+			console.log( '[TONE DEBUG] Available tones at init:', {
+				defaultTones,
+				configTones: config?.tonesDropdown || [],
+				mergedTones: this.availableTones.map( t => t.label )
+			} );
 		}
 
 		// Initialize with the stored tone or default to empty string
 		this.value = this.loadToneSelection() || '';
-
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] Initial tone value:', this.value );
-		}
 	}
 
 	/**
@@ -51,17 +46,9 @@ export default class AiAgentToneCommand extends Command {
 	 * @param options - An object containing the tone value to set.
 	 */
 	public override async execute( { value }: { value: string } ): Promise<void> {
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] Execute method called with value:', value );
-		}
-
 		// Set the value directly, replacing any previous tone
 		this.value = value;
 		this.fire( 'change:value', { value } );
-
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] Tone selected:', value );
-		}
 
 		// First try to find an exact match for the tone value
 		let selectedTone = this.availableTones.find( item => item.tone === value );
@@ -93,10 +80,6 @@ export default class AiAgentToneCommand extends Command {
 			const matchedLabel = toneDescriptions[ value ];
 			if ( matchedLabel ) {
 				selectedTone = this.availableTones.find( item => item.label === matchedLabel );
-
-				if ( this.debugMode && selectedTone ) {
-					console.log( '[TONE DEBUG] Matched by known description:', matchedLabel );
-				}
 			}
 		}
 
@@ -110,30 +93,10 @@ export default class AiAgentToneCommand extends Command {
 				label: selectedLabel,
 				tone: value // Use the full description as the tone value
 			};
-
-			if ( this.debugMode ) {
-				console.log( '[TONE DEBUG] Created temporary tone object:', selectedTone );
-			}
-		}
-
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] Selected tone found:', !!selectedTone, selectedTone );
 		}
 
 		if ( selectedTone ) {
-			if ( this.debugMode ) {
-				console.log( '[TONE DEBUG] About to save tone selection:', selectedTone.label );
-			}
 			this.saveToneSelection( selectedTone.label );
-		} else if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] No matching tone found for value:', value );
-			console.log( '[TONE DEBUG] Available tones:', this.availableTones );
-
-			// As a last resort, save the value directly if it's a string
-			if ( typeof value === 'string' && value.trim() ) {
-				console.log( '[TONE DEBUG] Saving value directly as label:', value );
-				this.saveToneSelection( value );
-			}
 		}
 	}
 
@@ -144,35 +107,21 @@ export default class AiAgentToneCommand extends Command {
 	 * @param toneLabel - The label of the selected tone to save.
 	 */
 	private saveToneSelection( toneLabel: string ): void {
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] saveToneSelection called with label:', toneLabel );
-		}
-
 		try {
 			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
-
-			// Compare with models endpoint cache key format
-			const modelsKey = `${ this.STORAGE_PREFIX }:openai_models`;
-			const hasModelsCache = localStorage.getItem( modelsKey ) !== null;
-
-			if ( this.debugMode ) {
-				console.log( '[TONE DEBUG] About to write to localStorage:', { key, toneLabel } );
-			}
-
 			localStorage.setItem( key, toneLabel );
 
 			if ( this.debugMode ) {
+				// CRITICAL DEBUG: Verify the tone was actually saved
 				const savedValue = localStorage.getItem( key );
-				console.log( '[TONE DEBUG] localStorage write:', {
+				console.log( '[TONE DEBUG] Tone saved to localStorage:', {
 					key,
-					value: toneLabel,
+					toneLabel,
 					savedValue,
-					modelsKey,
-					hasModelsCache
+					success: savedValue === toneLabel
 				} );
 			}
 		} catch ( error ) {
-			// Log errors only in debug mode, otherwise fail silently
 			if ( this.debugMode ) {
 				console.warn( '[TONE DEBUG] localStorage error:', error );
 			} else {
@@ -189,31 +138,11 @@ export default class AiAgentToneCommand extends Command {
 	 * @returns The current tone description string or null if not found or invalid.
 	 */
 	private loadToneSelection(): string | null {
-		if ( this.debugMode ) {
-			console.log( '[TONE DEBUG] loadToneSelection called' );
-		}
-
 		try {
 			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
-
-			if ( this.debugMode ) {
-				console.log( '[TONE DEBUG] Attempting to read from localStorage with key:', key );
-			}
-
 			const storedToneLabel = localStorage.getItem( key );
 
-			if ( this.debugMode ) {
-				console.log( '[TONE DEBUG] Raw localStorage value:', storedToneLabel );
-				console.log( '[TONE DEBUG] localStorage read:', {
-					key,
-					value: storedToneLabel
-				} );
-			}
-
 			if ( !storedToneLabel ) {
-				if ( this.debugMode ) {
-					console.log( '[TONE DEBUG] No stored tone found in localStorage' );
-				}
 				return null;
 			}
 
@@ -222,15 +151,13 @@ export default class AiAgentToneCommand extends Command {
 				const matchingTone = this.availableTones.find( item => item.label === storedToneLabel );
 
 				if ( this.debugMode ) {
-					console.log( '[TONE DEBUG] Matching tone:', {
+					// CRITICAL DEBUG: Show if we found a matching tone for the stored label
+					console.log( '[TONE DEBUG] Loading tone from localStorage:', {
 						storedLabel: storedToneLabel,
+						availableToneLabels: this.availableTones.map( t => t.label ),
 						found: !!matchingTone,
-						availableTones: this.availableTones.map( t => t.label )
+						loadedValue: matchingTone ? matchingTone.tone : null
 					} );
-
-					if ( !matchingTone ) {
-						console.log( '[TONE DEBUG] No matching tone found for stored label:', storedToneLabel );
-					}
 				}
 
 				return matchingTone ? matchingTone.tone : null;
@@ -238,7 +165,6 @@ export default class AiAgentToneCommand extends Command {
 
 			return null;
 		} catch ( error ) {
-			// Log errors only in debug mode, otherwise fail silently
 			if ( this.debugMode ) {
 				console.warn( '[TONE DEBUG] localStorage read error:', error );
 			} else {

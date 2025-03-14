@@ -302,6 +302,10 @@ msgctxt "Edit or review"
 msgid "Edit or review"
 msgstr "Edit or review"
 
+msgctxt "Polish Text"
+msgid "Polish Text"
+msgstr "Polish Text"
+
 msgctxt "Fix Mistakes"
 msgid "Fix Mistakes"
 msgstr "Fix Mistakes"

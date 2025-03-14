@@ -314,9 +314,9 @@ msgctxt "Edit or review"
 msgid "Edit or review"
 msgstr "Editar o revisar"
 
-msgctxt "Fix Mistakes"
-msgid "Fix Mistakes"
-msgstr "Mejorar la escritura"
+msgctxt "Polish Text"
+msgid "Polish Text"
+msgstr "Pulir el texto"
 
 msgctxt "Make Shorter"
 msgid "Make Shorter"

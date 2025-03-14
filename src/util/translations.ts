@@ -94,7 +94,7 @@ export function getDefaultAiAgentDropdownMenu(
 			title: t( 'Edit or review' ),
 			items: [
 				{
-					title: t( 'Fix Mistakes' ),
+					title: t( 'Polish Text' ),
 					command:
 						`Fix spelling mistakes, use proper grammar and apply good writing practices.
 						Do not lose the original meaning.\nYou must keep the text formatting.`

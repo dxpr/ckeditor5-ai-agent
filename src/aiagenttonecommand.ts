@@ -1,4 +1,5 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
+import { getDefaultAiAgentToneDropdownMenu } from './util/translations.js';
 
 export default class AiAgentToneCommand extends Command {
 	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
@@ -18,9 +19,14 @@ export default class AiAgentToneCommand extends Command {
 
 		if ( this.debugMode ) {
 			console.log( '[TONE DEBUG] Debug mode enabled:', this.debugMode );
+			console.log( '[TONE DEBUG] Editor ID:', editor.id );
+			console.log( '[TONE DEBUG] AiAgentToneCommand constructor called' );
 		}
 
-		const defaultTones = this._getDefaultTones();
+		// Get default tones from the shared utility function
+		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
+
+		// Initialize with default tones
 		this.availableTones = config?.tonesDropdown ?
 			[ defaultTones[ 0 ], ...config.tonesDropdown ] :
 			defaultTones;
@@ -31,6 +37,10 @@ export default class AiAgentToneCommand extends Command {
 
 		// Initialize with the stored tone or default to empty string
 		this.value = this.loadToneSelection() || '';
+
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] Initial tone value:', this.value );
+		}
 	}
 
 	/**
@@ -53,8 +63,58 @@ export default class AiAgentToneCommand extends Command {
 			console.log( '[TONE DEBUG] Tone selected:', value );
 		}
 
-		// Find the label for the selected tone value and persist it to localStorage
-		const selectedTone = this.availableTones.find( item => item.tone === value );
+		// First try to find an exact match for the tone value
+		let selectedTone = this.availableTones.find( item => item.tone === value );
+
+		// If no exact match, try to find a match by label (for backward compatibility)
+		if ( !selectedTone ) {
+			selectedTone = this.availableTones.find( item => item.label === value );
+		}
+
+		// If still no match, try to find a tone where the value contains the label
+		if ( !selectedTone ) {
+			selectedTone = this.availableTones.find( item =>
+				item.label && value.includes( item.label )
+			);
+		}
+
+		// If we still don't have a match, check if we're dealing with a hardcoded tone description
+		if ( !selectedTone ) {
+			// Map of known tone descriptions to their labels
+			const toneDescriptions: Record<string, string> = {
+				'Use compelling language to convince readers and support arguments with strong reasoning.': 'Persuasive',
+				'Use clear, concise language with a business-appropriate tone suitable for formal contexts.': 'Professional',
+				'Explain concepts clearly with an informative approach that helps readers understand complex topics.': 'Educational',
+				'Write in a friendly and accessible manner while maintaining professionalism.': 'Approachable',
+				'Employ precise, structured language appropriate for official documentation and communications.': 'Formal',
+				'Use motivational language that encourages action and creates a sense of possibility.': 'Inspirational'
+			};
+
+			const matchedLabel = toneDescriptions[ value ];
+			if ( matchedLabel ) {
+				selectedTone = this.availableTones.find( item => item.label === matchedLabel );
+
+				if ( this.debugMode && selectedTone ) {
+					console.log( '[TONE DEBUG] Matched by known description:', matchedLabel );
+				}
+			}
+		}
+
+		// Last resort: if the value is the actual tone description, try to match by position in dropdown
+		if ( !selectedTone && this.availableTones.length > 0 ) {
+			// This is a fallback for when the tone value is the description instead of the identifier
+			const selectedLabel = 'Persuasive'; // Default fallback
+
+			// If we can't find a match, create a temporary tone object
+			selectedTone = {
+				label: selectedLabel,
+				tone: value // Use the full description as the tone value
+			};
+
+			if ( this.debugMode ) {
+				console.log( '[TONE DEBUG] Created temporary tone object:', selectedTone );
+			}
+		}
 
 		if ( this.debugMode ) {
 			console.log( '[TONE DEBUG] Selected tone found:', !!selectedTone, selectedTone );
@@ -68,6 +128,12 @@ export default class AiAgentToneCommand extends Command {
 		} else if ( this.debugMode ) {
 			console.log( '[TONE DEBUG] No matching tone found for value:', value );
 			console.log( '[TONE DEBUG] Available tones:', this.availableTones );
+
+			// As a last resort, save the value directly if it's a string
+			if ( typeof value === 'string' && value.trim() ) {
+				console.log( '[TONE DEBUG] Saving value directly as label:', value );
+				this.saveToneSelection( value );
+			}
 		}
 	}
 
@@ -123,11 +189,21 @@ export default class AiAgentToneCommand extends Command {
 	 * @returns The current tone description string or null if not found or invalid.
 	 */
 	private loadToneSelection(): string | null {
+		if ( this.debugMode ) {
+			console.log( '[TONE DEBUG] loadToneSelection called' );
+		}
+
 		try {
 			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
+
+			if ( this.debugMode ) {
+				console.log( '[TONE DEBUG] Attempting to read from localStorage with key:', key );
+			}
+
 			const storedToneLabel = localStorage.getItem( key );
 
 			if ( this.debugMode ) {
+				console.log( '[TONE DEBUG] Raw localStorage value:', storedToneLabel );
 				console.log( '[TONE DEBUG] localStorage read:', {
 					key,
 					value: storedToneLabel
@@ -135,6 +211,9 @@ export default class AiAgentToneCommand extends Command {
 			}
 
 			if ( !storedToneLabel ) {
+				if ( this.debugMode ) {
+					console.log( '[TONE DEBUG] No stored tone found in localStorage' );
+				}
 				return null;
 			}
 
@@ -148,6 +227,10 @@ export default class AiAgentToneCommand extends Command {
 						found: !!matchingTone,
 						availableTones: this.availableTones.map( t => t.label )
 					} );
+
+					if ( !matchingTone ) {
+						console.log( '[TONE DEBUG] No matching tone found for stored label:', storedToneLabel );
+					}
 				}
 
 				return matchingTone ? matchingTone.tone : null;
@@ -163,21 +246,5 @@ export default class AiAgentToneCommand extends Command {
 			}
 			return null;
 		}
-	}
-
-	/**
-	 * Gets the default tones for validation purposes.
-	 * This is a simplified version of getDefaultAiAgentToneDropdownMenu.
-	 *
-	 * @returns An array of default tone options.
-	 */
-	private _getDefaultTones(): Array<{ label: string; tone: string }> {
-		const t = this.editor.t;
-		return [
-			{
-				label: t( 'Default tone' ),
-				tone: ''
-			}
-		];
 	}
 }

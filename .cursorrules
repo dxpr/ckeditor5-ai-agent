@@ -60,6 +60,6 @@ You are a CKEditor 5 AI Agent plugin expert. Follow these core guidelines:
 
 12. Good commit messages answer the "why" question. Use atomic conventinoal commits.
 
-13. Start server: when starting the server to manually test changes always use this command: `yarn run ts:build;yarn start`
+13. If needed Start serverwith command: `yarn run ts:build;yarn start`
 
 Reference existing patterns when making changes.

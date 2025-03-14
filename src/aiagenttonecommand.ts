@@ -4,6 +4,7 @@ export default class AiAgentToneCommand extends Command {
 	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
 	private readonly STORAGE_KEY = 'tone';
 	private availableTones: Array<{ label: string; tone: string }> = [];
+	private debugMode: boolean = false;
 
 	/**
 	 * @inheritDoc
@@ -13,6 +14,7 @@ export default class AiAgentToneCommand extends Command {
 
 		// Store available tones for validation when loading from storage
 		const config = editor.config.get( 'aiAgent' );
+		this.debugMode = !!config?.debugMode;
 		const defaultTones = this._getDefaultTones();
 		this.availableTones = config?.tonesDropdown ?
 			[ defaultTones[ 0 ], ...config.tonesDropdown ] :
@@ -50,7 +52,23 @@ export default class AiAgentToneCommand extends Command {
 	private saveToneSelection( toneLabel: string ): void {
 		try {
 			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
+
+			// Compare with models endpoint cache key format
+			const modelsKey = `${ this.STORAGE_PREFIX }:openai_models`;
+			const hasModelsCache = localStorage.getItem( modelsKey ) !== null;
+
 			localStorage.setItem( key, toneLabel );
+
+			if ( this.debugMode ) {
+				const savedValue = localStorage.getItem( key );
+				console.log( '[DEBUG] Tone localStorage:', {
+					key,
+					value: toneLabel,
+					savedValue,
+					modelsKey,
+					hasModelsCache
+				} );
+			}
 		} catch ( error ) {
 			// Fail silently if localStorage is not available
 			console.warn( 'Could not save tone to localStorage', error );

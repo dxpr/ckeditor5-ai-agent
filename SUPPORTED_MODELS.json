@@ -3,6 +3,25 @@
     "kavya-m1",
     "kavya-m1-eu"
   ],
+  "google": [
+    "gemma-3-27b-it",
+    "learnlm-1.5-pro-experimental",
+    "gemini-2.0-flash-thinking-exp",
+    "gemini-2.0-pro-exp-02-05",
+    "gemini-2.0-pro-exp",
+    "gemini-2.0-flash-lite-preview",
+    "gemini-2.0-flash-lite-preview-02-05",
+    "gemini-2.0-flash-lite",
+    "gemini-2.0-flash-exp-image-generation",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-exp",
+    "gemini-1.5-flash-8b-latest",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro",
+    "gemini-1.5-pro-latest"
+  ],
   "openai": [
     "chatgpt-4o-latest",
     "gpt-3.5-turbo",
@@ -124,12 +143,12 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama-guard-3-8b",
     "llama3-70b-8192",
     "llama-3.1-8b-instant",
+    "mixtral-8x7b-32768",
     "llama3-8b-8192",
-    "gemma2-9b-it",
-    "mixtral-8x7b-32768"
+    "llama-guard-3-8b",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-2-1212",
@@ -321,6 +340,8 @@
     "nousresearch/nous-hermes-llama2-13b",
     "nvidia/llama-3.1-nemotron-70b-instruct",
     "nvidia/llama-3.1-nemotron-70b-instruct:free",
+    "open-r1/olympiccoder-32b:free",
+    "open-r1/olympiccoder-7b:free",
     "openai/chatgpt-4o-latest",
     "openai/gpt-3.5-turbo",
     "openai/gpt-3.5-turbo-0125",
@@ -398,6 +419,7 @@
     "sao10k/l3.3-euryale-70b",
     "sophosympatheia/midnight-rose-70b",
     "sophosympatheia/rogue-rose-103b-v0.2:free",
+    "steelskull/l3.3-electra-r1-70b",
     "teknium/openhermes-2.5-mistral-7b",
     "thedrummer/anubis-pro-105b-v1",
     "thedrummer/rocinante-12b",

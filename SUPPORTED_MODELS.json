@@ -65,6 +65,8 @@
     "o1-mini-2024-09-12",
     "o1-preview",
     "o1-preview-2024-09-12",
+    "o1-pro",
+    "o1-pro-2025-03-19",
     "o3-mini",
     "o3-mini-2025-01-31"
   ],
@@ -144,15 +146,16 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
+    "llama3-8b-8192",
     "llama-3.1-8b-instant",
     "gemma2-9b-it",
-    "mixtral-8x7b-32768",
-    "llama3-8b-8192",
+    "llama3-70b-8192",
     "llama-guard-3-8b",
-    "llama3-70b-8192"
+    "mixtral-8x7b-32768"
   ],
   "xai": [
     "grok-2-1212",
+    "grok-2-image-1212",
     "grok-2-vision-1212",
     "grok-vision-beta",
     "grok-beta"
@@ -320,6 +323,7 @@
     "mistralai/mistral-small-24b-instruct-2501",
     "mistralai/mistral-small-24b-instruct-2501:free",
     "mistralai/mistral-small-3.1-24b-instruct",
+    "mistralai/mistral-small-3.1-24b-instruct:free",
     "mistralai/mistral-tiny",
     "mistralai/mixtral-8x22b-instruct",
     "mistralai/mixtral-8x7b",

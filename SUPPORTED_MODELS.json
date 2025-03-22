@@ -150,14 +150,13 @@
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
     "llama3-8b-8192",
-    "llama-3.1-8b-instant",
+    "gemma2-9b-it",
     "llama-guard-3-8b",
-    "llama3-70b-8192",
-    "gemma2-9b-it"
+    "llama-3.1-8b-instant",
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-2-1212",
-    "grok-2-image-1212",
     "grok-2-vision-1212",
     "grok-vision-beta",
     "grok-beta"
@@ -379,6 +378,7 @@
     "openai/o1-mini-2024-09-12",
     "openai/o1-preview",
     "openai/o1-preview-2024-09-12",
+    "openai/o1-pro",
     "openai/o3-mini",
     "openai/o3-mini-high",
     "openchat/openchat-7b",

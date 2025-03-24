@@ -39,8 +39,14 @@ export default class AiAgentUI extends Plugin {
 		this.showErrorDuration = config?.showErrorDuration ?? SHOW_ERROR_DURATION;
 		this.commandsDropdown = config?.commandsDropdown ?? getDefaultAiAgentDropdownMenu( editor );
 		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
-		this.tonesDropdown = config?.tonesDropdown ?
-			[ defaultTones[ 0 ], ...config?.tonesDropdown ] :
+		const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
+			label: item.label,
+			key: item.label.toLowerCase().replace( / /g, '_' ),
+			tone: item.tone
+		} ) );
+
+		this.tonesDropdown = configTonesDropdown ?
+			[ defaultTones[ 0 ], ...configTonesDropdown ] :
 			defaultTones;
 	}
 
@@ -446,10 +452,6 @@ export default class AiAgentUI extends Plugin {
 		const editor = this.editor;
 		const t = editor.t;
 
-		// Get the current tone value from the command (which may be loaded from localStorage)
-		const toneCommand = editor.commands.get( 'aiAgentTone' );
-		const currentToneValue = toneCommand?.value as string || '';
-
 		editor.ui.componentFactory.add( 'aiAgentToneButton', locale => {
 			const dropdownView = createDropdown( locale );
 			dropdownView.class = 'ck-ai-tone-list';
@@ -482,6 +484,9 @@ export default class AiAgentUI extends Plugin {
 				checkIconView.set( {
 					content: checkIcon
 				} );
+				// Get the current tone value from the command (which may be loaded from localStorage)
+				const toneCommand = editor.commands.get( 'aiAgentTone' );
+				const currentToneValue = toneCommand?.value as string || '';
 
 				// Set initial visibility based on the current tone value from localStorage
 				// The command now loads the tone description based on the stored label

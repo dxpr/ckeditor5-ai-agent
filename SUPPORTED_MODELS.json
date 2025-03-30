@@ -149,10 +149,10 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama3-70b-8192",
-    "llama-guard-3-8b",
     "llama3-8b-8192",
     "llama-3.1-8b-instant",
+    "llama3-70b-8192",
+    "llama-guard-3-8b",
     "gemma2-9b-it"
   ],
   "xai": [
@@ -234,6 +234,7 @@
     "deepseek/deepseek-r1-distill-qwen-32b:free",
     "deepseek/deepseek-r1-zero:free",
     "deepseek/deepseek-r1:free",
+    "deepseek/deepseek-v3-base:free",
     "eva-unit-01/eva-llama-3.33-70b",
     "eva-unit-01/eva-qwen-2.5-32b",
     "eva-unit-01/eva-qwen-2.5-72b",
@@ -241,7 +242,6 @@
     "google/gemini-2.0-flash-001",
     "google/gemini-2.0-flash-exp:free",
     "google/gemini-2.0-flash-lite-001",
-    "google/gemini-2.0-flash-lite-preview-02-05:free",
     "google/gemini-2.0-flash-thinking-exp-1219:free",
     "google/gemini-2.0-flash-thinking-exp:free",
     "google/gemini-2.0-pro-exp-02-05:free",

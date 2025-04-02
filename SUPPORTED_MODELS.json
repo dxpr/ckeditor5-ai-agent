@@ -5,6 +5,8 @@
   ],
   "google": [
     "gemma-3-27b-it",
+    "gemma-3-12b-it",
+    "gemma-3-4b-it",
     "learnlm-1.5-pro-experimental",
     "gemini-2.0-flash-thinking-exp",
     "gemini-2.0-pro-exp-02-05",
@@ -135,11 +137,11 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama-3.1-8b-instant",
     "llama3-8b-8192",
-    "llama3-70b-8192",
     "llama-guard-3-8b",
-    "gemma2-9b-it"
+    "llama3-70b-8192",
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-2-1212",
@@ -158,7 +160,6 @@
     "aion-labs/aion-1.0",
     "aion-labs/aion-1.0-mini",
     "aion-labs/aion-rp-llama-3.1-8b",
-    "allenai/llama-3.1-tulu-3-405b",
     "allenai/molmo-7b-d:free",
     "allenai/olmo-2-0325-32b-instruct",
     "alpindale/goliath-120b",

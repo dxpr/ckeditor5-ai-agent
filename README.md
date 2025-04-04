@@ -3,6 +3,8 @@
 [![CKEditor 5](https://img.shields.io/badge/ckeditor-5-blue)](https://ckeditor.com/docs/ckeditor5/latest/framework/index.html)
 [![typescript](https://img.shields.io/badge/code-typescript-blue)](https://www.typescriptlang.org/)
 
+note: This project is not part of CKEditor premium, it is a free plugin created by DXPR
+
 @dxpr/ckeditor5-ai-agent
 =========================
 

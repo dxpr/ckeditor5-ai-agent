@@ -138,10 +138,10 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
+    "llama-guard-3-8b",
+    "llama-3.1-8b-instant",
     "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant",
-    "llama-guard-3-8b",
     "llama3-8b-8192"
   ],
   "xai": [
@@ -287,7 +287,9 @@
     "meta-llama/llama-3.3-70b-instruct",
     "meta-llama/llama-3.3-70b-instruct:free",
     "meta-llama/llama-4-maverick",
+    "meta-llama/llama-4-maverick:free",
     "meta-llama/llama-4-scout",
+    "meta-llama/llama-4-scout:free",
     "meta-llama/llama-guard-2-8b",
     "meta-llama/llama-guard-3-8b",
     "microsoft/phi-3-medium-128k-instruct",

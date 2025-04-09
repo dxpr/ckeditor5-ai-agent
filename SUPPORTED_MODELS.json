@@ -138,11 +138,11 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama3-8b-8192",
+    "llama-guard-3-8b",
     "llama3-70b-8192",
-    "gemma2-9b-it",
     "llama-3.1-8b-instant",
-    "llama-guard-3-8b"
+    "llama3-8b-8192",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-2-1212",
@@ -343,6 +343,9 @@
     "nousresearch/nous-hermes-llama2-13b",
     "nvidia/llama-3.1-nemotron-70b-instruct",
     "nvidia/llama-3.1-nemotron-70b-instruct:free",
+    "nvidia/llama-3.1-nemotron-nano-8b-v1:free",
+    "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+    "nvidia/llama-3.3-nemotron-super-49b-v1:free",
     "open-r1/olympiccoder-32b:free",
     "open-r1/olympiccoder-7b:free",
     "openai/chatgpt-4o-latest",

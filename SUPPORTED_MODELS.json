@@ -124,6 +124,7 @@
     "pixtral-large-latest"
   ],
   "groq": [
+    "meta-llama/llama-4-maverick-17b-128e-instruct",
     "meta-llama/llama-4-scout-17b-16e-instruct",
     "qwen-qwq-32b",
     "mistral-saba-24b",
@@ -138,13 +139,17 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama-guard-3-8b",
     "llama3-70b-8192",
+    "llama-guard-3-8b",
     "llama-3.1-8b-instant",
     "llama3-8b-8192",
     "gemma2-9b-it"
   ],
   "xai": [
+    "grok-3-beta",
+    "grok-3-fast-beta",
+    "grok-3-mini-beta",
+    "grok-3-mini-fast-beta",
     "grok-2-1212",
     "grok-2-vision-1212",
     "grok-vision-beta",
@@ -440,6 +445,7 @@
     "undi95/toppy-m-7b",
     "x-ai/grok-2-1212",
     "x-ai/grok-2-vision-1212",
+    "x-ai/grok-3-beta",
     "x-ai/grok-beta",
     "x-ai/grok-vision-beta",
     "xwin-lm/xwin-lm-70b"

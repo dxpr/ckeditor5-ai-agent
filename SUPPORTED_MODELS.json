@@ -139,11 +139,11 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
+    "llama3-8b-8192",
+    "gemma2-9b-it",
     "llama3-70b-8192",
     "llama-guard-3-8b",
-    "llama-3.1-8b-instant",
-    "llama3-8b-8192",
-    "gemma2-9b-it"
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3-beta",
@@ -328,10 +328,10 @@
     "mistralai/mistral-small-3.1-24b-instruct:free",
     "mistralai/mistral-tiny",
     "mistralai/mixtral-8x22b-instruct",
-    "mistralai/mixtral-8x7b",
     "mistralai/mixtral-8x7b-instruct",
     "mistralai/pixtral-12b",
     "mistralai/pixtral-large-2411",
+    "moonshotai/kimi-vl-a3b-thinking:free",
     "moonshotai/moonlight-16b-a3b-instruct:free",
     "neversleep/llama-3-lumimaid-70b",
     "neversleep/llama-3-lumimaid-8b",
@@ -387,6 +387,7 @@
     "openai/o3-mini-high",
     "openchat/openchat-7b",
     "openrouter/auto",
+    "openrouter/optimus-alpha",
     "openrouter/quasar-alpha",
     "perplexity/llama-3.1-sonar-large-128k-online",
     "perplexity/llama-3.1-sonar-small-128k-online",
@@ -446,6 +447,7 @@
     "x-ai/grok-2-1212",
     "x-ai/grok-2-vision-1212",
     "x-ai/grok-3-beta",
+    "x-ai/grok-3-mini-beta",
     "x-ai/grok-beta",
     "x-ai/grok-vision-beta",
     "xwin-lm/xwin-lm-70b"

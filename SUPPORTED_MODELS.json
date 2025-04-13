@@ -140,9 +140,9 @@
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
     "llama-guard-3-8b",
-    "llama-3.1-8b-instant",
     "gemma2-9b-it",
     "llama3-70b-8192",
+    "llama-3.1-8b-instant",
     "llama3-8b-8192"
   ],
   "xai": [
@@ -168,7 +168,6 @@
     "aion-labs/aion-rp-llama-3.1-8b",
     "all-hands/openhands-lm-32b-v0.1",
     "allenai/molmo-7b-d:free",
-    "allenai/olmo-2-0325-32b-instruct",
     "alpindale/goliath-120b",
     "alpindale/magnum-72b",
     "amazon/nova-lite-v1",

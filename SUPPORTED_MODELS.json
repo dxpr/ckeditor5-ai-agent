@@ -139,11 +139,11 @@
     "llama-3.2-11b-vision-preview",
     "llama-3.2-3b-preview",
     "llama-3.2-1b-preview",
-    "llama-guard-3-8b",
     "gemma2-9b-it",
+    "llama3-8b-8192",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant",
-    "llama3-8b-8192"
+    "llama-guard-3-8b",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3-beta",
@@ -158,6 +158,7 @@
   "openrouter": [
     "01-ai/yi-large",
     "aetherwiing/mn-starcannon-12b",
+    "agentica-org/deepcoder-14b-preview:free",
     "ai21/jamba-1-5-large",
     "ai21/jamba-1-5-mini",
     "ai21/jamba-1.6-large",
@@ -198,6 +199,7 @@
     "anthropic/claude-3.7-sonnet",
     "anthropic/claude-3.7-sonnet:beta",
     "anthropic/claude-3.7-sonnet:thinking",
+    "arliai/qwq-32b-arliai-rpr-v1:free",
     "bytedance-research/ui-tars-72b:free",
     "cognitivecomputations/dolphin-mixtral-8x22b",
     "cognitivecomputations/dolphin-mixtral-8x7b",

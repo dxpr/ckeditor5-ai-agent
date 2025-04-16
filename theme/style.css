@@ -1,6 +1,6 @@
 /* style for placeholder */
 .place-holder {
-	position: fixed;
+	position: absolute;
 	z-index: -1;
 	opacity: 0;
 	color: hsl(0, 0%, 50%);
@@ -8,7 +8,6 @@
 	transition-property: opacity;
 	transition-timing-function: ease-in, ease-out;
 	margin: 0;
-	padding: 0 var(--ck-spacing-standard);
 }
 
 @media (prefers-reduced-motion: reduce) {

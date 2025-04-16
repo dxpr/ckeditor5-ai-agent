@@ -130,7 +130,6 @@ export default class AiAgentUI extends Plugin {
 			}
 		} );
 
-		this.addPlaceholder();
 		this.addLoader();
 		this.addGptErrorToolTip();
 		this.addAiAgentButton();
@@ -615,6 +614,10 @@ export default class AiAgentUI extends Plugin {
 		document.addEventListener( 'scroll', () => {
 			this.hidePlaceHolder();
 		} );
+
+		editor.editing.view.document.on( 'blur', () => {
+			this.hidePlaceHolder();
+		} );
 	}
 
 	/**
@@ -653,7 +656,7 @@ export default class AiAgentUI extends Plugin {
 	 */
 	private async getRectDomOfGivenModelElement(
 		element: any
-	): Promise<DOMRect | null | undefined> {
+	): Promise<{ top: number; left: number } | null> {
 		const editor = this.editor;
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
@@ -663,10 +666,18 @@ export default class AiAgentUI extends Plugin {
 		if ( equivalentView ) {
 			const domElement = view.domConverter.mapViewToDom( equivalentView );
 			if ( domElement ) {
-				return domElement.getBoundingClientRect();
+				const childPos = domElement.getBoundingClientRect();
+				const parentPos = editor.ui.view.editable.element?.parentElement?.getBoundingClientRect();
+
+				const topRelative = childPos.top - ( parentPos?.top ?? 0 );
+				const leftRelative = childPos.left - ( parentPos?.left ?? 0 );
+
+				return {
+					top: topRelative,
+					left: leftRelative
+				};
 			}
 		}
-
 		return null;
 	}
 
@@ -675,20 +686,27 @@ export default class AiAgentUI extends Plugin {
 	 */
 	private addPlaceholder(): void {
 		const editor = this.editor;
-		const t = editor.t;
-		const placeholder = document.createElement( 'p' );
-		placeholder.id = this.PLACEHOLDER_TEXT_ID;
-		placeholder.onclick = () => {
-			editor.focus();
-		};
-		placeholder.classList.add( 'place-holder' );
-		placeholder.textContent = t( 'Type / to request AI content' );
-		setTimeout( async () => {
-			const panelContent = editor.ui.view.element;
-			if ( panelContent ) {
-				panelContent.append( placeholder );
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` ) as HTMLElement;
+		if ( !ele ) {
+			const t = editor.t;
+			const placeholder = document.createElement( 'p' );
+			placeholder.id = this.PLACEHOLDER_TEXT_ID;
+			placeholder.onclick = () => {
+				editor.focus();
+			};
+			placeholder.classList.add( 'place-holder' );
+			placeholder.textContent = t( 'Type / to request AI content' );
+
+			const parentPanelContent = editor.ui.view.editable.element?.parentElement;
+			if ( parentPanelContent ) {
+				parentPanelContent.style.position = 'relative';
 			}
-		} );
+
+			const panelContent = editor.ui.view.editable.element;
+			if ( panelContent ) {
+				panelContent.insertAdjacentElement( 'afterend', placeholder );
+			}
+		}
 	}
 
 	/**
@@ -696,15 +714,17 @@ export default class AiAgentUI extends Plugin {
 	 *
 	 * @param rect - The DOMRect object defining the position to show the placeholder.
 	 */
-	private showPlaceHolder( rect?: DOMRect ): void {
+	private showPlaceHolder( rect: { top: number; left: number } ): void {
+		this.addPlaceholder();
 		const editor = this.editor;
-		const ele = editor.ui.view.element?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` ) as HTMLElement;
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` ) as HTMLElement;
 		const isReadOnlyMode = this.editor.isReadOnly;
 		if ( ele && rect && !isReadOnlyMode ) {
 			ele.classList.add( 'show-place-holder' );
 			ele.style.top = `${ rect.top }px`;
+			ele.style.left = `${ rect.left }px`;
 		} else if ( ele ) {
-			ele.classList.remove( 'show-place-holder' );
+			ele.remove();
 		}
 	}
 
@@ -713,9 +733,9 @@ export default class AiAgentUI extends Plugin {
 	 */
 	private hidePlaceHolder(): void {
 		const editor = this.editor;
-		const ele = editor.ui.view.element?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` );
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` );
 		if ( ele ) {
-			ele.classList.remove( 'show-place-holder' );
+			ele.remove();
 		}
 	}
 

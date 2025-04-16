@@ -27,11 +27,15 @@ import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
 import { AccessibilityHelp } from '@ckeditor/ckeditor5-ui';
 import { Style } from '@ckeditor/ckeditor5-style';
 import { GeneralHtmlSupport } from '@ckeditor/ckeditor5-html-support';
+import { Fullscreen } from '@ckeditor/ckeditor5-fullscreen';
+import { Emoji } from '@ckeditor/ckeditor5-emoji';
+import { Mention } from '@ckeditor/ckeditor5-mention';
 
 import AiAgent from '../src/aiagent.js';
 
 ClassicEditor
 	.create( document.getElementById( 'editor' )!, {
+		licenseKey: 'GPL',
 		plugins: [
 			AiAgent,
 			Essentials,
@@ -58,7 +62,10 @@ ClassicEditor
 			SourceEditing,
 			AccessibilityHelp,
 			GeneralHtmlSupport,
-			Style
+			Style,
+			Fullscreen,
+			Emoji,
+			Mention
 		],
 		toolbar: [
 			'aiAgentButton',
@@ -87,7 +94,10 @@ ClassicEditor
 			'codeBlock',
 			'|',
 			'sourceEditing',
-			'accessibilityHelp'
+			'accessibilityHelp',
+			'emoji',
+			'|',
+			'fullscreen'
 		],
 		image: {
 			toolbar: [
@@ -242,6 +252,7 @@ ClassicEditor
 
 // Common configuration for inline editors
 const inlineEditorConfig = {
+	licenseKey: 'GPL',
 	plugins: [
 		AiAgent,
 		Essentials,

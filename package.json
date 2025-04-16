@@ -1,6 +1,6 @@
 {
   "name": "@dxpr/ckeditor5-ai-agent",
-  "version": "1.0.0-beta49",
+  "version": "1.0.0-beta56",
   "description": "A plugin for CKEditor 5.",
   "keywords": [
     "ckeditor",
@@ -45,7 +45,7 @@
     "SUPPORTED_MODELS.json"
   ],
   "devDependencies": {
-    "@ckeditor/ckeditor5-dev-build-tools": "43.0.1",
+    "@ckeditor/ckeditor5-dev-build-tools": "^43.0.0 || ^44.0.0 || ^45.0.0",
     "@ckeditor/ckeditor5-inspector": ">=4.1.0",
     "@ckeditor/ckeditor5-package-tools": "^3.0.1",
     "@types/chai": "^5.2.1",
@@ -54,7 +54,7 @@
     "@types/sinon": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "~8.30.1",
     "@typescript-eslint/parser": "^8.30.1",
-    "ckeditor5": "^45.0.0",
+    "ckeditor5": "^43.0.0 || ^44.0.0 || ^45.0.0",
     "eslint": "^9.24.0",
     "eslint-config-ckeditor5": ">=9.1.0",
     "http-server": "^14.1.1",
@@ -69,7 +69,7 @@
     "zod": "^3.24.2"
   },
   "peerDependencies": {
-    "ckeditor5": "^43.0.0"
+    "ckeditor5": "^43.0.0 || ^44.0.0 || ^45.0.0"
   },
   "scripts": {
     "build:dist": "node ./scripts/build-dist.mjs",
@@ -104,8 +104,8 @@
     }
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-core": "^45.0.0",
-    "@ckeditor/ckeditor5-utils": "^45.0.0",
+    "@ckeditor/ckeditor5-core": "^43.0.0 || ^44.0.0 || ^45.0.0",
+    "@ckeditor/ckeditor5-utils": "^43.0.0 || ^44.0.0 || ^45.0.0",
     "http-status-message": "^1.2.4",
     "multi-llm-ts": "^3.3.0",
     "sbd": "^1.0.19"

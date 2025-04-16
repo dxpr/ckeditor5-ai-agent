@@ -56,6 +56,7 @@ Example configuration:
 ```typescript
 ClassicEditor
     .create( document.querySelector( '#editor' ), {
+        licenseKey: 'GPL',
         plugins: [ AiAgent, ... ],
         toolbar: [ 'aiAgentButton', 'aiAgentToneButton', ... ],
         aiAgent: {
@@ -290,6 +291,7 @@ Example configuration:
 ```typescript
 ClassicEditor
     .create( document.querySelector( '#editor' ), {
+        licenseKey: 'GPL',
         plugins: [ AiAgent, ... ],
         toolbar: [ 'aiAgentButton', 'aiAgentToneButton', ... ],
         aiAgent: {

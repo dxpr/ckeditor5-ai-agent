@@ -1053,19 +1053,22 @@ export default class AiAgentService {
 	 * @throws Will throw an error if the streaming process fails or if the model is invalid.
 	 */
 	private async* generate( llm: any, model: string, thread: Array<Message>, opts: LlmCompletionOpts ): any {
-		this.stream = await llm.stream( model, thread, opts );
-		while ( this.stream != null ) {
+		const response = await llm.stream(model, thread, opts);
+		this.stream = response?.stream;
+
+		while (true) {
 			let stream2 = null;
-			for await ( const chunk of this.stream ) {
-				const stream3 = llm.nativeChunkToLlmChunk( chunk );
-				for await ( const msg of stream3 ) {
-					if ( msg.type === 'stream' ) {
+			for await (const chunk of this.stream) {
+				const stream3 = llm.nativeChunkToLlmChunk(chunk, response.context);
+				for await (const msg of stream3) {
+					if (msg.type === "stream") {
 						stream2 = msg.stream;
 					} else {
 						yield msg;
 					}
 				}
 			}
+			if (!stream2) break;
 			this.stream = stream2;
 		}
 	}

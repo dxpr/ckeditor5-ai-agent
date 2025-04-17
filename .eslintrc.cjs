@@ -34,7 +34,8 @@ module.exports = {
 			{
 				extensions: [ '.ts', '.js', '.json' ]
 			}
-		]
+		],
+		'max-lines': [ 'error', { 'max': 500, 'skipBlankLines': true, 'skipComments': true } ]
 	},
 	overrides: [
 		{

@@ -1,8 +1,7 @@
+import type { LocaleTranslate } from 'ckeditor5';
 import type { Editor } from 'ckeditor5/src/core.js';
 
-export function getErrorMessages( status: number, editor: Editor ): string {
-	const t = editor.t;
-
+export function getErrorMessages( status: number, t: LocaleTranslate ): string {
 	const messages: { [key: number]: string } = {
 		100: t( 'Continue: The server has received the request headers and the client should proceed to send the request body.' ),
 		101: t( 'Switching Protocols: The server is switching protocols according to the Upgrade header.' ),

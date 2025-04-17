@@ -103,6 +103,39 @@ export class PromptHelper {
 		}
 	}
 
+	public async generateGptPromptBasedOnUserPrompt(
+		prompt: string,
+		promptContainerText?: string,
+		selectedContent?: string
+	): Promise<string | null> {
+		try {
+			const context = this.trimContext( prompt, promptContainerText );
+			const request = selectedContent ? prompt : prompt.slice( 1 );
+			let markDownContents: Array<MarkdownContent> = [];
+			const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
+			const urls = prompt.match( urlRegex );
+			if ( Array.isArray( urls ) && urls.length ) {
+				const formattedUrl = urls.map( url => {
+					return url.replace( /[,.]$/, '' );
+				} );
+				markDownContents = await this.generateMarkDownForUrls( formattedUrl );
+				markDownContents = this.allocateTokensToFetchedContent( prompt, markDownContents );
+			}
+
+			const isEditorEmpty = context === '@@@cursor@@@';
+			return this.formatFinalPrompt(
+				request,
+				context,
+				selectedContent,
+				markDownContents,
+				isEditorEmpty
+			);
+		} catch ( error ) {
+			console.error( error );
+			return null;
+		}
+	}
+
 	public getSystemPrompt( isInlineResponse: boolean = false ): string {
 		const defaultComponents = getDefaultRules( this.editor );
 		let systemPrompt = '';
@@ -155,7 +188,7 @@ export class PromptHelper {
 		return systemPrompt;
 	}
 
-	public trimContext( prompt: string, promptContainerText: string = '' ): string {
+	private trimContext( prompt: string, promptContainerText: string = '' ): string {
 		let contentBeforePrompt = '';
 		let contentAfterPrompt = '';
 		const splitText = promptContainerText ?? prompt;
@@ -250,7 +283,7 @@ export class PromptHelper {
 		return trimmedContext.trim();
 	}
 
-	public formatFinalPrompt(
+	private formatFinalPrompt(
 		request: string,
 		context?: string,
 		selectedContent?: string,
@@ -337,7 +370,7 @@ export class PromptHelper {
 		return trimMultilineString( content );
 	}
 
-	public async generateMarkDownForUrls( urls: Array<string> ): Promise<Array<MarkdownContent>> {
+	private async generateMarkDownForUrls( urls: Array<string> ): Promise<Array<MarkdownContent>> {
 		try {
 			const results = await fetchMultipleUrls( urls );
 			const markdownContents: Array<MarkdownContent> = [];
@@ -367,7 +400,7 @@ export class PromptHelper {
 		}
 	}
 
-	public allocateTokensToFetchedContent(
+	private allocateTokensToFetchedContent(
 		prompt: string,
 		fetchedContent: Array<MarkdownContent>
 	): Array<MarkdownContent> {

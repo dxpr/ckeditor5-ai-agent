@@ -1,8 +1,7 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
+import { STORAGE_PREFIX } from './const.js';
 import { getDefaultAiAgentToneDropdownMenu } from './util/translations.js';
-
 export default class AiAgentToneCommand extends Command {
-	private readonly STORAGE_PREFIX = 'ck5-ai-agent';
 	private readonly STORAGE_KEY = 'tone';
 	private availableTones: Array<{ label: string; key: string; tone: string }> = [];
 	private debugMode: boolean = false;
@@ -19,7 +18,7 @@ export default class AiAgentToneCommand extends Command {
 		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
 		const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
 			label: item.label,
-			key: item.label,
+			key: item.label.toLowerCase().replace( / /g, '_' ),
 			tone: item.tone
 		} ) );
 		this.availableTones = configTonesDropdown ?
@@ -63,10 +62,10 @@ export default class AiAgentToneCommand extends Command {
 	 */
 	private saveToneSelection( toneKey: string ): void {
 		try {
-			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
+			const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
 
 			// Compare with models endpoint cache key format
-			const modelsKey = `${ this.STORAGE_PREFIX }:openai_models`;
+			const modelsKey = `${ STORAGE_PREFIX }:openai_models`;
 			const hasModelsCache = localStorage.getItem( modelsKey ) !== null;
 
 			localStorage.setItem( key, toneKey );
@@ -100,7 +99,7 @@ export default class AiAgentToneCommand extends Command {
 	 */
 	private loadToneSelection(): string | null {
 		try {
-			const key = `${ this.STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
+			const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
 			const storedToneKey = localStorage.getItem( key );
 
 			if ( !storedToneKey ) {

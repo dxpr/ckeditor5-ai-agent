@@ -1,3 +1,5 @@
+import { Editor } from "ckeditor5";
+
 /**
  * The AiAgentContext class provides a context for the AI Agent plugin,
  * allowing access to shared resources and state across different components.
@@ -26,15 +28,15 @@ export class AiAgentContext {
 		}
 	}
 
-	public showLoader( rect: DOMRect ): void {
+	public showLoader( editor: Editor ): void {
 		if ( this._uiComponent ) {
-			this._uiComponent.showLoader( rect );
+			this._uiComponent.showLoader( editor );
 		}
 	}
 
-	public hideLoader(): void {
+	public hideLoader( editor: Editor ): void {
 		if ( this._uiComponent ) {
-			this._uiComponent.hideLoader();
+			this._uiComponent.hideLoader( editor );
 		}
 	}
 }

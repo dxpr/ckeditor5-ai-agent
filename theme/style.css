@@ -24,7 +24,7 @@
 
 /* style for response loader */
 .gpt-loader {
-	position: fixed;
+	position: absolute;
 	width: 5px;
 	height: 5px;
 	aspect-ratio: 1;

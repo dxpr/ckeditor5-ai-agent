@@ -130,7 +130,6 @@ export default class AiAgentUI extends Plugin {
 			}
 		} );
 
-		this.addLoader();
 		this.addGptErrorToolTip();
 		this.addAiAgentButton();
 		this.addAiAgentToneButton();
@@ -742,11 +741,23 @@ export default class AiAgentUI extends Plugin {
 	/**
 	 * Adds a loader element to the document body for indicating processing.
 	 */
-	private addLoader(): void {
-		const loaderElement = document.createElement( 'div' );
-		loaderElement.id = this.GPT_RESPONSE_LOADER_ID;
-		loaderElement.classList.add( 'gpt-loader' );
-		document.body.appendChild( loaderElement );
+	private addLoader( editor: Editor ): void {
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.GPT_RESPONSE_LOADER_ID }` ) as HTMLElement;
+		if ( !ele ) {
+			const loaderElement = document.createElement( 'div' );
+			loaderElement.id = this.GPT_RESPONSE_LOADER_ID;
+			loaderElement.classList.add( 'gpt-loader' );
+
+			const parentPanelContent = editor.ui.view.editable.element?.parentElement;
+			if ( parentPanelContent ) {
+				parentPanelContent.style.position = 'relative';
+			}
+
+			const panelContent = editor.ui.view.editable.element;
+			if ( panelContent ) {
+				panelContent.insertAdjacentElement( 'afterend', loaderElement );
+			}
+		}
 	}
 
 	/**
@@ -754,24 +765,32 @@ export default class AiAgentUI extends Plugin {
 	 *
 	 * @param rect - The DOMRect object defining the position to show the loader.
 	 */
-	public showLoader( rect?: DOMRect ): void {
-		const ele = document.getElementById( this.GPT_RESPONSE_LOADER_ID );
-		if ( ele && rect ) {
-			ele.style.left = `${ rect.left + 10 }px`;
-			ele.style.top = `${ rect.top + 10 }px`;
+	public showLoader( editor: Editor ): void {
+		this.addLoader( editor );
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.GPT_RESPONSE_LOADER_ID }` ) as HTMLElement;
+
+		const domSelection = window.getSelection();
+		const domRange: any = domSelection?.getRangeAt( 0 );
+		const childPos = domRange.getBoundingClientRect();
+
+		const parentPos = editor.ui.view.editable.element?.parentElement?.getBoundingClientRect();
+		const top = childPos.top - ( parentPos?.top ?? 0 );
+		const left = childPos.left - ( parentPos?.left ?? 0 );
+
+		if ( ele ) {
+			ele.style.left = `${ left + 10 }px`;
+			ele.style.top = `${ top + 10 }px`;
 			ele.classList.add( 'show-gpt-loader' );
-		} else if ( ele ) {
-			ele.classList.remove( 'show-gpt-loader' );
 		}
 	}
 
 	/**
 	 * Hides the loader element from the document.
 	 */
-	public hideLoader(): void {
-		const ele = document.getElementById( this.GPT_RESPONSE_LOADER_ID );
+	public hideLoader( editor: Editor ): void {
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.GPT_RESPONSE_LOADER_ID }` ) as HTMLElement;
 		if ( ele ) {
-			ele.classList.remove( 'show-gpt-loader' );
+			ele.remove();
 		}
 	}
 

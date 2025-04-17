@@ -143,11 +143,7 @@ export default class AiAgentService {
 		}
 
 		try {
-			const domSelection = window.getSelection();
-			const domRange: any = domSelection?.getRangeAt( 0 );
-			const rect = domRange.getBoundingClientRect();
-
-			aiAgentContext.showLoader( rect );
+			aiAgentContext.showLoader( editor );
 			const prompt = await this.generateGptPromptBasedOnUserPrompt(
 				content!,
 				parentEquivalentHTML?.innerHTML,
@@ -161,7 +157,7 @@ export default class AiAgentService {
 			throw error;
 		} finally {
 			this.isInlineInsertion = false;
-			aiAgentContext.hideLoader();
+			aiAgentContext.hideLoader( editor );
 		}
 	}
 
@@ -475,7 +471,7 @@ export default class AiAgentService {
 		try {
 			for await ( const c of stream ) {
 				if ( isFirstChunk ) {
-					aiAgentContext.hideLoader();
+					aiAgentContext.hideLoader( this.editor );
 					this.cancelGenerationButton( blockID, controller, llm );
 					this.undoRedoHandler();
 					this.insertAiTag( blockID );
@@ -514,7 +510,7 @@ export default class AiAgentService {
 		parent: Element,
 		command: boolean
 	): Promise<void> {
-		aiAgentContext.hideLoader();
+		aiAgentContext.hideLoader( this.editor );
 		this.insertAiTag( blockID );
 		this.clearParentContent( parent, command );
 

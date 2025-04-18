@@ -44,4 +44,4 @@ export const ALL_MODERATION_FLAGS = [
 ] as const;
 
 export const SHOW_ERROR_DURATION = 5000;
-
+export const STORAGE_PREFIX = 'ck5-ai-agent';

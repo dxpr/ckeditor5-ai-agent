@@ -145,11 +145,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
-    "llama3-70b-8192",
-    "llama-guard-3-8b",
     "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "llama-guard-3-8b",
+    "llama3-8b-8192",
+    "gemma2-9b-it",
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-3-beta",
@@ -443,7 +443,6 @@
     "sao10k/fimbulvetr-11b-v2",
     "sao10k/l3-euryale-70b",
     "sao10k/l3-lunaris-8b",
-    "sao10k/l3.1-70b-hanami-x1",
     "sao10k/l3.1-euryale-70b",
     "sao10k/l3.3-euryale-70b",
     "scb10x/llama3.1-typhoon2-70b-instruct",

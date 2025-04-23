@@ -19,7 +19,6 @@
     "gemini-2.0-flash-exp-image-generation",
     "gemini-2.0-flash",
     "gemini-2.0-flash-exp",
-    "gemini-2.5-flash-preview-04-17",
     "gemini-2.5-pro-preview-03-25",
     "gemini-2.5-pro-exp-03-25",
     "gemini-1.5-flash-8b-latest",
@@ -147,9 +146,9 @@
     "llama-3.3-70b-versatile",
     "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant",
+    "llama-guard-3-8b",
     "llama3-8b-8192",
-    "llama-guard-3-8b"
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3-beta",
@@ -245,8 +244,6 @@
     "google/gemini-2.0-flash-001",
     "google/gemini-2.0-flash-exp:free",
     "google/gemini-2.0-flash-lite-001",
-    "google/gemini-2.0-flash-thinking-exp-1219:free",
-    "google/gemini-2.0-flash-thinking-exp:free",
     "google/gemini-2.5-flash-preview",
     "google/gemini-2.5-flash-preview:thinking",
     "google/gemini-2.5-pro-exp-03-25:free",
@@ -254,7 +251,6 @@
     "google/gemini-flash-1.5",
     "google/gemini-flash-1.5-8b",
     "google/gemini-flash-1.5-8b-exp",
-    "google/gemini-pro",
     "google/gemini-pro-1.5",
     "google/gemini-pro-vision",
     "google/gemma-2-27b-it",

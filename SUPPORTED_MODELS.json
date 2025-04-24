@@ -144,11 +144,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+    "llama3-8b-8192",
     "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama-guard-3-8b",
-    "llama3-8b-8192",
-    "llama-3.1-8b-instant"
+    "llama-guard-3-8b"
   ],
   "xai": [
     "grok-3-beta",
@@ -361,7 +361,6 @@
     "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
     "nvidia/llama-3.3-nemotron-super-49b-v1:free",
     "open-r1/olympiccoder-32b:free",
-    "open-r1/olympiccoder-7b:free",
     "openai/chatgpt-4o-latest",
     "openai/gpt-3.5-turbo",
     "openai/gpt-3.5-turbo-0125",

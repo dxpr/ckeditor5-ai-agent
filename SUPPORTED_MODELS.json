@@ -144,11 +144,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
-    "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant",
-    "llama-guard-3-8b"
+    "gemma2-9b-it",
+    "llama-guard-3-8b",
+    "llama3-8b-8192",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3-beta",
@@ -356,7 +356,6 @@
     "nousresearch/nous-hermes-2-mixtral-8x7b-dpo",
     "nousresearch/nous-hermes-llama2-13b",
     "nvidia/llama-3.1-nemotron-70b-instruct",
-    "nvidia/llama-3.1-nemotron-nano-8b-v1:free",
     "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
     "nvidia/llama-3.3-nemotron-super-49b-v1:free",
     "open-r1/olympiccoder-32b:free",
@@ -457,6 +456,7 @@
     "thudm/glm-z1-32b:free",
     "thudm/glm-z1-9b:free",
     "thudm/glm-z1-rumination-32b",
+    "tngtech/deepseek-r1t-chimera:free",
     "undi95/remm-slerp-l2-13b",
     "undi95/toppy-m-7b",
     "x-ai/grok-2-1212",

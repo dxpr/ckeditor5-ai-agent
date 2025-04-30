@@ -144,11 +144,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
+    "llama-guard-3-8b",
+    "llama3-70b-8192",
     "llama-3.1-8b-instant",
     "llama3-8b-8192",
-    "llama-guard-3-8b",
-    "gemma2-9b-it",
-    "llama3-70b-8192"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-3-beta",
@@ -423,6 +423,7 @@
     "qwen/qwen2.5-vl-3b-instruct:free",
     "qwen/qwen2.5-vl-72b-instruct",
     "qwen/qwen2.5-vl-72b-instruct:free",
+    "qwen/qwen3-14b",
     "qwen/qwen3-14b:free",
     "qwen/qwen3-235b-a22b",
     "qwen/qwen3-235b-a22b:free",
@@ -446,7 +447,6 @@
     "scb10x/llama3.1-typhoon2-8b-instruct",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
     "sophosympatheia/midnight-rose-70b",
-    "sophosympatheia/rogue-rose-103b-v0.2:free",
     "steelskull/l3.3-electra-r1-70b",
     "thedrummer/anubis-pro-105b-v1",
     "thedrummer/rocinante-12b",

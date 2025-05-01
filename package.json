@@ -28,6 +28,10 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dxpr/ckeditor5-ai-agent.git"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0",

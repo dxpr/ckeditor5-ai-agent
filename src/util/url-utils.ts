@@ -60,11 +60,7 @@ async function fetchUrlWithRetry(
 		try {
 			const cleanedUrl = trimmedUrl.replace( /[^\x20-\x7E]/g, '' );
 			const requestURL = `https://r.jina.ai/${ cleanedUrl.trim() }`;
-			const response = await fetch( requestURL.trim(), {
-				headers: {
-					'X-With-Generated-Alt': 'false'
-				}
-			} );
+			const response = await fetch( requestURL.trim() );
 
 			if ( !response.ok ) {
 				throw new Error( `HTTP error! status: ${ response.status }` );

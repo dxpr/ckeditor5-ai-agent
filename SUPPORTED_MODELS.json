@@ -148,11 +148,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
     "llama-guard-3-8b",
     "llama-3.1-8b-instant",
+    "llama3-8b-8192",
     "llama3-70b-8192",
-    "llama3-8b-8192"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-3-beta",
@@ -168,8 +168,6 @@
     "01-ai/yi-large",
     "aetherwiing/mn-starcannon-12b",
     "agentica-org/deepcoder-14b-preview:free",
-    "ai21/jamba-1-5-large",
-    "ai21/jamba-1-5-mini",
     "ai21/jamba-1.6-large",
     "ai21/jamba-1.6-mini",
     "ai21/jamba-instruct",
@@ -279,7 +277,6 @@
     "google/gemma-3-4b-it:free",
     "google/learnlm-1.5-pro-experimental:free",
     "gryphe/mythomax-l2-13b",
-    "huggingfaceh4/zephyr-7b-beta:free",
     "inception/mercury-coder-small-beta",
     "infermatic/mn-inferor-12b",
     "inflection/inflection-3-pi",

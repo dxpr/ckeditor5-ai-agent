@@ -116,12 +116,6 @@ export default class AiAgentUI extends Plugin {
 		const editor = this.editor;
 		const model = editor.model;
 
-		model.document.on( 'change:data', () => {
-			setTimeout( () => {
-				this.applyPlaceholderToCurrentLine();
-			}, 10 );
-		} );
-
 		model.document.selection.on( 'change:range', () => {
 			setTimeout( () => {
 				this.applyPlaceholderToCurrentLine();
@@ -142,6 +136,14 @@ export default class AiAgentUI extends Plugin {
 						writer.remove( item );
 					}
 				} );
+			}
+		} );
+
+		editor.editing.view.document.on( 'change:isFocused', ( evt, data, isFocused ) => {
+			if (isFocused) {
+				setTimeout( () => {
+					this.applyPlaceholderToCurrentLine();
+				}, 10 );
 			}
 		} );
 
@@ -237,7 +239,10 @@ export default class AiAgentUI extends Plugin {
 
 			const parentPanelContent = editor.ui.view.editable.element?.parentElement;
 			if ( parentPanelContent ) {
-				parentPanelContent.style.position = 'relative';
+				console.log(parentPanelContent.style.position);
+				if (parentPanelContent.style.position !== 'absolute'){
+					parentPanelContent.style.position = 'relative';
+				}
 			}
 
 			const panelContent = editor.ui.view.editable.element;

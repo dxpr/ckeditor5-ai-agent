@@ -149,11 +149,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-70b-8192",
-    "gemma2-9b-it",
-    "llama3-8b-8192",
+    "llama-3.1-8b-instant",
     "llama-guard-3-8b",
-    "llama-3.1-8b-instant"
+    "gemma2-9b-it",
+    "llama3-70b-8192",
+    "llama3-8b-8192"
   ],
   "xai": [
     "grok-3-beta",
@@ -161,9 +161,7 @@
     "grok-3-mini-beta",
     "grok-3-mini-fast-beta",
     "grok-2-1212",
-    "grok-2-vision-1212",
-    "grok-vision-beta",
-    "grok-beta"
+    "grok-2-vision-1212"
   ],
   "openrouter": [
     "01-ai/yi-large",

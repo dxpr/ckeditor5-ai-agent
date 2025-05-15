@@ -9,7 +9,6 @@
     "gemma-3-4b-it",
     "gemma-3-1b-it",
     "learnlm-2.0-flash-experimental",
-    "learnlm-1.5-pro-experimental",
     "gemini-2.0-flash-thinking-exp",
     "gemini-2.0-pro-exp-02-05",
     "gemini-2.0-pro-exp",
@@ -149,11 +148,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "llama-guard-3-8b",
     "gemma2-9b-it",
+    "llama3-8b-8192",
+    "llama-guard-3-8b",
     "llama3-70b-8192",
-    "llama3-8b-8192"
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3-beta",

@@ -148,11 +148,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
+    "llama-3.1-8b-instant",
     "llama3-8b-8192",
+    "gemma2-9b-it",
     "llama-guard-3-8b",
-    "llama3-70b-8192",
-    "llama-3.1-8b-instant"
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-3-beta",
@@ -270,7 +270,6 @@
     "google/gemma-3-27b-it:free",
     "google/gemma-3-4b-it",
     "google/gemma-3-4b-it:free",
-    "google/learnlm-1.5-pro-experimental:free",
     "gryphe/mythomax-l2-13b",
     "inception/mercury-coder-small-beta",
     "infermatic/mn-inferor-12b",
@@ -299,6 +298,7 @@
     "meta-llama/llama-3.2-90b-vision-instruct",
     "meta-llama/llama-3.3-70b-instruct",
     "meta-llama/llama-3.3-70b-instruct:free",
+    "meta-llama/llama-3.3-8b-instruct:free",
     "meta-llama/llama-4-maverick",
     "meta-llama/llama-4-maverick:free",
     "meta-llama/llama-4-scout",
@@ -450,7 +450,6 @@
     "qwen/qwen3-8b:free",
     "qwen/qwq-32b",
     "qwen/qwq-32b-preview",
-    "qwen/qwq-32b-preview:free",
     "qwen/qwq-32b:free",
     "raifle/sorcererlm-8x22b",
     "rekaai/reka-flash-3:free",

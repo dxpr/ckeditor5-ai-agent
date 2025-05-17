@@ -32,6 +32,7 @@
   ],
   "openai": [
     "chatgpt-4o-latest",
+    "codex-mini-latest",
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-0125",
     "gpt-3.5-turbo-1106",
@@ -149,8 +150,8 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
-    "llama3-8b-8192",
     "gemma2-9b-it",
+    "llama3-8b-8192",
     "llama-guard-3-8b",
     "llama3-70b-8192"
   ],
@@ -317,7 +318,6 @@
     "microsoft/phi-4-reasoning:free",
     "microsoft/wizardlm-2-8x22b",
     "minimax/minimax-01",
-    "mistral/ministral-8b",
     "mistralai/codestral-2501",
     "mistralai/codestral-mamba",
     "mistralai/ministral-3b",
@@ -366,6 +366,7 @@
     "nvidia/llama-3.3-nemotron-super-49b-v1:free",
     "open-r1/olympiccoder-32b:free",
     "openai/chatgpt-4o-latest",
+    "openai/codex-mini",
     "openai/gpt-3.5-turbo",
     "openai/gpt-3.5-turbo-0125",
     "openai/gpt-3.5-turbo-0613",

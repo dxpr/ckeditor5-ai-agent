@@ -150,9 +150,9 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
+    "llama-guard-3-8b",
     "gemma2-9b-it",
     "llama3-8b-8192",
-    "llama-guard-3-8b",
     "llama3-70b-8192"
   ],
   "xai": [

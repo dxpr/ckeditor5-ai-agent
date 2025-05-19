@@ -239,7 +239,6 @@ export default class AiAgentUI extends Plugin {
 
 			const parentPanelContent = editor.ui.view.editable.element?.parentElement;
 			if ( parentPanelContent ) {
-				console.log(parentPanelContent.style.position);
 				if (parentPanelContent.style.position !== 'absolute'){
 					parentPanelContent.style.position = 'relative';
 				}

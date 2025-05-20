@@ -149,17 +149,17 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
-    "llama3-70b-8192",
     "llama-3.1-8b-instant",
     "gemma2-9b-it",
-    "llama-guard-3-8b"
+    "llama-guard-3-8b",
+    "llama3-8b-8192",
+    "llama3-70b-8192"
   ],
   "xai": [
-    "grok-3-beta",
-    "grok-3-fast-beta",
-    "grok-3-mini-beta",
-    "grok-3-mini-fast-beta",
+    "grok-3",
+    "grok-3-fast",
+    "grok-3-mini",
+    "grok-3-mini-fast",
     "grok-2-1212",
     "grok-2-vision-1212"
   ],
@@ -214,7 +214,6 @@
     "arcee-ai/virtuoso-large",
     "arcee-ai/virtuoso-medium-v2",
     "arliai/qwq-32b-arliai-rpr-v1:free",
-    "bytedance-research/ui-tars-72b:free",
     "cognitivecomputations/dolphin-mixtral-8x22b",
     "cognitivecomputations/dolphin3.0-mistral-24b:free",
     "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",

@@ -4,6 +4,7 @@
     "kavya-m1-eu"
   ],
   "google": [
+    "gemma-3n-e4b-it",
     "gemma-3-27b-it",
     "gemma-3-12b-it",
     "gemma-3-4b-it",
@@ -21,6 +22,7 @@
     "gemini-2.0-flash-exp",
     "gemini-2.5-pro-preview-05-06",
     "gemini-2.5-flash-preview-04-17-thinking",
+    "gemini-2.5-flash-preview-05-20",
     "gemini-2.5-pro-preview-03-25",
     "gemini-2.5-pro-exp-03-25",
     "gemini-1.5-flash-8b-latest",
@@ -149,11 +151,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
     "gemma2-9b-it",
     "llama-guard-3-8b",
-    "llama3-8b-8192",
-    "llama3-70b-8192"
+    "llama-3.1-8b-instant",
+    "llama3-70b-8192",
+    "llama3-8b-8192"
   ],
   "xai": [
     "grok-3",
@@ -254,6 +256,8 @@
     "google/gemini-2.0-flash-exp:free",
     "google/gemini-2.0-flash-lite-001",
     "google/gemini-2.5-flash-preview",
+    "google/gemini-2.5-flash-preview-05-20",
+    "google/gemini-2.5-flash-preview-05-20:thinking",
     "google/gemini-2.5-flash-preview:thinking",
     "google/gemini-2.5-pro-exp-03-25",
     "google/gemini-2.5-pro-preview",
@@ -270,6 +274,7 @@
     "google/gemma-3-27b-it:free",
     "google/gemma-3-4b-it",
     "google/gemma-3-4b-it:free",
+    "google/gemma-3n-e4b-it:free",
     "gryphe/mythomax-l2-13b",
     "inception/mercury-coder-small-beta",
     "infermatic/mn-inferor-12b",

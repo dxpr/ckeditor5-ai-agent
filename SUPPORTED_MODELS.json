@@ -158,11 +158,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "llama3-70b-8192",
     "llama-guard-3-8b",
+    "llama3-70b-8192",
     "llama3-8b-8192",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3",
@@ -362,7 +362,6 @@
     "moonshotai/moonlight-16b-a3b-instruct:free",
     "neversleep/llama-3-lumimaid-70b",
     "neversleep/llama-3-lumimaid-8b",
-    "neversleep/llama-3-lumimaid-8b:extended",
     "neversleep/llama-3.1-lumimaid-70b",
     "neversleep/llama-3.1-lumimaid-8b",
     "neversleep/noromaid-20b",

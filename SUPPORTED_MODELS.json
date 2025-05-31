@@ -157,11 +157,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
     "llama3-8b-8192",
+    "gemma2-9b-it",
     "llama-3.1-8b-instant",
-    "llama-guard-3-8b",
-    "llama3-70b-8192"
+    "llama3-70b-8192",
+    "llama-guard-3-8b"
   ],
   "xai": [
     "grok-3",
@@ -253,6 +253,7 @@
     "deepseek/deepseek-r1-distill-qwen-14b:free",
     "deepseek/deepseek-r1-distill-qwen-32b",
     "deepseek/deepseek-r1-distill-qwen-32b:free",
+    "deepseek/deepseek-r1-distill-qwen-7b",
     "deepseek/deepseek-r1-zero:free",
     "deepseek/deepseek-r1:free",
     "deepseek/deepseek-v3-base:free",

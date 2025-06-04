@@ -160,10 +160,10 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama-guard-3-8b",
-    "llama3-70b-8192",
     "llama3-8b-8192",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama3-70b-8192",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-3",

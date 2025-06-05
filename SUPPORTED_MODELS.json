@@ -159,11 +159,11 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-guard-3-8b",
     "llama3-8b-8192",
-    "gemma2-9b-it",
+    "llama-3.1-8b-instant",
+    "llama-guard-3-8b",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-3",
@@ -476,6 +476,7 @@
     "sarvamai/sarvam-m:free",
     "scb10x/llama3.1-typhoon2-70b-instruct",
     "scb10x/llama3.1-typhoon2-8b-instruct",
+    "sentientagi/dobby-mini-unhinged-plus-llama-3.1-8b",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
     "sophosympatheia/midnight-rose-70b",
     "thedrummer/anubis-pro-105b-v1",

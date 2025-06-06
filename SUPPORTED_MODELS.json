@@ -22,6 +22,7 @@
     "gemini-2.0-flash-exp-image-generation",
     "gemini-2.0-flash",
     "gemini-2.0-flash-exp",
+    "gemini-2.5-pro-preview-06-05",
     "gemini-2.5-pro-preview-05-06",
     "gemini-2.5-flash-preview-04-17-thinking",
     "gemini-2.5-flash-preview-05-20",
@@ -160,10 +161,10 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama3-8b-8192",
+    "gemma2-9b-it",
     "llama-3.1-8b-instant",
     "llama-guard-3-8b",
-    "llama3-70b-8192",
-    "gemma2-9b-it"
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-3",
@@ -273,6 +274,7 @@
     "google/gemini-2.5-flash-preview:thinking",
     "google/gemini-2.5-pro-exp-03-25",
     "google/gemini-2.5-pro-preview",
+    "google/gemini-2.5-pro-preview-05-06",
     "google/gemini-flash-1.5",
     "google/gemini-flash-1.5-8b",
     "google/gemini-pro-1.5",
@@ -393,8 +395,6 @@
     "openai/gpt-4",
     "openai/gpt-4-0314",
     "openai/gpt-4-1106-preview",
-    "openai/gpt-4-32k",
-    "openai/gpt-4-32k-0314",
     "openai/gpt-4-turbo",
     "openai/gpt-4-turbo-preview",
     "openai/gpt-4.1",

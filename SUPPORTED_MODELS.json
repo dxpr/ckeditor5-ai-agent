@@ -92,6 +92,7 @@
     "mistral-small-2409",
     "mistral-small-2501",
     "mistral-small-2503",
+    "mistral-small-2506",
     "mistral-small-latest",
     "mistral-small-2402",
     "open-mistral-7b",
@@ -127,10 +128,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
     "llama-3.1-8b-instant",
     "gemma2-9b-it",
-    "llama3-70b-8192"
+    "llama3-70b-8192",
+    "llama3-8b-8192"
   ],
   "xai": [
     "grok-3",
@@ -328,6 +329,7 @@
     "mistralai/mistral-small-24b-instruct-2501:free",
     "mistralai/mistral-small-3.1-24b-instruct",
     "mistralai/mistral-small-3.1-24b-instruct:free",
+    "mistralai/mistral-small-3.2-24b-instruct",
     "mistralai/mistral-small-3.2-24b-instruct:free",
     "mistralai/mixtral-8x22b-instruct",
     "mistralai/mixtral-8x7b-instruct",

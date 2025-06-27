@@ -124,10 +124,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
     "llama-3.1-8b-instant",
-    "gemma2-9b-it",
-    "llama3-70b-8192"
+    "llama3-70b-8192",
+    "llama3-8b-8192",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-3",
@@ -247,7 +247,9 @@
     "google/gemma-3-27b-it:free",
     "google/gemma-3-4b-it",
     "google/gemma-3-4b-it:free",
+    "google/gemma-3n-e4b-it",
     "google/gemma-3n-e4b-it:free",
+    "inception/mercury",
     "inception/mercury-coder-small-beta",
     "infermatic/mn-inferor-12b",
     "inflection/inflection-3-pi",
@@ -327,6 +329,7 @@
     "mistralai/pixtral-large-2411",
     "mistralai/mistral-saba",
     "moonshotai/kimi-vl-a3b-thinking:free",
+    "morph/morph-v2",
     "gryphe/mythomax-l2-13b",
     "neversleep/llama-3-lumimaid-70b",
     "neversleep/llama-3-lumimaid-8b",

@@ -124,10 +124,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
+    "llama3-70b-8192",
     "llama3-8b-8192",
     "llama-3.1-8b-instant",
-    "gemma2-9b-it",
-    "llama3-70b-8192"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-3",
@@ -184,6 +184,7 @@
     "arcee-ai/virtuoso-medium-v2",
     "arliai/qwq-32b-arliai-rpr-v1:free",
     "openrouter/auto",
+    "baidu/ernie-4.5-300b-a47b",
     "cohere/command",
     "cohere/command-a",
     "cohere/command-r",

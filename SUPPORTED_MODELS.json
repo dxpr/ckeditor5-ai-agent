@@ -124,10 +124,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
+    "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama3-8b-8192",
     "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "llama3-8b-8192"
   ],
   "xai": [
     "grok-3",
@@ -194,6 +194,7 @@
     "cohere/command-r-plus-04-2024",
     "cohere/command-r-plus-08-2024",
     "cohere/command-r7b-12-2024",
+    "openrouter/cypher-alpha:free",
     "deepseek/deepseek-prover-v2",
     "deepseek/deepseek-r1-0528-qwen3-8b",
     "deepseek/deepseek-r1-0528-qwen3-8b:free",
@@ -294,7 +295,6 @@
     "microsoft/phi-3.5-mini-128k-instruct",
     "sophosympatheia/midnight-rose-70b",
     "minimax/minimax-m1",
-    "minimax/minimax-m1:extended",
     "minimax/minimax-01",
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",
@@ -431,7 +431,6 @@
     "sao10k/l3.1-euryale-70b",
     "sao10k/l3.3-euryale-70b",
     "sarvamai/sarvam-m:free",
-    "sentientagi/dobby-mini-unhinged-plus-llama-3.1-8b",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
     "raifle/sorcererlm-8x22b",
     "thedrummer/anubis-70b-v1.1",

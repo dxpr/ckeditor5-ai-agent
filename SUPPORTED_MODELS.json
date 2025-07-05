@@ -124,10 +124,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
+    "llama3-8b-8192",
     "llama-3.1-8b-instant",
     "llama3-70b-8192",
-    "gemma2-9b-it",
-    "llama3-8b-8192"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-3",
@@ -381,7 +381,6 @@
     "openai/o4-mini",
     "openai/o4-mini-high",
     "opengvlab/internvl3-14b",
-    "opengvlab/internvl3-2b",
     "all-hands/openhands-lm-32b-v0.1",
     "perplexity/llama-3.1-sonar-large-128k-online",
     "perplexity/llama-3.1-sonar-small-128k-online",
@@ -439,9 +438,7 @@
     "thedrummer/valkyrie-49b-v1",
     "thudm/glm-4-32b",
     "thudm/glm-4-32b:free",
-    "thudm/glm-z1-32b",
     "thudm/glm-z1-32b:free",
-    "thudm/glm-z1-rumination-32b",
     "tngtech/deepseek-r1t-chimera:free",
     "undi95/toppy-m-7b",
     "scb10x/llama3.1-typhoon2-70b-instruct",

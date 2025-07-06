@@ -124,10 +124,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
     "llama-3.1-8b-instant",
-    "llama3-70b-8192",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama3-8b-8192",
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-3",
@@ -220,7 +220,6 @@
     "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
     "eleutherai/llemma_7b",
     "eva-unit-01/eva-llama-3.33-70b",
-    "eva-unit-01/eva-qwen-2.5-32b",
     "eva-unit-01/eva-qwen-2.5-72b",
     "sao10k/fimbulvetr-11b-v2",
     "alpindale/goliath-120b",
@@ -381,9 +380,6 @@
     "openai/o4-mini",
     "openai/o4-mini-high",
     "opengvlab/internvl3-14b",
-    "all-hands/openhands-lm-32b-v0.1",
-    "perplexity/llama-3.1-sonar-large-128k-online",
-    "perplexity/llama-3.1-sonar-small-128k-online",
     "perplexity/r1-1776",
     "perplexity/sonar",
     "perplexity/sonar-deep-research",

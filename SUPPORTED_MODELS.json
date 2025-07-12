@@ -127,10 +127,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-70b-8192",
-    "llama-3.1-8b-instant",
+    "llama3-8b-8192",
     "gemma2-9b-it",
-    "llama3-8b-8192"
+    "llama-3.1-8b-instant",
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-4-0709",
@@ -336,6 +336,7 @@
     "mistralai/pixtral-large-2411",
     "mistralai/mistral-saba",
     "moonshotai/kimi-vl-a3b-thinking:free",
+    "moonshotai/kimi-k2",
     "morph/morph-v2",
     "morph/morph-v3-fast",
     "morph/morph-v3-large",
@@ -436,6 +437,7 @@
     "sarvamai/sarvam-m:free",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
     "raifle/sorcererlm-8x22b",
+    "switchpoint/router",
     "tencent/hunyuan-a13b-instruct:free",
     "thedrummer/anubis-70b-v1.1",
     "thedrummer/anubis-pro-105b-v1",
@@ -445,6 +447,7 @@
     "thedrummer/valkyrie-49b-v1",
     "thudm/glm-4-32b",
     "thudm/glm-4-32b:free",
+    "thudm/glm-4.1v-9b-thinking",
     "thudm/glm-z1-32b:free",
     "tngtech/deepseek-r1t-chimera:free",
     "tngtech/deepseek-r1t2-chimera:free",

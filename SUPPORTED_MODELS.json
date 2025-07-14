@@ -127,10 +127,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama3-8b-8192"
+    "llama-3.1-8b-instant",
+    "llama3-8b-8192",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -337,6 +337,7 @@
     "mistralai/mistral-saba",
     "moonshotai/kimi-vl-a3b-thinking:free",
     "moonshotai/kimi-k2",
+    "moonshotai/kimi-k2:free",
     "morph/morph-v2",
     "morph/morph-v3-fast",
     "morph/morph-v3-large",

@@ -127,10 +127,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
     "llama3-8b-8192",
     "llama3-70b-8192",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -351,6 +351,7 @@
     "nvidia/llama-3.3-nemotron-super-49b-v1",
     "openai/chatgpt-4o-latest",
     "openai/codex-mini",
+    "openai/gpt-3.5-turbo",
     "openai/gpt-3.5-turbo-0613",
     "openai/gpt-3.5-turbo-16k",
     "openai/gpt-3.5-turbo-instruct",

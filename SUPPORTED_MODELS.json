@@ -105,10 +105,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "llama3-70b-8192",
     "llama3-8b-8192",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama3-70b-8192",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-0709",
@@ -162,6 +162,7 @@
     "arliai/qwq-32b-arliai-rpr-v1:free",
     "openrouter/auto",
     "baidu/ernie-4.5-300b-a47b",
+    "bytedance/ui-tars-1.5-7b",
     "cohere/command",
     "cohere/command-a",
     "cohere/command-r",
@@ -205,6 +206,7 @@
     "google/gemini-2.0-flash-exp:free",
     "google/gemini-2.0-flash-lite-001",
     "google/gemini-2.5-flash",
+    "google/gemini-2.5-flash-lite",
     "google/gemini-2.5-flash-lite-preview-06-17",
     "google/gemini-2.5-pro",
     "google/gemini-2.5-pro-exp-03-25",
@@ -388,6 +390,7 @@
     "qwen/qwen3-4b:free",
     "qwen/qwen3-8b",
     "qwen/qwen3-8b:free",
+    "qwen/qwen3-coder",
     "qwen/qwq-32b",
     "qwen/qwq-32b:free",
     "qwen/qwq-32b-preview",

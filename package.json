@@ -49,31 +49,31 @@
     "SUPPORTED_MODELS.json"
   ],
   "devDependencies": {
-    "@ckeditor/ckeditor5-dev-build-tools": "^43.0.0 || ^44.0.0 || ^45.0.0",
-    "@ckeditor/ckeditor5-inspector": ">=4.1.0",
-    "@ckeditor/ckeditor5-package-tools": "^3.0.1",
-    "@types/chai": "^5.2.1",
+    "@ckeditor/ckeditor5-dev-build-tools": "^43.1.0",
+    "@ckeditor/ckeditor5-inspector": ">=5.0.0",
+    "@ckeditor/ckeditor5-package-tools": "^4.0.2",
+    "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "@types/sbd": "^1.0.5",
     "@types/sinon": "^17.0.4",
-    "@typescript-eslint/eslint-plugin": "~8.30.1",
-    "@typescript-eslint/parser": "^8.30.1",
-    "ckeditor5": "^43.0.0 || ^44.0.0 || ^45.0.0",
-    "eslint": "^9.24.0",
-    "eslint-config-ckeditor5": ">=9.1.0",
+    "@typescript-eslint/eslint-plugin": "~8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "ckeditor5": "^46.0.0",
+    "eslint": "^9.32.0",
+    "eslint-config-ckeditor5": ">=12.1.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.1",
-    "sinon": "^20.0.0",
-    "stylelint": "^16.18.0",
-    "stylelint-config-ckeditor5": ">=9.1.0",
+    "lint-staged": "^16.1.2",
+    "sinon": "^21.0.0",
+    "stylelint": "^16.23.0",
+    "stylelint-config-ckeditor5": ">=12.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "5.0.4",
-    "webpack": "^5.99.5",
-    "zod": "^3.24.2"
+    "typescript": "5.8.3",
+    "webpack": "^5.101.0",
+    "zod": "^4.0.14"
   },
   "peerDependencies": {
-    "ckeditor5": "^43.0.0 || ^44.0.0 || ^45.0.0"
+    "ckeditor5": "^46.0.0"
   },
   "scripts": {
     "build:dist": "node ./scripts/build-dist.mjs",
@@ -108,10 +108,10 @@
     }
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-core": "^43.0.0 || ^44.0.0 || ^45.0.0",
-    "@ckeditor/ckeditor5-utils": "^43.0.0 || ^44.0.0 || ^45.0.0",
+    "@ckeditor/ckeditor5-core": "^46.0.0",
+    "@ckeditor/ckeditor5-utils": "^46.0.0",
     "http-status-message": "^1.2.4",
-    "multi-llm-ts": "^3.3.0",
+    "multi-llm-ts": "^4.2.2",
     "sbd": "^1.0.19"
   }
 }

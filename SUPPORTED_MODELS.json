@@ -67,6 +67,7 @@
     "claude-3-opus-20240229"
   ],
   "mistralai": [
+    "codestral-2501",
     "codestral-latest",
     "devstral-medium-latest",
     "devstral-small-2505",
@@ -101,14 +102,13 @@
     "meta-llama/llama-4-scout-17b-16e-instruct",
     "compound-beta-mini",
     "compound-beta",
-    "mistral-saba-24b",
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-70b-8192",
-    "gemma2-9b-it",
+    "llama-3.1-8b-instant",
     "llama3-8b-8192",
-    "llama-3.1-8b-instant"
+    "llama3-70b-8192",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -217,6 +217,7 @@
     "google/gemma-3n-e2b-it:free",
     "google/gemma-3n-e4b-it",
     "google/gemma-3n-e4b-it:free",
+    "openrouter/horizon-alpha",
     "inception/mercury",
     "inception/mercury-coder",
     "infermatic/mn-inferor-12b",
@@ -376,10 +377,10 @@
     "qwen/qwen3-235b-a22b",
     "qwen/qwen3-235b-a22b:free",
     "qwen/qwen3-235b-a22b-2507",
-    "qwen/qwen3-235b-a22b-2507:free",
     "qwen/qwen3-235b-a22b-thinking-2507",
     "qwen/qwen3-30b-a3b",
     "qwen/qwen3-30b-a3b:free",
+    "qwen/qwen3-30b-a3b-instruct-2507",
     "qwen/qwen3-32b",
     "qwen/qwen3-4b:free",
     "qwen/qwen3-8b",

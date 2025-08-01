@@ -14,6 +14,7 @@
     "gemini-2.0-flash-lite-preview"
   ],
   "openai": [
+    "gpt-5-newproxy-api-ev3",
     "o3-pro-2025-06-10",
     "o3-pro",
     "codex-mini-latest",
@@ -105,10 +106,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "llama3-8b-8192",
     "llama3-70b-8192",
-    "gemma2-9b-it"
+    "llama3-8b-8192",
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-0709",
@@ -343,8 +344,6 @@
     "openai/o1",
     "openai/o1-mini",
     "openai/o1-mini-2024-09-12",
-    "openai/o1-preview",
-    "openai/o1-preview-2024-09-12",
     "openai/o1-pro",
     "openai/o3",
     "openai/o3-mini",

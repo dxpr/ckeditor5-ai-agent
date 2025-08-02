@@ -14,7 +14,6 @@
     "gemini-2.0-flash-lite-preview"
   ],
   "openai": [
-    "gpt-5-newproxy-api-ev3",
     "o3-pro-2025-06-10",
     "o3-pro",
     "codex-mini-latest",
@@ -107,9 +106,9 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama3-70b-8192",
+    "llama-3.1-8b-instant",
     "llama3-8b-8192",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -136,7 +135,6 @@
     "anthropic/claude-3-haiku:beta",
     "anthropic/claude-3-opus",
     "anthropic/claude-3-opus:beta",
-    "anthropic/claude-3-sonnet",
     "anthropic/claude-3.5-haiku",
     "anthropic/claude-3.5-haiku-20241022",
     "anthropic/claude-3.5-haiku:beta",
@@ -269,6 +267,7 @@
     "mistralai/mistral-small",
     "mistralai/mistral-tiny",
     "mistralai/codestral-2501",
+    "mistralai/codestral-2508",
     "mistralai/devstral-medium",
     "mistralai/devstral-small",
     "mistralai/devstral-small-2505",
@@ -301,7 +300,6 @@
     "moonshotai/kimi-vl-a3b-thinking:free",
     "moonshotai/kimi-k2",
     "moonshotai/kimi-k2:free",
-    "morph/morph-v2",
     "morph/morph-v3-fast",
     "morph/morph-v3-large",
     "gryphe/mythomax-l2-13b",

@@ -106,9 +106,9 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama3-8b-8192",
-    "llama3-70b-8192",
+    "gemma2-9b-it",
     "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "llama3-70b-8192"
   ],
   "xai": [
     "grok-4-0709",
@@ -264,7 +264,6 @@
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",
     "mistralai/mistral-large-2411",
-    "nothingiisreal/mn-celeste-12b",
     "mistralai/mistral-small",
     "mistralai/mistral-tiny",
     "mistralai/codestral-2501",
@@ -413,13 +412,10 @@
     "thedrummer/unslopnemo-12b",
     "thedrummer/valkyrie-49b-v1",
     "thudm/glm-4-32b",
-    "thudm/glm-4-32b:free",
     "thudm/glm-4.1v-9b-thinking",
-    "thudm/glm-z1-32b",
     "thudm/glm-z1-32b:free",
     "tngtech/deepseek-r1t-chimera",
     "tngtech/deepseek-r1t-chimera:free",
-    "tngtech/deepseek-r1t2-chimera",
     "tngtech/deepseek-r1t2-chimera:free",
     "undi95/toppy-m-7b",
     "scb10x/llama3.1-typhoon2-70b-instruct",

@@ -107,10 +107,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
     "llama3-8b-8192",
+    "llama3-70b-8192",
     "llama-3.1-8b-instant",
-    "llama3-70b-8192"
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -124,8 +124,6 @@
   "openrouter": [
     "agentica-org/deepcoder-14b-preview",
     "agentica-org/deepcoder-14b-preview:free",
-    "ai21/jamba-1.6-large",
-    "ai21/jamba-1.6-mini",
     "aion-labs/aion-1.0",
     "aion-labs/aion-1.0-mini",
     "aion-labs/aion-rp-llama-3.1-8b",
@@ -321,8 +319,6 @@
     "nvidia/llama-3.3-nemotron-super-49b-v1",
     "openai/chatgpt-4o-latest",
     "openai/codex-mini",
-    "openai/gpt-oss-120b",
-    "openai/gpt-oss-20b",
     "openai/gpt-3.5-turbo",
     "openai/gpt-3.5-turbo-0613",
     "openai/gpt-3.5-turbo-16k",
@@ -344,6 +340,9 @@
     "openai/gpt-4o-mini",
     "openai/gpt-4o-mini-2024-07-18",
     "openai/gpt-4o-mini-search-preview",
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "openai/gpt-oss-20b:free",
     "openai/o1",
     "openai/o1-mini",
     "openai/o1-mini-2024-09-12",

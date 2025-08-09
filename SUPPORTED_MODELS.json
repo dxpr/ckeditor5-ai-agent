@@ -114,10 +114,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-8b-8192",
     "llama3-70b-8192",
     "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "llama3-8b-8192"
   ],
   "xai": [
     "grok-4-0709",
@@ -131,6 +131,8 @@
   "openrouter": [
     "agentica-org/deepcoder-14b-preview",
     "agentica-org/deepcoder-14b-preview:free",
+    "ai21/jamba-large-1.7",
+    "ai21/jamba-mini-1.7",
     "aion-labs/aion-1.0",
     "aion-labs/aion-1.0-mini",
     "aion-labs/aion-rp-llama-3.1-8b",
@@ -396,6 +398,7 @@
     "qwen/qwen3-8b",
     "qwen/qwen3-8b:free",
     "qwen/qwen3-coder",
+    "qwen/qwen3-coder:free",
     "qwen/qwq-32b",
     "qwen/qwq-32b:free",
     "qwen/qwq-32b-preview",

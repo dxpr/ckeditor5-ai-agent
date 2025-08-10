@@ -1,7 +1,7 @@
 import { Plugin } from 'ckeditor5/src/core.js';
 import AiAgentCommand from './aiagentcommand.js';
 import AiAgentToneCommand from './aiagenttonecommand.js';
-import type { Element } from 'ckeditor5';
+import type { ModelElement as Element } from 'ckeditor5';
 import AiAgentService from './aiagentservice.js';
 
 export default class AiAgentEditing extends Plugin {

@@ -1,5 +1,5 @@
 import type { Editor } from 'ckeditor5/src/core.js';
-import type { Element, Model, Position } from 'ckeditor5/src/engine.js';
+import type { ModelElement as Element, Model, ModelPosition as Position } from 'ckeditor5/src/engine.js';
 
 export class HtmlParser {
 	private editor: Editor;

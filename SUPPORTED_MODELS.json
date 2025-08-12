@@ -100,7 +100,10 @@
     "open-mixtral-8x22b",
     "open-mixtral-8x7b",
     "pixtral-12b-latest",
-    "pixtral-large-latest"
+    "pixtral-large-latest",
+    "voxtral-mini-latest",
+    "voxtral-mini-latest",
+    "voxtral-small-latest"
   ],
   "groq": [
     "openai/gpt-oss-120b",
@@ -112,12 +115,11 @@
     "compound-beta-mini",
     "compound-beta",
     "deepseek-r1-distill-llama-70b",
-    "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant",
-    "llama3-8b-8192"
+    "llama3-8b-8192",
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-0709",
@@ -141,16 +143,11 @@
     "amazon/nova-micro-v1",
     "amazon/nova-pro-v1",
     "anthropic/claude-3-haiku",
-    "anthropic/claude-3-haiku:beta",
     "anthropic/claude-3-opus",
-    "anthropic/claude-3-opus:beta",
     "anthropic/claude-3.5-haiku",
     "anthropic/claude-3.5-haiku-20241022",
-    "anthropic/claude-3.5-haiku:beta",
     "anthropic/claude-3.5-sonnet",
     "anthropic/claude-3.5-sonnet-20240620",
-    "anthropic/claude-3.5-sonnet-20240620:beta",
-    "anthropic/claude-3.5-sonnet:beta",
     "anthropic/claude-3.7-sonnet",
     "anthropic/claude-3.7-sonnet:beta",
     "anthropic/claude-3.7-sonnet:thinking",
@@ -428,6 +425,7 @@
     "thedrummer/valkyrie-49b-v1",
     "thudm/glm-4-32b",
     "thudm/glm-4.1v-9b-thinking",
+    "thudm/glm-z1-32b",
     "thudm/glm-z1-32b:free",
     "tngtech/deepseek-r1t-chimera",
     "tngtech/deepseek-r1t-chimera:free",
@@ -446,6 +444,7 @@
     "z-ai/glm-4-32b",
     "z-ai/glm-4.5",
     "z-ai/glm-4.5-air",
-    "z-ai/glm-4.5-air:free"
+    "z-ai/glm-4.5-air:free",
+    "z-ai/glm-4.5v"
   ]
 }

@@ -87,7 +87,9 @@
     "ministral-8b-latest",
     "mistral-large-2407",
     "mistral-large-2411",
+    "mistral-large-latest",
     "mistral-medium-2505",
+    "mistral-medium-latest",
     "mistral-ocr-2503",
     "mistral-ocr-latest",
     "mistral-saba-latest",
@@ -115,11 +117,12 @@
     "compound-beta-mini",
     "compound-beta",
     "deepseek-r1-distill-llama-70b",
+    "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-70b-8192",
     "llama3-8b-8192",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "llama3-70b-8192",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -426,7 +429,6 @@
     "thudm/glm-4-32b",
     "thudm/glm-4.1v-9b-thinking",
     "thudm/glm-z1-32b",
-    "thudm/glm-z1-32b:free",
     "tngtech/deepseek-r1t-chimera",
     "tngtech/deepseek-r1t-chimera:free",
     "tngtech/deepseek-r1t2-chimera:free",

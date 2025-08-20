@@ -120,12 +120,13 @@
     "allam-2-7b",
     "llama-3.3-70b-versatile",
     "llama3-8b-8192",
-    "llama-3.1-8b-instant",
+    "llama3-70b-8192",
     "gemma2-9b-it",
-    "llama3-70b-8192"
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-0709",
+    "grok-4-0709-eu",
     "grok-3",
     "grok-3-fast",
     "grok-3-mini",
@@ -344,6 +345,7 @@
     "openai/gpt-4o-2024-08-06",
     "openai/gpt-4o-2024-11-20",
     "openai/gpt-4o:extended",
+    "openai/gpt-4o-audio-preview",
     "openai/gpt-4o-search-preview",
     "openai/gpt-4o-mini",
     "openai/gpt-4o-mini-2024-07-18",

@@ -119,10 +119,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
     "llama3-70b-8192",
     "llama3-8b-8192",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-4-0709",
@@ -185,6 +185,7 @@
     "deepseek/deepseek-chat-v3-0324",
     "deepseek/deepseek-chat-v3-0324:free",
     "deepseek/deepseek-v3-base",
+    "deepseek/deepseek-chat-v3.1",
     "deepseek/deepseek-v3.1-base",
     "deepseek/deepseek-r1",
     "deepseek/deepseek-r1:free",

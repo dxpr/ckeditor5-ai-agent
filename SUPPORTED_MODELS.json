@@ -119,10 +119,10 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama3-70b-8192",
-    "llama-3.1-8b-instant",
     "llama3-8b-8192",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama3-70b-8192",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-0709",
@@ -256,8 +256,11 @@
     "meta-llama/llama-3.2-90b-vision-instruct",
     "meta-llama/llama-3.3-70b-instruct",
     "meta-llama/llama-3.3-70b-instruct:free",
+    "meta-llama/llama-3.3-8b-instruct:free",
     "meta-llama/llama-4-maverick",
+    "meta-llama/llama-4-maverick:free",
     "meta-llama/llama-4-scout",
+    "meta-llama/llama-4-scout:free",
     "meta-llama/llama-guard-4-12b",
     "meta-llama/llama-guard-2-8b",
     "microsoft/mai-ds-r1",

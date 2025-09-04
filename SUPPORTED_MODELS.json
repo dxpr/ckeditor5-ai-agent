@@ -144,8 +144,8 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-code-fast-1",
@@ -400,7 +400,6 @@
     "openai/o3-pro",
     "openai/o4-mini",
     "openai/o4-mini-high",
-    "opengvlab/internvl3-14b",
     "perplexity/r1-1776",
     "perplexity/sonar",
     "perplexity/sonar-deep-research",

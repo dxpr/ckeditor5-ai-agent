@@ -133,19 +133,19 @@
     "voxtral-small-latest"
   ],
   "groq": [
+    "groq/compound-mini",
+    "groq/compound",
     "openai/gpt-oss-120b",
     "openai/gpt-oss-20b",
     "moonshotai/kimi-k2-instruct",
     "qwen/qwen3-32b",
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     "meta-llama/llama-4-scout-17b-16e-instruct",
-    "compound-beta-mini",
-    "compound-beta",
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-code-fast-1",
@@ -238,7 +238,6 @@
     "google/gemini-2.0-flash-lite-001",
     "google/gemini-2.5-flash",
     "google/gemini-2.5-flash-image-preview",
-    "google/gemini-2.5-flash-image-preview:free",
     "google/gemini-2.5-flash-lite",
     "google/gemini-2.5-flash-lite-preview-06-17",
     "google/gemini-2.5-pro",

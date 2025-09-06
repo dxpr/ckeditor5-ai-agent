@@ -133,6 +133,7 @@
     "voxtral-small-latest"
   ],
   "groq": [
+    "moonshotai/kimi-k2-instruct-0905",
     "groq/compound-mini",
     "groq/compound",
     "openai/gpt-oss-120b",
@@ -144,8 +145,8 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-code-fast-1",
@@ -192,6 +193,7 @@
     "baidu/ernie-4.5-300b-a47b",
     "baidu/ernie-4.5-vl-28b-a3b",
     "baidu/ernie-4.5-vl-424b-a47b",
+    "bytedance/seed-oss-36b-instruct",
     "bytedance/ui-tars-1.5-7b",
     "deepcogito/cogito-v2-preview-llama-109b-moe",
     "cohere/command",
@@ -338,6 +340,7 @@
     "moonshotai/kimi-dev-72b:free",
     "moonshotai/kimi-k2",
     "moonshotai/kimi-k2:free",
+    "moonshotai/kimi-k2-0905",
     "moonshotai/kimi-vl-a3b-thinking",
     "moonshotai/kimi-vl-a3b-thinking:free",
     "morph/morph-v3-fast",
@@ -433,6 +436,7 @@
     "qwen/qwen3-coder-30b-a3b-instruct",
     "qwen/qwen3-coder",
     "qwen/qwen3-coder:free",
+    "qwen/qwen3-max",
     "qwen/qwq-32b",
     "qwen/qwq-32b:free",
     "qwen/qwq-32b-preview",
@@ -450,6 +454,7 @@
     "shisa-ai/shisa-v2-llama3.3-70b",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
     "raifle/sorcererlm-8x22b",
+    "stepfun-ai/step3",
     "switchpoint/router",
     "tencent/hunyuan-a13b-instruct",
     "tencent/hunyuan-a13b-instruct:free",
@@ -474,7 +479,6 @@
     "x-ai/grok-3-mini-beta",
     "x-ai/grok-4",
     "x-ai/grok-code-fast-1",
-    "x-ai/grok-vision-beta",
     "z-ai/glm-4-32b",
     "z-ai/glm-4.5",
     "z-ai/glm-4.5-air",

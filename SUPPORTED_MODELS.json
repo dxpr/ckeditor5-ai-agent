@@ -453,6 +453,8 @@
     "sao10k/l3.3-euryale-70b",
     "shisa-ai/shisa-v2-llama3.3-70b",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
+    "openrouter/sonoma-dusk-alpha",
+    "openrouter/sonoma-sky-alpha",
     "raifle/sorcererlm-8x22b",
     "stepfun-ai/step3",
     "switchpoint/router",

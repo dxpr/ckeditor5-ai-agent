@@ -145,8 +145,8 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-code-fast-1",
@@ -168,6 +168,8 @@
     "aion-labs/aion-1.0-mini",
     "aion-labs/aion-rp-llama-3.1-8b",
     "alfredpros/codellama-7b-instruct-solidity",
+    "allenai/molmo-7b-d",
+    "allenai/olmo-2-0325-32b-instruct",
     "amazon/nova-lite-v1",
     "amazon/nova-micro-v1",
     "amazon/nova-pro-v1",

@@ -145,17 +145,15 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-code-fast-1",
     "grok-4-0709",
     "grok-4-0709-eu",
     "grok-3",
-    "grok-3-fast",
     "grok-3-mini",
-    "grok-3-mini-fast",
     "grok-2-1212",
     "grok-2-vision-1212"
   ],
@@ -227,7 +225,6 @@
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-14b:free",
     "deepseek/deepseek-r1-distill-qwen-32b",
-    "cognitivecomputations/dolphin-mixtral-8x22b",
     "cognitivecomputations/dolphin3.0-mistral-24b",
     "cognitivecomputations/dolphin3.0-mistral-24b:free",
     "cognitivecomputations/dolphin3.0-r1-mistral-24b",
@@ -299,7 +296,6 @@
     "microsoft/phi-3-medium-128k-instruct",
     "microsoft/phi-3-mini-128k-instruct",
     "microsoft/phi-3.5-mini-128k-instruct",
-    "sophosympatheia/midnight-rose-70b",
     "minimax/minimax-m1",
     "minimax/minimax-01",
     "mistralai/mistral-large",
@@ -470,7 +466,6 @@
     "thedrummer/rocinante-12b",
     "thedrummer/skyfall-36b-v2",
     "thedrummer/unslopnemo-12b",
-    "thudm/glm-4-32b",
     "thudm/glm-4.1v-9b-thinking",
     "thudm/glm-z1-32b",
     "tngtech/deepseek-r1t-chimera",

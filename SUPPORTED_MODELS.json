@@ -106,8 +106,10 @@
     "devstral-small-2505",
     "devstral-small-latest",
     "magistral-medium-2506",
+    "magistral-medium-2507",
     "magistral-medium-latest",
     "magistral-small-2506",
+    "magistral-small-2507",
     "magistral-small-latest",
     "ministral-8b-latest",
     "mistral-large-2407",
@@ -145,8 +147,8 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it"
   ],
   "xai": [
     "grok-code-fast-1",
@@ -435,6 +437,8 @@
     "qwen/qwen3-coder-30b-a3b-instruct",
     "qwen/qwen3-coder",
     "qwen/qwen3-coder:free",
+    "qwen/qwen3-coder-flash",
+    "qwen/qwen3-coder-plus",
     "qwen/qwen3-max",
     "qwen/qwen3-next-80b-a3b-instruct",
     "qwen/qwen3-next-80b-a3b-thinking",
@@ -446,7 +450,6 @@
     "qwen/qwen-2.5-7b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct:free",
-    "rekaai/reka-flash-3:free",
     "undi95/remm-slerp-l2-13b",
     "sao10k/l3-lunaris-8b",
     "sao10k/l3-euryale-70b",

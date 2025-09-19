@@ -147,13 +147,12 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-code-fast-1",
     "grok-4-0709",
-    "grok-4-0709-eu",
     "grok-3",
     "grok-3-mini",
     "grok-2-1212",
@@ -474,6 +473,7 @@
     "tngtech/deepseek-r1t-chimera",
     "tngtech/deepseek-r1t-chimera:free",
     "tngtech/deepseek-r1t2-chimera:free",
+    "alibaba/tongyi-deepresearch-30b-a3b",
     "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
     "microsoft/wizardlm-2-8x22b",
     "x-ai/grok-3",

@@ -147,10 +147,12 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "gemma2-9b-it",
-    "llama-3.1-8b-instant"
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it"
   ],
   "xai": [
+    "grok-4-fast-non-reasoning",
+    "grok-4-fast-reasoning",
     "grok-code-fast-1",
     "grok-4-0709",
     "grok-3",
@@ -456,8 +458,6 @@
     "sao10k/l3.3-euryale-70b",
     "shisa-ai/shisa-v2-llama3.3-70b",
     "shisa-ai/shisa-v2-llama3.3-70b:free",
-    "openrouter/sonoma-dusk-alpha",
-    "openrouter/sonoma-sky-alpha",
     "raifle/sorcererlm-8x22b",
     "stepfun-ai/step3",
     "switchpoint/router",
@@ -481,6 +481,7 @@
     "x-ai/grok-3-mini",
     "x-ai/grok-3-mini-beta",
     "x-ai/grok-4",
+    "x-ai/grok-4-fast:free",
     "x-ai/grok-code-fast-1",
     "z-ai/glm-4-32b",
     "z-ai/glm-4.5",

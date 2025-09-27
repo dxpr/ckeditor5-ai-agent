@@ -455,6 +455,7 @@
     "qwen/qwen-2.5-7b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct:free",
+    "relace/relace-apply-3",
     "undi95/remm-slerp-l2-13b",
     "sao10k/l3-lunaris-8b",
     "sao10k/l3-euryale-70b",

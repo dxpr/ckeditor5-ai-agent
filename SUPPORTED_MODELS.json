@@ -118,7 +118,6 @@
     "mistral-medium-latest",
     "mistral-ocr-2503",
     "mistral-ocr-latest",
-    "mistral-saba-latest",
     "mistral-small-2409",
     "mistral-small-2501",
     "mistral-small-2503",
@@ -146,8 +145,8 @@
     "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "gemma2-9b-it",
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-fast-non-reasoning",
@@ -486,6 +485,7 @@
     "z-ai/glm-4.5",
     "z-ai/glm-4.5-air",
     "z-ai/glm-4.5-air:free",
-    "z-ai/glm-4.5v"
+    "z-ai/glm-4.5v",
+    "z-ai/glm-4.6"
   ]
 }

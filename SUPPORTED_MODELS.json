@@ -145,11 +145,9 @@
     "qwen/qwen3-32b",
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     "meta-llama/llama-4-scout-17b-16e-instruct",
-    "deepseek-r1-distill-llama-70b",
     "allam-2-7b",
     "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "gemma2-9b-it"
+    "llama-3.1-8b-instant"
   ],
   "xai": [
     "grok-4-fast-non-reasoning",
@@ -196,6 +194,7 @@
     "arliai/qwq-32b-arliai-rpr-v1:free",
     "openrouter/auto",
     "baidu/ernie-4.5-21b-a3b",
+    "baidu/ernie-4.5-21b-a3b-thinking",
     "baidu/ernie-4.5-300b-a47b",
     "baidu/ernie-4.5-vl-28b-a3b",
     "baidu/ernie-4.5-vl-424b-a47b",
@@ -222,7 +221,6 @@
     "deepseek/deepseek-r1-0528:free",
     "deepseek/deepseek-r1-distill-llama-70b",
     "deepseek/deepseek-r1-distill-llama-70b:free",
-    "deepseek/deepseek-r1-distill-llama-8b",
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
     "cognitivecomputations/dolphin3.0-mistral-24b",
@@ -441,6 +439,8 @@
     "qwen/qwen3-next-80b-a3b-thinking",
     "qwen/qwen3-vl-235b-a22b-instruct",
     "qwen/qwen3-vl-235b-a22b-thinking",
+    "qwen/qwen3-vl-30b-a3b-instruct",
+    "qwen/qwen3-vl-30b-a3b-thinking",
     "qwen/qwq-32b",
     "qwen/qwen-2.5-72b-instruct",
     "qwen/qwen-2.5-72b-instruct:free",

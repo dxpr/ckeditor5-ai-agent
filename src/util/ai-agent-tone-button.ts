@@ -11,6 +11,7 @@ import {
 import aiAgentToneIcon from '../../theme/icons/ai-agent-tone.svg';
 import checkIcon from '../../theme/icons/check.svg';
 import { getDefaultAiAgentToneDropdownMenu } from './translations.js';
+import { STORAGE_PREFIX } from '../const.js';
 
 export function addAiAgentToneButton( editor: Editor ): void {
 	const t = editor.t;
@@ -38,7 +39,7 @@ export function addAiAgentToneButton( editor: Editor ): void {
 
 		const menuView = new MenuBarMenuView( locale );
 		const listView = new MenuBarMenuListView( locale );
-		const checkIcons: Array<IconView> = [];
+		const toneItems: Array<{ tone: string; checkIcon: IconView }> = [];
 
 		// Add group title for Tone
 		const titleView = new MenuBarMenuListItemView( locale, menuView );
@@ -59,10 +60,8 @@ export function addAiAgentToneButton( editor: Editor ): void {
 				content: checkIcon
 			} );
 
-			const toneCommand = editor.commands.get( 'aiAgentTone' );
-			const currentToneValue = toneCommand?.value as string || '';
-			checkIconView.isVisible = item.tone === currentToneValue;
-			checkIcons.push( checkIconView );
+			checkIconView.isVisible = false;
+			toneItems.push( { tone: item.tone, checkIcon: checkIconView } );
 
 			const spanView = new View( locale );
 			spanView.setTemplate( {
@@ -84,8 +83,8 @@ export function addAiAgentToneButton( editor: Editor ): void {
 			listItemView.children.add( buttonView );
 			listView.items.add( listItemView );
 			buttonView.on( 'execute', () => {
-				checkIcons.forEach( iconView => {
-					iconView.isVisible = false;
+				toneItems.forEach( toneItem => {
+					toneItem.checkIcon.isVisible = false;
 				} );
 				checkIconView.isVisible = true;
 				editor.execute( 'aiAgentTone', {
@@ -96,6 +95,20 @@ export function addAiAgentToneButton( editor: Editor ): void {
 		}
 
 		dropdownView.panelView.children.add( listView );
+
+		// Update checkmarks from localStorage when dropdown opens
+		dropdownView.on( 'change:isOpen', () => {
+			if ( dropdownView.isOpen ) {
+				const storedToneKey = localStorage.getItem( `${ STORAGE_PREFIX }:tone` );
+				const matchingTone = tonesDropdown.find( item => item.key === storedToneKey );
+				const currentToneValue = matchingTone?.tone || '';
+
+				toneItems.forEach( item => {
+					item.checkIcon.isVisible = item.tone === currentToneValue;
+				} );
+			}
+		} );
+
 		return dropdownView;
 	} );
 }

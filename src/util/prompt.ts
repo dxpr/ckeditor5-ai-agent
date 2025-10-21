@@ -6,6 +6,8 @@ import { countTokens, trimLLMContentByTokens } from './token-utils.js';
 import { fetchMultipleUrls } from './url-utils.js';
 import { getDefaultRules } from './default-rules.js';
 import { getAllowedHtmlTags } from './html-utils.js';
+import { STORAGE_PREFIX } from '../const.js';
+import { getDefaultAiAgentToneDropdownMenu } from './translations.js';
 
 // Default token limits if no specific match is found
 const DEFAULT_MAX_INPUT_TOKENS = 1000000;
@@ -136,13 +138,33 @@ export class PromptHelper {
 		}
 	}
 
+	private getToneFromStorage(): string | null {
+		const storedToneKey = localStorage.getItem( `${ STORAGE_PREFIX }:tone` );
+		if ( !storedToneKey ) {
+			return null;
+		}
+
+		const config = this.editor.config.get( 'aiAgent' );
+		const defaultTones = getDefaultAiAgentToneDropdownMenu( this.editor );
+		const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
+			label: item.label,
+			key: item.label.toLowerCase().replace( / /g, '_' ),
+			tone: item.tone
+		} ) );
+		const availableTones = configTonesDropdown ?
+			[ defaultTones[ 0 ], ...configTonesDropdown ] :
+			defaultTones;
+
+		const matchingTone = availableTones.find( item => item.key === storedToneKey );
+		return matchingTone ? matchingTone.tone : null;
+	}
+
 	public getSystemPrompt( isInlineResponse: boolean = false ): string {
 		const defaultComponents = getDefaultRules( this.editor );
 		let systemPrompt = '';
 
-		// Get custom tone if set
-		const toneCommand = this.editor.commands.get( 'aiAgentTone' );
-		const customTone = toneCommand?.value as string | undefined;
+		// Get custom tone from localStorage (single source of truth)
+		const customTone = this.getToneFromStorage();
 
 		// Process each component
 		for ( const [ id, defaultContent ] of Object.entries( defaultComponents ) ) {

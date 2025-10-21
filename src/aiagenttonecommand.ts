@@ -48,69 +48,19 @@ export default class AiAgentToneCommand extends Command {
 		}
 	}
 
-	/**
-	 * Saves the selected tone to localStorage for future use.
-	 *
-	 * This method stores the specified tone under a unique key in localStorage,
-	 * allowing the application to remember the user's tone preference across sessions.
-	 * It also logs the saved value for debugging purposes if debug mode is enabled.
-	 *
-	 * @param toneKey - The toneKey string to be saved in localStorage.
-	 * @returns {void} This function does not return a value.
-	 *
-	 * @throws {Error} If localStorage is not available, a warning is logged to the console.
-	 */
 	private saveToneSelection( toneKey: string ): void {
-		try {
-			const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
-
-			// Compare with models endpoint cache key format
-			const modelsKey = `${ STORAGE_PREFIX }:openai_models`;
-			const hasModelsCache = localStorage.getItem( modelsKey ) !== null;
-
-			localStorage.setItem( key, toneKey );
-
-			if ( this.debugMode ) {
-				const savedValue = localStorage.getItem( key );
-				console.log( '[DEBUG] Tone localStorage:', {
-					key,
-					toneKey,
-					savedValue,
-					modelsKey,
-					hasModelsCache
-				} );
-			}
-		} catch ( error ) {
-			// Fail silently if localStorage is not available
-			console.warn( 'Could not save tone to localStorage', error );
-		}
+		const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
+		localStorage.setItem( key, toneKey );
 	}
 
-	/**
-	 * Loads the selected tone from localStorage.
-	 *
-	 * This method retrieves the tone string stored under a unique key in localStorage,
-	 * allowing the application to remember the user's tone preference across sessions.
-	 * If no tone is found, it returns null.
-	 *
-	 * @returns {string | null} The stored tone string if found, or null if no tone is stored.
-	 *
-	 * @throws {Error} If localStorage is not available, a warning is logged to the console.
-	 */
 	private loadToneSelection(): string | null {
-		try {
-			const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
-			const storedToneKey = localStorage.getItem( key );
+		const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
+		const storedToneKey = localStorage.getItem( key );
 
-			if ( !storedToneKey ) {
-				return null;
-			}
-			const matchingTone = this.availableTones.find( item => item.key === storedToneKey );
-			return matchingTone ? matchingTone.tone : null;
-		} catch ( error ) {
-			// Fail silently if localStorage is not available
-			console.warn( 'Could not load tone from localStorage', error );
+		if ( !storedToneKey ) {
 			return null;
 		}
+		const matchingTone = this.availableTones.find( item => item.key === storedToneKey );
+		return matchingTone ? matchingTone.tone : null;
 	}
 }

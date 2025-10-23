@@ -218,6 +218,7 @@
     "deepseek/deepseek-chat-v3.1",
     "deepseek/deepseek-chat-v3.1:free",
     "deepseek/deepseek-v3.1-terminus",
+    "deepseek/deepseek-v3.1-terminus:exacto",
     "deepseek/deepseek-v3.2-exp",
     "deepseek/deepseek-r1",
     "deepseek/deepseek-r1:free",
@@ -340,6 +341,7 @@
     "moonshotai/kimi-k2",
     "moonshotai/kimi-k2:free",
     "moonshotai/kimi-k2-0905",
+    "moonshotai/kimi-k2-0905:exacto",
     "morph/morph-v3-fast",
     "morph/morph-v3-large",
     "gryphe/mythomax-l2-13b",
@@ -349,6 +351,7 @@
     "nousresearch/deephermes-3-llama-3-8b-preview:free",
     "nousresearch/deephermes-3-mistral-24b-preview",
     "nousresearch/hermes-3-llama-3.1-405b",
+    "nousresearch/hermes-3-llama-3.1-405b:free",
     "nousresearch/hermes-3-llama-3.1-70b",
     "nousresearch/hermes-4-405b",
     "nousresearch/hermes-4-70b",
@@ -391,6 +394,7 @@
     "openai/gpt-5-nano",
     "openai/gpt-5-pro",
     "openai/gpt-oss-120b",
+    "openai/gpt-oss-120b:exacto",
     "openai/gpt-oss-20b",
     "openai/gpt-oss-20b:free",
     "openai/o1",
@@ -440,6 +444,7 @@
     "qwen/qwen3-8b:free",
     "qwen/qwen3-coder-30b-a3b-instruct",
     "qwen/qwen3-coder",
+    "qwen/qwen3-coder:exacto",
     "qwen/qwen3-coder:free",
     "qwen/qwen3-coder-flash",
     "qwen/qwen3-coder-plus",
@@ -498,6 +503,7 @@
     "z-ai/glm-4.5-air",
     "z-ai/glm-4.5-air:free",
     "z-ai/glm-4.5v",
-    "z-ai/glm-4.6"
+    "z-ai/glm-4.6",
+    "z-ai/glm-4.6:exacto"
   ]
 }

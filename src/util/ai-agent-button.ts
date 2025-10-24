@@ -132,12 +132,17 @@ export function addAiAgentButton( editor: Editor ): void {
 				button.isEnabled = !!textareaView.element?.value;
 			} );
 
-			textareaView.on( 'keydown', ( evt: any, data: any ) => {
-				if ( data.keyCode === 13 && !data.shiftKey && button.isEnabled ) {
-					data.preventDefault();
-					const command = textareaView.element?.value || '';
-					insertEmptySpace( editor );
-					executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
+			// Use CKEditor's render event to attach native keyboard listener
+			textareaView.on( 'render', () => {
+				if ( textareaView.element ) {
+					textareaView.element.addEventListener( 'keydown', ( event: KeyboardEvent ) => {
+						if ( event.key === 'Enter' && ( event.ctrlKey || event.metaKey ) && button.isEnabled ) {
+							event.preventDefault();
+							const command = textareaView.element?.value || '';
+							insertEmptySpace( editor );
+							executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
+						}
+					} );
 				}
 			} );
 

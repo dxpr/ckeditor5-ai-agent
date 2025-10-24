@@ -79,13 +79,16 @@ export default class AiAgentUI extends Plugin {
 			label: t( 'AI Agent' ),
 			keystrokes: [
 				{
-					label: t( 'Slash Command: Open the AI Command Menu in an Empty Field' ),
+					label: t( 'Type / to Start Inline AI Prompt' ),
 					keystroke: '/'
 				},
 				{
-					// eslint-disable-next-line max-len
-					label: t( 'Force Insert Slash Command: Add a Slash Command Within Existing Text' ),
+					label: t( 'Insert / to Start AI Prompt Within Existing Text' ),
 					keystroke: env.isMac ? 'Cmd + /' : 'Ctrl + /'
+				},
+				{
+					label: t( 'Submit Command from "Ask AI to Edit" Field in Dropdown' ),
+					keystroke: env.isMac ? 'Cmd + Enter' : 'Ctrl + Enter'
 				},
 				{
 					label: t( 'Cancel AI Generation' ),

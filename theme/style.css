@@ -311,6 +311,11 @@
 	margin-top: 1.5em;
 }
 
+.ck-ai-commands-list .ck.ck-button.ck-ask-ai-to-edit-button:not(.ck-disabled):hover {
+	background: var(--ck-color-button-action-hover-background);
+	cursor: pointer;
+}
+
 .ck.ck-list-item-button .ck-tone-of-voice {
 	height: 100%;
 }

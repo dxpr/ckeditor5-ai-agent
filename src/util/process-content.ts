@@ -141,14 +141,20 @@ export class ProcessContentHelper {
 		const editorData = editor.getData();
 		let editorContent = editorData.replace( new RegExp( `<ai-tag id="${ blockID }-inline">&nbsp;</ai-tag>`, 'g' ), '' );
 		editorContent = editorContent.replace( new RegExp( `<ai-tag id="${ blockID }">&nbsp;</ai-tag>`, 'g' ), '' );
-		editorContent = editorContent.replace( /<\/ai-tag>\s*<[^>]+>\s*&nbsp;\s*<\/[^>]+>/g, '' );
+		editorContent = editorContent.replace( `</ai-tag>`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }-inline">`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
 
-		editor.execute( 'selectAll' );
-		const viewFragment = editor.data.processor.toView( editorContent );
-		const modelFragment = editor.data.toModel( viewFragment );
-		editor.model.insertContent( modelFragment );
+		editor.model.change( writer => {
+			const root = editor.model.document.getRoot();
+			if ( root ) {
+				writer.remove( editor.model.createRangeIn( root ) );
+				
+				const viewFragment = editor.data.processor.toView( editorContent );
+				const modelFragment = editor.data.toModel( viewFragment );
+				writer.insert( modelFragment, root, 0 );
+			}
+		} );
 	}
 
 	/**

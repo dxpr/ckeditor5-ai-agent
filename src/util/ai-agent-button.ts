@@ -140,7 +140,6 @@ export function addAiAgentButton( editor: Editor ): void {
 						if ( event.key === 'Enter' && ( event.ctrlKey || event.metaKey ) && button.isEnabled ) {
 							event.preventDefault();
 							const command = textareaView.element?.value || '';
-							insertEmptySpace( editor );
 							executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
 						}
 					} );
@@ -154,7 +153,6 @@ export function addAiAgentButton( editor: Editor ): void {
 		// Execute a command when the button is clicked
 		button.on( 'execute', () => {
 			const command = ( labeledFieldView.fieldView as TextareaView ).element?.value || '';
-			insertEmptySpace( editor );
 			executeAiAgentCommand( command, labeledFieldView as LabeledFieldView<TextareaView>, listView );
 		} );
 
@@ -185,7 +183,6 @@ export function addAiAgentButton( editor: Editor ): void {
 				} );
 				buttonView.delegate( 'execute' ).to( menuView );
 				buttonView.on( 'execute', () => {
-					insertEmptySpace( editor );
 					executeAiAgentCommand( item.command, labeledFieldView, listView );
 				} );
 				listItemView.children.add( buttonView );
@@ -210,15 +207,6 @@ export function addAiAgentButton( editor: Editor ): void {
 	editor.editing.view.document.on( 'keydown', ( event, data ) => {
 		if ( ( data.ctrlKey || data.metaKey ) && data.keyCode === 191 ) {
 			executeCommand();
-		}
-	} );
-}
-
-function insertEmptySpace( editor: Editor ): void {
-	editor.model.change( writer => {
-		const insertPosition = editor.model.document.selection.getFirstPosition();
-		if ( insertPosition ) {
-			writer.insertText( '\u00A0', insertPosition );
 		}
 	} );
 }

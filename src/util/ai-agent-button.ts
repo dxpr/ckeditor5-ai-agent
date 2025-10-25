@@ -11,9 +11,9 @@ import {
 	ButtonView,
 	TextareaView
 } from 'ckeditor5/src/ui.js';
+import { env } from 'ckeditor5/src/utils.js';
 import AiAgentService from '../aiagentservice.js';
 import aiAgentIcon from '../../theme/icons/ai-agent.svg';
-import arrowIcon from '../../theme/icons/arrow.svg';
 import { getDefaultAiAgentDropdownMenu } from './translations.js';
 
 export function addAiAgentButton( editor: Editor ): void {
@@ -109,11 +109,12 @@ export function addAiAgentButton( editor: Editor ): void {
 		const searchContainer = new MenuBarMenuListItemView( locale, menuView );
 
 		const button = new ButtonView( locale );
+		const shortcutText = env.isMac ? '⌘↵' : 'Ctrl+Enter';
 		button.set( {
 			label: t( 'Submit' ),
-			icon: arrowIcon,
-			tooltip: true,
-			class: 'ck-ask-ai-to-edit-button',
+			withText: true,
+			tooltip: shortcutText,
+			class: 'ck-button-action ck-ask-ai-to-edit-button',
 			isEnabled: false
 		} );
 

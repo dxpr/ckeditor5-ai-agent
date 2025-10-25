@@ -301,6 +301,7 @@
     "microsoft/phi-3-mini-128k-instruct",
     "microsoft/phi-3.5-mini-128k-instruct",
     "minimax/minimax-m1",
+    "minimax/minimax-m2:free",
     "minimax/minimax-01",
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",

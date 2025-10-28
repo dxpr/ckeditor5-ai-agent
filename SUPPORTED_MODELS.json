@@ -401,8 +401,6 @@
     "openai/gpt-oss-20b",
     "openai/gpt-oss-20b:free",
     "openai/o1",
-    "openai/o1-mini",
-    "openai/o1-mini-2024-09-12",
     "openai/o1-pro",
     "openai/o3",
     "openai/o3-deep-research",

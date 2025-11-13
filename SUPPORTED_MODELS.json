@@ -103,7 +103,7 @@
   "mistralai": [
     "codestral-2501",
     "codestral-latest",
-    "devstral-medium-latest",
+    "devstral-medium-2507",
     "devstral-small-2505",
     "devstral-small-latest",
     "magistral-medium-2506",
@@ -295,7 +295,6 @@
     "microsoft/phi-3.5-mini-128k-instruct",
     "minimax/minimax-m1",
     "minimax/minimax-m2",
-    "minimax/minimax-m2:free",
     "minimax/minimax-01",
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",

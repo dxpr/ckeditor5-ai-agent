@@ -106,7 +106,7 @@
   "mistralai": [
     "codestral-2501",
     "codestral-latest",
-    "devstral-medium-2507",
+    "devstral-medium-latest",
     "devstral-small-2505",
     "devstral-small-latest",
     "magistral-medium-2506",
@@ -253,8 +253,6 @@
     "ibm-granite/granite-4.0-h-micro",
     "inception/mercury",
     "inception/mercury-coder",
-    "inclusionai/ling-1t",
-    "inclusionai/ring-1t",
     "inflection/inflection-3-pi",
     "inflection/inflection-3-productivity",
     "kwaipilot/kat-coder-pro:free",

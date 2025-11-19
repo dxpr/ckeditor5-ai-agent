@@ -54,10 +54,10 @@ export default class AiAgentService {
 	 */
 	constructor( editor: Editor ) {
 		this.editor = editor;
+		const config = editor.config.get( 'aiAgent' )!;
 		this.promptHelper = new PromptHelper( editor );
 		this.htmlParser = new HtmlParser( editor );
-		this.processContentHelper = new ProcessContentHelper( editor );
-		const config = editor.config.get( 'aiAgent' )!;
+		this.processContentHelper = new ProcessContentHelper( editor, config.aiOutputSecurity );
 
 		this.aiModel = config.model!;
 		this.apiKey = config.apiKey;

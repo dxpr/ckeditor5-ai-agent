@@ -1,13 +1,16 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { ModelElement as Element, ModelPosition as Position, ModelItem as Item } from 'ckeditor5/src/engine.js';
+import { AiOutputFilter, type AiOutputSecurityConfig } from './ai-output-filter.js';
 
 export class ProcessContentHelper {
 	private editor: Editor;
+	private securityFilter: AiOutputFilter;
 
 	private readonly FILTERED_STRINGS = /```html|```|html\n|@@@cursor@@@/g;
 
-	constructor( editor: Editor ) {
+	constructor( editor: Editor, securityConfig?: AiOutputSecurityConfig ) {
 		this.editor = editor;
+		this.securityFilter = new AiOutputFilter( securityConfig );
 	}
 
 	/**
@@ -20,8 +23,9 @@ export class ProcessContentHelper {
 	 */
 	public async updateContent( newHtml: string, blockID: string ): Promise<void> {
 		const editor = this.editor;
+		const sanitizedHtml = this.securityFilter.filter( newHtml );
 		const tempParagraph: HTMLElement = document.createElement( 'div' );
-		tempParagraph.innerHTML = newHtml;
+		tempParagraph.innerHTML = sanitizedHtml;
 		let textContent = '';
 
 		const root = editor.model.document.getRoot();
@@ -144,12 +148,13 @@ export class ProcessContentHelper {
 		editorContent = editorContent.replace( `</ai-tag>`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }-inline">`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
+		editorContent = this.securityFilter.filter( editorContent );
 
 		editor.model.change( writer => {
 			const root = editor.model.document.getRoot();
 			if ( root ) {
 				writer.remove( editor.model.createRangeIn( root ) );
-				
+
 				const viewFragment = editor.data.processor.toView( editorContent );
 				const modelFragment = editor.data.toModel( viewFragment );
 				writer.insert( modelFragment, root, 0 );

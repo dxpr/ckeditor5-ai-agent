@@ -64,6 +64,13 @@ export interface AiAgentConfig {
     moderationEnable?: boolean;
     moderationDisableFlags?: Array<ModerationFlagsTypes>;
 
+    // Security Settings
+    aiOutputSecurity?: {
+        allowedDomains?: string[];
+        strictMode?: boolean;
+        alwaysAllowedDomains?: string[];
+    };
+
     commandsDropdown?: Array<{
         title: string;
         items: Array<{

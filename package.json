@@ -53,6 +53,7 @@
     "@ckeditor/ckeditor5-inspector": ">=5.0.0",
     "@ckeditor/ckeditor5-package-tools": "^4.0.2",
     "@types/chai": "^5.2.2",
+    "@types/dompurify": "^3.0.5",
     "@types/mocha": "^10.0.10",
     "@types/sbd": "^1.0.5",
     "@types/sinon": "^17.0.4",
@@ -110,6 +111,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-core": "^46.0.0",
     "@ckeditor/ckeditor5-utils": "^46.0.0",
+    "dompurify": "^3.3.0",
     "http-status-message": "^1.2.4",
     "multi-llm-ts": "^4.2.2",
     "sbd": "^1.0.19"

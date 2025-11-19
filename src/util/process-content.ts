@@ -1,13 +1,16 @@
 import type { Editor } from 'ckeditor5/src/core.js';
 import type { ModelElement as Element, ModelPosition as Position, ModelItem as Item } from 'ckeditor5/src/engine.js';
+import { filterAiImages, type AiFilterConfig } from './ai-output-filter.js';
 
 export class ProcessContentHelper {
 	private editor: Editor;
+	private filterConfig: AiFilterConfig | undefined;
 
 	private readonly FILTERED_STRINGS = /```html|```|html\n|@@@cursor@@@/g;
 
-	constructor( editor: Editor ) {
+	constructor( editor: Editor, filterConfig?: AiFilterConfig ) {
 		this.editor = editor;
+		this.filterConfig = filterConfig;
 	}
 
 	/**
@@ -20,8 +23,9 @@ export class ProcessContentHelper {
 	 */
 	public async updateContent( newHtml: string, blockID: string ): Promise<void> {
 		const editor = this.editor;
+		const filteredHtml = filterAiImages( newHtml, this.filterConfig );
 		const tempParagraph: HTMLElement = document.createElement( 'div' );
-		tempParagraph.innerHTML = newHtml;
+		tempParagraph.innerHTML = filteredHtml;
 		let textContent = '';
 
 		const root = editor.model.document.getRoot();
@@ -144,6 +148,7 @@ export class ProcessContentHelper {
 		editorContent = editorContent.replace( `</ai-tag>`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }-inline">`, '' );
 		editorContent = editorContent.replace( `<ai-tag id="${ blockID }">`, '' );
+		editorContent = filterAiImages( editorContent, this.filterConfig );
 
 		editor.model.change( writer => {
 			const root = editor.model.document.getRoot();

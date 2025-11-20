@@ -148,6 +148,8 @@
     "llama-3.1-8b-instant"
   ],
   "xai": [
+    "grok-4-1-fast-non-reasoning",
+    "grok-4-1-fast-reasoning",
     "grok-4-fast-non-reasoning",
     "grok-4-fast-reasoning",
     "grok-code-fast-1",
@@ -203,6 +205,7 @@
     "deepcogito/cogito-v2-preview-deepseek-671b",
     "deepcogito/cogito-v2-preview-llama-405b",
     "deepcogito/cogito-v2-preview-llama-70b",
+    "deepcogito/cogito-v2.1-671b",
     "deepseek/deepseek-prover-v2",
     "deepseek/deepseek-r1-0528-qwen3-8b",
     "deepseek/deepseek-r1-0528-qwen3-8b:free",
@@ -461,8 +464,6 @@
     "sao10k/l3.1-70b-hanami-x1",
     "sao10k/l3.1-euryale-70b",
     "sao10k/l3.3-euryale-70b",
-    "openrouter/sherlock-dash-alpha",
-    "openrouter/sherlock-think-alpha",
     "raifle/sorcererlm-8x22b",
     "stepfun-ai/step3",
     "switchpoint/router",
@@ -487,6 +488,7 @@
     "x-ai/grok-3-mini-beta",
     "x-ai/grok-4",
     "x-ai/grok-4-fast",
+    "x-ai/grok-4.1-fast",
     "x-ai/grok-code-fast-1",
     "z-ai/glm-4-32b",
     "z-ai/glm-4.5",

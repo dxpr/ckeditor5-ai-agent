@@ -94,6 +94,7 @@
     "gpt-3.5-turbo"
   ],
   "anthropic": [
+    "claude-opus-4-5-20251101",
     "claude-haiku-4-5-20251001",
     "claude-sonnet-4-5-20250929",
     "claude-opus-4-1-20250805",
@@ -185,6 +186,7 @@
     "anthropic/claude-haiku-4.5",
     "anthropic/claude-opus-4",
     "anthropic/claude-opus-4.1",
+    "anthropic/claude-opus-4.5",
     "anthropic/claude-sonnet-4",
     "anthropic/claude-sonnet-4.5",
     "arcee-ai/coder-large",
@@ -199,6 +201,7 @@
     "baidu/ernie-4.5-300b-a47b",
     "baidu/ernie-4.5-vl-28b-a3b",
     "baidu/ernie-4.5-vl-424b-a47b",
+    "openrouter/bert-nebulon-alpha",
     "bytedance/ui-tars-1.5-7b",
     "deepcogito/cogito-v2-preview-llama-109b-moe",
     "cohere/command-a",

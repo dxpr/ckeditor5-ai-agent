@@ -86,13 +86,7 @@ const PATTERNS = {
 	/** Detects HTML content */
 	htmlDetection: /<[^>]+>/,
 	/** Escapes regex special characters */
-	regexEscape: /[.*+?^${}()|[\]\\]/g,
-	/** HTML tags that are always filtered (dangerous elements) */
-	streamingDangerousTags: /^<(iframe|object|embed|applet)[\s>]/i,
-	/** Image tag detection for streaming */
-	streamingImgTag: /^<img[\s>]/i,
-	/** Anchor tag detection for streaming */
-	streamingAnchorTag: /^<a[\s>]/i
+	regexEscape: /[.*+?^${}()|[\]\\]/g
 } as const;
 
 // ============================================================================
@@ -134,12 +128,6 @@ interface ResolvedConfig {
 	filterImages: boolean;
 	filterLinks: boolean;
 	onUrlBlocked?: ( blockedUrls: BlockedUrlInfo ) => void;
-}
-
-export interface FilterState {
-	buffer: string;
-	inTag: boolean;
-	tagType: string | null;
 }
 
 // ============================================================================
@@ -515,69 +503,4 @@ export const filterAiImages = ( content: string, config?: AiFilterConfig ): stri
 	}
 
 	return filtered;
-};
-
-/**
- * Filters streaming content chunks in real-time.
- * Buffers potentially dangerous tags until complete, then filters them.
- */
-export const filterAiStreamingChunk = (
-	chunk: string,
-	state?: FilterState,
-	config?: AiFilterConfig
-): string => {
-	const filterState: FilterState = state || { buffer: '', inTag: false, tagType: null };
-	const resolvedConfig = resolveConfig( config );
-
-	if ( !resolvedConfig.enabled ) return chunk;
-
-	let output = '';
-
-	for ( let i = 0; i < chunk.length; i++ ) {
-		const char = chunk[ i ];
-
-		if ( !filterState.inTag && char === '<' ) {
-			const remaining = chunk.substring( i );
-
-			// Always filter dangerous elements
-			const dangerousMatch = remaining.match( PATTERNS.streamingDangerousTags );
-			if ( dangerousMatch ) {
-				filterState.inTag = true;
-				filterState.buffer = char;
-				filterState.tagType = dangerousMatch[ 1 ].toLowerCase();
-				continue;
-			}
-
-			// Filter images if enabled
-			if ( resolvedConfig.filterImages && PATTERNS.streamingImgTag.test( remaining ) ) {
-				filterState.inTag = true;
-				filterState.buffer = char;
-				filterState.tagType = 'img';
-				continue;
-			}
-
-			// Filter links if enabled
-			if ( resolvedConfig.filterLinks && PATTERNS.streamingAnchorTag.test( remaining ) ) {
-				filterState.inTag = true;
-				filterState.buffer = char;
-				filterState.tagType = 'a';
-				continue;
-			}
-		}
-
-		if ( filterState.inTag ) {
-			filterState.buffer += char;
-
-			if ( char === '>' ) {
-				output += filterAiImages( filterState.buffer, config );
-				filterState.inTag = false;
-				filterState.buffer = '';
-				filterState.tagType = null;
-			}
-		} else {
-			output += char;
-		}
-	}
-
-	return output;
 };

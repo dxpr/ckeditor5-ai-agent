@@ -147,6 +147,21 @@ ClassicEditor
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
 			debugMode: true,
+			// AI Output Security - protects against prompt injection data exfiltration (CVE-2025-32711)
+			aiOutputSecurity: {
+				enabled: true,
+				allowedDomains: [
+					'unsplash.com',
+					'images.unsplash.com',
+					'pexels.com',
+					'images.pexels.com',
+					'pixabay.com',
+					'promptahuman.com'
+				],
+				strictMode: false,
+				filterImages: true,
+				filterLinks: true
+			},
 			tonesDropdown: [
 				{
 					label: 'Patient-Friendly',
@@ -290,7 +305,11 @@ const inlineEditorConfig = {
 	aiAgent: {
 		apiKey: 'YOUR_API_KEY',
 		contentScope: '.page-builder-container',
-		debugMode: true
+		debugMode: true,
+		// AI Output Security - using strictMode for maximum security
+		aiOutputSecurity: {
+			strictMode: true // Blocks ALL external images and links
+		}
 	},
 	language: {
 		content: 'en',

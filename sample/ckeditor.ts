@@ -153,7 +153,8 @@ ClassicEditor
 					'images.unsplash.com',
 					'pexels.com',
 					'images.pexels.com',
-					'pixabay.com'
+					'pixabay.com',
+					'promptahuman.com'
 				],
 				allowedLinkDomains: [
 					'unsplash.com',

@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=24.0.0",
     "npm": ">=5.7.1"
   },
   "files": [
@@ -60,13 +60,13 @@
     "@typescript-eslint/parser": "^8.38.0",
     "ckeditor5": "^46.0.0",
     "eslint": "^9.32.0",
-    "eslint-config-ckeditor5": ">=12.1.0",
+    "eslint-config-ckeditor5": "^13.0.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
     "sinon": "^21.0.0",
     "stylelint": "^16.23.0",
-    "stylelint-config-ckeditor5": ">=12.1.0",
+    "stylelint-config-ckeditor5": "^13.0.0",
     "ts-node": "^10.9.2",
     "typescript": "5.8.3",
     "webpack": "^5.101.0",

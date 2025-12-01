@@ -341,13 +341,25 @@ export default class AiAgentUI extends Plugin {
 	}
 
 	/**
-	 * Adds an error tooltip element to the document body for displaying error messages.
+	 * Adds an error tooltip element to the editor container for displaying error messages.
 	 */
 	private addGptErrorToolTip(): void {
-		const tooltipElement = document.createElement( 'p' );
-		tooltipElement.id = this.GPT_RESPONSE_ERROR_ID;
-		tooltipElement.classList.add( 'response-error' );
-		document.body.appendChild( tooltipElement );
+		const editor = this.editor;
+		const parentContainer = editor.ui.view.editable.element?.parentElement;
+
+		// Only add if it doesn't exist and we have a parent container
+		if ( parentContainer && !parentContainer.querySelector( `#${ this.GPT_RESPONSE_ERROR_ID }` ) ) {
+			const tooltipElement = document.createElement( 'p' );
+			tooltipElement.id = this.GPT_RESPONSE_ERROR_ID;
+			tooltipElement.classList.add( 'response-error' );
+
+			// Ensure parent has relative positioning for absolute child
+			if ( parentContainer.style.position !== 'absolute' ) {
+				parentContainer.style.position = 'relative';
+			}
+
+			parentContainer.appendChild( tooltipElement );
+		}
 	}
 
 	/**
@@ -358,15 +370,29 @@ export default class AiAgentUI extends Plugin {
 	public showGptErrorToolTip( message: string ): void {
 		console.log( 'Showing error message...', message );
 		const editor = this.editor;
+		const parentContainer = editor.ui.view.editable.element?.parentElement;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
-		const tooltipElement = document.getElementById(
-			this.GPT_RESPONSE_ERROR_ID
-		);
+
+		// Ensure tooltip exists
+		this.addGptErrorToolTip();
+
+		const tooltipElement = parentContainer?.querySelector(
+			`#${ this.GPT_RESPONSE_ERROR_ID }`
+		) as HTMLElement;
 
 		const editorRect = view?.getBoundingClientRect();
-		if ( tooltipElement && editorRect ) {
+		const parentRect = parentContainer?.getBoundingClientRect();
+
+		if ( tooltipElement && editorRect && parentRect ) {
+			// Position at top-right of editor, with some padding
+			const topPosition = editorRect.top - parentRect.top + 10;
+			const rightPosition = parentRect.right - editorRect.right + 10;
+
+			tooltipElement.style.top = `${ topPosition }px`;
+			tooltipElement.style.right = `${ rightPosition }px`;
 			tooltipElement.classList.add( 'show-response-error' );
 			tooltipElement.textContent = message;
+
 			setTimeout( () => {
 				this.hideGptErrorToolTip();
 			}, this.showErrorDuration );
@@ -377,9 +403,12 @@ export default class AiAgentUI extends Plugin {
 	 * Hides the error tooltip element from the document.
 	 */
 	private hideGptErrorToolTip(): void {
-		const tooltipElement = document.getElementById(
-			this.GPT_RESPONSE_ERROR_ID
-		);
+		const editor = this.editor;
+		const parentContainer = editor.ui.view.editable.element?.parentElement;
+		const tooltipElement = parentContainer?.querySelector(
+			`#${ this.GPT_RESPONSE_ERROR_ID }`
+		) as HTMLElement;
+
 		if ( tooltipElement ) {
 			tooltipElement.classList.remove( 'show-response-error' );
 		}

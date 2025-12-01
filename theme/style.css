@@ -62,18 +62,19 @@
 /* style for response error */
 
 .response-error {
-	position: fixed;
+	position: absolute;
 	z-index: 9999;
 	color: hsl(0, 0%, 100%);
 	background: hsl(0, 39%, 60%);
 	width: auto;
-	padding: 5px 10px;
+	max-width: 400px;
+	padding: 10px 15px;
 	border-radius: 5px;
 	transition-duration: 1s;
 	transition-property: opacity;
 	opacity: 0;
-	right: 10px;
-	top: 0;
+	pointer-events: none;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .show-response-error {

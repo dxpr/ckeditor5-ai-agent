@@ -17,13 +17,16 @@
 // Constants
 // ============================================================================
 
+/** Domain for the placeholder image service */
+const PLACEHOLDER_SERVICE_DOMAIN = 'promptahuman.com';
+
 /**
  * Default allowed domains for external images.
  * Only allows the placeholder image service by default for maximum security.
  * Users can extend this list via allowedImageDomains config option.
  */
 const DEFAULT_ALLOWED_IMAGE_DOMAINS = [
-	'promptahuman.com'
+	PLACEHOLDER_SERVICE_DOMAIN
 ] as const;
 
 /**
@@ -264,10 +267,10 @@ const recordBlockedUrl = (
 };
 
 /**
- * Checks if the placeholder image service (promptahuman.com) is allowed by the config.
+ * Checks if the placeholder image service is allowed by the config.
  */
 const isPlaceholderServiceAllowed = ( config: ResolvedConfig ): boolean =>
-	config.allowedImageDomains.some( domain => matchesDomainPattern( 'promptahuman.com', domain ) );
+	config.allowedImageDomains.some( domain => matchesDomainPattern( PLACEHOLDER_SERVICE_DOMAIN, domain ) );
 
 /**
  * Gets the replacement image source.

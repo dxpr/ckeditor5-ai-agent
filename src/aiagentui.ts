@@ -13,6 +13,15 @@ import {
 	registerAiAnimateStatusSchema
 } from './util/ai-agent-ui-schema.js';
 
+/** Maximum number of blocked URLs to display in the warning notification */
+const MAX_BLOCKED_URLS_DISPLAYED = 5;
+
+/** Maximum URL length before truncation in the warning notification */
+const MAX_URL_DISPLAY_LENGTH = 50;
+
+/** Duration in ms to show blocked URL warning (longer than errors for user to read URL list) */
+const BLOCKED_URL_WARNING_DURATION = 15000;
+
 export default class AiAgentUI extends Plugin {
 	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
 	public GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
@@ -414,15 +423,16 @@ export default class AiAgentUI extends Plugin {
 			parts.push( `${ blockedUrls.links.length } ${ linkWord }` );
 		}
 
-		// Build URL list (limit to 5 to avoid overwhelming the user)
+		// Build URL list (limit to avoid overwhelming the user)
 		const allUrls = [ ...blockedUrls.images, ...blockedUrls.links ];
-		const displayUrls = allUrls.slice( 0, 5 );
+		const displayUrls = allUrls.slice( 0, MAX_BLOCKED_URLS_DISPLAYED );
 		const remainingCount = allUrls.length - displayUrls.length;
 
 		const urlListItems = displayUrls.map( url => {
 			// Truncate long URLs for readability
-			const maxLen = 50;
-			const truncated = url.length > maxLen ? `${ url.substring( 0, maxLen ) }...` : url;
+			const truncated = url.length > MAX_URL_DISPLAY_LENGTH
+				? `${ url.substring( 0, MAX_URL_DISPLAY_LENGTH ) }...`
+				: url;
 			return `<li>${ this.escapeHtml( truncated ) }</li>`;
 		} );
 
@@ -436,7 +446,7 @@ export default class AiAgentUI extends Plugin {
 			`${ parts.join( ` ${ t( 'and' ) } ` ) } ${ t( 'blocked for security.' ) }<br>` +
 			`<ul class="blocked-urls-list">${ urlListItems.join( '' ) }</ul>`;
 
-		this.showGptErrorToolTip( message, { type: 'warning', html: true, duration: 15000 } );
+		this.showGptErrorToolTip( message, { type: 'warning', html: true, duration: BLOCKED_URL_WARNING_DURATION } );
 	}
 
 	/**

@@ -1,67 +1,244 @@
 /**
  * AI Output Security Filter
- * Filters images and inline frames in AI-generated content.
+ *
+ * Mitigates prompt injection attacks that attempt to exfiltrate data via
+ * malicious URLs in AI-generated content (CVE-2025-32711 / EchoLeak style attacks).
+ *
+ * Filters:
+ * - Images: <img> tags and Markdown ![alt](url) syntax including reference-style (enabled by default)
+ * - Links: <a> tags and Markdown [text](url) syntax including reference-style (enabled by default)
+ * - Iframes: All <iframe> tags are unconditionally removed (always enabled)
+ * - Dangerous elements: <object>, <embed>, <applet>, SVG <image> (always enabled)
+ *
+ * @see https://nvd.nist.gov/vuln/detail/CVE-2025-32711
  */
 
-const AI_FILTER_DEFAULT_DOMAINS = [ 'unsplash.com', 'pexels.com', 'pixabay.com' ];
-const AI_FILTER_BYPASS_DOMAIN = 'promptahuman.com';
-const AI_FILTER_PLACEHOLDER_IMAGE_URL = 'https://promptahuman.com/900x160@x2?prompt=';
-const AI_FILTER_GRAY_PIXEL_BASE64 =
-	'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYGD4DwABBAEAW9TREES5CYII=';
+// ============================================================================
+// Constants
+// ============================================================================
+
+/**
+ * Default allowed domains for external images and links.
+ * Includes trusted stock photo services and DXPR's placeholder image service.
+ */
+const DEFAULT_ALLOWED_DOMAINS = [
+	'unsplash.com',
+	'images.unsplash.com',
+	'pexels.com',
+	'images.pexels.com',
+	'pixabay.com',
+	'promptahuman.com' // DXPR placeholder image service
+] as const;
+
+/** Placeholder image service URL for blocked images */
+const PLACEHOLDER_IMAGE_URL = 'https://promptahuman.com/900x160@x2?prompt=';
+
+/** 1x1 gray pixel as base64 - used in strict mode */
+const GRAY_PIXEL_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYGD4DwABBAEAW9TREES5CYII=';
+
+/** URL prefixes that are always considered safe (no network request or same-origin) */
+const SAFE_URL_PREFIXES = [ '/', '../', './', '#', 'mailto:', 'tel:', 'data:' ] as const;
+
+/** Wildcard prefix for domain matching */
+const WILDCARD_PREFIX = '*.';
+
+/** HTML elements that are always removed (can load external resources dangerously) */
+const DANGEROUS_ELEMENTS_SELECTOR = 'iframe, object, embed, applet';
+
+/** SVG image element selector */
+const SVG_IMAGE_SELECTOR = 'svg image';
+
+/** XLink namespace for SVG href attributes */
+const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
+
+/** Data attribute added to blocked links */
+const BLOCKED_LINK_ATTR = 'data-blocked-href';
+
+/** Maximum filename length for placeholders */
+const MAX_FILENAME_LENGTH = 50;
+
+/** Default filename when extraction fails */
+const DEFAULT_FILENAME = 'image';
+
+// Regex patterns
+const PATTERNS = {
+	/** Matches [refname]: url or [refname]: url "title" */
+	markdownReference: /^\[([^\]]+)\]:\s*(\S+)(?:\s+"[^"]*")?$/gm,
+	/** Matches ![alt](url) or ![alt](url "title") */
+	markdownInlineImage: /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
+	/** Matches ![alt][ref] or ![alt][] */
+	markdownRefImage: /!\[([^\]]*)\]\[([^\]]*)\]/g,
+	/** Matches [text](url) or [text](url "title") - with negative lookbehind to exclude images */
+	markdownInlineLink: /(?<!!)\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
+	/** Matches [text][ref] or [text][] - with negative lookbehind to exclude images */
+	markdownRefLink: /(?<!!)\[([^\]]+)\]\[([^\]]*)\]/g,
+	/** Matches reference definitions with trailing newlines */
+	markdownRefDefinition: /^\[([^\]]+)\]:\s*(\S+)(?:\s+"[^"]*")?[\r\n]*/gm,
+	/** Detects HTML content */
+	htmlDetection: /<[^>]+>/,
+	/** Escapes regex special characters */
+	regexEscape: /[.*+?^${}()|[\]\\]/g,
+	/** HTML tags that are always filtered (dangerous elements) */
+	streamingDangerousTags: /^<(iframe|object|embed|applet)[\s>]/i,
+	/** Image tag detection for streaming */
+	streamingImgTag: /^<img[\s>]/i,
+	/** Anchor tag detection for streaming */
+	streamingAnchorTag: /^<a[\s>]/i
+} as const;
+
+// ============================================================================
+// Types
+// ============================================================================
 
 export interface AiFilterConfig {
+	/** Enable/disable the entire security filter. Default: true */
 	enabled?: boolean;
+	/** Allowed domains for external resources. Supports wildcards (*.example.com). */
 	allowedDomains?: string[];
+	/** Block ALL external resources regardless of whitelist. Default: false */
 	strictMode?: boolean;
+	/** Enable image filtering. Default: true */
+	filterImages?: boolean;
+	/** Enable link filtering. Default: true */
+	filterLinks?: boolean;
 }
 
-const getAiFilterConfig = function( config?: AiFilterConfig ): Required<AiFilterConfig> {
-	return {
-		enabled: config?.enabled !== false,
-		allowedDomains: config?.allowedDomains || AI_FILTER_DEFAULT_DOMAINS,
-		strictMode: config?.strictMode === true
-	};
+interface ResolvedConfig {
+	enabled: boolean;
+	allowedDomains: string[];
+	strictMode: boolean;
+	filterImages: boolean;
+	filterLinks: boolean;
+}
+
+export interface FilterState {
+	buffer: string;
+	inTag: boolean;
+	tagType: string | null;
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Resolves partial config into complete config with defaults.
+ */
+const resolveConfig = ( config?: AiFilterConfig ): ResolvedConfig => ( {
+	enabled: config?.enabled !== false,
+	allowedDomains: config?.allowedDomains || [ ...DEFAULT_ALLOWED_DOMAINS ],
+	strictMode: config?.strictMode === true,
+	filterImages: config?.filterImages !== false,
+	filterLinks: config?.filterLinks !== false
+} );
+
+/**
+ * Escapes special regex characters in a string.
+ */
+const escapeRegExp = ( str: string ): string =>
+	str.replace( PATTERNS.regexEscape, '\\$&' );
+
+/**
+ * Extracts a safe filename from a URL for placeholder display.
+ */
+const extractFilename = ( url: string ): string => {
+	try {
+		const pathPart = url.split( '?' )[ 0 ].split( '#' )[ 0 ];
+		const filename = pathPart.split( '/' ).pop() || DEFAULT_FILENAME;
+		return filename.substring( 0, MAX_FILENAME_LENGTH );
+	} catch {
+		return DEFAULT_FILENAME;
+	}
 };
 
-const isAiImageUrlAllowed = function( url: string, allowedDomains: string[] = [] ): boolean {
+/**
+ * Checks if a URL starts with any of the safe prefixes.
+ */
+const hasSafePrefix = ( url: string ): boolean =>
+	SAFE_URL_PREFIXES.some( prefix => url.startsWith( prefix ) );
+
+/**
+ * Checks if a hostname matches an allowed domain pattern.
+ */
+const matchesDomainPattern = ( hostname: string, pattern: string ): boolean => {
+	if ( pattern === hostname ) return true;
+
+	if ( pattern.startsWith( WILDCARD_PREFIX ) ) {
+		const baseDomain = pattern.substring( WILDCARD_PREFIX.length );
+		return hostname.endsWith( `.${ baseDomain }` ) || hostname === baseDomain;
+	}
+
+	return false;
+};
+
+/**
+ * Validates whether a URL is allowed based on the whitelist.
+ */
+const isUrlAllowed = ( url: string, allowedDomains: string[] ): boolean => {
 	if ( !url ) return false;
 
 	try {
-		if ( url.includes( AI_FILTER_BYPASS_DOMAIN ) ) return true;
-
-		if (
-			url.startsWith( '/' ) ||
-			url.startsWith( '../' ) ||
-			url.startsWith( './' ) ||
-			url.startsWith( '#' ) ||
-			url.startsWith( 'mailto:' ) ||
-			url.startsWith( 'tel:' ) ||
-			url.startsWith( 'data:' )
-		) {
-			return true;
-		}
+		if ( hasSafePrefix( url ) ) return true;
 
 		const urlObj = new URL( url, typeof window !== 'undefined' ? window.location.href : undefined );
 		const { hostname } = urlObj;
 
-		if ( typeof window !== 'undefined' && hostname === window.location.hostname ) return true;
+		// Allow same-origin URLs
+		if ( typeof window !== 'undefined' && hostname === window.location.hostname ) {
+			return true;
+		}
 
-		return allowedDomains.some( ( pattern ) => {
-			if ( pattern === hostname ) return true;
-
-			if ( pattern.startsWith( '*.' ) ) {
-				const baseDomain = pattern.substring( 2 );
-				return hostname.endsWith( `.${ baseDomain }` ) || hostname === baseDomain;
-			}
-
-			return false;
-		} );
-	} catch ( e ) {
-		return false;
+		return allowedDomains.some( pattern => matchesDomainPattern( hostname, pattern ) );
+	} catch {
+		return false; // Invalid URL - block it
 	}
 };
 
-const filterAiHtmlImages = function( html: string, config: Required<AiFilterConfig> ): string {
+/**
+ * Determines if a URL should be blocked based on config.
+ */
+const shouldBlockUrl = ( url: string, config: ResolvedConfig ): boolean =>
+	config.strictMode || !isUrlAllowed( url, config.allowedDomains );
+
+/**
+ * Gets the replacement image source based on strict mode.
+ */
+const getReplacementImageSrc = ( originalUrl: string, strictMode: boolean ): string =>
+	strictMode
+		? GRAY_PIXEL_BASE64
+		: PLACEHOLDER_IMAGE_URL + encodeURIComponent( extractFilename( originalUrl ) );
+
+/**
+ * Parses reference-style definitions from Markdown content.
+ */
+const parseMarkdownReferences = ( markdown: string ): Map<string, string> => {
+	const refs = new Map<string, string>();
+	const pattern = new RegExp( PATTERNS.markdownReference.source, 'gm' );
+	let match;
+	while ( ( match = pattern.exec( markdown ) ) !== null ) {
+		refs.set( match[ 1 ].toLowerCase(), match[ 2 ] );
+	}
+	return refs;
+};
+
+/**
+ * Creates a regex pattern to find reference usage in markdown.
+ */
+const createRefUsagePattern = ( refName: string, isImage: boolean ): RegExp => {
+	const escaped = escapeRegExp( refName );
+	return isImage
+		? new RegExp( `!\\[[^\\]]*\\]\\[${ escaped }\\]`, 'i' )
+		: new RegExp( `(?<!!)\\[[^\\]]+\\]\\[${ escaped }\\]`, 'i' );
+};
+
+// ============================================================================
+// HTML Filtering
+// ============================================================================
+
+/**
+ * Filters HTML content for dangerous elements, images, and links.
+ */
+const filterHtmlContent = ( html: string, config: ResolvedConfig ): string => {
 	if ( !config.enabled ) return html;
 
 	const parser = typeof DOMParser !== 'undefined' ? new DOMParser() : null;
@@ -69,83 +246,209 @@ const filterAiHtmlImages = function( html: string, config: Required<AiFilterConf
 
 	const doc = parser.parseFromString( html, 'text/html' );
 
-	doc.querySelectorAll( 'iframe' ).forEach( ( iframe ) => iframe.remove() );
+	// Always remove dangerous elements
+	doc.querySelectorAll( DANGEROUS_ELEMENTS_SELECTOR ).forEach( el => el.remove() );
 
-	doc.querySelectorAll( 'img' ).forEach( ( img ) => {
-		const src = img.getAttribute( 'src' );
-		if ( config.strictMode || !isAiImageUrlAllowed( src || '', config.allowedDomains ) ) {
-			if ( config.strictMode ) {
-				img.setAttribute( 'src', AI_FILTER_GRAY_PIXEL_BASE64 );
-			} else {
-				const filename = src ? src.split( '/' ).pop()!.split( '?' )[ 0 ] : 'image';
-				img.setAttribute( 'src', AI_FILTER_PLACEHOLDER_IMAGE_URL + encodeURIComponent( filename ) );
+	// Filter images
+	if ( config.filterImages ) {
+		doc.querySelectorAll( 'img' ).forEach( img => {
+			const src = img.getAttribute( 'src' ) || '';
+			if ( shouldBlockUrl( src, config ) ) {
+				img.setAttribute( 'src', getReplacementImageSrc( src, config.strictMode ) );
+				img.removeAttribute( 'srcset' );
 			}
-		}
-	} );
+		} );
+
+		// Filter SVG images
+		doc.querySelectorAll( SVG_IMAGE_SELECTOR ).forEach( svgImg => {
+			const href = svgImg.getAttribute( 'href' ) || svgImg.getAttributeNS( XLINK_NAMESPACE, 'href' ) || '';
+			if ( shouldBlockUrl( href, config ) ) {
+				svgImg.remove();
+			}
+		} );
+	}
+
+	// Filter links
+	if ( config.filterLinks ) {
+		doc.querySelectorAll( 'a' ).forEach( anchor => {
+			const href = anchor.getAttribute( 'href' ) || '';
+			if ( href && shouldBlockUrl( href, config ) ) {
+				anchor.removeAttribute( 'href' );
+				anchor.setAttribute( BLOCKED_LINK_ATTR, 'true' );
+			}
+		} );
+	}
 
 	return doc.body.innerHTML;
 };
 
-const filterAiMarkdownImages = function( markdown: string, config: Required<AiFilterConfig> ): string {
+// ============================================================================
+// Markdown Filtering
+// ============================================================================
+
+/**
+ * Filters inline markdown resources (images or links).
+ */
+const filterMarkdownInline = (
+	content: string,
+	pattern: RegExp,
+	config: ResolvedConfig,
+	isImage: boolean
+): string => {
+	const regex = new RegExp( pattern.source, pattern.flags );
+	return content.replace( regex, ( match, textOrAlt, url ) => {
+		if ( shouldBlockUrl( url, config ) ) {
+			return isImage
+				? `![${ textOrAlt }](${ getReplacementImageSrc( url, config.strictMode ) })`
+				: textOrAlt; // For links, return just the text
+		}
+		return match;
+	} );
+};
+
+/**
+ * Filters reference-style markdown resources (images or links).
+ */
+const filterMarkdownReference = (
+	content: string,
+	pattern: RegExp,
+	references: Map<string, string>,
+	config: ResolvedConfig,
+	isImage: boolean
+): string => {
+	const regex = new RegExp( pattern.source, pattern.flags );
+	return content.replace( regex, ( match, textOrAlt, ref ) => {
+		const refKey = ( ref || textOrAlt ).toLowerCase();
+		const url = references.get( refKey );
+		if ( url && shouldBlockUrl( url, config ) ) {
+			return isImage
+				? `![${ textOrAlt }](${ getReplacementImageSrc( url, config.strictMode ) })`
+				: textOrAlt; // For links, return just the text
+		}
+		return match;
+	} );
+};
+
+/**
+ * Removes orphaned reference definitions for blocked URLs.
+ */
+const cleanupMarkdownReferences = (
+	content: string,
+	originalMarkdown: string,
+	config: ResolvedConfig
+): string => {
+	const regex = new RegExp( PATTERNS.markdownRefDefinition.source, 'gm' );
+	return content.replace( regex, ( match, refName, url ) => {
+		// Check image references
+		if ( config.filterImages ) {
+			const imagePattern = createRefUsagePattern( refName, true );
+			if ( imagePattern.test( originalMarkdown ) && shouldBlockUrl( url, config ) ) {
+				return '';
+			}
+		}
+
+		// Check link references
+		if ( config.filterLinks ) {
+			const linkPattern = createRefUsagePattern( refName, false );
+			if ( linkPattern.test( originalMarkdown ) && shouldBlockUrl( url, config ) ) {
+				return '';
+			}
+		}
+
+		return match;
+	} );
+};
+
+/**
+ * Filters Markdown content for images and links.
+ */
+const filterMarkdownContent = ( markdown: string, config: ResolvedConfig ): string => {
 	if ( !config.enabled ) return markdown;
 
 	let filtered = markdown;
+	const references = parseMarkdownReferences( markdown );
 
-	filtered = filtered.replace(
-		/!\[([^\]]*)\]\(([^)]+)\)/g,
-		( match, alt, url ) => {
-			if ( config.strictMode || !isAiImageUrlAllowed( url, config.allowedDomains ) ) {
-				if ( config.strictMode ) {
-					return `![${ alt }](${ AI_FILTER_GRAY_PIXEL_BASE64 })`;
-				}
+	// Filter images
+	if ( config.filterImages ) {
+		filtered = filterMarkdownInline( filtered, PATTERNS.markdownInlineImage, config, true );
+		filtered = filterMarkdownReference( filtered, PATTERNS.markdownRefImage, references, config, true );
+	}
 
-				const filename = url ? url.split( '/' ).pop().split( '?' )[ 0 ] : 'image';
-				return `![${ alt }](${ AI_FILTER_PLACEHOLDER_IMAGE_URL }${ encodeURIComponent( filename ) })`;
-			}
+	// Filter links
+	if ( config.filterLinks ) {
+		filtered = filterMarkdownInline( filtered, PATTERNS.markdownInlineLink, config, false );
+		filtered = filterMarkdownReference( filtered, PATTERNS.markdownRefLink, references, config, false );
+	}
 
-			return match;
-		}
-	);
+	// Clean up orphaned reference definitions
+	filtered = cleanupMarkdownReferences( filtered, markdown, config );
 
 	return filtered;
 };
 
-export const filterAiImages = function( content: string, config?: AiFilterConfig ): string {
+// ============================================================================
+// Public API
+// ============================================================================
+
+/**
+ * Main filter function for AI-generated content.
+ * Automatically detects HTML vs Markdown content.
+ */
+export const filterAiImages = ( content: string, config?: AiFilterConfig ): string => {
 	if ( !content ) return content;
 
-	const filterConfig = getAiFilterConfig( config );
-	const isHtml = /<[^>]+>/.test( content );
+	const resolvedConfig = resolveConfig( config );
+	const isHtml = PATTERNS.htmlDetection.test( content );
 
 	return isHtml
-		? filterAiHtmlImages( content, filterConfig )
-		: filterAiMarkdownImages( content, filterConfig );
+		? filterHtmlContent( content, resolvedConfig )
+		: filterMarkdownContent( content, resolvedConfig );
 };
 
-interface FilterState {
-	buffer: string;
-	inTag: boolean;
-	tagType: string | null;
-}
-
-export const filterAiStreamingChunk = function( chunk: string, state?: FilterState, config?: AiFilterConfig ): string {
+/**
+ * Filters streaming content chunks in real-time.
+ * Buffers potentially dangerous tags until complete, then filters them.
+ */
+export const filterAiStreamingChunk = (
+	chunk: string,
+	state?: FilterState,
+	config?: AiFilterConfig
+): string => {
 	const filterState: FilterState = state || { buffer: '', inTag: false, tagType: null };
-	const filterConfig = getAiFilterConfig( config );
+	const resolvedConfig = resolveConfig( config );
 
-	if ( !filterConfig.enabled ) return chunk;
+	if ( !resolvedConfig.enabled ) return chunk;
 
 	let output = '';
-	let i = 0;
 
-	while ( i < chunk.length ) {
+	for ( let i = 0; i < chunk.length; i++ ) {
 		const char = chunk[ i ];
 
 		if ( !filterState.inTag && char === '<' ) {
 			const remaining = chunk.substring( i );
-			if ( remaining.match( /^<img[\s>]/i ) || remaining.match( /^<iframe[\s>]/i ) ) {
+
+			// Always filter dangerous elements
+			const dangerousMatch = remaining.match( PATTERNS.streamingDangerousTags );
+			if ( dangerousMatch ) {
 				filterState.inTag = true;
 				filterState.buffer = char;
-				filterState.tagType = remaining.match( /^<(\w+)/i )![ 1 ].toLowerCase();
-				i++;
+				filterState.tagType = dangerousMatch[ 1 ].toLowerCase();
+				continue;
+			}
+
+			// Filter images if enabled
+			if ( resolvedConfig.filterImages && PATTERNS.streamingImgTag.test( remaining ) ) {
+				filterState.inTag = true;
+				filterState.buffer = char;
+				filterState.tagType = 'img';
+				continue;
+			}
+
+			// Filter links if enabled
+			if ( resolvedConfig.filterLinks && PATTERNS.streamingAnchorTag.test( remaining ) ) {
+				filterState.inTag = true;
+				filterState.buffer = char;
+				filterState.tagType = 'a';
 				continue;
 			}
 		}
@@ -154,12 +457,7 @@ export const filterAiStreamingChunk = function( chunk: string, state?: FilterSta
 			filterState.buffer += char;
 
 			if ( char === '>' ) {
-				const filteredTag = filterAiImages( filterState.buffer, config );
-
-				if ( filteredTag === filterState.buffer ) {
-					output += filteredTag;
-				}
-
+				output += filterAiImages( filterState.buffer, config );
 				filterState.inTag = false;
 				filterState.buffer = '';
 				filterState.tagType = null;
@@ -167,8 +465,6 @@ export const filterAiStreamingChunk = function( chunk: string, state?: FilterSta
 		} else {
 			output += char;
 		}
-
-		i++;
 	}
 
 	return output;

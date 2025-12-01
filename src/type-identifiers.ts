@@ -64,11 +64,18 @@ export interface AiAgentConfig {
     moderationEnable?: boolean;
     moderationDisableFlags?: Array<ModerationFlagsTypes>;
 
-    // AI Output Security
+    // AI Output Security - mitigates prompt injection data exfiltration (CVE-2025-32711)
     aiOutputSecurity?: {
+        /** Enable/disable the entire security filter. Default: true */
         enabled?: boolean;
+        /** Allowed domains for external resources. Supports wildcards (*.example.com). Default includes stock photo sites + promptahuman.com */
         allowedDomains?: string[];
+        /** Block ALL external resources regardless of whitelist (images→gray pixel, links→neutralized). Default: false */
         strictMode?: boolean;
+        /** Enable image filtering. Default: true */
+        filterImages?: boolean;
+        /** Enable link filtering. Default: true */
+        filterLinks?: boolean;
     };
 
     commandsDropdown?: Array<{

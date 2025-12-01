@@ -378,7 +378,6 @@ export default class AiAgentUI extends Plugin {
 
 		const editorRect = view?.getBoundingClientRect();
 		if ( tooltipElement && editorRect ) {
-			// Apply type-specific styling
 			tooltipElement.classList.remove( 'response-error--warning' );
 			if ( options?.type === 'warning' ) {
 				tooltipElement.classList.add( 'response-error--warning' );
@@ -386,7 +385,6 @@ export default class AiAgentUI extends Plugin {
 
 			tooltipElement.classList.add( 'show-response-error' );
 
-			// Support HTML content for rich notifications
 			if ( options?.html ) {
 				tooltipElement.innerHTML = message;
 			} else {
@@ -402,7 +400,6 @@ export default class AiAgentUI extends Plugin {
 
 	/**
 	 * Displays a warning notification for blocked URLs.
-	 * Follows Nielsen Norman Group microcopy best practices.
 	 *
 	 * @param blockedUrls - Object containing arrays of blocked image and link URLs.
 	 */
@@ -412,7 +409,6 @@ export default class AiAgentUI extends Plugin {
 
 		const t = this.editor.t;
 
-		// Build message parts
 		const parts: string[] = [];
 		if ( blockedUrls.images.length > 0 ) {
 			const imageWord = blockedUrls.images.length === 1 ? t( 'image' ) : t( 'images' );
@@ -423,13 +419,11 @@ export default class AiAgentUI extends Plugin {
 			parts.push( `${ blockedUrls.links.length } ${ linkWord }` );
 		}
 
-		// Build URL list (limit to avoid overwhelming the user)
 		const allUrls = [ ...blockedUrls.images, ...blockedUrls.links ];
 		const displayUrls = allUrls.slice( 0, MAX_BLOCKED_URLS_DISPLAYED );
 		const remainingCount = allUrls.length - displayUrls.length;
 
 		const urlListItems = displayUrls.map( url => {
-			// Truncate long URLs for readability
 			const truncated = url.length > MAX_URL_DISPLAY_LENGTH
 				? `${ url.substring( 0, MAX_URL_DISPLAY_LENGTH ) }...`
 				: url;
@@ -440,7 +434,6 @@ export default class AiAgentUI extends Plugin {
 			urlListItems.push( `<li>...${ t( 'and %0 more', [ remainingCount ] ) }</li>` );
 		}
 
-		// Construct the message following Nielsen best practices
 		const message =
 			`<strong>${ t( 'External URLs filtered' ) }</strong><br>` +
 			`${ parts.join( ` ${ t( 'and' ) } ` ) } ${ t( 'blocked for security.' ) }<br>` +

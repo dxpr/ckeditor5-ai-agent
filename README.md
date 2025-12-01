@@ -163,15 +163,10 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 | `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
 | `aiOutputSecurity` | `object?` | `{}` | Security settings to mitigate prompt injection data exfiltration attacks ([CVE-2025-32711](https://nvd.nist.gov/vuln/detail/CVE-2025-32711)) |
-| `aiOutputSecurity.enabled` | `boolean?` | `true` | Enable/disable the entire security filter |
-| `aiOutputSecurity.allowedDomains` | `string[]?` | - | **Deprecated.** Use `allowedImageDomains` and `allowedLinkDomains` for granular control |
-| `aiOutputSecurity.allowedImageDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`) |
-| `aiOutputSecurity.allowedLinkDomains` | `string[]?` | `[]` | Allowed domains for links. Supports wildcards. Empty by default for maximum security |
-| `aiOutputSecurity.strictMode` | `boolean?` | `false` | Block ALL external resources regardless of whitelist |
-| `aiOutputSecurity.filterImages` | `boolean?` | `true` | Enable image filtering (`<img>`, Markdown `![alt](url)`, SVG `<image>`) |
-| `aiOutputSecurity.filterLinks` | `boolean?` | `true` | Enable link filtering (`<a>`, Markdown `[text](url)`) |
+| `aiOutputSecurity.allowedImageDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`). Use `[]` to block all, `['*']` to allow all |
+| `aiOutputSecurity.allowedLinkDomains` | `string[]?` | `[]` | Allowed domains for links. Supports wildcards (`*.example.com`). Use `[]` to block all, `['*']` to allow all |
 
-**Note:** Iframes and dangerous elements (`<object>`, `<embed>`, `<applet>`) are always removed regardless of settings.
+**Note:** Iframes and dangerous elements (`<object>`, `<embed>`, `<applet>`) are always removed.
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
@@ -370,9 +365,8 @@ Protects against prompt injection attacks that exfiltrate data via malicious URL
 
 ```typescript
 aiOutputSecurity: {
-    allowedImageDomains: ['unsplash.com', '*.mycdn.com'],
-    allowedLinkDomains: ['mycompany.com', '*.trusted-partner.com'],
-    strictMode: false  // Set true to block ALL external resources
+    allowedImageDomains: ['unsplash.com', '*.mycdn.com'],  // [] blocks all, ['*'] allows all
+    allowedLinkDomains: ['mycompany.com', '*.trusted-partner.com']  // [] blocks all, ['*'] allows all
 }
 ```
 

@@ -66,23 +66,16 @@ export interface AiAgentConfig {
 
     // AI Output Security - mitigates prompt injection data exfiltration (CVE-2025-32711)
     aiOutputSecurity?: {
-        /** Enable/disable the entire security filter. Default: true */
-        enabled?: boolean;
         /**
-         * Allowed domains for external resources. Supports wildcards (*.example.com).
-         * @deprecated Use `allowedImageDomains` and `allowedLinkDomains` for granular control.
+         * Allowed domains for images. Supports wildcards (*.example.com).
+         * Default: ['promptahuman.com']. Use [] to block all, ['*'] to allow all.
          */
-        allowedDomains?: string[];
-        /** Allowed domains for images. Supports wildcards (*.example.com). Default: ['promptahuman.com'] */
         allowedImageDomains?: string[];
-        /** Allowed domains for links. Supports wildcards (*.example.com). Default: [] (all external links blocked) */
+        /**
+         * Allowed domains for links. Supports wildcards (*.example.com).
+         * Default: [] (blocks all). Use ['*'] to allow all external links.
+         */
         allowedLinkDomains?: string[];
-        /** Block ALL external resources regardless of whitelist (images→gray pixel, links→neutralized). Default: false */
-        strictMode?: boolean;
-        /** Enable image filtering. Default: true */
-        filterImages?: boolean;
-        /** Enable link filtering. Default: true */
-        filterLinks?: boolean;
     };
 
     commandsDropdown?: Array<{

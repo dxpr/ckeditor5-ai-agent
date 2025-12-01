@@ -171,9 +171,9 @@ The `aiOutputSecurity` option protects against prompt injection attacks where ma
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `enabled` | `boolean?` | `true` | Enable/disable the entire security filter |
-| `allowedDomains` | `string[]?` | Default domains | **Deprecated.** Use `allowedImageDomains` and `allowedLinkDomains` for granular control |
-| `allowedImageDomains` | `string[]?` | `['unsplash.com', 'images.unsplash.com', 'pexels.com', 'images.pexels.com', 'pixabay.com', 'promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`) |
-| `allowedLinkDomains` | `string[]?` | Same as `allowedImageDomains` | Allowed domains for links. Supports wildcards (`*.example.com`) |
+| `allowedDomains` | `string[]?` | - | **Deprecated.** Use `allowedImageDomains` and `allowedLinkDomains` for granular control |
+| `allowedImageDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`) |
+| `allowedLinkDomains` | `string[]?` | `[]` | Allowed domains for links. Supports wildcards (`*.example.com`). Empty by default for maximum security |
 | `strictMode` | `boolean?` | `false` | Block ALL external resources regardless of whitelist. Images are replaced with a gray pixel, links are neutralized |
 | `filterImages` | `boolean?` | `true` | Enable image filtering. Filters `<img>` tags, Markdown `![alt](url)` and `![alt][ref]` syntax, SVG `<image>` elements |
 | `filterLinks` | `boolean?` | `true` | Enable link filtering. Filters `<a>` tags, Markdown `[text](url)` and `[text][ref]` syntax |
@@ -217,7 +217,11 @@ This separation is useful when you want to allow images from stock photo service
 
 #### Default Behavior
 
-**Important:** By default, the filter only allows images from `promptahuman.com` (the placeholder image service). This provides maximum security out of the box. To allow additional domains, configure the whitelist:
+**Maximum security by default:**
+- **Images**: Only `promptahuman.com` (placeholder service) is allowed
+- **Links**: All external links are blocked (empty whitelist)
+
+This provides maximum security out of the box. To allow additional domains, configure the whitelists:
 
 ```typescript
 aiOutputSecurity: {
@@ -228,26 +232,22 @@ aiOutputSecurity: {
         'pexels.com',
         'images.pexels.com',
         'pixabay.com'
+    ],
+    allowedLinkDomains: [
+        'wikipedia.org',
+        '*.wikipedia.org',
+        'docs.mycompany.com'
     ]
 }
 ```
 
-To block ALL external resources, you must either:
+To block ALL external images as well, use strict mode:
 
-1. **Use strict mode** (recommended for maximum security):
-   ```typescript
-   aiOutputSecurity: {
-       strictMode: true
-   }
-   ```
-
-2. **Set empty whitelists** (blocks external URLs while keeping placeholder behavior):
-   ```typescript
-   aiOutputSecurity: {
-       allowedImageDomains: [],
-       allowedLinkDomains: []
-   }
-   ```
+```typescript
+aiOutputSecurity: {
+    strictMode: true
+}
+```
 
 #### Strict Mode
 

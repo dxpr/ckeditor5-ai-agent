@@ -22,9 +22,16 @@
  * Only allows the placeholder image service by default for maximum security.
  * Users can extend this list via allowedImageDomains config option.
  */
-const DEFAULT_ALLOWED_DOMAINS = [
+const DEFAULT_ALLOWED_IMAGE_DOMAINS = [
 	'promptahuman.com'
 ] as const;
+
+/**
+ * Default allowed domains for external links.
+ * Empty by default for maximum security - all external links are blocked.
+ * Users can extend this list via allowedLinkDomains config option.
+ */
+const DEFAULT_ALLOWED_LINK_DOMAINS: readonly string[] = [] as const;
 
 /** Placeholder image service URL for blocked images */
 const PLACEHOLDER_IMAGE_URL = 'https://promptahuman.com/900x160@x2?prompt=';
@@ -142,13 +149,16 @@ export interface FilterState {
  * Supports legacy `allowedDomains` for backwards compatibility.
  */
 const resolveConfig = ( config?: AiFilterConfig ): ResolvedConfig => {
-	// Support legacy allowedDomains as fallback for both image and link domains
-	const legacyDomains = config?.allowedDomains || [ ...DEFAULT_ALLOWED_DOMAINS ];
+	// Support legacy allowedDomains for backwards compatibility
+	// If legacy allowedDomains is set, use it for both; otherwise use separate defaults
+	const hasLegacyDomains = config?.allowedDomains !== undefined;
 
 	return {
 		enabled: config?.enabled !== false,
-		allowedImageDomains: config?.allowedImageDomains || legacyDomains,
-		allowedLinkDomains: config?.allowedLinkDomains || legacyDomains,
+		allowedImageDomains: config?.allowedImageDomains ||
+			( hasLegacyDomains ? config!.allowedDomains! : [ ...DEFAULT_ALLOWED_IMAGE_DOMAINS ] ),
+		allowedLinkDomains: config?.allowedLinkDomains ||
+			( hasLegacyDomains ? config!.allowedDomains! : [ ...DEFAULT_ALLOWED_LINK_DOMAINS ] ),
 		strictMode: config?.strictMode === true,
 		filterImages: config?.filterImages !== false,
 		filterLinks: config?.filterLinks !== false,

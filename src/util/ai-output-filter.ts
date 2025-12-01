@@ -33,8 +33,12 @@ const DEFAULT_ALLOWED_DOMAINS = [
 /** Placeholder image service URL for blocked images */
 const PLACEHOLDER_IMAGE_URL = 'https://promptahuman.com/900x160@x2?prompt=';
 
-/** 1x1 transparent pixel as base64 - used when external placeholder not allowed */
-const GRAY_PIXEL_BASE64 = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+/** 1x1 gray pixel as base64 - used when external placeholder not allowed */
+const GRAY_PIXEL_BASE64 = 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+/** Default dimensions for blocked image placeholder (matches promptahuman.com default) */
+const BLOCKED_IMAGE_WIDTH = 900;
+const BLOCKED_IMAGE_HEIGHT = 160;
 
 /** URL prefixes that are always considered safe (no network request or same-origin) */
 const SAFE_URL_PREFIXES = [ '/', '../', './', '#', 'mailto:', 'tel:', 'data:' ] as const;
@@ -323,8 +327,15 @@ const filterHtmlContent = (
 			const src = img.getAttribute( 'src' ) || '';
 			if ( shouldBlockImageUrl( src, config ) ) {
 				recordBlockedUrl( blockedUrls, src, 'image' );
-				img.setAttribute( 'src', getReplacementImageSrc( src, config ) );
+				const replacementSrc = getReplacementImageSrc( src, config );
+				img.setAttribute( 'src', replacementSrc );
 				img.removeAttribute( 'srcset' );
+
+				// Set visible dimensions when using the BASE64 placeholder
+				if ( replacementSrc === GRAY_PIXEL_BASE64 ) {
+					img.setAttribute( 'width', String( BLOCKED_IMAGE_WIDTH ) );
+					img.setAttribute( 'height', String( BLOCKED_IMAGE_HEIGHT ) );
+				}
 			}
 		} );
 

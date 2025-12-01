@@ -162,96 +162,16 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `tonesDropdown` | `Array<{ label: string; tone: string; }>?` | - | Specifies the available tones for content generation, allowing users to select the desired tone for the AI's responses. Each tone can be associated with a specific instruction to adjust the AI's output style. |
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 | `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
-| `aiOutputSecurity` | `object?` | See below | Security settings to mitigate prompt injection data exfiltration attacks (CVE-2025-32711) |
+| `aiOutputSecurity` | `object?` | `{}` | Security settings to mitigate prompt injection data exfiltration attacks ([CVE-2025-32711](https://nvd.nist.gov/vuln/detail/CVE-2025-32711)) |
+| `aiOutputSecurity.enabled` | `boolean?` | `true` | Enable/disable the entire security filter |
+| `aiOutputSecurity.allowedDomains` | `string[]?` | - | **Deprecated.** Use `allowedImageDomains` and `allowedLinkDomains` for granular control |
+| `aiOutputSecurity.allowedImageDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`) |
+| `aiOutputSecurity.allowedLinkDomains` | `string[]?` | `[]` | Allowed domains for links. Supports wildcards. Empty by default for maximum security |
+| `aiOutputSecurity.strictMode` | `boolean?` | `false` | Block ALL external resources regardless of whitelist |
+| `aiOutputSecurity.filterImages` | `boolean?` | `true` | Enable image filtering (`<img>`, Markdown `![alt](url)`, SVG `<image>`) |
+| `aiOutputSecurity.filterLinks` | `boolean?` | `true` | Enable link filtering (`<a>`, Markdown `[text](url)`) |
 
-### AI Output Security
-
-The `aiOutputSecurity` option protects against prompt injection attacks where malicious content instructs the AI to embed tracking images or links that exfiltrate sensitive data. This addresses vulnerabilities like [CVE-2025-32711 (EchoLeak)](https://nvd.nist.gov/vuln/detail/CVE-2025-32711).
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `enabled` | `boolean?` | `true` | Enable/disable the entire security filter |
-| `allowedDomains` | `string[]?` | - | **Deprecated.** Use `allowedImageDomains` and `allowedLinkDomains` for granular control |
-| `allowedImageDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`) |
-| `allowedLinkDomains` | `string[]?` | `[]` | Allowed domains for links. Supports wildcards (`*.example.com`). Empty by default for maximum security |
-| `strictMode` | `boolean?` | `false` | Block ALL external resources regardless of whitelist. Images are replaced with a gray pixel, links are neutralized |
-| `filterImages` | `boolean?` | `true` | Enable image filtering. Filters `<img>` tags, Markdown `![alt](url)` and `![alt][ref]` syntax, SVG `<image>` elements |
-| `filterLinks` | `boolean?` | `true` | Enable link filtering. Filters `<a>` tags, Markdown `[text](url)` and `[text][ref]` syntax |
-
-**Note:** Iframes (`<iframe>`) and dangerous elements (`<object>`, `<embed>`, `<applet>`) are always removed regardless of settings.
-
-#### Example Configuration
-
-```typescript
-aiAgent: {
-    apiKey: 'YOUR_API_KEY',
-    aiOutputSecurity: {
-        enabled: true,
-        // Separate whitelists for granular control
-        allowedImageDomains: [
-            'unsplash.com',
-            'images.unsplash.com',
-            'pexels.com',
-            '*.mycdn.com'
-        ],
-        allowedLinkDomains: [
-            'mycompany.com',
-            'docs.mycompany.com',
-            '*.trusted-partner.com'
-        ],
-        strictMode: false,
-        filterImages: true,
-        filterLinks: true
-    }
-}
-```
-
-#### Separate Whitelists
-
-You can configure separate domain whitelists for images and links, allowing different security policies:
-
-- **`allowedImageDomains`**: Controls which external image sources are permitted (stock photo sites, CDNs, etc.)
-- **`allowedLinkDomains`**: Controls which external link destinations are permitted (documentation, partner sites, etc.)
-
-This separation is useful when you want to allow images from stock photo services but restrict links to only your organization's domains.
-
-#### Default Behavior
-
-**Maximum security by default:**
-- **Images**: Only `promptahuman.com` (placeholder service) is allowed
-- **Links**: All external links are blocked (empty whitelist)
-
-This provides maximum security out of the box. To allow additional domains, configure the whitelists:
-
-```typescript
-aiOutputSecurity: {
-    allowedImageDomains: [
-        'promptahuman.com',    // Keep for placeholder images
-        'unsplash.com',
-        'images.unsplash.com',
-        'pexels.com',
-        'images.pexels.com',
-        'pixabay.com'
-    ],
-    allowedLinkDomains: [
-        'wikipedia.org',
-        '*.wikipedia.org',
-        'docs.mycompany.com'
-    ]
-}
-```
-
-To block ALL external images as well, use strict mode:
-
-```typescript
-aiOutputSecurity: {
-    strictMode: true
-}
-```
-
-#### Strict Mode
-
-When `strictMode` is enabled, ALL external images are replaced with a 1x1 gray pixel and ALL external links are neutralized (href removed, text preserved), regardless of the whitelist settings. This is the most secure option for environments where no external resources should be loaded.
+**Note:** Iframes and dangerous elements (`<object>`, `<embed>`, `<applet>`) are always removed regardless of settings.
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
@@ -440,6 +360,20 @@ ClassicEditor
     .catch( error => {
         console.error( error );
     } );
+```
+
+### AI Output Security
+
+Protects against prompt injection attacks that exfiltrate data via malicious URLs in AI-generated content ([CVE-2025-32711](https://nvd.nist.gov/vuln/detail/CVE-2025-32711)).
+
+**Default behavior:** Only `promptahuman.com` allowed for images, all external links blocked.
+
+```typescript
+aiOutputSecurity: {
+    allowedImageDomains: ['unsplash.com', '*.mycdn.com'],
+    allowedLinkDomains: ['mycompany.com', '*.trusted-partner.com'],
+    strictMode: false  // Set true to block ALL external resources
+}
 ```
 
 ## Development

@@ -217,12 +217,20 @@ This separation is useful when you want to allow images from stock photo service
 
 #### Default Behavior
 
-**Important:** By default, the filter allows images and links from popular stock photo services. If you don't configure any whitelist, the following domains are permitted:
+**Important:** By default, the filter only allows images from `promptahuman.com` (the placeholder image service). This provides maximum security out of the box. To allow additional domains, configure the whitelist:
 
-- `unsplash.com`, `images.unsplash.com`
-- `pexels.com`, `images.pexels.com`
-- `pixabay.com`
-- `promptahuman.com` (DXPR placeholder service)
+```typescript
+aiOutputSecurity: {
+    allowedImageDomains: [
+        'promptahuman.com',    // Keep for placeholder images
+        'unsplash.com',
+        'images.unsplash.com',
+        'pexels.com',
+        'images.pexels.com',
+        'pixabay.com'
+    ]
+}
+```
 
 To block ALL external resources, you must either:
 

@@ -18,16 +18,12 @@
 // ============================================================================
 
 /**
- * Default allowed domains for external images and links.
- * Includes trusted stock photo services and DXPR's placeholder image service.
+ * Default allowed domains for external images.
+ * Only allows the placeholder image service by default for maximum security.
+ * Users can extend this list via allowedImageDomains config option.
  */
 const DEFAULT_ALLOWED_DOMAINS = [
-	'unsplash.com',
-	'images.unsplash.com',
-	'pexels.com',
-	'images.pexels.com',
-	'pixabay.com',
-	'promptahuman.com' // DXPR placeholder image service
+	'promptahuman.com'
 ] as const;
 
 /** Placeholder image service URL for blocked images */

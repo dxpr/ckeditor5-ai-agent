@@ -45,3 +45,6 @@ export const ALL_MODERATION_FLAGS = [
 
 export const SHOW_ERROR_DURATION = 5000;
 export const STORAGE_PREFIX = 'ck5-ai-agent';
+
+/** Domain for the placeholder image service used for AI-generated images */
+export const PLACEHOLDER_SERVICE_DOMAIN = 'promptahuman.com';

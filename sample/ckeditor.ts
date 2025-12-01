@@ -147,6 +147,23 @@ ClassicEditor
 		aiAgent: {
 			apiKey: 'YOUR_API_KEY',
 			debugMode: true,
+			aiOutputSecurity: {
+				allowedImageDomains: [
+					'unsplash.com',
+					'images.unsplash.com',
+					'pexels.com',
+					'images.pexels.com',
+					'pixabay.com',
+					'promptahuman.com'
+				],
+				allowedLinkDomains: [
+					'unsplash.com',
+					'pexels.com',
+					'pixabay.com',
+					'wikipedia.org',
+					'*.wikipedia.org'
+				],
+			},
 			tonesDropdown: [
 				{
 					label: 'Patient-Friendly',
@@ -290,7 +307,11 @@ const inlineEditorConfig = {
 	aiAgent: {
 		apiKey: 'YOUR_API_KEY',
 		contentScope: '.page-builder-container',
-		debugMode: true
+		debugMode: true,
+		aiOutputSecurity: {
+			allowedImageDomains: [],
+			allowedLinkDomains: []
+		}
 	},
 	language: {
 		content: 'en',

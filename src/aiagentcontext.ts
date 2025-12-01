@@ -39,6 +39,12 @@ export class AiAgentContext {
 			this._uiComponent.hideLoader( editor );
 		}
 	}
+
+	public showBlockedUrlsWarning( blockedUrls: { images: string[]; links: string[] } ): void {
+		if ( this._uiComponent ) {
+			this._uiComponent.showBlockedUrlsWarning( blockedUrls );
+		}
+	}
 }
 
 export const aiAgentContext = AiAgentContext.getInstance();

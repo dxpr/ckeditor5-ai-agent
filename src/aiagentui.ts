@@ -384,4 +384,28 @@ export default class AiAgentUI extends Plugin {
 			tooltipElement.classList.remove( 'show-response-error' );
 		}
 	}
+
+	/**
+	 * Displays a warning message when URLs are blocked by the security filter.
+	 *
+	 * @param blockedUrls - Object containing arrays of blocked image and link URLs.
+	 */
+	public showBlockedUrlsWarning( blockedUrls: { images: string[]; links: string[] } ): void {
+		const t = this.editor.t;
+		const imageCount = blockedUrls.images.length;
+		const linkCount = blockedUrls.links.length;
+
+		const parts: string[] = [];
+		if ( imageCount > 0 ) {
+			parts.push( `${ imageCount } image${ imageCount > 1 ? 's' : '' }` );
+		}
+		if ( linkCount > 0 ) {
+			parts.push( `${ linkCount } link${ linkCount > 1 ? 's' : '' }` );
+		}
+
+		if ( parts.length > 0 ) {
+			const message = t( 'Security filter blocked' ) + ' ' + parts.join( ' and ' );
+			this.showGptErrorToolTip( message );
+		}
+	}
 }

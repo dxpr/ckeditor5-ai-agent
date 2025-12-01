@@ -73,9 +73,9 @@ export interface AiAgentConfig {
          * @deprecated Use `allowedImageDomains` and `allowedLinkDomains` for granular control.
          */
         allowedDomains?: string[];
-        /** Allowed domains for images. Supports wildcards (*.example.com). Default includes stock photo sites + promptahuman.com */
+        /** Allowed domains for images. Supports wildcards (*.example.com). Default: ['promptahuman.com'] */
         allowedImageDomains?: string[];
-        /** Allowed domains for links. Supports wildcards (*.example.com). Default includes stock photo sites + promptahuman.com */
+        /** Allowed domains for links. Supports wildcards (*.example.com). Default: [] (all external links blocked) */
         allowedLinkDomains?: string[];
         /** Block ALL external resources regardless of whitelist (images→gray pixel, links→neutralized). Default: false */
         strictMode?: boolean;

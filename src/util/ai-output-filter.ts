@@ -13,12 +13,11 @@
  * @see https://nvd.nist.gov/vuln/detail/CVE-2025-32711
  */
 
+import { PLACEHOLDER_SERVICE_DOMAIN } from '../const.js';
+
 // ============================================================================
 // Constants
 // ============================================================================
-
-/** Domain for the placeholder image service */
-const PLACEHOLDER_SERVICE_DOMAIN = 'promptahuman.com';
 
 /**
  * Default allowed domains for external images.
@@ -37,7 +36,7 @@ const DEFAULT_ALLOWED_IMAGE_DOMAINS = [
 const DEFAULT_ALLOWED_LINK_DOMAINS: readonly string[] = [] as const;
 
 /** Placeholder image service URL for blocked images */
-const PLACEHOLDER_IMAGE_URL = 'https://promptahuman.com/900x160@x2?prompt=';
+const PLACEHOLDER_IMAGE_URL = `https://${ PLACEHOLDER_SERVICE_DOMAIN }/900x160@x2?prompt=`;
 
 /** 1x1 gray pixel as base64 - used when external placeholder not allowed */
 const GRAY_PIXEL_BASE64 = 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';

@@ -171,7 +171,9 @@ The `aiOutputSecurity` option protects against prompt injection attacks where ma
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `enabled` | `boolean?` | `true` | Enable/disable the entire security filter |
-| `allowedDomains` | `string[]?` | `['unsplash.com', 'images.unsplash.com', 'pexels.com', 'images.pexels.com', 'pixabay.com', 'promptahuman.com']` | Allowed domains for external resources. Supports wildcards (`*.example.com`) |
+| `allowedDomains` | `string[]?` | Default domains | **Deprecated.** Use `allowedImageDomains` and `allowedLinkDomains` for granular control |
+| `allowedImageDomains` | `string[]?` | `['unsplash.com', 'images.unsplash.com', 'pexels.com', 'images.pexels.com', 'pixabay.com', 'promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`) |
+| `allowedLinkDomains` | `string[]?` | Same as `allowedImageDomains` | Allowed domains for links. Supports wildcards (`*.example.com`) |
 | `strictMode` | `boolean?` | `false` | Block ALL external resources regardless of whitelist. Images are replaced with a gray pixel, links are neutralized |
 | `filterImages` | `boolean?` | `true` | Enable image filtering. Filters `<img>` tags, Markdown `![alt](url)` and `![alt][ref]` syntax, SVG `<image>` elements |
 | `filterLinks` | `boolean?` | `true` | Enable link filtering. Filters `<a>` tags, Markdown `[text](url)` and `[text][ref]` syntax |
@@ -185,11 +187,17 @@ aiAgent: {
     apiKey: 'YOUR_API_KEY',
     aiOutputSecurity: {
         enabled: true,
-        allowedDomains: [
+        // Separate whitelists for granular control
+        allowedImageDomains: [
             'unsplash.com',
             'images.unsplash.com',
-            'mycompany.com',
+            'pexels.com',
             '*.mycdn.com'
+        ],
+        allowedLinkDomains: [
+            'mycompany.com',
+            'docs.mycompany.com',
+            '*.trusted-partner.com'
         ],
         strictMode: false,
         filterImages: true,
@@ -198,9 +206,44 @@ aiAgent: {
 }
 ```
 
+#### Separate Whitelists
+
+You can configure separate domain whitelists for images and links, allowing different security policies:
+
+- **`allowedImageDomains`**: Controls which external image sources are permitted (stock photo sites, CDNs, etc.)
+- **`allowedLinkDomains`**: Controls which external link destinations are permitted (documentation, partner sites, etc.)
+
+This separation is useful when you want to allow images from stock photo services but restrict links to only your organization's domains.
+
+#### Default Behavior
+
+**Important:** By default, the filter allows images and links from popular stock photo services. If you don't configure any whitelist, the following domains are permitted:
+
+- `unsplash.com`, `images.unsplash.com`
+- `pexels.com`, `images.pexels.com`
+- `pixabay.com`
+- `promptahuman.com` (DXPR placeholder service)
+
+To block ALL external resources, you must either:
+
+1. **Use strict mode** (recommended for maximum security):
+   ```typescript
+   aiOutputSecurity: {
+       strictMode: true
+   }
+   ```
+
+2. **Set empty whitelists** (blocks external URLs while keeping placeholder behavior):
+   ```typescript
+   aiOutputSecurity: {
+       allowedImageDomains: [],
+       allowedLinkDomains: []
+   }
+   ```
+
 #### Strict Mode
 
-When `strictMode` is enabled, ALL external images are replaced with a 1x1 gray pixel and ALL external links are neutralized (href removed, text preserved), regardless of the `allowedDomains` whitelist. This is the most secure option for environments where no external resources should be loaded.
+When `strictMode` is enabled, ALL external images are replaced with a 1x1 gray pixel and ALL external links are neutralized (href removed, text preserved), regardless of the whitelist settings. This is the most secure option for environments where no external resources should be loaded.
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

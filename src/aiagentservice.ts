@@ -57,7 +57,18 @@ export default class AiAgentService {
 		const config = editor.config.get( 'aiAgent' )!;
 		this.promptHelper = new PromptHelper( editor );
 		this.htmlParser = new HtmlParser( editor );
-		this.processContentHelper = new ProcessContentHelper( editor, config.aiOutputSecurity );
+
+		// Wire up blocked URL notifications to the UI component
+		const filterConfig = {
+			...config.aiOutputSecurity,
+			onUrlBlocked: ( blockedUrls: { images: string[]; links: string[] } ) => {
+				const uiComponent = aiAgentContext.uiComponent;
+				if ( uiComponent?.showBlockedUrlsWarning ) {
+					uiComponent.showBlockedUrlsWarning( blockedUrls );
+				}
+			}
+		};
+		this.processContentHelper = new ProcessContentHelper( editor, filterConfig );
 
 		this.aiModel = config.model!;
 		this.apiKey = config.apiKey;

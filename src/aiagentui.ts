@@ -354,8 +354,12 @@ export default class AiAgentUI extends Plugin {
 	 * Displays an error tooltip with the specified message.
 	 *
 	 * @param message - The error message to display in the tooltip.
+	 * @param options - Optional configuration for the tooltip.
 	 */
-	public showGptErrorToolTip( message: string ): void {
+	public showGptErrorToolTip(
+		message: string,
+		options?: { type?: 'error' | 'warning'; html?: boolean; duration?: number }
+	): void {
 		console.log( 'Showing error message...', message );
 		const editor = this.editor;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
@@ -365,12 +369,83 @@ export default class AiAgentUI extends Plugin {
 
 		const editorRect = view?.getBoundingClientRect();
 		if ( tooltipElement && editorRect ) {
+			// Apply type-specific styling
+			tooltipElement.classList.remove( 'response-error--warning' );
+			if ( options?.type === 'warning' ) {
+				tooltipElement.classList.add( 'response-error--warning' );
+			}
+
 			tooltipElement.classList.add( 'show-response-error' );
-			tooltipElement.textContent = message;
+
+			// Support HTML content for rich notifications
+			if ( options?.html ) {
+				tooltipElement.innerHTML = message;
+			} else {
+				tooltipElement.textContent = message;
+			}
+
+			const duration = options?.duration ?? this.showErrorDuration;
 			setTimeout( () => {
 				this.hideGptErrorToolTip();
-			}, this.showErrorDuration );
+			}, duration );
 		}
+	}
+
+	/**
+	 * Displays a warning notification for blocked URLs.
+	 * Follows Nielsen Norman Group microcopy best practices.
+	 *
+	 * @param blockedUrls - Object containing arrays of blocked image and link URLs.
+	 */
+	public showBlockedUrlsWarning( blockedUrls: { images: string[]; links: string[] } ): void {
+		const totalBlocked = blockedUrls.images.length + blockedUrls.links.length;
+		if ( totalBlocked === 0 ) return;
+
+		const t = this.editor.t;
+
+		// Build message parts
+		const parts: string[] = [];
+		if ( blockedUrls.images.length > 0 ) {
+			const imageWord = blockedUrls.images.length === 1 ? t( 'image' ) : t( 'images' );
+			parts.push( `${ blockedUrls.images.length } ${ imageWord }` );
+		}
+		if ( blockedUrls.links.length > 0 ) {
+			const linkWord = blockedUrls.links.length === 1 ? t( 'link' ) : t( 'links' );
+			parts.push( `${ blockedUrls.links.length } ${ linkWord }` );
+		}
+
+		// Build URL list (limit to 5 to avoid overwhelming the user)
+		const allUrls = [ ...blockedUrls.images, ...blockedUrls.links ];
+		const displayUrls = allUrls.slice( 0, 5 );
+		const remainingCount = allUrls.length - displayUrls.length;
+
+		const urlListItems = displayUrls.map( url => {
+			// Truncate long URLs for readability
+			const maxLen = 50;
+			const truncated = url.length > maxLen ? `${ url.substring( 0, maxLen ) }...` : url;
+			return `<li>${ this.escapeHtml( truncated ) }</li>`;
+		} );
+
+		if ( remainingCount > 0 ) {
+			urlListItems.push( `<li>...${ t( 'and %0 more', [ remainingCount ] ) }</li>` );
+		}
+
+		// Construct the message following Nielsen best practices
+		const message =
+			`<strong>${ t( 'External URLs filtered' ) }</strong><br>` +
+			`${ parts.join( ` ${ t( 'and' ) } ` ) } ${ t( 'blocked for security.' ) }<br>` +
+			`<ul class="blocked-urls-list">${ urlListItems.join( '' ) }</ul>`;
+
+		this.showGptErrorToolTip( message, { type: 'warning', html: true, duration: 15000 } );
+	}
+
+	/**
+	 * Escapes HTML special characters to prevent XSS.
+	 */
+	private escapeHtml( text: string ): string {
+		const div = document.createElement( 'div' );
+		div.textContent = text;
+		return div.innerHTML;
 	}
 
 	/**

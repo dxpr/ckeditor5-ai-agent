@@ -66,14 +66,47 @@
 	z-index: 9999;
 	color: hsl(0, 0%, 100%);
 	background: hsl(0, 39%, 60%);
-	width: auto;
-	padding: 5px 10px;
+	width: clamp(280px, 85vw, 400px);
+	padding: 12px 16px;
 	border-radius: 5px;
 	transition-duration: 1s;
 	transition-property: opacity;
 	opacity: 0;
 	right: 10px;
-	top: 0;
+	top: 10px;
+	font-size: 14px;
+	line-height: 1.4;
+	word-break: break-word;
+	overflow-wrap: break-word;
+	box-shadow: 0 4px 12px hsla(0, 0%, 0%, 0.15);
+}
+
+.response-error--warning {
+	background: hsl(45, 100%, 40%);
+	color: hsl(0, 0%, 10%);
+}
+
+.response-error--warning a {
+	color: hsl(220, 80%, 30%);
+	text-decoration: underline;
+}
+
+.response-error strong {
+	display: block;
+	font-size: 16px;
+	margin-bottom: 4px;
+}
+
+.response-error .blocked-urls-list {
+	margin: 8px 0 0 0;
+	padding-left: 20px;
+	font-size: 12px;
+	opacity: 0.9;
+}
+
+.response-error .blocked-urls-list li {
+	margin-bottom: 2px;
+	word-break: break-all;
 }
 
 .show-response-error {

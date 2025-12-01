@@ -68,8 +68,15 @@ export interface AiAgentConfig {
     aiOutputSecurity?: {
         /** Enable/disable the entire security filter. Default: true */
         enabled?: boolean;
-        /** Allowed domains for external resources. Supports wildcards (*.example.com). Default includes stock photo sites + promptahuman.com */
+        /**
+         * Allowed domains for external resources. Supports wildcards (*.example.com).
+         * @deprecated Use `allowedImageDomains` and `allowedLinkDomains` for granular control.
+         */
         allowedDomains?: string[];
+        /** Allowed domains for images. Supports wildcards (*.example.com). Default includes stock photo sites + promptahuman.com */
+        allowedImageDomains?: string[];
+        /** Allowed domains for links. Supports wildcards (*.example.com). Default includes stock photo sites + promptahuman.com */
+        allowedLinkDomains?: string[];
         /** Block ALL external resources regardless of whitelist (images→gray pixel, links→neutralized). Default: false */
         strictMode?: boolean;
         /** Enable image filtering. Default: true */

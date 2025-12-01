@@ -145,18 +145,25 @@ ClassicEditor
 			]
 		},
 		aiAgent: {
-			apiKey: 'YOUR_API_KEY',
+			apiKey: 'YOUR_OPENAI_API_KEY',
 			debugMode: true,
 			// AI Output Security - protects against prompt injection data exfiltration (CVE-2025-32711)
 			aiOutputSecurity: {
 				enabled: true,
-				allowedDomains: [
+				// Separate whitelists for images and links allow granular control
+				allowedImageDomains: [
 					'unsplash.com',
 					'images.unsplash.com',
 					'pexels.com',
 					'images.pexels.com',
+					'pixabay.com'
+				],
+				allowedLinkDomains: [
+					'unsplash.com',
+					'pexels.com',
 					'pixabay.com',
-					'promptahuman.com'
+					'wikipedia.org',
+					'*.wikipedia.org'
 				],
 				strictMode: false,
 				filterImages: true,
@@ -303,7 +310,7 @@ const inlineEditorConfig = {
 		shouldNotGroupWhenFull: true
 	},
 	aiAgent: {
-		apiKey: 'YOUR_API_KEY',
+		apiKey: 'YOUR_OPENAI_API_KEY',
 		contentScope: '.page-builder-container',
 		debugMode: true,
 		// AI Output Security - using strictMode for maximum security

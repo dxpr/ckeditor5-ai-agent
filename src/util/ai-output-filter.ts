@@ -33,8 +33,8 @@ const DEFAULT_ALLOWED_DOMAINS = [
 /** Placeholder image service URL for blocked images */
 const PLACEHOLDER_IMAGE_URL = 'https://promptahuman.com/900x160@x2?prompt=';
 
-/** 1x1 gray pixel as base64 - used in strict mode */
-const GRAY_PIXEL_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYGD4DwABBAEAW9TREES5CYII=';
+/** 1x1 transparent pixel as base64 - used when external placeholder not allowed */
+const GRAY_PIXEL_BASE64 = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 /** URL prefixes that are always considered safe (no network request or same-origin) */
 const SAFE_URL_PREFIXES = [ '/', '../', './', '#', 'mailto:', 'tel:', 'data:' ] as const;
@@ -93,22 +93,38 @@ const PATTERNS = {
 export interface AiFilterConfig {
 	/** Enable/disable the entire security filter. Default: true */
 	enabled?: boolean;
-	/** Allowed domains for external resources. Supports wildcards (*.example.com). */
+	/**
+	 * Allowed domains for external resources. Supports wildcards (*.example.com).
+	 * @deprecated Use `allowedImageDomains` and `allowedLinkDomains` for granular control.
+	 */
 	allowedDomains?: string[];
+	/** Allowed domains for images. Supports wildcards (*.example.com). */
+	allowedImageDomains?: string[];
+	/** Allowed domains for links. Supports wildcards (*.example.com). */
+	allowedLinkDomains?: string[];
 	/** Block ALL external resources regardless of whitelist. Default: false */
 	strictMode?: boolean;
 	/** Enable image filtering. Default: true */
 	filterImages?: boolean;
 	/** Enable link filtering. Default: true */
 	filterLinks?: boolean;
+	/** Callback to notify about blocked URLs. Called with blocked URL info after filtering. */
+	onUrlBlocked?: ( blockedUrls: BlockedUrlInfo ) => void;
+}
+
+export interface BlockedUrlInfo {
+	images: string[];
+	links: string[];
 }
 
 interface ResolvedConfig {
 	enabled: boolean;
-	allowedDomains: string[];
+	allowedImageDomains: string[];
+	allowedLinkDomains: string[];
 	strictMode: boolean;
 	filterImages: boolean;
 	filterLinks: boolean;
+	onUrlBlocked?: ( blockedUrls: BlockedUrlInfo ) => void;
 }
 
 export interface FilterState {
@@ -123,14 +139,22 @@ export interface FilterState {
 
 /**
  * Resolves partial config into complete config with defaults.
+ * Supports legacy `allowedDomains` for backwards compatibility.
  */
-const resolveConfig = ( config?: AiFilterConfig ): ResolvedConfig => ( {
-	enabled: config?.enabled !== false,
-	allowedDomains: config?.allowedDomains || [ ...DEFAULT_ALLOWED_DOMAINS ],
-	strictMode: config?.strictMode === true,
-	filterImages: config?.filterImages !== false,
-	filterLinks: config?.filterLinks !== false
-} );
+const resolveConfig = ( config?: AiFilterConfig ): ResolvedConfig => {
+	// Support legacy allowedDomains as fallback for both image and link domains
+	const legacyDomains = config?.allowedDomains || [ ...DEFAULT_ALLOWED_DOMAINS ];
+
+	return {
+		enabled: config?.enabled !== false,
+		allowedImageDomains: config?.allowedImageDomains || legacyDomains,
+		allowedLinkDomains: config?.allowedLinkDomains || legacyDomains,
+		strictMode: config?.strictMode === true,
+		filterImages: config?.filterImages !== false,
+		filterLinks: config?.filterLinks !== false,
+		onUrlBlocked: config?.onUrlBlocked
+	};
+};
 
 /**
  * Escapes special regex characters in a string.
@@ -195,18 +219,58 @@ const isUrlAllowed = ( url: string, allowedDomains: string[] ): boolean => {
 };
 
 /**
- * Determines if a URL should be blocked based on config.
+ * Determines if an image URL should be blocked based on config.
  */
-const shouldBlockUrl = ( url: string, config: ResolvedConfig ): boolean =>
-	config.strictMode || !isUrlAllowed( url, config.allowedDomains );
+const shouldBlockImageUrl = ( url: string, config: ResolvedConfig ): boolean =>
+	config.strictMode || !isUrlAllowed( url, config.allowedImageDomains );
 
 /**
- * Gets the replacement image source based on strict mode.
+ * Determines if a link URL should be blocked based on config.
  */
-const getReplacementImageSrc = ( originalUrl: string, strictMode: boolean ): string =>
-	strictMode
-		? GRAY_PIXEL_BASE64
-		: PLACEHOLDER_IMAGE_URL + encodeURIComponent( extractFilename( originalUrl ) );
+const shouldBlockLinkUrl = ( url: string, config: ResolvedConfig ): boolean =>
+	config.strictMode || !isUrlAllowed( url, config.allowedLinkDomains );
+
+/**
+ * Creates a blocked URL tracker for collecting blocked URLs during filtering.
+ */
+const createBlockedUrlTracker = (): BlockedUrlInfo => ( {
+	images: [],
+	links: []
+} );
+
+/**
+ * Records a blocked URL in the tracker.
+ */
+const recordBlockedUrl = (
+	tracker: BlockedUrlInfo,
+	url: string,
+	type: 'image' | 'link'
+): void => {
+	if ( !url ) return;
+	const list = type === 'image' ? tracker.images : tracker.links;
+	if ( !list.includes( url ) ) {
+		list.push( url );
+	}
+};
+
+/**
+ * Checks if the placeholder image service (promptahuman.com) is allowed by the config.
+ */
+const isPlaceholderServiceAllowed = ( config: ResolvedConfig ): boolean =>
+	config.allowedImageDomains.some( domain => matchesDomainPattern( 'promptahuman.com', domain ) );
+
+/**
+ * Gets the replacement image source.
+ * Uses BASE64 gray pixel if strict mode is enabled OR if promptahuman.com is not whitelisted.
+ * This ensures we don't violate the user's security config by replacing blocked images
+ * with another external URL they haven't explicitly allowed.
+ */
+const getReplacementImageSrc = ( originalUrl: string, config: ResolvedConfig ): string => {
+	if ( config.strictMode || !isPlaceholderServiceAllowed( config ) ) {
+		return GRAY_PIXEL_BASE64;
+	}
+	return PLACEHOLDER_IMAGE_URL + encodeURIComponent( extractFilename( originalUrl ) );
+};
 
 /**
  * Parses reference-style definitions from Markdown content.
@@ -238,7 +302,11 @@ const createRefUsagePattern = ( refName: string, isImage: boolean ): RegExp => {
 /**
  * Filters HTML content for dangerous elements, images, and links.
  */
-const filterHtmlContent = ( html: string, config: ResolvedConfig ): string => {
+const filterHtmlContent = (
+	html: string,
+	config: ResolvedConfig,
+	blockedUrls: BlockedUrlInfo
+): string => {
 	if ( !config.enabled ) return html;
 
 	const parser = typeof DOMParser !== 'undefined' ? new DOMParser() : null;
@@ -253,8 +321,9 @@ const filterHtmlContent = ( html: string, config: ResolvedConfig ): string => {
 	if ( config.filterImages ) {
 		doc.querySelectorAll( 'img' ).forEach( img => {
 			const src = img.getAttribute( 'src' ) || '';
-			if ( shouldBlockUrl( src, config ) ) {
-				img.setAttribute( 'src', getReplacementImageSrc( src, config.strictMode ) );
+			if ( shouldBlockImageUrl( src, config ) ) {
+				recordBlockedUrl( blockedUrls, src, 'image' );
+				img.setAttribute( 'src', getReplacementImageSrc( src, config ) );
 				img.removeAttribute( 'srcset' );
 			}
 		} );
@@ -262,7 +331,8 @@ const filterHtmlContent = ( html: string, config: ResolvedConfig ): string => {
 		// Filter SVG images
 		doc.querySelectorAll( SVG_IMAGE_SELECTOR ).forEach( svgImg => {
 			const href = svgImg.getAttribute( 'href' ) || svgImg.getAttributeNS( XLINK_NAMESPACE, 'href' ) || '';
-			if ( shouldBlockUrl( href, config ) ) {
+			if ( shouldBlockImageUrl( href, config ) ) {
+				recordBlockedUrl( blockedUrls, href, 'image' );
 				svgImg.remove();
 			}
 		} );
@@ -272,7 +342,8 @@ const filterHtmlContent = ( html: string, config: ResolvedConfig ): string => {
 	if ( config.filterLinks ) {
 		doc.querySelectorAll( 'a' ).forEach( anchor => {
 			const href = anchor.getAttribute( 'href' ) || '';
-			if ( href && shouldBlockUrl( href, config ) ) {
+			if ( href && shouldBlockLinkUrl( href, config ) ) {
+				recordBlockedUrl( blockedUrls, href, 'link' );
 				anchor.removeAttribute( 'href' );
 				anchor.setAttribute( BLOCKED_LINK_ATTR, 'true' );
 			}
@@ -293,13 +364,17 @@ const filterMarkdownInline = (
 	content: string,
 	pattern: RegExp,
 	config: ResolvedConfig,
-	isImage: boolean
+	isImage: boolean,
+	blockedUrls: BlockedUrlInfo
 ): string => {
 	const regex = new RegExp( pattern.source, pattern.flags );
+	const shouldBlock = isImage ? shouldBlockImageUrl : shouldBlockLinkUrl;
+
 	return content.replace( regex, ( match, textOrAlt, url ) => {
-		if ( shouldBlockUrl( url, config ) ) {
+		if ( shouldBlock( url, config ) ) {
+			recordBlockedUrl( blockedUrls, url, isImage ? 'image' : 'link' );
 			return isImage
-				? `![${ textOrAlt }](${ getReplacementImageSrc( url, config.strictMode ) })`
+				? `![${ textOrAlt }](${ getReplacementImageSrc( url, config ) })`
 				: textOrAlt; // For links, return just the text
 		}
 		return match;
@@ -314,15 +389,19 @@ const filterMarkdownReference = (
 	pattern: RegExp,
 	references: Map<string, string>,
 	config: ResolvedConfig,
-	isImage: boolean
+	isImage: boolean,
+	blockedUrls: BlockedUrlInfo
 ): string => {
 	const regex = new RegExp( pattern.source, pattern.flags );
+	const shouldBlock = isImage ? shouldBlockImageUrl : shouldBlockLinkUrl;
+
 	return content.replace( regex, ( match, textOrAlt, ref ) => {
 		const refKey = ( ref || textOrAlt ).toLowerCase();
 		const url = references.get( refKey );
-		if ( url && shouldBlockUrl( url, config ) ) {
+		if ( url && shouldBlock( url, config ) ) {
+			recordBlockedUrl( blockedUrls, url, isImage ? 'image' : 'link' );
 			return isImage
-				? `![${ textOrAlt }](${ getReplacementImageSrc( url, config.strictMode ) })`
+				? `![${ textOrAlt }](${ getReplacementImageSrc( url, config ) })`
 				: textOrAlt; // For links, return just the text
 		}
 		return match;
@@ -342,7 +421,7 @@ const cleanupMarkdownReferences = (
 		// Check image references
 		if ( config.filterImages ) {
 			const imagePattern = createRefUsagePattern( refName, true );
-			if ( imagePattern.test( originalMarkdown ) && shouldBlockUrl( url, config ) ) {
+			if ( imagePattern.test( originalMarkdown ) && shouldBlockImageUrl( url, config ) ) {
 				return '';
 			}
 		}
@@ -350,7 +429,7 @@ const cleanupMarkdownReferences = (
 		// Check link references
 		if ( config.filterLinks ) {
 			const linkPattern = createRefUsagePattern( refName, false );
-			if ( linkPattern.test( originalMarkdown ) && shouldBlockUrl( url, config ) ) {
+			if ( linkPattern.test( originalMarkdown ) && shouldBlockLinkUrl( url, config ) ) {
 				return '';
 			}
 		}
@@ -362,7 +441,11 @@ const cleanupMarkdownReferences = (
 /**
  * Filters Markdown content for images and links.
  */
-const filterMarkdownContent = ( markdown: string, config: ResolvedConfig ): string => {
+const filterMarkdownContent = (
+	markdown: string,
+	config: ResolvedConfig,
+	blockedUrls: BlockedUrlInfo
+): string => {
 	if ( !config.enabled ) return markdown;
 
 	let filtered = markdown;
@@ -370,14 +453,14 @@ const filterMarkdownContent = ( markdown: string, config: ResolvedConfig ): stri
 
 	// Filter images
 	if ( config.filterImages ) {
-		filtered = filterMarkdownInline( filtered, PATTERNS.markdownInlineImage, config, true );
-		filtered = filterMarkdownReference( filtered, PATTERNS.markdownRefImage, references, config, true );
+		filtered = filterMarkdownInline( filtered, PATTERNS.markdownInlineImage, config, true, blockedUrls );
+		filtered = filterMarkdownReference( filtered, PATTERNS.markdownRefImage, references, config, true, blockedUrls );
 	}
 
 	// Filter links
 	if ( config.filterLinks ) {
-		filtered = filterMarkdownInline( filtered, PATTERNS.markdownInlineLink, config, false );
-		filtered = filterMarkdownReference( filtered, PATTERNS.markdownRefLink, references, config, false );
+		filtered = filterMarkdownInline( filtered, PATTERNS.markdownInlineLink, config, false, blockedUrls );
+		filtered = filterMarkdownReference( filtered, PATTERNS.markdownRefLink, references, config, false, blockedUrls );
 	}
 
 	// Clean up orphaned reference definitions
@@ -393,16 +476,26 @@ const filterMarkdownContent = ( markdown: string, config: ResolvedConfig ): stri
 /**
  * Main filter function for AI-generated content.
  * Automatically detects HTML vs Markdown content.
+ * Calls onUrlBlocked callback if any URLs were blocked.
  */
 export const filterAiImages = ( content: string, config?: AiFilterConfig ): string => {
 	if ( !content ) return content;
 
 	const resolvedConfig = resolveConfig( config );
+	const blockedUrls = createBlockedUrlTracker();
 	const isHtml = PATTERNS.htmlDetection.test( content );
 
-	return isHtml
-		? filterHtmlContent( content, resolvedConfig )
-		: filterMarkdownContent( content, resolvedConfig );
+	const filtered = isHtml
+		? filterHtmlContent( content, resolvedConfig, blockedUrls )
+		: filterMarkdownContent( content, resolvedConfig, blockedUrls );
+
+	// Notify about blocked URLs if any were found
+	const hasBlockedUrls = blockedUrls.images.length > 0 || blockedUrls.links.length > 0;
+	if ( hasBlockedUrls && resolvedConfig.onUrlBlocked ) {
+		resolvedConfig.onUrlBlocked( blockedUrls );
+	}
+
+	return filtered;
 };
 
 /**

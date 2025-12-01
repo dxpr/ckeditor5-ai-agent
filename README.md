@@ -162,6 +162,45 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `tonesDropdown` | `Array<{ label: string; tone: string; }>?` | - | Specifies the available tones for content generation, allowing users to select the desired tone for the AI's responses. Each tone can be associated with a specific instruction to adjust the AI's output style. |
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 | `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
+| `aiOutputSecurity` | `object?` | See below | Security settings to mitigate prompt injection data exfiltration attacks (CVE-2025-32711) |
+
+### AI Output Security
+
+The `aiOutputSecurity` option protects against prompt injection attacks where malicious content instructs the AI to embed tracking images or links that exfiltrate sensitive data. This addresses vulnerabilities like [CVE-2025-32711 (EchoLeak)](https://nvd.nist.gov/vuln/detail/CVE-2025-32711).
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | `boolean?` | `true` | Enable/disable the entire security filter |
+| `allowedDomains` | `string[]?` | `['unsplash.com', 'images.unsplash.com', 'pexels.com', 'images.pexels.com', 'pixabay.com', 'promptahuman.com']` | Allowed domains for external resources. Supports wildcards (`*.example.com`) |
+| `strictMode` | `boolean?` | `false` | Block ALL external resources regardless of whitelist. Images are replaced with a gray pixel, links are neutralized |
+| `filterImages` | `boolean?` | `true` | Enable image filtering. Filters `<img>` tags, Markdown `![alt](url)` and `![alt][ref]` syntax, SVG `<image>` elements |
+| `filterLinks` | `boolean?` | `true` | Enable link filtering. Filters `<a>` tags, Markdown `[text](url)` and `[text][ref]` syntax |
+
+**Note:** Iframes (`<iframe>`) and dangerous elements (`<object>`, `<embed>`, `<applet>`) are always removed regardless of settings.
+
+#### Example Configuration
+
+```typescript
+aiAgent: {
+    apiKey: 'YOUR_API_KEY',
+    aiOutputSecurity: {
+        enabled: true,
+        allowedDomains: [
+            'unsplash.com',
+            'images.unsplash.com',
+            'mycompany.com',
+            '*.mycdn.com'
+        ],
+        strictMode: false,
+        filterImages: true,
+        filterLinks: true
+    }
+}
+```
+
+#### Strict Mode
+
+When `strictMode` is enabled, ALL external images are replaced with a 1x1 gray pixel and ALL external links are neutralized (href removed, text preserved), regardless of the `allowedDomains` whitelist. This is the most secure option for environments where no external resources should be loaded.
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.

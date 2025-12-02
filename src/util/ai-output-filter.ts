@@ -60,9 +60,6 @@ const SVG_IMAGE_SELECTOR = 'svg image';
 /** XLink namespace for SVG href attributes */
 const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
 
-/** Data attribute added to blocked links */
-const BLOCKED_LINK_ATTR = 'data-blocked-href';
-
 /** Maximum filename length for placeholders */
 const MAX_FILENAME_LENGTH = 50;
 
@@ -326,8 +323,7 @@ const filterHtmlContent = (
 		const href = anchor.getAttribute( 'href' ) || '';
 		if ( href && shouldBlockLinkUrl( href, config ) ) {
 			recordBlockedUrl( blockedUrls, href, 'link' );
-			anchor.removeAttribute( 'href' );
-			anchor.setAttribute( BLOCKED_LINK_ATTR, 'true' );
+			anchor.setAttribute( 'href', '#' );
 		}
 	} );
 

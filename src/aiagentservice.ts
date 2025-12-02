@@ -299,8 +299,8 @@ export default class AiAgentService {
 					editor: this.editor
 				};
 
-				// Add providers if engine is dxai and providers is set
-				if ( this.aiEngine === 'dxai' && this.providers ) {
+				// Add providers if engine is dxai and model is kavya-m1 (default model)
+				if ( this.aiEngine === 'dxai' && this.aiModel === 'kavya-m1' && this.providers ) {
 					config.providers = this.providers;
 				}
 

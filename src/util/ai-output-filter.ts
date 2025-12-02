@@ -7,6 +7,7 @@
  * Filters:
  * - Images: <img> tags and Markdown ![alt](url) syntax including reference-style (enabled by default)
  * - Links: <a> tags and Markdown [text](url) syntax including reference-style (enabled by default)
+ * - Plain text URLs: Bare http(s):// URLs in text content (replaced with EXTERNAL_URL_REDACTED)
  * - Iframes: All <iframe> tags are unconditionally removed (always enabled)
  * - Dangerous elements: <object>, <embed>, <applet>, SVG <image> (always enabled)
  *
@@ -66,6 +67,9 @@ const MAX_FILENAME_LENGTH = 50;
 /** Default filename when extraction fails */
 const DEFAULT_FILENAME = 'image';
 
+/** Replacement text for blocked plain text URLs */
+const REDACTED_URL_TEXT = 'EXTERNAL_URL_REDACTED';
+
 // Regex patterns
 const PATTERNS = {
 	/** Matches [refname]: url or [refname]: url "title" */
@@ -83,7 +87,12 @@ const PATTERNS = {
 	/** Detects HTML content */
 	htmlDetection: /<[^>]+>/,
 	/** Escapes regex special characters */
-	regexEscape: /[.*+?^${}()|[\]\\]/g
+	regexEscape: /[.*+?^${}()|[\]\\]/g,
+	/**
+	 * Matches plain text URLs (http:// or https://)
+	 * Captures URLs that are not already inside HTML attributes or markdown syntax.
+	 */
+	plainTextUrl: /https?:\/\/[^\s<>"')\]]+/gi
 } as const;
 
 // ============================================================================
@@ -250,6 +259,26 @@ const getReplacementImageSrc = ( originalUrl: string, config: ResolvedConfig ): 
 };
 
 /**
+ * Filters plain text URLs in content.
+ * Replaces blocked URLs with EXTERNAL_URL_REDACTED.
+ * This handles URLs that aren't wrapped in <a> tags or markdown link syntax.
+ */
+const filterPlainTextUrls = (
+	content: string,
+	config: ResolvedConfig,
+	blockedUrls: BlockedUrlInfo
+): string => {
+	const regex = new RegExp( PATTERNS.plainTextUrl.source, 'gi' );
+	return content.replace( regex, ( url: string ) => {
+		if ( shouldBlockLinkUrl( url, config ) ) {
+			recordBlockedUrl( blockedUrls, url, 'link' );
+			return REDACTED_URL_TEXT;
+		}
+		return url;
+	} );
+};
+
+/**
  * Parses reference-style definitions from Markdown content.
  */
 const parseMarkdownReferences = ( markdown: string ): Map<string, string> => {
@@ -324,6 +353,21 @@ const filterHtmlContent = (
 		if ( href && shouldBlockLinkUrl( href, config ) ) {
 			recordBlockedUrl( blockedUrls, href, 'link' );
 			anchor.setAttribute( 'href', '#' );
+		}
+	} );
+
+	// Filter plain text URLs in text nodes
+	const walker = doc.createTreeWalker( doc.body, NodeFilter.SHOW_TEXT, null );
+	const textNodes: Text[] = [];
+	let node: Text | null;
+	while ( ( node = walker.nextNode() as Text | null ) ) {
+		textNodes.push( node );
+	}
+	textNodes.forEach( textNode => {
+		const text = textNode.textContent || '';
+		const filtered = filterPlainTextUrls( text, config, blockedUrls );
+		if ( filtered !== text ) {
+			textNode.textContent = filtered;
 		}
 	} );
 
@@ -432,6 +476,9 @@ const filterMarkdownContent = (
 
 	// Clean up orphaned reference definitions
 	filtered = cleanupMarkdownReferences( filtered, markdown, config );
+
+	// Filter plain text URLs (not in markdown syntax)
+	filtered = filterPlainTextUrls( filtered, config, blockedUrls );
 
 	return filtered;
 };

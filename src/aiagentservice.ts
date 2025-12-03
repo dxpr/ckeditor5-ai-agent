@@ -60,8 +60,8 @@ export default class AiAgentService {
 
 		// Wire up blocked URL notifications to the UI component
 		const filterConfig = {
-			...config.aiOutputSecurity,
-			onUrlBlocked: ( blockedUrls: { images: string[]; links: string[] } ) => {
+			allowedDomains: config.aiOutputSecurity?.allowedDomains,
+			onUrlBlocked: ( blockedUrls: string[] ) => {
 				const uiComponent = aiAgentContext.uiComponent;
 				if ( uiComponent?.showBlockedUrlsWarning ) {
 					uiComponent.showBlockedUrlsWarning( blockedUrls );

@@ -163,10 +163,9 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 | `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
 | `aiOutputSecurity` | `object?` | `{}` | Security settings to mitigate prompt injection data exfiltration attacks ([CVE-2025-32711](https://nvd.nist.gov/vuln/detail/CVE-2025-32711)) |
-| `aiOutputSecurity.allowedImageDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for images. Supports wildcards (`*.example.com`). Use `[]` to block all, `['*']` to allow all |
-| `aiOutputSecurity.allowedLinkDomains` | `string[]?` | `[]` | Allowed domains for links. Supports wildcards (`*.example.com`). Use `[]` to block all, `['*']` to allow all |
+| `aiOutputSecurity.allowedDomains` | `string[]?` | `['promptahuman.com']` | Allowed domains for external URLs. Supports wildcards (`*.example.com`). Use `[]` to block all, `['*']` to allow all |
 
-**Note:** Iframes and dangerous elements (`<object>`, `<embed>`, `<applet>`) are always removed.
+**Note:** Only whitelisted HTML tags are allowed. Dangerous elements are always removed.
 
 ### Prompt Components
 The plugin uses various prompt components to guide AI response generation. You can customize these through the `promptSettings` configuration.
@@ -361,12 +360,11 @@ ClassicEditor
 
 Protects against prompt injection attacks that exfiltrate data via malicious URLs in AI-generated content ([CVE-2025-32711](https://nvd.nist.gov/vuln/detail/CVE-2025-32711)).
 
-**Default behavior:** Only `promptahuman.com` allowed for images, all external links blocked.
+**Default behavior:** Only `promptahuman.com` allowed, all other external URLs blocked.
 
 ```typescript
 aiOutputSecurity: {
-    allowedImageDomains: ['unsplash.com', '*.mycdn.com'],  // [] blocks all, ['*'] allows all
-    allowedLinkDomains: ['mycompany.com', '*.trusted-partner.com']  // [] blocks all, ['*'] allows all
+    allowedDomains: ['unsplash.com', '*.mycdn.com', 'mycompany.com']  // [] blocks all, ['*'] allows all
 }
 ```
 

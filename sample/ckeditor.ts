@@ -148,21 +148,16 @@ ClassicEditor
 			apiKey: 'YOUR_API_KEY',
 			debugMode: true,
 			aiOutputSecurity: {
-				allowedImageDomains: [
+				allowedDomains: [
 					'unsplash.com',
 					'images.unsplash.com',
 					'pexels.com',
 					'images.pexels.com',
 					'pixabay.com',
-					'promptahuman.com'
-				],
-				allowedLinkDomains: [
-					'unsplash.com',
-					'pexels.com',
-					'pixabay.com',
+					'promptahuman.com',
 					'wikipedia.org',
 					'*.wikipedia.org'
-				],
+				]
 			},
 			tonesDropdown: [
 				{
@@ -309,8 +304,7 @@ const inlineEditorConfig = {
 		contentScope: '.page-builder-container',
 		debugMode: true,
 		aiOutputSecurity: {
-			allowedImageDomains: [],
-			allowedLinkDomains: []
+			allowedDomains: []
 		}
 	},
 	language: {

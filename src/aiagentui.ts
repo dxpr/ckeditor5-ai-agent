@@ -401,27 +401,14 @@ export default class AiAgentUI extends Plugin {
 	/**
 	 * Displays a warning notification for blocked URLs.
 	 *
-	 * @param blockedUrls - Object containing arrays of blocked image and link URLs.
+	 * @param blockedUrls - Array of blocked URL strings.
 	 */
-	public showBlockedUrlsWarning( blockedUrls: { images: string[]; links: string[] } ): void {
-		const totalBlocked = blockedUrls.images.length + blockedUrls.links.length;
-		if ( totalBlocked === 0 ) return;
+	public showBlockedUrlsWarning( blockedUrls: string[] ): void {
+		if ( blockedUrls.length === 0 ) return;
 
 		const t = this.editor.t;
-
-		const parts: string[] = [];
-		if ( blockedUrls.images.length > 0 ) {
-			const imageWord = blockedUrls.images.length === 1 ? t( 'image' ) : t( 'images' );
-			parts.push( `${ blockedUrls.images.length } ${ imageWord }` );
-		}
-		if ( blockedUrls.links.length > 0 ) {
-			const linkWord = blockedUrls.links.length === 1 ? t( 'link' ) : t( 'links' );
-			parts.push( `${ blockedUrls.links.length } ${ linkWord }` );
-		}
-
-		const allUrls = [ ...blockedUrls.images, ...blockedUrls.links ];
-		const displayUrls = allUrls.slice( 0, MAX_BLOCKED_URLS_DISPLAYED );
-		const remainingCount = allUrls.length - displayUrls.length;
+		const displayUrls = blockedUrls.slice( 0, MAX_BLOCKED_URLS_DISPLAYED );
+		const remainingCount = blockedUrls.length - displayUrls.length;
 
 		const urlListItems = displayUrls.map( url => {
 			const truncated = url.length > MAX_URL_DISPLAY_LENGTH
@@ -434,9 +421,10 @@ export default class AiAgentUI extends Plugin {
 			urlListItems.push( `<li>...${ t( 'and %0 more', [ remainingCount ] ) }</li>` );
 		}
 
+		const urlWord = blockedUrls.length === 1 ? t( 'URL' ) : t( 'URLs' );
 		const message =
 			`<strong>${ t( 'External URLs filtered' ) }</strong><br>` +
-			`${ parts.join( ` ${ t( 'and' ) } ` ) } ${ t( 'blocked for security.' ) }<br>` +
+			`${ blockedUrls.length } ${ urlWord } ${ t( 'blocked for security.' ) }<br>` +
 			`<ul class="blocked-urls-list">${ urlListItems.join( '' ) }</ul>`;
 
 		this.showGptErrorToolTip( message, { type: 'warning', html: true, duration: BLOCKED_URL_WARNING_DURATION } );

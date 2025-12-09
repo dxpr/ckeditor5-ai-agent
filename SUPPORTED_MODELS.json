@@ -196,6 +196,7 @@
     "baidu/ernie-4.5-300b-a47b",
     "baidu/ernie-4.5-vl-28b-a3b",
     "baidu/ernie-4.5-vl-424b-a47b",
+    "openrouter/bodybuilder",
     "bytedance/ui-tars-1.5-7b",
     "deepcogito/cogito-v2-preview-llama-109b-moe",
     "cohere/command-a",
@@ -221,6 +222,7 @@
     "deepseek/deepseek-r1-distill-qwen-14b",
     "deepseek/deepseek-r1-distill-qwen-32b",
     "eleutherai/llemma_7b",
+    "essentialai/rnj-1-instruct",
     "alpindale/goliath-120b",
     "google/gemini-2.0-flash-001",
     "google/gemini-2.0-flash-exp:free",
@@ -448,6 +450,7 @@
     "qwen/qwen-2.5-72b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
     "relace/relace-apply-3",
+    "relace/relace-search",
     "undi95/remm-slerp-l2-13b",
     "sao10k/l3-lunaris-8b",
     "sao10k/l3-euryale-70b",
@@ -488,6 +491,7 @@
     "z-ai/glm-4.5-air:free",
     "z-ai/glm-4.5v",
     "z-ai/glm-4.6",
-    "z-ai/glm-4.6:exacto"
+    "z-ai/glm-4.6:exacto",
+    "z-ai/glm-4.6v"
   ]
 }

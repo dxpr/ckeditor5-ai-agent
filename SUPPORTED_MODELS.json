@@ -140,6 +140,7 @@
     "voxtral-small-latest"
   ],
   "groq": [
+    "canopylabs/orpheus-arabic-saudi",
     "moonshotai/kimi-k2-instruct-0905",
     "groq/compound-mini",
     "groq/compound",
@@ -443,7 +444,6 @@
     "qwen/qwen-2.5-vl-7b-instruct:free",
     "qwen/qwen3-14b",
     "qwen/qwen3-235b-a22b",
-    "qwen/qwen3-235b-a22b:free",
     "qwen/qwen3-235b-a22b-2507",
     "qwen/qwen3-235b-a22b-thinking-2507",
     "qwen/qwen3-30b-a3b",

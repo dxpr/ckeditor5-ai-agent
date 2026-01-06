@@ -30,10 +30,59 @@ const ALLOWED_TAGS = new Set( [
 // Universal URL pattern - catches http://, https://, and protocol-relative //
 const URL_PATTERN = /(?:https?:)?\/\/[^\s"'<>)\]]+/gi;
 
+// Context domains - domains extracted from pre-existing content that should be preserved
+let contextDomains: Set<string> = new Set();
+
 export interface AiFilterConfig {
 	allowedDomains?: string[];
 	onUrlBlocked?: ( blockedUrls: string[] ) => void;
 }
+
+/**
+ * Extract hostname from a URL string.
+ */
+const extractHostname = ( url: string ): string | null => {
+	try {
+		const urlObj = new URL( url, typeof window !== 'undefined' ? window.location.href : undefined );
+		return urlObj.hostname.toLowerCase();
+	} catch {
+		return null;
+	}
+};
+
+/**
+ * Extract unique domains from content (HTML or plain text).
+ * Used to preserve URLs that were already in the user's content.
+ */
+export const extractDomainsFromContent = ( content: string ): Set<string> => {
+	if ( !content ) return new Set();
+	const domains = new Set<string>();
+	const matches = content.match( URL_PATTERN ) || [];
+	const currentHostname = typeof window !== 'undefined' ? window.location.hostname : '';
+
+	for ( const url of matches ) {
+		const hostname = extractHostname( url );
+		if ( hostname && hostname !== currentHostname ) {
+			domains.add( hostname );
+		}
+	}
+	return domains;
+};
+
+/**
+ * Set context domains from pre-existing content.
+ * These domains will be allowed in addition to the configured allowedDomains.
+ */
+export const setContextDomains = ( content: string ): void => {
+	contextDomains = extractDomainsFromContent( content );
+};
+
+/**
+ * Clear context domains after an AI operation completes.
+ */
+export const clearContextDomains = (): void => {
+	contextDomains = new Set();
+};
 
 const isUrlAllowed = ( url: string, allowedDomains: string[] ): boolean => {
 	if ( !url ) return true;
@@ -56,6 +105,9 @@ const isUrlAllowed = ( url: string, allowedDomains: string[] ): boolean => {
 		}
 
 		if ( typeof window !== 'undefined' && hostname === window.location.hostname ) return true;
+
+		// Check context domains first (domains from pre-existing content)
+		if ( contextDomains.has( hostname.toLowerCase() ) ) return true;
 
 		return allowedDomains.some( pattern => {
 			if ( pattern === hostname ) return true;

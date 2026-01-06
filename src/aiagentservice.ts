@@ -16,6 +16,7 @@ import { getErrorMessages } from './util/translations.js';
 import { moderateContent } from './util/moderate-content.js';
 import { AIApi } from './util/ai-api.js';
 import { checkModel } from './util/check-model.js';
+import { setContextDomains, clearContextDomains } from './util/ai-output-filter.js';
 import type { AiModel, AiEngine, ModerationFlagsTypes, AIApiConfig } from './type-identifiers.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { AI_ENGINE } from './const.js';
@@ -197,6 +198,8 @@ export default class AiAgentService {
 				selectedContent
 			);
 			if ( parent && prompt ) {
+				// Set context domains for URL filtering - preserve URLs from user's prompt and existing content
+				setContextDomains( `${ content || '' } ${ selectedContent || '' } ${ parentEquivalentHTML?.innerHTML || '' }` );
 				await this.fetchAndProcessGptResponse( !!command, prompt, parent );
 			}
 		} catch ( error ) {
@@ -205,6 +208,7 @@ export default class AiAgentService {
 		} finally {
 			this.isInlineInsertion = false;
 			aiAgentContext.hideLoader( editor );
+			clearContextDomains();
 		}
 	}
 

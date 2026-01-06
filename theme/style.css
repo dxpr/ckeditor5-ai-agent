@@ -72,6 +72,7 @@
 	transition-duration: 1s;
 	transition-property: opacity;
 	opacity: 0;
+	pointer-events: none;
 	right: 10px;
 	top: 10px;
 	font-size: 14px;
@@ -111,6 +112,7 @@
 
 .show-response-error {
 	opacity: 1;
+	pointer-events: auto;
 }
 
 /* style for slash animation */

@@ -1,4 +1,5 @@
 import { Plugin, type Editor } from 'ckeditor5/src/core.js';
+import type { ModelElement as Element } from 'ckeditor5/src/engine.js';
 import { aiAgentContext } from './aiagentcontext.js';
 import { SUPPORTED_LANGUAGES, SHOW_ERROR_DURATION } from './const.js';
 import { Widget } from 'ckeditor5/src/widget.js';
@@ -22,11 +23,24 @@ const MAX_URL_DISPLAY_LENGTH = 50;
 /** Duration in ms to show blocked URL warning (longer than errors for user to read URL list) */
 const BLOCKED_URL_WARNING_DURATION = 15000;
 
+/** Delay in ms before updating placeholder after selection change */
+const SELECTION_CHANGE_DELAY = 10;
+
+/** Delay in ms before showing placeholder after position calculation */
+const PLACEHOLDER_SHOW_DELAY = 100;
+
+/** Offset in pixels for loader positioning relative to cursor */
+const LOADER_POSITION_OFFSET = 10;
+
 export default class AiAgentUI extends Plugin {
-	public PLACEHOLDER_TEXT_ID = 'slash-placeholder';
-	public GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
-	public GPT_RESPONSE_ERROR_ID = 'gpt-error';
+	public readonly PLACEHOLDER_TEXT_ID = 'slash-placeholder';
+	public readonly GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
+	public readonly GPT_RESPONSE_ERROR_ID = 'gpt-error';
+
 	private showErrorDuration: number = SHOW_ERROR_DURATION;
+	private readonly abortController = new AbortController();
+	private readonly pendingTimeouts = new Set<ReturnType<typeof setTimeout>>();
+	private errorTooltipElement: HTMLElement | null = null;
 
 	constructor( editor: Editor ) {
 		super( editor );
@@ -41,6 +55,28 @@ export default class AiAgentUI extends Plugin {
 
 	public static get requires() {
 		return [ Widget ] as const;
+	}
+
+	/**
+	 * Creates a tracked timeout that will be automatically cleared on destroy.
+	 */
+	private setTimeout( callback: () => void, delay: number ): ReturnType<typeof setTimeout> {
+		const timeoutId = setTimeout( () => {
+			this.pendingTimeouts.delete( timeoutId );
+			callback();
+		}, delay );
+		this.pendingTimeouts.add( timeoutId );
+		return timeoutId;
+	}
+
+	/**
+	 * Clears all pending timeouts.
+	 */
+	private clearAllTimeouts(): void {
+		for ( const timeoutId of this.pendingTimeouts ) {
+			clearTimeout( timeoutId );
+		}
+		this.pendingTimeouts.clear();
 	}
 
 	/**
@@ -129,33 +165,17 @@ export default class AiAgentUI extends Plugin {
 		const model = editor.model;
 
 		model.document.selection.on( 'change:range', () => {
-			setTimeout( () => {
+			this.setTimeout( () => {
 				this.applyPlaceholderToCurrentLine();
-			}, 10 );
-			const modelRoot = editor.model.document.getRoot();
-			if ( modelRoot ) {
-				const modelRange = editor.model.createRangeIn( modelRoot );
-				const itemsToRemove: Array<any> = [];
-				for ( const item of modelRange.getItems() ) {
-					if ( item.is( 'element', 'inline-slash' ) && item.isEmpty ) {
-						itemsToRemove.push( item ); // Collect empty items
-					}
-				}
-
-				// Remove collected empty inline-slash elements
-				editor.model.change( writer => {
-					for ( const item of itemsToRemove ) {
-						writer.remove( item );
-					}
-				} );
-			}
+			}, SELECTION_CHANGE_DELAY );
+			this.removeEmptyInlineSlashElements();
 		} );
 
 		editor.editing.view.document.on( 'change:isFocused', ( evt, data, isFocused ) => {
-			if (isFocused) {
-				setTimeout( () => {
+			if ( isFocused ) {
+				this.setTimeout( () => {
 					this.applyPlaceholderToCurrentLine();
-				}, 10 );
+				}, SELECTION_CHANGE_DELAY );
 			}
 		} );
 
@@ -165,11 +185,40 @@ export default class AiAgentUI extends Plugin {
 
 		document.addEventListener( 'scroll', () => {
 			this.hidePlaceHolder();
-		} );
+		}, { signal: this.abortController.signal } );
 
 		editor.editing.view.document.on( 'blur', () => {
 			this.hidePlaceHolder();
 		} );
+	}
+
+	/**
+	 * Removes empty inline-slash elements from the document.
+	 */
+	private removeEmptyInlineSlashElements(): void {
+		const editor = this.editor;
+		const modelRoot = editor.model.document.getRoot();
+
+		if ( !modelRoot ) {
+			return;
+		}
+
+		const modelRange = editor.model.createRangeIn( modelRoot );
+		const itemsToRemove: Element[] = [];
+
+		for ( const item of modelRange.getItems() ) {
+			if ( item.is( 'element', 'inline-slash' ) && item.isEmpty ) {
+				itemsToRemove.push( item );
+			}
+		}
+
+		if ( itemsToRemove.length > 0 ) {
+			editor.model.change( writer => {
+				for ( const item of itemsToRemove ) {
+					writer.remove( item );
+				}
+			} );
+		}
 	}
 
 	/**
@@ -185,16 +234,14 @@ export default class AiAgentUI extends Plugin {
 		if ( block && block.isEmpty ) {
 			this.hidePlaceHolder();
 
-			setTimeout( async () => {
+			this.setTimeout( () => {
 				if ( block.is( 'element' ) ) {
-					const rect = await this.getRectDomOfGivenModelElement(
-						block
-					);
+					const rect = this.getRectDomOfGivenModelElement( block );
 					if ( rect ) {
 						this.showPlaceHolder( rect );
 					}
 				}
-			}, 100 );
+			}, PLACEHOLDER_SHOW_DELAY );
 		} else {
 			this.hidePlaceHolder();
 		}
@@ -204,11 +251,11 @@ export default class AiAgentUI extends Plugin {
 	 * Retrieves the DOM rectangle of a given model element.
 	 *
 	 * @param element - The model element for which to get the DOM rectangle.
-	 * @returns A promise that resolves to the DOMRect of the element, or null if not found.
+	 * @returns The position of the element relative to the editor container, or null if not found.
 	 */
-	private async getRectDomOfGivenModelElement(
-		element: any
-	): Promise<{ top: number; left: number } | null> {
+	private getRectDomOfGivenModelElement(
+		element: Element
+	): { top: number; left: number } | null {
 		const editor = this.editor;
 		const mapper = editor.editing.mapper;
 		const view = editor.editing.view;
@@ -316,16 +363,22 @@ export default class AiAgentUI extends Plugin {
 	}
 
 	/**
-	 * Shows the loader at the specified position.
+	 * Shows the loader at the current cursor position.
 	 *
-	 * @param rect - The DOMRect object defining the position to show the loader.
+	 * @param editor - The editor instance.
 	 */
 	public showLoader( editor: Editor ): void {
 		this.addLoader( editor );
-		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.GPT_RESPONSE_LOADER_ID }` ) as HTMLElement;
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector(
+			`#${ this.GPT_RESPONSE_LOADER_ID }`
+		) as HTMLElement | null;
 
 		const domSelection = window.getSelection();
-		const domRange: any = domSelection?.getRangeAt( 0 );
+		if ( !domSelection || domSelection.rangeCount === 0 ) {
+			return;
+		}
+
+		const domRange = domSelection.getRangeAt( 0 );
 		const childPos = domRange.getBoundingClientRect();
 
 		const parentPos = editor.ui.view.editable.element?.parentElement?.getBoundingClientRect();
@@ -333,8 +386,8 @@ export default class AiAgentUI extends Plugin {
 		const left = childPos.left - ( parentPos?.left ?? 0 );
 
 		if ( ele ) {
-			ele.style.left = `${ left + 10 }px`;
-			ele.style.top = `${ top + 10 }px`;
+			ele.style.left = `${ left + LOADER_POSITION_OFFSET }px`;
+			ele.style.top = `${ top + LOADER_POSITION_OFFSET }px`;
 			ele.classList.add( 'show-gpt-loader' );
 		}
 	}
@@ -353,10 +406,16 @@ export default class AiAgentUI extends Plugin {
 	 * Adds an error tooltip element to the document body for displaying error messages.
 	 */
 	private addGptErrorToolTip(): void {
+		const existingElement = document.getElementById( this.GPT_RESPONSE_ERROR_ID );
+		if ( existingElement ) {
+			this.errorTooltipElement = existingElement;
+			return;
+		}
 		const tooltipElement = document.createElement( 'p' );
 		tooltipElement.id = this.GPT_RESPONSE_ERROR_ID;
 		tooltipElement.classList.add( 'response-error' );
 		document.body.appendChild( tooltipElement );
+		this.errorTooltipElement = tooltipElement;
 	}
 
 	/**
@@ -369,12 +428,9 @@ export default class AiAgentUI extends Plugin {
 		message: string,
 		options?: { type?: 'error' | 'warning'; html?: boolean; duration?: number }
 	): void {
-		console.log( 'Showing error message...', message );
 		const editor = this.editor;
 		const view = editor?.editing?.view?.domRoots?.get( 'main' );
-		const tooltipElement = document.getElementById(
-			this.GPT_RESPONSE_ERROR_ID
-		);
+		const tooltipElement = this.errorTooltipElement;
 
 		const editorRect = view?.getBoundingClientRect();
 		if ( tooltipElement && editorRect ) {
@@ -392,7 +448,7 @@ export default class AiAgentUI extends Plugin {
 			}
 
 			const duration = options?.duration ?? this.showErrorDuration;
-			setTimeout( () => {
+			this.setTimeout( () => {
 				this.hideGptErrorToolTip();
 			}, duration );
 		}
@@ -443,11 +499,32 @@ export default class AiAgentUI extends Plugin {
 	 * Hides the error tooltip element from the document.
 	 */
 	private hideGptErrorToolTip(): void {
-		const tooltipElement = document.getElementById(
-			this.GPT_RESPONSE_ERROR_ID
-		);
-		if ( tooltipElement ) {
-			tooltipElement.classList.remove( 'show-response-error' );
+		if ( this.errorTooltipElement ) {
+			this.errorTooltipElement.classList.remove( 'show-response-error' );
 		}
+	}
+
+	/**
+	 * Cleans up resources when the plugin is destroyed.
+	 * Removes event listeners, clears timeouts, and removes created DOM elements.
+	 */
+	public override destroy(): void {
+		// Abort all document-level event listeners
+		this.abortController.abort();
+
+		// Clear all pending timeouts
+		this.clearAllTimeouts();
+
+		// Remove error tooltip if we created it
+		if ( this.errorTooltipElement ) {
+			this.errorTooltipElement.remove();
+			this.errorTooltipElement = null;
+		}
+
+		// Clean up placeholder and loader elements
+		this.hidePlaceHolder();
+		this.hideLoader( this.editor );
+
+		super.destroy();
 	}
 }

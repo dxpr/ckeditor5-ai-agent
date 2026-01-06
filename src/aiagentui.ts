@@ -33,9 +33,9 @@ const PLACEHOLDER_SHOW_DELAY = 100;
 const LOADER_POSITION_OFFSET = 10;
 
 export default class AiAgentUI extends Plugin {
-	public readonly PLACEHOLDER_TEXT_ID = 'slash-placeholder';
-	public readonly GPT_RESPONSE_LOADER_ID = 'gpt-response-loader';
-	public readonly GPT_RESPONSE_ERROR_ID = 'gpt-error';
+	public readonly PLACEHOLDER_TEXT_ID = 'ck-ai-agent-placeholder';
+	public readonly LOADER_ID = 'ck-ai-agent-loader';
+	public readonly ERROR_TOOLTIP_ID = 'ck-ai-agent-error';
 
 	private showErrorDuration: number = SHOW_ERROR_DURATION;
 	private readonly abortController = new AbortController();
@@ -114,7 +114,7 @@ export default class AiAgentUI extends Plugin {
 		registerAiTagSchema( editor );
 		registerAiAnimateStatusSchema( editor );
 
-		this.addGptErrorToolTip();
+		this.createErrorTooltip();
 		addAiAgentButton( editor );
 		addAiAgentToneButton( editor );
 
@@ -153,7 +153,7 @@ export default class AiAgentUI extends Plugin {
 		const contentLanguageCode = editor.locale.contentLanguage;
 		const supportedLanguages = SUPPORTED_LANGUAGES;
 		if ( !supportedLanguages.includes( contentLanguageCode ) ) {
-			this.showGptErrorToolTip( t( 'Unsupported language code' ) );
+			this.showErrorTooltip( t( 'Unsupported language code' ) );
 		}
 	}
 
@@ -293,7 +293,7 @@ export default class AiAgentUI extends Plugin {
 			placeholder.onclick = () => {
 				editor.focus();
 			};
-			placeholder.classList.add( 'place-holder' );
+			placeholder.classList.add( 'ck-ai-agent-placeholder' );
 			placeholder.textContent = t( 'Type / to request AI content' );
 
 			const parentPanelContent = editor.ui.view.editable.element?.parentElement;
@@ -321,7 +321,7 @@ export default class AiAgentUI extends Plugin {
 		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.PLACEHOLDER_TEXT_ID }` ) as HTMLElement;
 		const isReadOnlyMode = this.editor.isReadOnly;
 		if ( ele && rect && !isReadOnlyMode ) {
-			ele.classList.add( 'show-place-holder' );
+			ele.classList.add( 'ck-ai-agent-placeholder--visible' );
 			ele.style.top = `${ rect.top }px`;
 			ele.style.left = `${ rect.left }px`;
 		} else if ( ele ) {
@@ -344,11 +344,11 @@ export default class AiAgentUI extends Plugin {
 	 * Adds a loader element to the document body for indicating processing.
 	 */
 	private addLoader( editor: Editor ): void {
-		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.GPT_RESPONSE_LOADER_ID }` ) as HTMLElement;
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.LOADER_ID }` ) as HTMLElement;
 		if ( !ele ) {
 			const loaderElement = document.createElement( 'div' );
-			loaderElement.id = this.GPT_RESPONSE_LOADER_ID;
-			loaderElement.classList.add( 'gpt-loader' );
+			loaderElement.id = this.LOADER_ID;
+			loaderElement.classList.add( 'ck-ai-agent-loader' );
 
 			const parentPanelContent = editor.ui.view.editable.element?.parentElement;
 			if ( parentPanelContent ) {
@@ -370,7 +370,7 @@ export default class AiAgentUI extends Plugin {
 	public showLoader( editor: Editor ): void {
 		this.addLoader( editor );
 		const ele = editor.ui.view.editable.element?.parentElement?.querySelector(
-			`#${ this.GPT_RESPONSE_LOADER_ID }`
+			`#${ this.LOADER_ID }`
 		) as HTMLElement | null;
 
 		const domSelection = window.getSelection();
@@ -388,7 +388,7 @@ export default class AiAgentUI extends Plugin {
 		if ( ele ) {
 			ele.style.left = `${ left + LOADER_POSITION_OFFSET }px`;
 			ele.style.top = `${ top + LOADER_POSITION_OFFSET }px`;
-			ele.classList.add( 'show-gpt-loader' );
+			ele.classList.add( 'ck-ai-agent-loader--visible' );
 		}
 	}
 
@@ -396,24 +396,24 @@ export default class AiAgentUI extends Plugin {
 	 * Hides the loader element from the document.
 	 */
 	public hideLoader( editor: Editor ): void {
-		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.GPT_RESPONSE_LOADER_ID }` ) as HTMLElement;
+		const ele = editor.ui.view.editable.element?.parentElement?.querySelector( `#${ this.LOADER_ID }` ) as HTMLElement;
 		if ( ele ) {
 			ele.remove();
 		}
 	}
 
 	/**
-	 * Adds an error tooltip element to the document body for displaying error messages.
+	 * Creates an error tooltip element in the document body for displaying error messages.
 	 */
-	private addGptErrorToolTip(): void {
-		const existingElement = document.getElementById( this.GPT_RESPONSE_ERROR_ID );
+	private createErrorTooltip(): void {
+		const existingElement = document.getElementById( this.ERROR_TOOLTIP_ID );
 		if ( existingElement ) {
 			this.errorTooltipElement = existingElement;
 			return;
 		}
 		const tooltipElement = document.createElement( 'p' );
-		tooltipElement.id = this.GPT_RESPONSE_ERROR_ID;
-		tooltipElement.classList.add( 'response-error' );
+		tooltipElement.id = this.ERROR_TOOLTIP_ID;
+		tooltipElement.classList.add( 'ck-ai-agent-error' );
 		document.body.appendChild( tooltipElement );
 		this.errorTooltipElement = tooltipElement;
 	}
@@ -424,7 +424,7 @@ export default class AiAgentUI extends Plugin {
 	 * @param message - The error message to display in the tooltip.
 	 * @param options - Optional configuration for the tooltip.
 	 */
-	public showGptErrorToolTip(
+	public showErrorTooltip(
 		message: string,
 		options?: { type?: 'error' | 'warning'; html?: boolean; duration?: number }
 	): void {
@@ -434,12 +434,12 @@ export default class AiAgentUI extends Plugin {
 
 		const editorRect = view?.getBoundingClientRect();
 		if ( tooltipElement && editorRect ) {
-			tooltipElement.classList.remove( 'response-error--warning' );
+			tooltipElement.classList.remove( 'ck-ai-agent-error--warning' );
 			if ( options?.type === 'warning' ) {
-				tooltipElement.classList.add( 'response-error--warning' );
+				tooltipElement.classList.add( 'ck-ai-agent-error--warning' );
 			}
 
-			tooltipElement.classList.add( 'show-response-error' );
+			tooltipElement.classList.add( 'ck-ai-agent-error--visible' );
 
 			if ( options?.html ) {
 				tooltipElement.innerHTML = message;
@@ -449,7 +449,7 @@ export default class AiAgentUI extends Plugin {
 
 			const duration = options?.duration ?? this.showErrorDuration;
 			this.setTimeout( () => {
-				this.hideGptErrorToolTip();
+				this.hideErrorTooltip();
 			}, duration );
 		}
 	}
@@ -483,7 +483,7 @@ export default class AiAgentUI extends Plugin {
 			`${ blockedUrls.length } ${ urlWord } ${ t( 'blocked for security.' ) }<br>` +
 			`<ul class="blocked-urls-list">${ urlListItems.join( '' ) }</ul>`;
 
-		this.showGptErrorToolTip( message, { type: 'warning', html: true, duration: BLOCKED_URL_WARNING_DURATION } );
+		this.showErrorTooltip( message, { type: 'warning', html: true, duration: BLOCKED_URL_WARNING_DURATION } );
 	}
 
 	/**
@@ -498,9 +498,9 @@ export default class AiAgentUI extends Plugin {
 	/**
 	 * Hides the error tooltip element from the document.
 	 */
-	private hideGptErrorToolTip(): void {
+	private hideErrorTooltip(): void {
 		if ( this.errorTooltipElement ) {
-			this.errorTooltipElement.classList.remove( 'show-response-error' );
+			this.errorTooltipElement.classList.remove( 'ck-ai-agent-error--visible' );
 		}
 	}
 

@@ -269,6 +269,8 @@
     "kwaipilot/kat-coder-pro",
     "liquid/lfm-2.2-6b",
     "liquid/lfm2-8b-a1b",
+    "liquid/lfm-2.5-1.2b-instruct:free",
+    "liquid/lfm-2.5-1.2b-thinking:free",
     "meta-llama/llama-guard-3-8b",
     "anthracite-org/magnum-v4-72b",
     "mancer/weaver",

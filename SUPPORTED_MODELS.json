@@ -153,6 +153,7 @@
     "llama-3.1-8b-instant"
   ],
   "xai": [
+    "grok-imagine-video",
     "grok-4-1-fast-non-reasoning",
     "grok-4-1-fast-reasoning",
     "grok-4-fast-non-reasoning",
@@ -235,7 +236,6 @@
     "essentialai/rnj-1-instruct",
     "alpindale/goliath-120b",
     "google/gemini-2.0-flash-001",
-    "google/gemini-2.0-flash-exp:free",
     "google/gemini-2.0-flash-lite-001",
     "google/gemini-2.5-flash",
     "google/gemini-2.5-flash-image",

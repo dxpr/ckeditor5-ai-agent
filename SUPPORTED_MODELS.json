@@ -70,7 +70,6 @@
     "o3-mini",
     "o1",
     "o1-2024-12-17",
-    "chatgpt-4o-latest",
     "gpt-4o-2024-08-06",
     "gpt-4o-mini",
     "gpt-4o-mini-2024-07-18",
@@ -91,6 +90,7 @@
     "gpt-3.5-turbo"
   ],
   "anthropic": [
+    "claude-sonnet-4-6",
     "claude-opus-4-6",
     "claude-opus-4-5-20251101",
     "claude-haiku-4-5-20251001",
@@ -187,6 +187,7 @@
     "anthropic/claude-opus-4.6",
     "anthropic/claude-sonnet-4",
     "anthropic/claude-sonnet-4.5",
+    "anthropic/claude-sonnet-4.6",
     "arcee-ai/coder-large",
     "arcee-ai/maestro-reasoning",
     "arcee-ai/spotlight",
@@ -343,7 +344,6 @@
     "nvidia/nemotron-nano-12b-v2-vl:free",
     "nvidia/nemotron-nano-9b-v2",
     "nvidia/nemotron-nano-9b-v2:free",
-    "openai/chatgpt-4o-latest",
     "openai/gpt-audio",
     "openai/gpt-audio-mini",
     "openai/gpt-3.5-turbo",

@@ -29,6 +29,7 @@
     "deep-research-pro-preview-12-2025"
   ],
   "openai": [
+    "gpt-5.3-codex",
     "gpt-5.2-codex",
     "gpt-5.2-chat-latest",
     "gpt-5.2-pro",
@@ -159,6 +160,7 @@
     "ai21/jamba-large-1.7",
     "aion-labs/aion-1.0",
     "aion-labs/aion-1.0-mini",
+    "aion-labs/aion-2.0",
     "aion-labs/aion-rp-llama-3.1-8b",
     "alfredpros/codellama-7b-instruct-solidity",
     "allenai/molmo-2-8b",
@@ -218,7 +220,6 @@
     "deepseek/deepseek-v3.2-speciale",
     "deepseek/deepseek-r1",
     "deepseek/deepseek-r1-0528",
-    "deepseek/deepseek-r1-0528:free",
     "deepseek/deepseek-r1-distill-llama-70b",
     "deepseek/deepseek-r1-distill-qwen-32b",
     "eleutherai/llemma_7b",
@@ -381,6 +382,7 @@
     "openai/gpt-5.2-chat",
     "openai/gpt-5.2-pro",
     "openai/gpt-5.2-codex",
+    "openai/gpt-5.3-codex",
     "openai/gpt-oss-120b",
     "openai/gpt-oss-120b:exacto",
     "openai/gpt-oss-120b:free",

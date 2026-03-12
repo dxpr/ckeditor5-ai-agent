@@ -149,10 +149,18 @@
     "llama-3.1-8b-instant"
   ],
   "xai": [
+    "grok-4.20-beta-0309-non-reasoning",
+    "grok-4.20-beta-0309-reasoning",
+    "grok-4.20-multi-agent-beta-0309",
     "grok-imagine-video",
     "grok-4-1-fast-non-reasoning",
     "grok-4-1-fast-reasoning",
-    "grok-code-fast-1"
+    "grok-4-fast-non-reasoning",
+    "grok-4-fast-reasoning",
+    "grok-code-fast-1",
+    "grok-4-0709",
+    "grok-3",
+    "grok-3-mini"
   ],
   "openrouter": [
     "ai21/jamba-large-1.7",
@@ -252,6 +260,8 @@
     "google/gemini-2.5-flash-image",
     "google/gemini-3.1-flash-image-preview",
     "google/gemini-3-pro-image-preview",
+    "openrouter/healer-alpha",
+    "openrouter/hunter-alpha",
     "ibm-granite/granite-4.0-h-micro",
     "inception/mercury",
     "inception/mercury-2",
@@ -333,6 +343,7 @@
     "nvidia/llama-3.3-nemotron-super-49b-v1.5",
     "nvidia/nemotron-3-nano-30b-a3b",
     "nvidia/nemotron-3-nano-30b-a3b:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
     "nvidia/nemotron-nano-12b-v2-vl",
     "nvidia/nemotron-nano-12b-v2-vl:free",
     "nvidia/nemotron-nano-9b-v2",

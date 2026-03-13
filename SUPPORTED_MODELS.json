@@ -493,6 +493,8 @@
     "x-ai/grok-4",
     "x-ai/grok-4-fast",
     "x-ai/grok-4.1-fast",
+    "x-ai/grok-4.20-beta",
+    "x-ai/grok-4.20-multi-agent-beta",
     "x-ai/grok-code-fast-1",
     "xiaomi/mimo-v2-flash",
     "z-ai/glm-4-32b",

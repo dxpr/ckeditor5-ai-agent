@@ -299,6 +299,7 @@
     "minimax/minimax-m2-her",
     "minimax/minimax-m2.1",
     "minimax/minimax-m2.5",
+    "minimax/minimax-m2.5:free",
     "minimax/minimax-01",
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",
@@ -506,6 +507,7 @@
     "z-ai/glm-4.6v",
     "z-ai/glm-4.7",
     "z-ai/glm-4.7-flash",
-    "z-ai/glm-5"
+    "z-ai/glm-5",
+    "z-ai/glm-5-turbo"
   ]
 }

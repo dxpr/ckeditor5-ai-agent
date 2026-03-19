@@ -138,7 +138,6 @@
     "mistral-tiny-latest",
     "pixtral-large-latest",
     "voxtral-mini-latest",
-    "voxtral-mini-realtime-latest",
     "voxtral-small-latest"
   ],
   "groq": [
@@ -307,6 +306,7 @@
     "minimax/minimax-m2.1",
     "minimax/minimax-m2.5",
     "minimax/minimax-m2.5:free",
+    "minimax/minimax-m2.7",
     "minimax/minimax-01",
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",
@@ -352,6 +352,7 @@
     "nvidia/llama-3.3-nemotron-super-49b-v1.5",
     "nvidia/nemotron-3-nano-30b-a3b",
     "nvidia/nemotron-3-nano-30b-a3b:free",
+    "nvidia/nemotron-3-super-120b-a12b",
     "nvidia/nemotron-3-super-120b-a12b:free",
     "nvidia/nemotron-nano-12b-v2-vl",
     "nvidia/nemotron-nano-12b-v2-vl:free",
@@ -508,6 +509,8 @@
     "x-ai/grok-4.20-multi-agent-beta",
     "x-ai/grok-code-fast-1",
     "xiaomi/mimo-v2-flash",
+    "xiaomi/mimo-v2-omni",
+    "xiaomi/mimo-v2-pro",
     "z-ai/glm-4-32b",
     "z-ai/glm-4.5",
     "z-ai/glm-4.5-air",

@@ -156,9 +156,9 @@
     "llama-3.1-8b-instant"
   ],
   "xai": [
-    "grok-4.20-beta-0309-non-reasoning",
-    "grok-4.20-beta-0309-reasoning",
-    "grok-4.20-multi-agent-beta-0309",
+    "grok-4.20-0309-non-reasoning",
+    "grok-4.20-0309-reasoning",
+    "grok-4.20-multi-agent-0309",
     "grok-imagine-video",
     "grok-4-1-fast-non-reasoning",
     "grok-4-1-fast-reasoning",
@@ -267,8 +267,6 @@
     "google/gemini-2.5-flash-image",
     "google/gemini-3.1-flash-image-preview",
     "google/gemini-3-pro-image-preview",
-    "openrouter/healer-alpha",
-    "openrouter/hunter-alpha",
     "ibm-granite/granite-4.0-h-micro",
     "inception/mercury",
     "inception/mercury-2",

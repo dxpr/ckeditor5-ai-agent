@@ -243,6 +243,7 @@ export default class AiAgentService {
 		resetTimeout();
 
 		const blockID = `ai-${ new Date().getTime() }`;
+		const generationStartTime = performance.now();
 		try {
 			let llm: LlmEngine | undefined;
 			let response;
@@ -327,6 +328,16 @@ export default class AiAgentService {
 				);
 				await this.handleStreamingResponse( response, blockID, parent, command, controller, llm, resetTimeout );
 			}
+
+			// Dispatch success event for external analytics integration
+			document.dispatchEvent( new CustomEvent( 'dxpr:ai:generation:success', {
+				detail: {
+					model: this.aiModel,
+					promptLength: prompt?.length || 0,
+					generationDurationMs: Math.round( performance.now() - generationStartTime ),
+					outputLength: this.processContentHelper.getLastOutputLength?.() || 0
+				}
+			} ) );
 		} catch ( error: any ) {
 			if ( this.abortGeneration ) {
 				return;
@@ -340,6 +351,17 @@ export default class AiAgentService {
 			} else {
 				errorMessage = error?.message?.trim();
 			}
+
+			// Dispatch failure event for external analytics integration
+			document.dispatchEvent( new CustomEvent( 'dxpr:ai:generation:failure', {
+				detail: {
+					model: this.aiModel,
+					promptLength: prompt?.length || 0,
+					generationDurationMs: Math.round( performance.now() - generationStartTime ),
+					errorType: error?.name || 'Error',
+					errorCode: error?.status || error?.code || ''
+				}
+			} ) );
 
 			aiAgentContext.showError( errorMessage );
 			this.processContentHelper.processCompleted( blockID );

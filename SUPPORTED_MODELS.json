@@ -4,6 +4,8 @@
     "kavya-m1-eu"
   ],
   "google": [
+    "lyria-3-pro-preview",
+    "lyria-3-clip-preview",
     "gemma-3n-e4b-it",
     "gemma-3n-e2b-it",
     "gemma-3-4b-it",
@@ -246,7 +248,6 @@
     "google/gemini-2.5-pro-preview-05-06",
     "google/gemini-2.5-pro-preview",
     "google/gemini-3-flash-preview",
-    "google/gemini-3-pro-preview",
     "google/gemini-3.1-flash-lite-preview",
     "google/gemini-3.1-pro-preview",
     "google/gemini-3.1-pro-preview-customtools",
@@ -470,6 +471,7 @@
     "qwen/qwq-32b",
     "qwen/qwen-2.5-72b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
+    "reka/reka-edge",
     "relace/relace-apply-3",
     "relace/relace-search",
     "undi95/remm-slerp-l2-13b",

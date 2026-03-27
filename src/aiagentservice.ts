@@ -48,6 +48,17 @@ export default class AiAgentService {
 	private processContentHelper: ProcessContentHelper;
 	private readonly FILTERED_STRINGS = /```html|```|html\n|@@@cursor@@@/g;
 
+	private getOutputMetrics( content: string ): { outputLength: number; outputWordCount: number } {
+		const safeContent = content || '';
+		const outputLength = safeContent.length;
+		const tempElement = document.createElement( 'div' );
+		tempElement.innerHTML = safeContent;
+		const plainText = ( tempElement.textContent || tempElement.innerText || '' ).trim();
+		const outputWordCount = plainText ? plainText.split( /\s+/ ).length : 0;
+
+		return { outputLength, outputWordCount };
+	}
+
 	/**
 	 * Initializes the AiAgentService with the provided editor and configuration settings.
 	 *
@@ -229,6 +240,7 @@ export default class AiAgentService {
 		const editor = this.editor;
 		const t = editor.t;
 		const controller = new AbortController();
+		this.abortGeneration = false;
 
 		// Create a timeout that can be reset
 		let timeoutId: ReturnType<typeof setTimeout> | undefined;
@@ -243,9 +255,14 @@ export default class AiAgentService {
 		resetTimeout();
 
 		const blockID = `ai-${ new Date().getTime() }`;
+		const generationStartTime = performance.now();
 		try {
 			let llm: LlmEngine | undefined;
 			let response;
+			let outputMetrics = {
+				outputLength: 0,
+				outputWordCount: 0
+			};
 
 			const contentMatch = prompt.match(
 				/<CONTEXT>([\s\S]*?)<\/CONTEXT>/,
@@ -286,14 +303,14 @@ export default class AiAgentService {
 				if ( this.streamContent ) {
 					// Streaming path
 					const stream = this.generate( llm, this.aiModel, messages, completionOpts );
-					await this.handleStreamingResponse( stream, blockID, parent, command, controller, llm, resetTimeout );
+					outputMetrics = await this.handleStreamingResponse( stream, blockID, parent, command, controller, llm, resetTimeout );
 				} else {
 					// Non-streaming path
 					const result = await llm.complete( this.aiModel, messages, completionOpts );
 					if ( !result.content ) {
 						throw new Error( t( 'Empty response from AI model' ) );
 					}
-					await this.handleNonStreamingResponse( result.content, blockID, parent, command );
+					outputMetrics = await this.handleNonStreamingResponse( result.content, blockID, parent, command );
 				}
 			} else {
 				const config: AIApiConfig = {
@@ -325,8 +342,23 @@ export default class AiAgentService {
 					controller,
 					retries
 				);
-				await this.handleStreamingResponse( response, blockID, parent, command, controller, llm, resetTimeout );
+				outputMetrics = await this.handleStreamingResponse( response, blockID, parent, command, controller, llm, resetTimeout );
 			}
+
+			// Dispatch success event for external analytics integration
+			if ( this.abortGeneration ) {
+				return;
+			}
+			document.dispatchEvent( new CustomEvent( 'dxpr:ai:generation:success', {
+				detail: {
+					model: this.aiModel,
+					responseModel: this.aiModel,
+					promptLength: prompt?.length || 0,
+					generationDurationMs: Math.round( performance.now() - generationStartTime ),
+					outputLength: outputMetrics.outputLength,
+					outputWordCount: outputMetrics.outputWordCount
+				}
+			} ) );
 		} catch ( error: any ) {
 			if ( this.abortGeneration ) {
 				return;
@@ -340,6 +372,17 @@ export default class AiAgentService {
 			} else {
 				errorMessage = error?.message?.trim();
 			}
+
+			// Dispatch failure event for external analytics integration
+			document.dispatchEvent( new CustomEvent( 'dxpr:ai:generation:failure', {
+				detail: {
+					model: this.aiModel,
+					promptLength: prompt?.length || 0,
+					generationDurationMs: Math.round( performance.now() - generationStartTime ),
+					errorType: error?.name || 'Error',
+					errorCode: error?.status || error?.code || ''
+				}
+			} ) );
 
 			aiAgentContext.showError( errorMessage );
 			this.processContentHelper.processCompleted( blockID );
@@ -359,9 +402,10 @@ export default class AiAgentService {
 		controller: AbortController,
 		llm: LlmEngine | undefined,
 		resetTimeout: () => void
-	): Promise<void> {
+	): Promise<{ outputLength: number; outputWordCount: number }> {
 		let isFirstChunk = true;
 		let contentBuffer = '';
+		let generatedContent = '';
 		const updateInterval = 1000 / this.writesPerSecond; // Calculate interval in ms
 
 		const updateContent = async () => {
@@ -402,9 +446,10 @@ export default class AiAgentService {
 			clearInterval( updateContentTimer );
 			await updateContent();
 			this.processContentHelper.processCompleted( blockID );
-			contentBuffer = '';
+			generatedContent = contentBuffer;
 		}
-		this.processContentHelper.processCompleted( blockID );
+
+		return this.getOutputMetrics( generatedContent );
 	}
 
 	private async handleNonStreamingResponse(
@@ -412,7 +457,7 @@ export default class AiAgentService {
 		blockID: string,
 		parent: Element,
 		command: boolean
-	): Promise<void> {
+	): Promise<{ outputLength: number; outputWordCount: number }> {
 		aiAgentContext.hideLoader(this.editor);
 		this.processContentHelper.insertAiTag( blockID );
 		this.processContentHelper.clearParentContent( parent, command );
@@ -425,6 +470,8 @@ export default class AiAgentService {
 			await this.htmlParser.insertSimpleHtml( filteredContent );
 		}
 		this.processContentHelper.processCompleted( blockID );
+
+		return this.getOutputMetrics( filteredContent );
 	}
 
 	/**

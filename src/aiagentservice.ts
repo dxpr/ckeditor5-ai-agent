@@ -240,6 +240,7 @@ export default class AiAgentService {
 		const editor = this.editor;
 		const t = editor.t;
 		const controller = new AbortController();
+		this.abortGeneration = false;
 
 		// Create a timeout that can be reset
 		let timeoutId: ReturnType<typeof setTimeout> | undefined;
@@ -345,6 +346,9 @@ export default class AiAgentService {
 			}
 
 			// Dispatch success event for external analytics integration
+			if ( this.abortGeneration ) {
+				return;
+			}
 			document.dispatchEvent( new CustomEvent( 'dxpr:ai:generation:success', {
 				detail: {
 					model: this.aiModel,

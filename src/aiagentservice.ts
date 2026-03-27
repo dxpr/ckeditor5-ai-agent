@@ -406,13 +406,13 @@ export default class AiAgentService {
 		let isFirstChunk = true;
 		let contentBuffer = '';
 		let generatedContent = '';
-			const updateInterval = 1000 / this.writesPerSecond; // Calculate interval in ms
+		const updateInterval = 1000 / this.writesPerSecond; // Calculate interval in ms
 
-			const updateContent = async () => {
-				if ( contentBuffer ) {
-					await this.processContentHelper.updateContent( contentBuffer, blockID );
-				}
-			};
+		const updateContent = async () => {
+			if ( contentBuffer ) {
+				await this.processContentHelper.updateContent( contentBuffer, blockID );
+			}
+		};
 
 		const updateContentTimer = setInterval( updateContent, updateInterval );
 		try {

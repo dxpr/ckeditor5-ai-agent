@@ -22,7 +22,6 @@
     "gemini-3-pro-preview",
     "gemini-3-flash-preview",
     "gemini-2.5-pro",
-    "gemini-2.5-flash-lite-preview-09-2025",
     "gemini-2.5-flash-lite",
     "gemini-2.5-flash",
     "gemini-2.0-flash-lite-001",
@@ -199,6 +198,7 @@
     "arcee-ai/maestro-reasoning",
     "arcee-ai/spotlight",
     "arcee-ai/trinity-large-preview:free",
+    "arcee-ai/trinity-large-thinking",
     "arcee-ai/trinity-mini",
     "arcee-ai/trinity-mini:free",
     "arcee-ai/virtuoso-large",
@@ -467,7 +467,7 @@
     "qwen/qwq-32b",
     "qwen/qwen-2.5-72b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
-    "reka/reka-edge",
+    "rekaai/reka-edge",
     "rekaai/reka-flash-3",
     "relace/relace-apply-3",
     "relace/relace-search",
@@ -514,6 +514,7 @@
     "z-ai/glm-4.7",
     "z-ai/glm-4.7-flash",
     "z-ai/glm-5",
-    "z-ai/glm-5-turbo"
+    "z-ai/glm-5-turbo",
+    "z-ai/glm-5v-turbo"
   ]
 }

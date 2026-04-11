@@ -114,7 +114,6 @@
   "mistralai": [
     "codestral-latest",
     "devstral-2512",
-    "mistral-vibe-cli-latest",
     "devstral-medium-latest",
     "devstral-latest",
     "devstral-medium-2507",
@@ -130,11 +129,11 @@
     "mistral-large-2512",
     "mistral-large-latest",
     "mistral-medium-2505",
-    "mistral-medium-3.5.0",
     "mistral-medium-latest",
     "mistral-small-2506",
     "mistral-small-latest",
     "mistral-tiny-latest",
+    "mistral-vibe-cli-latest",
     "pixtral-large-latest",
     "voxtral-mini-latest",
     "voxtral-small-latest"

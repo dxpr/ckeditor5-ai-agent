@@ -230,6 +230,7 @@
     "deepseek/deepseek-r1-0528",
     "deepseek/deepseek-r1-distill-llama-70b",
     "deepseek/deepseek-r1-distill-qwen-32b",
+    "openrouter/elephant-alpha",
     "essentialai/rnj-1-instruct",
     "openrouter/free",
     "alpindale/goliath-120b",

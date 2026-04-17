@@ -103,6 +103,7 @@
     "gpt-3.5-turbo"
   ],
   "anthropic": [
+    "claude-opus-4-7",
     "claude-sonnet-4-6",
     "claude-opus-4-6",
     "claude-opus-4-5-20251101",
@@ -143,12 +144,10 @@
   "groq": [
     "canopylabs/orpheus-v1-english",
     "canopylabs/orpheus-arabic-saudi",
-    "moonshotai/kimi-k2-instruct-0905",
     "groq/compound-mini",
     "groq/compound",
     "openai/gpt-oss-120b",
     "openai/gpt-oss-20b",
-    "moonshotai/kimi-k2-instruct",
     "qwen/qwen3-32b",
     "meta-llama/llama-4-scout-17b-16e-instruct",
     "allam-2-7b",
@@ -176,7 +175,6 @@
     "aion-labs/aion-2.0",
     "aion-labs/aion-rp-llama-3.1-8b",
     "alfredpros/codellama-7b-instruct-solidity",
-    "allenai/olmo-2-0325-32b-instruct",
     "allenai/olmo-3-32b-think",
     "allenai/olmo-3.1-32b-instruct",
     "amazon/nova-2-lite-v1",
@@ -194,6 +192,7 @@
     "anthropic/claude-opus-4.5",
     "anthropic/claude-opus-4.6",
     "anthropic/claude-opus-4.6-fast",
+    "anthropic/claude-opus-4.7",
     "anthropic/claude-sonnet-4",
     "anthropic/claude-sonnet-4.5",
     "anthropic/claude-sonnet-4.6",

@@ -290,7 +290,6 @@
     "meta-llama/llama-4-maverick",
     "meta-llama/llama-4-scout",
     "meta-llama/llama-guard-4-12b",
-    "meta-llama/llama-guard-4-12b:free",
     "microsoft/phi-4",
     "minimax/minimax-m1",
     "minimax/minimax-m2",

@@ -27,8 +27,7 @@ export class AiAgentContext {
 
 	public showError( message: string ): void {
 		if ( this._uiComponent ) {
-			console.log( 'Showing error message...', message );
-			this._uiComponent.showGptErrorToolTip( message );
+			this._uiComponent.showErrorTooltip( message );
 		}
 	}
 

@@ -6,6 +6,7 @@ import {
 	Message
 } from 'multi-llm-ts/dist/index.js';
 import type { Editor } from 'ckeditor5/src/core.js';
+import type { LocaleTranslate } from 'ckeditor5';
 import type { ModelElement as Element } from 'ckeditor5/src/engine.js';
 import { ButtonView } from 'ckeditor5/src/ui.js';
 import { env } from 'ckeditor5/src/utils.js';
@@ -37,6 +38,7 @@ export default class AiAgentService {
 	private promptHelper: PromptHelper;
 	private htmlParser: HtmlParser;
 	private providers?: string;
+	private creditsUrl?: string;
 
 	private isInlineInsertion: boolean = false;
 	private abortGeneration: boolean = false;
@@ -97,6 +99,7 @@ export default class AiAgentService {
 		this.disableFlags = config.moderationDisableFlags ?? [];
 		this.writesPerSecond = config.writesPerSecond ?? 10;
 		this.providers = config.providers;
+		this.creditsUrl = config.creditsUrl;
 	}
 
 	/**
@@ -364,14 +367,9 @@ export default class AiAgentService {
 				return;
 			}
 			console.error( 'Error in fetchAndProcessGptResponse:', error );
-			let errorMessage: string = t(
-				'We couldn\'t connect to the AI. Please check your internet'
-			);
-			if ( error?.status ) {
-				errorMessage = getErrorMessages( error.status, t );
-			} else {
-				errorMessage = error?.message?.trim();
-			}
+
+			const { message: errorMessage, options: toastOptions } =
+				this.getErrorNotification( error, t );
 
 			// Dispatch failure event for external analytics integration
 			document.dispatchEvent( new CustomEvent( 'dxpr:ai:generation:failure', {
@@ -384,7 +382,7 @@ export default class AiAgentService {
 				}
 			} ) );
 
-			aiAgentContext.showError( errorMessage );
+			aiAgentContext.showError( errorMessage, toastOptions );
 			this.processContentHelper.processCompleted( blockID );
 		} finally {
 			if ( timeoutId ) {
@@ -572,5 +570,70 @@ export default class AiAgentService {
 			if (!stream2) break;
 			this.stream = stream2;
 		}
+	}
+
+	private escapeHtml( text: string ): string {
+		const div = document.createElement( 'div' );
+		div.textContent = text;
+		return div.innerHTML;
+	}
+
+	private getErrorNotification(
+		error: any,
+		t: LocaleTranslate
+	): { message: string; options?: { type?: 'error' | 'warning'; html?: boolean } } {
+		const status = error?.status;
+
+		if ( status === 402 ) {
+			if ( this.creditsUrl ) {
+				const safeUrl = this.escapeHtml( this.creditsUrl );
+				return {
+					message: `${ t( 'You\'ve run out of AI credits.' ) } <a href="${ safeUrl }" target="_blank" rel="noopener">${ t( 'Add credits' ) } &rarr;</a>`,
+					options: { type: 'error', html: true }
+				};
+			}
+			return {
+				message: t( 'You\'ve run out of AI credits.' ),
+				options: { type: 'error' }
+			};
+		}
+
+		if ( status === 401 ) {
+			return {
+				message: t( 'Invalid API key. Check your AI configuration.' ),
+				options: { type: 'error' }
+			};
+		}
+
+		if ( status === 429 ) {
+			return {
+				message: t( 'Too many requests. Please wait a moment and try again.' ),
+				options: { type: 'warning' }
+			};
+		}
+
+		if ( status >= 500 ) {
+			return {
+				message: t( 'The AI service is temporarily unavailable. Try again shortly.' ),
+				options: { type: 'warning' }
+			};
+		}
+
+		if ( !status && error?.name === 'AbortError' ) {
+			return {
+				message: t( 'Request timed out. Check your connection and try again.' ),
+				options: { type: 'warning' }
+			};
+		}
+
+		if ( status ) {
+			return { message: getErrorMessages( status, t ) };
+		}
+
+		return {
+			message: error?.message?.trim() ||
+				t( 'We couldn\'t connect to the AI. Please check your internet connection.' ),
+			options: { type: 'warning' }
+		};
 	}
 }

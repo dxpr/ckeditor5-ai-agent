@@ -64,6 +64,9 @@ export interface AiAgentConfig {
     moderationEnable?: boolean;
     moderationDisableFlags?: Array<ModerationFlagsTypes>;
 
+    // URL shown in 402 error toast linking users to add credits/billing
+    creditsUrl?: string;
+
     // AI Output Security - mitigates prompt injection data exfiltration (CVE-2025-32711)
     aiOutputSecurity?: {
         /**

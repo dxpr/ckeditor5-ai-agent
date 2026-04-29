@@ -588,19 +588,19 @@ export default class AiAgentService {
 			if ( this.creditsUrl ) {
 				const safeUrl = this.escapeHtml( this.creditsUrl );
 				return {
-					message: `${ t( 'You\'ve run out of AI credits.' ) } <a href="${ safeUrl }" target="_blank" rel="noopener">${ t( 'Add credits' ) } &rarr;</a>`,
+					message: `${ t( 'AI credit limit reached.' ) } <a href="${ safeUrl }" target="_blank" rel="noopener">${ t( 'Top up your credits' ) } &rarr;</a>`,
 					options: { type: 'error', html: true }
 				};
 			}
 			return {
-				message: t( 'You\'ve run out of AI credits.' ),
+				message: t( 'AI credit limit reached.' ),
 				options: { type: 'error' }
 			};
 		}
 
 		if ( status === 401 ) {
 			return {
-				message: t( 'Invalid API key. Check your AI configuration.' ),
+				message: t( 'Authentication error. Please check your API credentials.' ),
 				options: { type: 'error' }
 			};
 		}
@@ -614,14 +614,14 @@ export default class AiAgentService {
 
 		if ( status >= 500 ) {
 			return {
-				message: t( 'The AI service is temporarily unavailable. Try again shortly.' ),
+				message: t( 'AI service is currently unavailable. Please try again later.' ),
 				options: { type: 'warning' }
 			};
 		}
 
 		if ( !status && error?.name === 'AbortError' ) {
 			return {
-				message: t( 'Request timed out. Check your connection and try again.' ),
+				message: t( 'Request timed out. Please try again later.' ),
 				options: { type: 'warning' }
 			};
 		}
@@ -631,8 +631,7 @@ export default class AiAgentService {
 		}
 
 		return {
-			message: error?.message?.trim() ||
-				t( 'We couldn\'t connect to the AI. Please check your internet connection.' ),
+			message: t( 'AI operation failed. Please try again.' ),
 			options: { type: 'warning' }
 		};
 	}

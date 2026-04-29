@@ -97,13 +97,34 @@ jobs:
               
               if (shouldUpdate) {
                 await fs.writeFile(filePath, JSON.stringify(modelsList, null, 2) + "\n");
-                
-                // Update only the model count in README.md
+
+                const displayNames = {
+                  dxai: "DXAI", google: "Google", openai: "OpenAI",
+                  anthropic: "Anthropic", mistralai: "Mistral AI",
+                  groq: "Groq", xai: "xAI", openrouter: "OpenRouter"
+                };
+                const cols = 4;
+                let tableLines = [];
+                for (const [engine, models] of Object.entries(modelsList)) {
+                  const name = displayNames[engine] || engine;
+                  tableLines.push("", `#### ${name}`, "", "| | | | |", "|---|---|---|---|");
+                  for (let i = 0; i < models.length; i += cols) {
+                    const row = [];
+                    for (let j = 0; j < cols; j++) row.push(models[i + j] || "");
+                    tableLines.push("| " + row.join(" | ") + " |");
+                  }
+                }
+                const modelTable = tableLines.join("\n");
+
                 const readmePath = "./README.md";
                 let readme = await fs.readFile(readmePath, "utf8");
                 readme = readme.replace(
                   /<!-- BEGIN_MODEL_COUNT -->\d+<!-- END_MODEL_COUNT -->/,
                   `<!-- BEGIN_MODEL_COUNT -->${totalModels}<!-- END_MODEL_COUNT -->`
+                );
+                readme = readme.replace(
+                  /<!-- BEGIN_MODEL_TABLE -->[\s\S]*?<!-- END_MODEL_TABLE -->/,
+                  `<!-- BEGIN_MODEL_TABLE -->${modelTable}\n\n<!-- END_MODEL_TABLE -->`
                 );
                 await fs.writeFile(readmePath, readme);
                 

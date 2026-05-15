@@ -494,7 +494,7 @@ yarn dll:serve
 | arcee-ai/coder-large | arcee-ai/maestro-reasoning | arcee-ai/spotlight | arcee-ai/trinity-large-preview |
 | arcee-ai/trinity-large-thinking | arcee-ai/trinity-large-thinking:free | arcee-ai/trinity-mini | arcee-ai/virtuoso-large |
 | openrouter/auto | baidu/cobuddy:free | baidu/ernie-4.5-21b-a3b | baidu/ernie-4.5-21b-a3b-thinking |
-| baidu/ernie-4.5-300b-a47b | baidu/ernie-4.5-vl-28b-a3b | baidu/ernie-4.5-vl-424b-a47b | baidu/qianfan-ocr-fast:free |
+| baidu/ernie-4.5-300b-a47b | baidu/ernie-4.5-vl-28b-a3b | baidu/ernie-4.5-vl-424b-a47b | baidu/qianfan-ocr-fast |
 | openrouter/bodybuilder | bytedance-seed/seed-1.6 | bytedance-seed/seed-1.6-flash | bytedance-seed/seed-2.0-lite |
 | bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b | cohere/command-a | cohere/command-r-08-2024 |
 | cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | deepcogito/cogito-v2.1-671b | deepseek/deepseek-chat |

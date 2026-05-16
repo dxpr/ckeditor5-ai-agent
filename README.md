@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->527<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->511<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -476,9 +476,7 @@ yarn dll:serve
 | | | | |
 |---|---|---|---|
 | grok-4.3 | grok-4.20-0309-non-reasoning | grok-4.20-0309-reasoning | grok-4.20-multi-agent-0309 |
-| grok-imagine-video | grok-4-1-fast-non-reasoning | grok-4-1-fast-reasoning | grok-4-fast-non-reasoning |
-| grok-4-fast-reasoning | grok-code-fast-1 | grok-4-0709 | grok-3 |
-| grok-3-mini |  |  |  |
+| grok-imagine-video |  |  |  |
 
 #### OpenRouter
 
@@ -510,7 +508,7 @@ yarn dll:serve
 | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:free | google/lyria-3-clip-preview |
 | google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview | google/gemini-3-pro-image-preview |
 | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.1-8b | inception/mercury-2 | inclusionai/ling-2.6-1t |
-| inclusionai/ling-2.6-flash | inclusionai/ring-2.6-1t:free | inflection/inflection-3-pi | inflection/inflection-3-productivity |
+| inclusionai/ling-2.6-flash | inclusionai/ring-2.6-1t | inflection/inflection-3-pi | inflection/inflection-3-productivity |
 | kwaipilot/kat-coder-pro-v2 | liquid/lfm-2-24b-a2b | liquid/lfm-2.5-1.2b-instruct:free | liquid/lfm-2.5-1.2b-thinking:free |
 | meta-llama/llama-guard-3-8b | anthracite-org/magnum-v4-72b | mancer/weaver | meta-llama/llama-3-70b-instruct |
 | meta-llama/llama-3-8b-instruct | meta-llama/llama-3.1-70b-instruct | meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-11b-vision-instruct |
@@ -567,10 +565,8 @@ yarn dll:serve
 | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash | switchpoint/router |
 | tencent/hunyuan-a13b-instruct | tencent/hy3-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b |
 | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | alibaba/tongyi-deepresearch-30b-a3b | upstage/solar-pro-3 |
-| cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | x-ai/grok-3 |
-| x-ai/grok-3-beta | x-ai/grok-3-mini | x-ai/grok-3-mini-beta | x-ai/grok-4 |
-| x-ai/grok-4-fast | x-ai/grok-4.1-fast | x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent |
-| x-ai/grok-4.3 | x-ai/grok-code-fast-1 | xiaomi/mimo-v2-flash | xiaomi/mimo-v2-omni |
+| cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | x-ai/grok-4.20 |
+| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | xiaomi/mimo-v2-flash | xiaomi/mimo-v2-omni |
 | xiaomi/mimo-v2-pro | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4-32b |
 | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5-air:free | z-ai/glm-4.5v |
 | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash |

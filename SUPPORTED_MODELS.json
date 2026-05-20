@@ -13,6 +13,7 @@
     "gemini-pro-latest",
     "gemini-flash-lite-latest",
     "gemini-flash-latest",
+    "gemini-3.5-flash",
     "gemini-3.1-pro-preview-customtools",
     "gemini-3.1-pro-preview",
     "gemini-3.1-flash-tts-preview",
@@ -29,7 +30,8 @@
     "gemini-2.0-flash",
     "deep-research-pro-preview-12-2025",
     "deep-research-preview-04-2026",
-    "deep-research-max-preview-04-2026"
+    "deep-research-max-preview-04-2026",
+    "antigravity-preview-05-2026"
   ],
   "openai": [
     "chat-latest",
@@ -139,11 +141,11 @@
     "mistral-medium-3",
     "mistral-medium-2604",
     "mistral-medium-c21211-r0-75",
-    "mistral-vibe-cli-latest",
     "mistral-medium-latest",
     "mistral-small-2506",
     "mistral-small-2603",
     "mistral-tiny-latest",
+    "mistral-vibe-cli-latest",
     "pixtral-large-latest",
     "voxtral-mini-latest",
     "voxtral-small-latest"
@@ -255,6 +257,7 @@
     "google/gemini-3.1-flash-lite-preview",
     "google/gemini-3.1-pro-preview",
     "google/gemini-3.1-pro-preview-customtools",
+    "google/gemini-3.5-flash",
     "google/gemma-2-27b-it",
     "google/gemma-3-12b-it",
     "google/gemma-3-27b-it",

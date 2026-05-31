@@ -171,6 +171,7 @@
     "llama-3.1-8b-instant"
   ],
   "xai": [
+    "grok-imagine-video-1.5-preview",
     "grok-4.3",
     "grok-build-0.1",
     "grok-4.20-0309-non-reasoning",
@@ -217,7 +218,6 @@
     "arcee-ai/virtuoso-large",
     "openrouter/auto",
     "baidu/ernie-4.5-21b-a3b",
-    "baidu/ernie-4.5-21b-a3b-thinking",
     "baidu/ernie-4.5-300b-a47b",
     "baidu/ernie-4.5-vl-28b-a3b",
     "baidu/ernie-4.5-vl-424b-a47b",
@@ -325,7 +325,6 @@
     "mistralai/ministral-14b-2512",
     "mistralai/ministral-3b-2512",
     "mistralai/ministral-8b-2512",
-    "mistralai/mistral-7b-instruct-v0.1",
     "mistralai/mistral-large-2512",
     "mistralai/mistral-medium-3",
     "mistralai/mistral-medium-3.1",
@@ -509,7 +508,6 @@
     "thedrummer/rocinante-12b",
     "thedrummer/skyfall-36b-v2",
     "thedrummer/unslopnemo-12b",
-    "upstage/solar-pro-3",
     "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
     "microsoft/wizardlm-2-8x22b",
     "writer/palmyra-x5",

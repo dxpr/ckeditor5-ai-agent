@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->519<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->505<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -455,15 +455,13 @@ yarn dll:serve
 | | | | |
 |---|---|---|---|
 | codestral-latest | devstral-2512 | devstral-medium-latest | devstral-latest |
-| devstral-medium-2507 | devstral-small-2507 | labs-leanstral-2603 | magistral-medium-latest |
-| magistral-small-2509 | ministral-14b-latest | ministral-3b-latest | ministral-8b-latest |
-| mistral-large-2411 | mistral-large-2512 | mistral-large-latest | mistral-large-2512 |
-| mistral-large-latest | mistral-medium-2505 | mistral-medium-3-5 | mistral-medium-3.5 |
-| mistral-medium-3 | mistral-medium-2604 | mistral-medium-c21211-r0-75 | mistral-vibe-cli-latest |
-| mistral-medium-3-5 | mistral-medium-3.5 | mistral-medium-3 | mistral-medium-2604 |
-| mistral-medium-c21211-r0-75 | mistral-vibe-cli-latest | mistral-medium-latest | mistral-small-2506 |
-| mistral-small-2603 | mistral-tiny-latest | pixtral-large-latest | voxtral-mini-latest |
-| voxtral-small-latest |  |  |  |
+| labs-leanstral-2603 | magistral-medium-latest | magistral-small-2509 | ministral-14b-latest |
+| ministral-3b-latest | ministral-8b-latest | mistral-large-2512 | mistral-large-latest |
+| mistral-large-2512 | mistral-large-latest | mistral-medium-2505 | mistral-medium-3-5 |
+| mistral-medium-3.5 | mistral-medium-3 | mistral-medium-2604 | mistral-medium-c21211-r0-75 |
+| mistral-vibe-cli-latest | mistral-medium-3-5 | mistral-medium-3.5 | mistral-medium-3 |
+| mistral-medium-2604 | mistral-medium-c21211-r0-75 | mistral-vibe-cli-latest | mistral-medium-latest |
+| mistral-small-2506 | mistral-small-2603 | mistral-tiny-latest | voxtral-small-latest |
 
 #### Groq
 
@@ -485,44 +483,42 @@ yarn dll:serve
 | | | | |
 |---|---|---|---|
 | ai21/jamba-large-1.7 | aion-labs/aion-1.0 | aion-labs/aion-1.0-mini | aion-labs/aion-2.0 |
-| aion-labs/aion-rp-llama-3.1-8b | alfredpros/codellama-7b-instruct-solidity | allenai/olmo-3-32b-think | amazon/nova-2-lite-v1 |
-| amazon/nova-lite-v1 | amazon/nova-micro-v1 | amazon/nova-premier-v1 | amazon/nova-pro-v1 |
-| ~anthropic/claude-haiku-latest | ~anthropic/claude-sonnet-latest | anthropic/claude-3-haiku | anthropic/claude-3.5-haiku |
-| anthropic/claude-haiku-4.5 | anthropic/claude-opus-4 | anthropic/claude-opus-4.1 | anthropic/claude-opus-4.5 |
-| anthropic/claude-opus-4.6 | anthropic/claude-opus-4.6-fast | anthropic/claude-opus-4.7 | anthropic/claude-opus-4.7-fast |
-| anthropic/claude-opus-4.8 | anthropic/claude-opus-4.8-fast | ~anthropic/claude-opus-latest | anthropic/claude-sonnet-4 |
-| anthropic/claude-sonnet-4.5 | anthropic/claude-sonnet-4.6 | arcee-ai/coder-large | arcee-ai/maestro-reasoning |
-| arcee-ai/spotlight | arcee-ai/trinity-large-thinking | arcee-ai/trinity-mini | arcee-ai/virtuoso-large |
-| openrouter/auto | baidu/ernie-4.5-21b-a3b | baidu/ernie-4.5-300b-a47b | baidu/ernie-4.5-vl-28b-a3b |
-| baidu/ernie-4.5-vl-424b-a47b | openrouter/bodybuilder | bytedance-seed/seed-1.6 | bytedance-seed/seed-1.6-flash |
-| bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b | cohere/command-a |
-| cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | deepcogito/cogito-v2.1-671b |
-| deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 | deepseek/deepseek-chat-v3.1 | deepseek/deepseek-v3.1-terminus |
-| deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp | deepseek/deepseek-v4-flash | deepseek/deepseek-v4-flash:free |
-| deepseek/deepseek-v4-pro | deepseek/deepseek-r1 | deepseek/deepseek-r1-0528 | deepseek/deepseek-r1-distill-llama-70b |
-| deepseek/deepseek-r1-distill-qwen-32b | essentialai/rnj-1-instruct | openrouter/free | ~google/gemini-flash-latest |
-| ~google/gemini-pro-latest | google/gemini-2.0-flash-001 | google/gemini-2.0-flash-lite-001 | google/gemini-2.5-flash |
-| google/gemini-2.5-flash-lite | google/gemini-2.5-flash-lite-preview-09-2025 | google/gemini-2.5-pro | google/gemini-2.5-pro-preview-05-06 |
-| google/gemini-2.5-pro-preview | google/gemini-3-flash-preview | google/gemini-3.1-flash-lite | google/gemini-3.1-flash-lite-preview |
-| google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview-customtools | google/gemini-3.5-flash | google/gemma-2-27b-it |
-| google/gemma-3-12b-it | google/gemma-3-27b-it | google/gemma-3-4b-it | google/gemma-3n-e4b-it |
-| google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:free |
-| google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview |
-| google/gemini-3-pro-image-preview | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.1-8b | inception/mercury-2 |
-| inclusionai/ling-2.6-1t | inclusionai/ling-2.6-flash | inclusionai/ring-2.6-1t | inflection/inflection-3-pi |
-| inflection/inflection-3-productivity | kwaipilot/kat-coder-pro-v2 | liquid/lfm-2-24b-a2b | liquid/lfm-2.5-1.2b-instruct:free |
-| liquid/lfm-2.5-1.2b-thinking:free | meta-llama/llama-guard-3-8b | anthracite-org/magnum-v4-72b | mancer/weaver |
-| meta-llama/llama-3-70b-instruct | meta-llama/llama-3-8b-instruct | meta-llama/llama-3.1-70b-instruct | meta-llama/llama-3.1-8b-instruct |
-| meta-llama/llama-3.2-11b-vision-instruct | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.2-3b-instruct:free |
-| meta-llama/llama-3.3-70b-instruct | meta-llama/llama-3.3-70b-instruct:free | meta-llama/llama-4-maverick | meta-llama/llama-4-scout |
-| meta-llama/llama-guard-4-12b | microsoft/phi-4 | microsoft/phi-4-mini-instruct | minimax/minimax-m1 |
-| minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 | minimax/minimax-m2.5 |
-| minimax/minimax-m2.5:free | minimax/minimax-m2.7 | minimax/minimax-01 | mistralai/mistral-large |
-| mistralai/mistral-large-2407 | mistralai/mistral-large-2411 | mistralai/codestral-2508 | mistralai/devstral-2512 |
-| mistralai/devstral-medium | mistralai/devstral-small | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 |
-| mistralai/ministral-8b-2512 | mistralai/mistral-large-2512 | mistralai/mistral-medium-3 | mistralai/mistral-medium-3.1 |
-| mistralai/mistral-medium-3-5 | mistralai/mistral-nemo | mistralai/mistral-small-24b-instruct-2501 | mistralai/mistral-small-3.1-24b-instruct |
-| mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 | mistralai/mixtral-8x22b-instruct | mistralai/pixtral-large-2411 |
+| aion-labs/aion-rp-llama-3.1-8b | allenai/olmo-3-32b-think | amazon/nova-2-lite-v1 | amazon/nova-lite-v1 |
+| amazon/nova-micro-v1 | amazon/nova-premier-v1 | amazon/nova-pro-v1 | ~anthropic/claude-haiku-latest |
+| ~anthropic/claude-sonnet-latest | anthropic/claude-3-haiku | anthropic/claude-3.5-haiku | anthropic/claude-haiku-4.5 |
+| anthropic/claude-opus-4 | anthropic/claude-opus-4.1 | anthropic/claude-opus-4.5 | anthropic/claude-opus-4.6 |
+| anthropic/claude-opus-4.6-fast | anthropic/claude-opus-4.7 | anthropic/claude-opus-4.7-fast | anthropic/claude-opus-4.8 |
+| anthropic/claude-opus-4.8-fast | ~anthropic/claude-opus-latest | anthropic/claude-sonnet-4 | anthropic/claude-sonnet-4.5 |
+| anthropic/claude-sonnet-4.6 | arcee-ai/coder-large | arcee-ai/maestro-reasoning | arcee-ai/spotlight |
+| arcee-ai/trinity-large-thinking | arcee-ai/trinity-mini | arcee-ai/virtuoso-large | openrouter/auto |
+| baidu/ernie-4.5-300b-a47b | baidu/ernie-4.5-vl-28b-a3b | baidu/ernie-4.5-vl-424b-a47b | openrouter/bodybuilder |
+| bytedance-seed/seed-1.6 | bytedance-seed/seed-1.6-flash | bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini |
+| bytedance/ui-tars-1.5-7b | cohere/command-a | cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 |
+| cohere/command-r7b-12-2024 | deepcogito/cogito-v2.1-671b | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 |
+| deepseek/deepseek-chat-v3.1 | deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp |
+| deepseek/deepseek-v4-flash | deepseek/deepseek-v4-pro | deepseek/deepseek-r1 | deepseek/deepseek-r1-0528 |
+| deepseek/deepseek-r1-distill-llama-70b | deepseek/deepseek-r1-distill-qwen-32b | essentialai/rnj-1-instruct | openrouter/free |
+| ~google/gemini-flash-latest | ~google/gemini-pro-latest | google/gemini-2.0-flash-001 | google/gemini-2.0-flash-lite-001 |
+| google/gemini-2.5-flash | google/gemini-2.5-flash-lite | google/gemini-2.5-flash-lite-preview-09-2025 | google/gemini-2.5-pro |
+| google/gemini-2.5-pro-preview-05-06 | google/gemini-2.5-pro-preview | google/gemini-3-flash-preview | google/gemini-3.1-flash-lite |
+| google/gemini-3.1-flash-lite-preview | google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview-customtools | google/gemini-3.5-flash |
+| google/gemma-2-27b-it | google/gemma-3-12b-it | google/gemma-3-27b-it | google/gemma-3-4b-it |
+| google/gemma-3n-e4b-it | google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it |
+| google/gemma-4-31b-it:free | google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image |
+| google/gemini-3.1-flash-image-preview | google/gemini-3-pro-image-preview | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.1-8b |
+| inception/mercury-2 | inclusionai/ling-2.6-1t | inclusionai/ling-2.6-flash | inclusionai/ring-2.6-1t |
+| inflection/inflection-3-pi | inflection/inflection-3-productivity | kwaipilot/kat-coder-pro-v2 | liquid/lfm-2-24b-a2b |
+| liquid/lfm-2.5-1.2b-instruct:free | liquid/lfm-2.5-1.2b-thinking:free | meta-llama/llama-guard-3-8b | anthracite-org/magnum-v4-72b |
+| mancer/weaver | meta-llama/llama-3-70b-instruct | meta-llama/llama-3-8b-instruct | meta-llama/llama-3.1-70b-instruct |
+| meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-11b-vision-instruct | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct |
+| meta-llama/llama-3.2-3b-instruct:free | meta-llama/llama-3.3-70b-instruct | meta-llama/llama-3.3-70b-instruct:free | meta-llama/llama-4-maverick |
+| meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b | microsoft/phi-4 | microsoft/phi-4-mini-instruct |
+| minimax/minimax-m1 | minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 |
+| minimax/minimax-m2.5 | minimax/minimax-m2.7 | minimax/minimax-01 | mistralai/mistral-large |
+| mistralai/mistral-large-2407 | mistralai/codestral-2508 | mistralai/devstral-2512 | mistralai/ministral-14b-2512 |
+| mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 | mistralai/mistral-large-2512 | mistralai/mistral-medium-3 |
+| mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 | mistralai/mistral-nemo | mistralai/mistral-small-24b-instruct-2501 |
+| mistralai/mistral-small-3.1-24b-instruct | mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 | mistralai/mixtral-8x22b-instruct |
 | mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest | moonshotai/kimi-k2 |
 | moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 |
 | moonshotai/kimi-k2.6:free | morph/morph-v3-fast | morph/morph-v3-large | gryphe/mythomax-l2-13b |
@@ -566,12 +562,11 @@ yarn dll:serve
 | sao10k/l3.1-70b-hanami-x1 | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash |
 | stepfun/step-3.7-flash | switchpoint/router | tencent/hunyuan-a13b-instruct | tencent/hy3-preview |
 | thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b |
-| cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | x-ai/grok-4.20 |
-| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-build-0.1 | xiaomi/mimo-v2-flash |
-| xiaomi/mimo-v2-omni | xiaomi/mimo-v2-pro | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro |
-| z-ai/glm-4-32b | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5-air:free |
-| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
-| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
-| z-ai/glm-5v-turbo |  |  |  |
+| upstage/solar-pro-3 | cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
+| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-build-0.1 |
+| xiaomi/mimo-v2-flash | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4-32b |
+| z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5-air:free | z-ai/glm-4.5v |
+| z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash |
+| z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5v-turbo |
 
 <!-- END_MODEL_TABLE -->

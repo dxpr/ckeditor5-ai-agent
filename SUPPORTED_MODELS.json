@@ -460,6 +460,7 @@
     "qwen/qwen3.6-max-preview",
     "qwen/qwen3.6-plus",
     "qwen/qwen3.7-max",
+    "qwen/qwen3.7-plus",
     "qwen/qwen-2.5-72b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
     "rekaai/reka-edge",

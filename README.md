@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->491<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->492<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -553,17 +553,17 @@ yarn dll:serve
 | qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 | qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b |
 | qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 |
 | qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-max-preview |
-| qwen/qwen3.6-plus | qwen/qwen3.7-max | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct |
-| rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 | relace/relace-search |
-| undi95/remm-slerp-l2-13b | sao10k/l3-lunaris-8b | sao10k/l3-euryale-70b | sao10k/l3.1-70b-hanami-x1 |
-| sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash | stepfun/step-3.7-flash |
-| switchpoint/router | tencent/hunyuan-a13b-instruct | tencent/hy3-preview | thedrummer/cydonia-24b-v4.1 |
-| thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | upstage/solar-pro-3 |
-| cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | x-ai/grok-4.20 |
-| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-build-0.1 | xiaomi/mimo-v2-flash |
-| xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4-32b | z-ai/glm-4.5 |
-| z-ai/glm-4.5-air | z-ai/glm-4.5-air:free | z-ai/glm-4.5v | z-ai/glm-4.6 |
-| z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
-| z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5v-turbo |  |
+| qwen/qwen3.6-plus | qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen-2.5-72b-instruct |
+| qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 |
+| relace/relace-search | undi95/remm-slerp-l2-13b | sao10k/l3-lunaris-8b | sao10k/l3-euryale-70b |
+| sao10k/l3.1-70b-hanami-x1 | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash |
+| stepfun/step-3.7-flash | switchpoint/router | tencent/hunyuan-a13b-instruct | tencent/hy3-preview |
+| thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b |
+| upstage/solar-pro-3 | cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
+| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-build-0.1 |
+| xiaomi/mimo-v2-flash | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4-32b |
+| z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5-air:free | z-ai/glm-4.5v |
+| z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash |
+| z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5v-turbo |
 
 <!-- END_MODEL_TABLE -->

@@ -518,7 +518,7 @@ yarn dll:serve
 | mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest | moonshotai/kimi-k2 |
 | moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 |
 | moonshotai/kimi-k2.6:free | morph/morph-v3-fast | morph/morph-v3-large | gryphe/mythomax-l2-13b |
-| nex-agi/deepseek-v3.1-nex-n1 | nousresearch/hermes-3-llama-3.1-405b | nousresearch/hermes-3-llama-3.1-405b:free | nousresearch/hermes-3-llama-3.1-70b |
+| nex-agi/nex-n2-pro:free | nousresearch/hermes-3-llama-3.1-405b | nousresearch/hermes-3-llama-3.1-405b:free | nousresearch/hermes-3-llama-3.1-70b |
 | nousresearch/hermes-4-405b | nousresearch/hermes-4-70b | nvidia/llama-3.3-nemotron-super-49b-v1.5 | nvidia/nemotron-3-nano-30b-a3b |
 | nvidia/nemotron-3-nano-30b-a3b:free | nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free | nvidia/nemotron-3-super-120b-a12b | nvidia/nemotron-3-super-120b-a12b:free |
 | nvidia/nemotron-3-ultra-550b-a55b | nvidia/nemotron-3-ultra-550b-a55b:free | nvidia/nemotron-3.5-content-safety:free | nvidia/nemotron-nano-12b-v2-vl:free |

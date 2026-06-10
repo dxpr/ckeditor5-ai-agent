@@ -107,6 +107,7 @@
     "gpt-3.5-turbo"
   ],
   "anthropic": [
+    "claude-fable-5",
     "claude-opus-4-8",
     "claude-opus-4-7",
     "claude-sonnet-4-6",
@@ -177,6 +178,8 @@
     "~anthropic/claude-sonnet-latest",
     "anthropic/claude-3-haiku",
     "anthropic/claude-3.5-haiku",
+    "anthropic/claude-fable-5",
+    "~anthropic/claude-fable-latest",
     "anthropic/claude-haiku-4.5",
     "anthropic/claude-opus-4",
     "anthropic/claude-opus-4.1",
@@ -192,7 +195,6 @@
     "anthropic/claude-sonnet-4.5",
     "anthropic/claude-sonnet-4.6",
     "arcee-ai/coder-large",
-    "arcee-ai/maestro-reasoning",
     "arcee-ai/trinity-large-thinking",
     "arcee-ai/trinity-mini",
     "arcee-ai/virtuoso-large",
@@ -490,10 +492,8 @@
     "xiaomi/mimo-v2-flash",
     "xiaomi/mimo-v2.5",
     "xiaomi/mimo-v2.5-pro",
-    "z-ai/glm-4-32b",
     "z-ai/glm-4.5",
     "z-ai/glm-4.5-air",
-    "z-ai/glm-4.5-air:free",
     "z-ai/glm-4.5v",
     "z-ai/glm-4.6",
     "z-ai/glm-4.6v",
@@ -501,7 +501,6 @@
     "z-ai/glm-4.7-flash",
     "z-ai/glm-5",
     "z-ai/glm-5-turbo",
-    "z-ai/glm-5.1",
-    "z-ai/glm-5v-turbo"
+    "z-ai/glm-5.1"
   ]
 }

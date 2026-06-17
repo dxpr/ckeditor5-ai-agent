@@ -139,6 +139,7 @@
     "voxtral-small-latest"
   ],
   "groq": [
+    "qwen/qwen3.6-27b",
     "canopylabs/orpheus-v1-english",
     "canopylabs/orpheus-arabic-saudi",
     "groq/compound-mini",
@@ -220,7 +221,6 @@
     "deepseek/deepseek-r1",
     "deepseek/deepseek-r1-0528",
     "deepseek/deepseek-r1-distill-llama-70b",
-    "deepseek/deepseek-r1-distill-qwen-32b",
     "essentialai/rnj-1-instruct",
     "openrouter/free",
     "~google/gemini-flash-latest",
@@ -497,6 +497,7 @@
     "z-ai/glm-4.7-flash",
     "z-ai/glm-5",
     "z-ai/glm-5-turbo",
-    "z-ai/glm-5.1"
+    "z-ai/glm-5.1",
+    "z-ai/glm-5.2"
   ]
 }

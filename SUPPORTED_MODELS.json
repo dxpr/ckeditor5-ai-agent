@@ -140,6 +140,20 @@
     "voxtral-mini-latest",
     "voxtral-small-latest"
   ],
+  "groq": [
+    "qwen/qwen3.6-27b",
+    "canopylabs/orpheus-v1-english",
+    "canopylabs/orpheus-arabic-saudi",
+    "groq/compound-mini",
+    "groq/compound",
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "qwen/qwen3-32b",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+    "allam-2-7b",
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant"
+  ],
   "xai": [
     "grok-imagine-video-1.5",
     "grok-4.3",

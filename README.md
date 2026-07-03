@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->488<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->490<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -541,29 +541,29 @@ yarn dll:serve
 | openai/o3-pro | openai/o4-mini | openai/o4-mini-deep-research | openai/o4-mini-high |
 | openrouter/fusion | openrouter/pareto-code | perceptron/perceptron-mk1 | perplexity/sonar |
 | perplexity/sonar-deep-research | perplexity/sonar-pro | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro |
-| poolside/laguna-m.1 | poolside/laguna-m.1:free | poolside/laguna-xs.2 | poolside/laguna-xs.2:free |
-| qwen/qwen-plus-2025-07-28 | qwen/qwen-plus-2025-07-28:thinking | qwen/qwen-plus | qwen/qwen-2.5-7b-instruct |
-| qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b | qwen/qwen3-235b-a22b | qwen/qwen3-235b-a22b-2507 |
-| qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-30b-a3b-thinking-2507 |
-| qwen/qwen3-32b | qwen/qwen3-8b | qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder |
-| qwen/qwen3-coder:free | qwen/qwen3-coder-flash | qwen/qwen3-coder-next | qwen/qwen3-coder-plus |
-| qwen/qwen3-max | qwen/qwen3-max-thinking | qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-next-80b-a3b-instruct:free |
-| qwen/qwen3-next-80b-a3b-thinking | qwen/qwen3-vl-235b-a22b-instruct | qwen/qwen3-vl-235b-a22b-thinking | qwen/qwen3-vl-30b-a3b-instruct |
-| qwen/qwen3-vl-30b-a3b-thinking | qwen/qwen3-vl-32b-instruct | qwen/qwen3-vl-8b-instruct | qwen/qwen3-vl-8b-thinking |
-| qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 | qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b |
-| qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 |
-| qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-max-preview |
-| qwen/qwen3.6-plus | qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen-2.5-72b-instruct |
-| qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 |
-| relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-ultra | sao10k/l3-lunaris-8b |
-| sao10k/l3.1-70b-hanami-x1 | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash |
-| stepfun/step-3.7-flash | switchpoint/router | tencent/hunyuan-a13b-instruct | tencent/hy3-preview |
-| thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b |
-| upstage/solar-pro-3 | cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
-| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-build-0.1 |
-| xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 | z-ai/glm-4.5-air |
-| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
-| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
-| z-ai/glm-5.2 | z-ai/glm-5v-turbo |  |  |
+| poolside/laguna-m.1 | poolside/laguna-m.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free |
+| poolside/laguna-xs.2 | poolside/laguna-xs.2:free | qwen/qwen-plus-2025-07-28 | qwen/qwen-plus-2025-07-28:thinking |
+| qwen/qwen-plus | qwen/qwen-2.5-7b-instruct | qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b |
+| qwen/qwen3-235b-a22b | qwen/qwen3-235b-a22b-2507 | qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b |
+| qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-30b-a3b-thinking-2507 | qwen/qwen3-32b | qwen/qwen3-8b |
+| qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder | qwen/qwen3-coder:free | qwen/qwen3-coder-flash |
+| qwen/qwen3-coder-next | qwen/qwen3-coder-plus | qwen/qwen3-max | qwen/qwen3-max-thinking |
+| qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-next-80b-a3b-instruct:free | qwen/qwen3-next-80b-a3b-thinking | qwen/qwen3-vl-235b-a22b-instruct |
+| qwen/qwen3-vl-235b-a22b-thinking | qwen/qwen3-vl-30b-a3b-instruct | qwen/qwen3-vl-30b-a3b-thinking | qwen/qwen3-vl-32b-instruct |
+| qwen/qwen3-vl-8b-instruct | qwen/qwen3-vl-8b-thinking | qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 |
+| qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b | qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b |
+| qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b |
+| qwen/qwen3.6-flash | qwen/qwen3.6-max-preview | qwen/qwen3.6-plus | qwen/qwen3.7-max |
+| qwen/qwen3.7-plus | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge |
+| rekaai/reka-flash-3 | relace/relace-apply-3 | relace/relace-search | undi95/remm-slerp-l2-13b |
+| sakana/fugu-ultra | sao10k/l3-lunaris-8b | sao10k/l3.1-70b-hanami-x1 | sao10k/l3.1-euryale-70b |
+| sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash | stepfun/step-3.7-flash | switchpoint/router |
+| tencent/hunyuan-a13b-instruct | tencent/hy3-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b |
+| thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | upstage/solar-pro-3 | cognitivecomputations/dolphin-mistral-24b-venice-edition:free |
+| microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent |
+| x-ai/grok-4.3 | x-ai/grok-build-0.1 | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro |
+| z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 |
+| z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
+| z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5v-turbo |
 
 <!-- END_MODEL_TABLE -->

@@ -480,7 +480,7 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| ai21/jamba-large-1.7 | aion-labs/aion-1.0 | aion-labs/aion-1.0-mini | aion-labs/aion-2.0 |
+| ai21/jamba-large-1.7 | aion-labs/aion-2.0 | aion-labs/aion-3.0 | aion-labs/aion-3.0-mini |
 | aion-labs/aion-rp-llama-3.1-8b | allenai/olmo-3-32b-think | amazon/nova-2-lite-v1 | amazon/nova-lite-v1 |
 | amazon/nova-micro-v1 | amazon/nova-premier-v1 | amazon/nova-pro-v1 | ~anthropic/claude-haiku-latest |
 | ~anthropic/claude-sonnet-latest | anthropic/claude-3-haiku | anthropic/claude-fable-5 | ~anthropic/claude-fable-latest |

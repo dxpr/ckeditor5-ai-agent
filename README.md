@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->493<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->494<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -459,7 +459,7 @@ yarn dll:serve
 | magistral-small-2509 | ministral-14b-latest | ministral-3b-latest | ministral-8b-latest |
 | mistral-large-latest | mistral-large-latest | mistral-medium-2505 | mistral-medium-2508 |
 | mistral-small-2506 | mistral-small-2603 | mistral-tiny-latest | mistral-vibe-cli-latest |
-| mistral-vibe-cli-latest | voxtral-mini-latest | voxtral-small-latest |  |
+| mistral-vibe-cli-latest | voxtral-small-latest |  |  |
 
 #### Groq
 
@@ -473,8 +473,8 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| grok-imagine-video-1.5 | grok-4.3 | grok-build-0.1 | grok-4.20-0309-non-reasoning |
-| grok-4.20-0309-reasoning | grok-4.20-multi-agent-0309 | grok-imagine-video |  |
+| grok-4.5 | grok-imagine-video-1.5 | grok-4.3 | grok-build-0.1 |
+| grok-4.20-0309-non-reasoning | grok-4.20-0309-reasoning | grok-4.20-multi-agent-0309 | grok-imagine-video |
 
 #### OpenRouter
 
@@ -558,13 +558,13 @@ yarn dll:serve
 | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 | relace/relace-search |
 | undi95/remm-slerp-l2-13b | sakana/fugu-ultra | sao10k/l3-lunaris-8b | sao10k/l3.1-70b-hanami-x1 |
 | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | stepfun/step-3.5-flash | stepfun/step-3.7-flash |
-| switchpoint/router | tencent/hunyuan-a13b-instruct | tencent/hy3 | tencent/hy3:free |
-| tencent/hy3-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 |
-| thedrummer/unslopnemo-12b | upstage/solar-pro-3 | cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b |
-| writer/palmyra-x5 | x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 |
-| x-ai/grok-build-0.1 | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 |
-| z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v |
-| z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo |
-| z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5v-turbo |  |
+| tencent/hunyuan-a13b-instruct | tencent/hy3 | tencent/hy3:free | tencent/hy3-preview |
+| thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b |
+| upstage/solar-pro-3 | cognitivecomputations/dolphin-mistral-24b-venice-edition:free | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
+| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.5 |
+| x-ai/grok-build-0.1 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro |
+| z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 |
+| z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
+| z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5v-turbo |
 
 <!-- END_MODEL_TABLE -->

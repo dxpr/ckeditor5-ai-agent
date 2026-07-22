@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->487<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->491<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -413,12 +413,12 @@ yarn dll:serve
 |---|---|---|---|
 | lyria-3-pro-preview | lyria-3-clip-preview | gemma-4-31b-it | gemma-4-26b-a4b-it |
 | gemini-robotics-er-1.6-preview | gemini-robotics-er-1.5-preview | gemini-pro-latest | gemini-omni-flash-preview |
-| gemini-flash-lite-latest | gemini-flash-latest | gemini-3.5-flash | gemini-3.1-pro-preview-customtools |
-| gemini-3.1-pro-preview | gemini-3.1-flash-tts-preview | gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite |
-| gemini-3-pro-preview | gemini-3-flash-preview | gemini-2.5-pro | gemini-2.5-flash-lite |
-| gemini-2.5-flash | gemini-2.0-flash-lite-001 | gemini-2.0-flash-lite | gemini-2.0-flash-001 |
-| gemini-2.0-flash | deep-research-pro-preview-12-2025 | deep-research-preview-04-2026 | deep-research-max-preview-04-2026 |
-| antigravity-preview-05-2026 |  |  |  |
+| gemini-flash-lite-latest | gemini-flash-latest | gemini-3.6-flash | gemini-3.5-flash-lite |
+| gemini-3.5-flash | gemini-3.1-pro-preview-customtools | gemini-3.1-pro-preview | gemini-3.1-flash-tts-preview |
+| gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite | gemini-3-pro-preview | gemini-3-flash-preview |
+| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | gemini-2.0-flash-lite-001 |
+| gemini-2.0-flash-lite | gemini-2.0-flash-001 | gemini-2.0-flash | deep-research-pro-preview-12-2025 |
+| deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-05-2026 |  |
 
 #### OpenAI
 
@@ -458,9 +458,8 @@ yarn dll:serve
 |---|---|---|---|
 | codestral-2508 | devstral-2512 | labs-leanstral-1-5-1 | magistral-medium-latest |
 | magistral-small-2509 | ministral-14b-latest | ministral-3b-latest | ministral-8b-latest |
-| mistral-large-latest | mistral-large-latest | mistral-medium-2505 | mistral-medium-2508 |
-| mistral-small-2506 | mistral-small-2603 | mistral-tiny-latest | mistral-vibe-cli-latest |
-| mistral-vibe-cli-latest | voxtral-small-latest |  |  |
+| mistral-large-latest | mistral-medium-2505 | mistral-medium-2508 | mistral-small-2506 |
+| mistral-small-2603 | mistral-tiny-latest | mistral-vibe-cli-latest | voxtral-small-latest |
 
 #### Groq
 
@@ -499,50 +498,51 @@ yarn dll:serve
 | ~google/gemini-pro-latest | google/gemini-2.5-flash | google/gemini-2.5-flash-lite | google/gemini-2.5-pro |
 | google/gemini-2.5-pro-preview-05-06 | google/gemini-2.5-pro-preview | google/gemini-3-flash-preview | google/gemini-3.1-flash-lite |
 | google/gemini-3.1-flash-lite-preview | google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview-customtools | google/gemini-3.5-flash |
-| google/gemma-2-27b-it | google/gemma-3-12b-it | google/gemma-3-27b-it | google/gemma-3-4b-it |
-| google/gemma-3n-e4b-it | google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it |
-| google/gemma-4-31b-it:free | google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image |
-| google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image | google/gemini-3-pro-image-preview |
-| google/gemini-3-pro-image | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.1-8b | inception/mercury-2 |
-| inclusionai/ling-2.6-1t | inclusionai/ling-2.6-flash | inclusionai/ring-2.6-1t | inflection/inflection-3-pi |
-| inflection/inflection-3-productivity | kwaipilot/kat-coder-air-v2.5 | kwaipilot/kat-coder-pro-v2 | kwaipilot/kat-coder-pro-v2.5 |
-| anthracite-org/magnum-v4-72b | mancer/weaver | meituan/longcat-2.0 | meta-llama/llama-3.1-70b-instruct |
-| meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct |
-| meta-llama/llama-4-maverick | meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b | meta/muse-spark-1.1 |
-| microsoft/phi-4 | minimax/minimax-m1 | minimax/minimax-m2 | minimax/minimax-m2-her |
-| minimax/minimax-m2.1 | minimax/minimax-m2.5 | minimax/minimax-m2.7 | minimax/minimax-m3 |
-| minimax/minimax-01 | mistralai/mistral-large | mistralai/mistral-large-2407 | mistralai/codestral-2508 |
-| mistralai/devstral-2512 | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 |
-| mistralai/mistral-large-2512 | mistralai/mistral-medium-3 | mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 |
-| mistralai/mistral-nemo | mistralai/mistral-small-24b-instruct-2501 | mistralai/mistral-small-3.1-24b-instruct | mistralai/mistral-small-3.2-24b-instruct |
-| mistralai/mistral-small-2603 | mistralai/mixtral-8x22b-instruct | mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 |
-| ~moonshotai/kimi-latest | moonshotai/kimi-k2 | moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking |
-| moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 | moonshotai/kimi-k2.7-code | moonshotai/kimi-k3 |
-| morph/morph-v3-fast | morph/morph-v3-large | gryphe/mythomax-l2-13b | nex-agi/nex-n2-mini |
-| nex-agi/nex-n2-pro | nousresearch/hermes-3-llama-3.1-405b | nousresearch/hermes-3-llama-3.1-70b | nousresearch/hermes-4-405b |
-| nousresearch/hermes-4-70b | nvidia/nemotron-3-nano-30b-a3b | nvidia/nemotron-3-nano-30b-a3b:free | nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free |
-| nvidia/nemotron-3-super-120b-a12b | nvidia/nemotron-3-super-120b-a12b:free | nvidia/nemotron-3-ultra-550b-a55b | nvidia/nemotron-3-ultra-550b-a55b:free |
-| nvidia/nemotron-3.5-content-safety:free | nvidia/nemotron-nano-12b-v2-vl:free | nvidia/nemotron-nano-9b-v2:free | ~openai/gpt-latest |
-| ~openai/gpt-mini-latest | openai/gpt-audio | openai/gpt-audio-mini | openai/gpt-chat-latest |
-| openai/gpt-3.5-turbo | openai/gpt-3.5-turbo-0613 | openai/gpt-3.5-turbo-16k | openai/gpt-3.5-turbo-instruct |
-| openai/gpt-4 | openai/gpt-4-turbo | openai/gpt-4-turbo-preview | openai/gpt-4.1 |
-| openai/gpt-4.1-mini | openai/gpt-4.1-nano | openai/gpt-4o | openai/gpt-4o-2024-05-13 |
-| openai/gpt-4o-2024-08-06 | openai/gpt-4o-2024-11-20 | openai/gpt-4o-search-preview | openai/gpt-4o-mini |
-| openai/gpt-4o-mini-2024-07-18 | openai/gpt-4o-mini-search-preview | openai/gpt-5 | openai/gpt-5-chat |
-| openai/gpt-5-codex | openai/gpt-5-image | openai/gpt-5-image-mini | openai/gpt-5-mini |
-| openai/gpt-5-nano | openai/gpt-5-pro | openai/gpt-5.1 | openai/gpt-5.1-chat |
-| openai/gpt-5.1-codex | openai/gpt-5.1-codex-max | openai/gpt-5.1-codex-mini | openai/gpt-5.2 |
-| openai/gpt-5.2-chat | openai/gpt-5.2-pro | openai/gpt-5.2-codex | openai/gpt-5.3-chat |
-| openai/gpt-5.3-codex | openai/gpt-5.4 | openai/gpt-5.4-image-2 | openai/gpt-5.4-mini |
-| openai/gpt-5.4-nano | openai/gpt-5.4-pro | openai/gpt-5.5 | openai/gpt-5.5-pro |
-| openai/gpt-5.6-luna | openai/gpt-5.6-luna-pro | openai/gpt-5.6-sol | openai/gpt-5.6-sol-pro |
-| openai/gpt-5.6-terra | openai/gpt-5.6-terra-pro | openai/gpt-oss-120b | openai/gpt-oss-20b |
-| openai/gpt-oss-20b:free | openai/gpt-oss-safeguard-20b | openai/o1 | openai/o1-pro |
-| openai/o3 | openai/o3-deep-research | openai/o3-mini | openai/o3-mini-high |
-| openai/o3-pro | openai/o4-mini | openai/o4-mini-deep-research | openai/o4-mini-high |
-| openrouter/fusion | openrouter/pareto-code | perceptron/perceptron-mk1 | perplexity/sonar |
-| perplexity/sonar-deep-research | perplexity/sonar-pro | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro |
-| poolside/laguna-m.1 | poolside/laguna-m.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free |
+| google/gemini-3.5-flash-lite | google/gemini-3.6-flash | google/gemma-2-27b-it | google/gemma-3-12b-it |
+| google/gemma-3-27b-it | google/gemma-3-4b-it | google/gemma-3n-e4b-it | google/gemma-4-26b-a4b-it |
+| google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:free | google/lyria-3-clip-preview |
+| google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image |
+| google/gemini-3.1-flash-lite-image | google/gemini-3-pro-image-preview | google/gemini-3-pro-image | ibm-granite/granite-4.0-h-micro |
+| ibm-granite/granite-4.1-8b | inception/mercury-2 | inclusionai/ling-2.6-1t | inclusionai/ling-2.6-flash |
+| inclusionai/ring-2.6-1t | inflection/inflection-3-pi | inflection/inflection-3-productivity | kwaipilot/kat-coder-air-v2.5 |
+| kwaipilot/kat-coder-pro-v2 | kwaipilot/kat-coder-pro-v2.5 | anthracite-org/magnum-v4-72b | mancer/weaver |
+| meituan/longcat-2.0 | meta-llama/llama-3.1-70b-instruct | meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-1b-instruct |
+| meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct | meta-llama/llama-4-maverick | meta-llama/llama-4-scout |
+| meta-llama/llama-guard-4-12b | meta/muse-spark-1.1 | microsoft/phi-4 | minimax/minimax-m1 |
+| minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 | minimax/minimax-m2.5 |
+| minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-01 | mistralai/mistral-large |
+| mistralai/mistral-large-2407 | mistralai/codestral-2508 | mistralai/devstral-2512 | mistralai/ministral-14b-2512 |
+| mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 | mistralai/mistral-large-2512 | mistralai/mistral-medium-3 |
+| mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 | mistralai/mistral-nemo | mistralai/mistral-small-24b-instruct-2501 |
+| mistralai/mistral-small-3.1-24b-instruct | mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 | mistralai/mixtral-8x22b-instruct |
+| mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest | moonshotai/kimi-k2 |
+| moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 |
+| moonshotai/kimi-k2.7-code | moonshotai/kimi-k3 | morph/morph-v3-fast | morph/morph-v3-large |
+| gryphe/mythomax-l2-13b | nex-agi/nex-n2-mini | nex-agi/nex-n2-pro | nousresearch/hermes-3-llama-3.1-405b |
+| nousresearch/hermes-3-llama-3.1-70b | nousresearch/hermes-4-405b | nousresearch/hermes-4-70b | nvidia/nemotron-3-nano-30b-a3b |
+| nvidia/nemotron-3-nano-30b-a3b:free | nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free | nvidia/nemotron-3-super-120b-a12b | nvidia/nemotron-3-super-120b-a12b:free |
+| nvidia/nemotron-3-ultra-550b-a55b | nvidia/nemotron-3-ultra-550b-a55b:free | nvidia/nemotron-3.5-content-safety:free | nvidia/nemotron-nano-12b-v2-vl:free |
+| nvidia/nemotron-nano-9b-v2:free | ~openai/gpt-latest | ~openai/gpt-mini-latest | openai/gpt-audio |
+| openai/gpt-audio-mini | openai/gpt-chat-latest | openai/gpt-3.5-turbo | openai/gpt-3.5-turbo-0613 |
+| openai/gpt-3.5-turbo-16k | openai/gpt-3.5-turbo-instruct | openai/gpt-4 | openai/gpt-4-turbo |
+| openai/gpt-4-turbo-preview | openai/gpt-4.1 | openai/gpt-4.1-mini | openai/gpt-4.1-nano |
+| openai/gpt-4o | openai/gpt-4o-2024-05-13 | openai/gpt-4o-2024-08-06 | openai/gpt-4o-2024-11-20 |
+| openai/gpt-4o-search-preview | openai/gpt-4o-mini | openai/gpt-4o-mini-2024-07-18 | openai/gpt-4o-mini-search-preview |
+| openai/gpt-5 | openai/gpt-5-chat | openai/gpt-5-codex | openai/gpt-5-image |
+| openai/gpt-5-image-mini | openai/gpt-5-mini | openai/gpt-5-nano | openai/gpt-5-pro |
+| openai/gpt-5.1 | openai/gpt-5.1-chat | openai/gpt-5.1-codex | openai/gpt-5.1-codex-max |
+| openai/gpt-5.1-codex-mini | openai/gpt-5.2 | openai/gpt-5.2-chat | openai/gpt-5.2-pro |
+| openai/gpt-5.2-codex | openai/gpt-5.3-chat | openai/gpt-5.3-codex | openai/gpt-5.4 |
+| openai/gpt-5.4-image-2 | openai/gpt-5.4-mini | openai/gpt-5.4-nano | openai/gpt-5.4-pro |
+| openai/gpt-5.5 | openai/gpt-5.5-pro | openai/gpt-5.6-luna | openai/gpt-5.6-luna-pro |
+| openai/gpt-5.6-sol | openai/gpt-5.6-sol-pro | openai/gpt-5.6-terra | openai/gpt-5.6-terra-pro |
+| openai/gpt-oss-120b | openai/gpt-oss-20b | openai/gpt-oss-20b:free | openai/gpt-oss-safeguard-20b |
+| openai/o1 | openai/o1-pro | openai/o3 | openai/o3-deep-research |
+| openai/o3-mini | openai/o3-mini-high | openai/o3-pro | openai/o4-mini |
+| openai/o4-mini-deep-research | openai/o4-mini-high | openrouter/fusion | openrouter/pareto-code |
+| perceptron/perceptron-mk1 | perplexity/sonar | perplexity/sonar-deep-research | perplexity/sonar-pro |
+| perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro | poolside/laguna-m.1 | poolside/laguna-m.1:free |
+| poolside/laguna-s-2.1 | poolside/laguna-s-2.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free |
 | qwen/qwen-plus-2025-07-28 | qwen/qwen-plus-2025-07-28:thinking | qwen/qwen-plus | qwen/qwen-2.5-7b-instruct |
 | qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b | qwen/qwen3-235b-a22b | qwen/qwen3-235b-a22b-2507 |
 | qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-30b-a3b-thinking-2507 |

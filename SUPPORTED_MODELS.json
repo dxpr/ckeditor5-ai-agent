@@ -113,6 +113,7 @@
     "gpt-3.5-turbo"
   ],
   "anthropic": [
+    "claude-opus-5",
     "claude-sonnet-5",
     "claude-fable-5",
     "claude-opus-4-8",
@@ -204,6 +205,8 @@
     "bytedance-seed/seed-2.0-lite",
     "bytedance-seed/seed-2.0-mini",
     "bytedance/ui-tars-1.5-7b",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-5-fast",
     "cohere/command-a",
     "cohere/command-r-08-2024",
     "cohere/command-r-plus-08-2024",

@@ -73,7 +73,7 @@
     "zod": "^4.0.14"
   },
   "peerDependencies": {
-    "ckeditor5": "^46.0.0"
+    "ckeditor5": ">=46.0.0"
   },
   "scripts": {
     "build:dist": "node ./scripts/build-dist.mjs",

@@ -19,8 +19,9 @@ export function addAiAgentToneButton( editor: Editor ): void {
 	const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
 	const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
 		label: item.label,
-		key: item.label.toLowerCase().replace( / /g, '_' ),
-		tone: item.tone
+		key: item.tid ? String( item.tid ) : item.label.toLowerCase().replace( / /g, '_' ),
+		tone: item.tone,
+		tid: item.tid
 	} ) );
 
 	const tonesDropdown = configTonesDropdown ?

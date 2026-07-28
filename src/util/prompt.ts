@@ -148,8 +148,9 @@ export class PromptHelper {
 		const defaultTones = getDefaultAiAgentToneDropdownMenu( this.editor );
 		const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
 			label: item.label,
-			key: item.label.toLowerCase().replace( / /g, '_' ),
-			tone: item.tone
+			key: item.tid ? String( item.tid ) : item.label.toLowerCase().replace( / /g, '_' ),
+			tone: item.tone,
+			tid: item.tid
 		} ) );
 		const availableTones = configTonesDropdown ?
 			[ defaultTones[ 0 ], ...configTonesDropdown ] :

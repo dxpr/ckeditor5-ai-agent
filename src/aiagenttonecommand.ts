@@ -37,16 +37,10 @@ export default class AiAgentToneCommand extends Command {
 	 *
 	 * @param options - An object containing the tone value to set.
 	 */
-	public override async execute( { value }: { value: string } ): Promise<void> {
-		// Set the value directly, replacing any previous tone
+	public override async execute( { value, key }: { value: string; key: string } ): Promise<void> {
 		this.value = value;
 		this.fire( 'change:value', { value } );
-
-		// Find the label for the selected tone value and persist it to localStorage
-		const selectedTone = this.availableTones.find( item => item.tone === value );
-		if ( selectedTone ) {
-			this.saveToneSelection( selectedTone.key );
-		}
+		this.saveToneSelection( key );
 	}
 
 	private saveToneSelection( toneKey: string ): void {

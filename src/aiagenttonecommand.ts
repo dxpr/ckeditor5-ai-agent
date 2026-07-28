@@ -3,7 +3,7 @@ import { STORAGE_PREFIX } from './const.js';
 import { getDefaultAiAgentToneDropdownMenu } from './util/translations.js';
 export default class AiAgentToneCommand extends Command {
 	private readonly STORAGE_KEY = 'tone';
-	private availableTones: Array<{ label: string; key: string; tone: string }> = [];
+	private availableTones: Array<{ label: string; key: string; tone: string; tid?: number }> = [];
 	private debugMode: boolean = false;
 
 	/**
@@ -18,8 +18,9 @@ export default class AiAgentToneCommand extends Command {
 		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
 		const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
 			label: item.label,
-			key: item.label.toLowerCase().replace( / /g, '_' ),
-			tone: item.tone
+			key: item.tid ? String( item.tid ) : item.label.toLowerCase().replace( / /g, '_' ),
+			tone: item.tone,
+			tid: item.tid
 		} ) );
 		this.availableTones = configTonesDropdown ?
 			[ defaultTones[ 0 ], ...configTonesDropdown ] :
@@ -36,16 +37,10 @@ export default class AiAgentToneCommand extends Command {
 	 *
 	 * @param options - An object containing the tone value to set.
 	 */
-	public override async execute( { value }: { value: string } ): Promise<void> {
-		// Set the value directly, replacing any previous tone
+	public override async execute( { value, key }: { value: string; key: string } ): Promise<void> {
 		this.value = value;
 		this.fire( 'change:value', { value } );
-
-		// Find the label for the selected tone value and persist it to localStorage
-		const selectedTone = this.availableTones.find( item => item.tone === value );
-		if ( selectedTone ) {
-			this.saveToneSelection( selectedTone.key );
-		}
+		this.saveToneSelection( key );
 	}
 
 	private saveToneSelection( toneKey: string ): void {

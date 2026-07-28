@@ -19,8 +19,9 @@ export function addAiAgentToneButton( editor: Editor ): void {
 	const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
 	const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
 		label: item.label,
-		key: item.label.toLowerCase().replace( / /g, '_' ),
-		tone: item.tone
+		key: item.tid ? String( item.tid ) : item.label.toLowerCase().replace( / /g, '_' ),
+		tone: item.tone,
+		tid: item.tid
 	} ) );
 
 	const tonesDropdown = configTonesDropdown ?
@@ -39,7 +40,7 @@ export function addAiAgentToneButton( editor: Editor ): void {
 
 		const menuView = new MenuBarMenuView( locale );
 		const listView = new MenuBarMenuListView( locale );
-		const toneItems: Array<{ tone: string; checkIcon: IconView }> = [];
+		const toneItems: Array<{ key: string; checkIcon: IconView }> = [];
 
 		// Add group title for Tone
 		const titleView = new MenuBarMenuListItemView( locale, menuView );
@@ -61,7 +62,7 @@ export function addAiAgentToneButton( editor: Editor ): void {
 			} );
 
 			checkIconView.isVisible = false;
-			toneItems.push( { tone: item.tone, checkIcon: checkIconView } );
+			toneItems.push( { key: item.key, checkIcon: checkIconView } );
 
 			const spanView = new View( locale );
 			spanView.setTemplate( {
@@ -88,7 +89,8 @@ export function addAiAgentToneButton( editor: Editor ): void {
 				} );
 				checkIconView.isVisible = true;
 				editor.execute( 'aiAgentTone', {
-					value: item.tone
+					value: item.tone,
+					key: item.key
 				} );
 				editor.editing.view.focus();
 			} );
@@ -100,11 +102,9 @@ export function addAiAgentToneButton( editor: Editor ): void {
 		dropdownView.on( 'change:isOpen', () => {
 			if ( dropdownView.isOpen ) {
 				const storedToneKey = localStorage.getItem( `${ STORAGE_PREFIX }:tone` );
-				const matchingTone = tonesDropdown.find( item => item.key === storedToneKey );
-				const currentToneValue = matchingTone?.tone || '';
 
 				toneItems.forEach( item => {
-					item.checkIcon.isVisible = item.tone === currentToneValue;
+					item.checkIcon.isVisible = item.key === storedToneKey;
 				} );
 			}
 		} );

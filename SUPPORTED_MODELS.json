@@ -210,6 +210,7 @@
     "cohere/command-r7b-12-2024",
     "cohere/north-mini-code:free",
     "deepcogito/cogito-v2.1-671b",
+    "~deepseek/deepseek-v4-flash-latest",
     "deepseek/deepseek-chat",
     "deepseek/deepseek-chat-v3-0324",
     "deepseek/deepseek-chat-v3.1",

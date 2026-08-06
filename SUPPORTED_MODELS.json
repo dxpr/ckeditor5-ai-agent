@@ -123,8 +123,7 @@
     "claude-opus-4-6",
     "claude-opus-4-5-20251101",
     "claude-haiku-4-5-20251001",
-    "claude-sonnet-4-5-20250929",
-    "claude-opus-4-1-20250805"
+    "claude-sonnet-4-5-20250929"
   ],
   "mistralai": [
     "codestral-2508",
@@ -265,6 +264,7 @@
     "kwaipilot/kat-coder-air-v2.5",
     "kwaipilot/kat-coder-pro-v2",
     "kwaipilot/kat-coder-pro-v2.5",
+    "inclusionai/ling-3.0-flash",
     "inclusionai/ling-3.0-flash:free",
     "anthracite-org/magnum-v4-72b",
     "mancer/weaver",
@@ -278,6 +278,7 @@
     "meta-llama/llama-4-scout",
     "meta-llama/llama-guard-4-12b",
     "meta/muse-spark-1.1",
+    "meta/muse-spark-1.2",
     "microsoft/phi-4",
     "minimax/minimax-m1",
     "minimax/minimax-m2",

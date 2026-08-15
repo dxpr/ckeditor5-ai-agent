@@ -416,8 +416,8 @@ yarn dll:serve
 | gemini-flash-lite-latest | gemini-flash-latest | gemini-3.7-flash | gemini-3.6-flash |
 | gemini-3.5-flash-lite | gemini-3.5-flash | gemini-3.1-pro-preview-customtools | gemini-3.1-pro-preview |
 | gemini-3.1-flash-tts-preview | gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite | gemini-3-flash-preview |
-| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | deep-research-pro-preview-12-2025 |
-| deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-05-2026 |  |
+| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | gemini-3.7-flash-video-understanding-eap |
+| deep-research-pro-preview-12-2025 | deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-05-2026 |
 
 #### OpenAI
 
@@ -549,38 +549,38 @@ yarn dll:serve
 | openai/gpt-5.6-luna | openai/gpt-5.6-luna:batch | openai/gpt-5.6-luna-pro | openai/gpt-5.6-luna-pro:batch |
 | openai/gpt-5.6-sol | openai/gpt-5.6-sol:batch | openai/gpt-5.6-sol-pro | openai/gpt-5.6-sol-pro:batch |
 | openai/gpt-5.6-terra | openai/gpt-5.6-terra:batch | openai/gpt-5.6-terra-pro | openai/gpt-5.6-terra-pro:batch |
-| openai/gpt-oss-120b | openai/gpt-oss-20b | openai/gpt-oss-20b:free | openai/gpt-oss-safeguard-20b |
-| openai/o1 | openai/o1:batch | openai/o1-pro | openai/o1-pro:batch |
-| openai/o3 | openai/o3:batch | openai/o3-mini | openai/o3-mini:batch |
-| openai/o3-mini-high | openai/o3-mini-high:batch | openai/o3-pro | openai/o3-pro:batch |
-| openai/o4-mini | openai/o4-mini:batch | openai/o4-mini-high | openai/o4-mini-high:batch |
-| openrouter/fusion | openrouter/pareto-code | perceptron/perceptron-mk1 | perplexity/sonar |
-| perplexity/sonar-deep-research | perplexity/sonar-pro | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro |
-| poolside/laguna-s-2.1 | poolside/laguna-s-2.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free |
-| qwen/qwen-plus-2025-07-28 | qwen/qwen-plus-2025-07-28:thinking | qwen/qwen-plus | qwen/qwen-2.5-7b-instruct |
-| qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b | qwen/qwen3-235b-a22b | qwen/qwen3-235b-a22b-2507 |
-| qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-30b-a3b-thinking-2507 |
-| qwen/qwen3-32b | qwen/qwen3-8b | qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder |
-| qwen/qwen3-coder-flash | qwen/qwen3-coder-next | qwen/qwen3-coder-plus | qwen/qwen3-max |
-| qwen/qwen3-max-thinking | qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-next-80b-a3b-thinking | qwen/qwen3-vl-235b-a22b-instruct |
-| qwen/qwen3-vl-235b-a22b-thinking | qwen/qwen3-vl-30b-a3b-instruct | qwen/qwen3-vl-30b-a3b-thinking | qwen/qwen3-vl-32b-instruct |
-| qwen/qwen3-vl-8b-instruct | qwen/qwen3-vl-8b-thinking | qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 |
-| qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b | qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b |
-| qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b |
-| qwen/qwen3.6-flash | qwen/qwen3.6-max-preview | qwen/qwen3.6-plus | qwen/qwen3.7-flash |
-| qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen3.8-2.4t-a95b | qwen/qwen3.8-max |
-| qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 |
-| relace/relace-apply-3 | relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-ultra |
-| sakana/sakana-namazu | sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b |
-| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.5 |
-| x-ai/grok-4.6 | x-ai/grok-build-0.1 | stepfun/step-3.5-flash | stepfun/step-3.7-flash |
-| tencent/hunyuan-a13b-instruct | tencent/hy3 | tencent/hy3-preview | thedrummer/cydonia-24b-v4.1 |
-| thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling |
-| thinkingmachines/inkling:batch | thinkingmachines/inkling-small | upstage/solar-pro-3 | upstage/solar-pro4 |
-| cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | ~x-ai/grok-latest |
-| xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 | z-ai/glm-4.5-air |
-| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
-| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
-| z-ai/glm-5.2 | z-ai/glm-5.2:batch | z-ai/glm-5v-turbo |  |
+| openai/gpt-oss-120b | openai/gpt-oss-20b | openai/gpt-oss-safeguard-20b | openai/o1 |
+| openai/o1:batch | openai/o1-pro | openai/o1-pro:batch | openai/o3 |
+| openai/o3:batch | openai/o3-mini | openai/o3-mini:batch | openai/o3-mini-high |
+| openai/o3-mini-high:batch | openai/o3-pro | openai/o3-pro:batch | openai/o4-mini |
+| openai/o4-mini:batch | openai/o4-mini-high | openai/o4-mini-high:batch | openrouter/fusion |
+| openrouter/pareto-code | perceptron/perceptron-mk1 | perplexity/sonar | perplexity/sonar-deep-research |
+| perplexity/sonar-pro | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro | poolside/laguna-s-2.1 |
+| poolside/laguna-s-2.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free | qwen/qwen-plus-2025-07-28 |
+| qwen/qwen-plus-2025-07-28:thinking | qwen/qwen-plus | qwen/qwen-2.5-7b-instruct | qwen/qwen2.5-vl-72b-instruct |
+| qwen/qwen3-14b | qwen/qwen3-235b-a22b | qwen/qwen3-235b-a22b-2507 | qwen/qwen3-235b-a22b-thinking-2507 |
+| qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-30b-a3b-thinking-2507 | qwen/qwen3-32b |
+| qwen/qwen3-8b | qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder | qwen/qwen3-coder-flash |
+| qwen/qwen3-coder-next | qwen/qwen3-coder-plus | qwen/qwen3-max | qwen/qwen3-max-thinking |
+| qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-next-80b-a3b-thinking | qwen/qwen3-vl-235b-a22b-instruct | qwen/qwen3-vl-235b-a22b-thinking |
+| qwen/qwen3-vl-30b-a3b-instruct | qwen/qwen3-vl-30b-a3b-thinking | qwen/qwen3-vl-32b-instruct | qwen/qwen3-vl-8b-instruct |
+| qwen/qwen3-vl-8b-thinking | qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 | qwen/qwen3.5-plus-20260420 |
+| qwen/qwen3.5-122b-a10b | qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b |
+| qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash |
+| qwen/qwen3.6-max-preview | qwen/qwen3.6-plus | qwen/qwen3.7-flash | qwen/qwen3.7-max |
+| qwen/qwen3.7-plus | qwen/qwen3.8-2.4t-a95b | qwen/qwen3.8-max | qwen/qwen-2.5-72b-instruct |
+| qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 |
+| relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-ultra | sakana/sakana-namazu |
+| sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | x-ai/grok-4.20 |
+| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.5 | x-ai/grok-4.6 |
+| x-ai/grok-build-0.1 | stepfun/step-3.5-flash | stepfun/step-3.7-flash | tencent/hunyuan-a13b-instruct |
+| tencent/hy3 | tencent/hy3-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b |
+| thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling:batch |
+| thinkingmachines/inkling-small | upstage/solar-pro-3 | upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition |
+| microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 |
+| xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v |
+| z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash |
+| z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 |
+| z-ai/glm-5.2:batch | z-ai/glm-5v-turbo |  |  |
 
 <!-- END_MODEL_TABLE -->

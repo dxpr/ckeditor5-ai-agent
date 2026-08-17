@@ -416,8 +416,8 @@ yarn dll:serve
 | gemini-flash-lite-latest | gemini-flash-latest | gemini-3.7-flash | gemini-3.6-flash |
 | gemini-3.5-flash-lite | gemini-3.5-flash | gemini-3.1-pro-preview-customtools | gemini-3.1-pro-preview |
 | gemini-3.1-flash-tts-preview | gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite | gemini-3-flash-preview |
-| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | gemini-3.7-flash-video-understanding-eap |
-| deep-research-pro-preview-12-2025 | deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-05-2026 |
+| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | deep-research-pro-preview-12-2025 |
+| deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-05-2026 |  |
 
 #### OpenAI
 
@@ -582,6 +582,6 @@ yarn dll:serve
 | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 |
 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.2:batch |
-| z-ai/glm-5v-turbo |  |  |  |
+| z-ai/glm-5.2:free | z-ai/glm-5v-turbo |  |  |
 
 <!-- END_MODEL_TABLE -->

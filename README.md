@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->555<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->556<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -581,6 +581,6 @@ yarn dll:serve
 | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 |
 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.2:batch |
-| z-ai/glm-5.2:free | z-ai/glm-5v-turbo |  |  |
+| z-ai/glm-5.2:free | z-ai/glm-5.3 | z-ai/glm-5v-turbo |  |
 
 <!-- END_MODEL_TABLE -->

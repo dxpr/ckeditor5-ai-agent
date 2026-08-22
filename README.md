@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->560<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->562<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -493,9 +493,9 @@ yarn dll:serve
 | bytedance-seed/seed-2.0-code | bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b |
 | anthropic/claude-opus-5 | anthropic/claude-opus-5:batch | anthropic/claude-opus-5-fast | cohere/command-a |
 | cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | cohere/north-mini-code:free |
-| deepcogito/cogito-v2.1-671b | ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 |
-| deepseek/deepseek-chat-v3.1 | deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp |
-| deepseek/deepseek-v4-flash | deepseek/deepseek-v4-flash-0731 | deepseek/deepseek-v4-pro | deepseek/deepseek-v4-pro-0813 |
+| ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 | deepseek/deepseek-chat-v3.1 |
+| deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp | deepseek/deepseek-v4-flash |
+| deepseek/deepseek-v4-flash-0731 | deepseek/deepseek-v4-flash-vision-exp | deepseek/deepseek-v4-pro | deepseek/deepseek-v4-pro-0813 |
 | deepseek/deepseek-r1 | deepseek/deepseek-r1-0528 | deepseek/deepseek-r1-distill-llama-70b | dots-studio/dots-3-note-preview:free |
 | openrouter/free | ~google/gemini-flash-latest | ~google/gemini-pro-latest | google/gemini-2.5-flash |
 | google/gemini-2.5-flash:batch | google/gemini-2.5-flash-lite | google/gemini-2.5-flash-lite:batch | google/gemini-2.5-pro |
@@ -514,41 +514,41 @@ yarn dll:serve
 | mancer/weaver | meituan/longcat-2.0 | meta-llama/llama-3.1-70b-instruct | meta-llama/llama-3.1-8b-instruct |
 | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct | meta-llama/llama-4-maverick |
 | meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b | meta/muse-glimmer-30b | meta/muse-spark-1.1 |
-| meta/muse-spark-1.2 | microsoft/phi-4 | minimax/minimax-m1 | minimax/minimax-m2 |
-| minimax/minimax-m2-her | minimax/minimax-m2.1 | minimax/minimax-m2.5 | minimax/minimax-m2.7 |
-| minimax/minimax-m3 | minimax/minimax-m3:batch | minimax/minimax-01 | mistralai/mistral-large |
-| mistralai/mistral-large-2407 | mistralai/codestral-2508 | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 |
-| mistralai/ministral-8b-2512 | mistralai/ministral-8b | mistralai/mistral-large-2512 | mistralai/mistral-medium-3 |
-| mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 | mistralai/mistral-nemo | mistralai/mistral-small-24b-instruct-2501 |
-| mistralai/mistral-small-3.1-24b-instruct | mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 | mistralai/mixtral-8x22b-instruct |
-| mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest | moonshotai/kimi-k2 |
-| moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 |
-| moonshotai/kimi-k2.7-code | moonshotai/kimi-k2.7-code:batch | moonshotai/kimi-k3 | morph/morph-v3-fast |
-| morph/morph-v3-large | gryphe/mythomax-l2-13b | nex-agi/nex-n2-mini | nex-agi/nex-n2-pro |
-| nousresearch/hermes-3-llama-3.1-405b | nousresearch/hermes-3-llama-3.1-70b | nousresearch/hermes-4-405b | nousresearch/hermes-4-70b |
-| nvidia/nemotron-3-nano-30b-a3b | nvidia/nemotron-3-nano-30b-a3b:free | nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free | nvidia/nemotron-3-super-120b-a12b |
-| nvidia/nemotron-3-super-120b-a12b:free | nvidia/nemotron-3-ultra-550b-a55b | nvidia/nemotron-3-ultra-550b-a55b:batch | nvidia/nemotron-3-ultra-550b-a55b:free |
-| nvidia/nemotron-3.5-content-safety:free | nvidia/nemotron-3.5-lightning | nvidia/nemotron-3.5-lightning:free | nvidia/nemotron-nano-12b-v2-vl:free |
-| nvidia/nemotron-nano-9b-v2:free | ~openai/gpt-latest | ~openai/gpt-mini-latest | openai/gpt-audio |
-| openai/gpt-audio-mini | openai/gpt-chat-latest | openai/gpt-3.5-turbo | openai/gpt-3.5-turbo:batch |
-| openai/gpt-3.5-turbo-0613 | openai/gpt-3.5-turbo-16k | openai/gpt-3.5-turbo-instruct | openai/gpt-4 |
-| openai/gpt-4-turbo | openai/gpt-4-turbo:batch | openai/gpt-4-turbo-preview | openai/gpt-4.1 |
-| openai/gpt-4.1:batch | openai/gpt-4.1-mini | openai/gpt-4.1-mini:batch | openai/gpt-4.1-nano |
-| openai/gpt-4.1-nano:batch | openai/gpt-4o | openai/gpt-4o-2024-05-13 | openai/gpt-4o-2024-08-06 |
-| openai/gpt-4o-2024-11-20 | openai/gpt-4o:batch | openai/gpt-4o-mini | openai/gpt-4o-mini-2024-07-18 |
-| openai/gpt-4o-mini:batch | openai/gpt-5 | openai/gpt-5:batch | openai/gpt-5-codex:batch |
-| openai/gpt-5-image | openai/gpt-5-image-mini | openai/gpt-5-mini | openai/gpt-5-mini:batch |
-| openai/gpt-5-nano | openai/gpt-5-nano:batch | openai/gpt-5-pro | openai/gpt-5-pro:batch |
-| openai/gpt-5.1 | openai/gpt-5.1:batch | openai/gpt-5.1-codex | openai/gpt-5.1-codex-max |
-| openai/gpt-5.1-codex-mini | openai/gpt-5.2 | openai/gpt-5.2:batch | openai/gpt-5.2-chat |
-| openai/gpt-5.2-pro | openai/gpt-5.2-pro:batch | openai/gpt-5.2-codex | openai/gpt-5.3-codex |
-| openai/gpt-5.4 | openai/gpt-5.4:batch | openai/gpt-5.4-image-2 | openai/gpt-5.4-mini |
-| openai/gpt-5.4-mini:batch | openai/gpt-5.4-nano | openai/gpt-5.4-nano:batch | openai/gpt-5.4-pro |
-| openai/gpt-5.4-pro:batch | openai/gpt-5.5 | openai/gpt-5.5:batch | openai/gpt-5.5-pro |
-| openai/gpt-5.5-pro:batch | openai/gpt-5.6-luna | openai/gpt-5.6-luna:batch | openai/gpt-5.6-luna-pro |
-| openai/gpt-5.6-luna-pro:batch | openai/gpt-5.6-sol | openai/gpt-5.6-sol:batch | openai/gpt-5.6-sol-pro |
-| openai/gpt-5.6-sol-pro:batch | openai/gpt-5.6-terra | openai/gpt-5.6-terra:batch | openai/gpt-5.6-terra-pro |
-| openai/gpt-5.6-terra-pro:batch | openai/gpt-oss-120b | openai/gpt-oss-20b | openai/gpt-oss-20b:free |
+| meta/muse-spark-1.2 | meta/muse-spark-1.2-contributor | microsoft/phi-4 | minimax/minimax-m1 |
+| minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 | minimax/minimax-m2.5 |
+| minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-m3:batch | minimax/minimax-01 |
+| mistralai/mistral-large | mistralai/mistral-large-2407 | mistralai/codestral-2508 | mistralai/ministral-14b-2512 |
+| mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 | mistralai/ministral-8b | mistralai/mistral-large-2512 |
+| mistralai/mistral-medium-3 | mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 | mistralai/mistral-nemo |
+| mistralai/mistral-small-24b-instruct-2501 | mistralai/mistral-small-3.1-24b-instruct | mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 |
+| mistralai/mixtral-8x22b-instruct | mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest |
+| moonshotai/kimi-k2 | moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 |
+| moonshotai/kimi-k2.6 | moonshotai/kimi-k2.7-code | moonshotai/kimi-k2.7-code:batch | moonshotai/kimi-k3 |
+| morph/morph-v3-fast | morph/morph-v3-large | gryphe/mythomax-l2-13b | nex-agi/nex-n2-mini |
+| nex-agi/nex-n2-pro | nousresearch/hermes-3-llama-3.1-405b | nousresearch/hermes-3-llama-3.1-70b | nousresearch/hermes-4-405b |
+| nousresearch/hermes-4-70b | nvidia/nemotron-3-nano-30b-a3b | nvidia/nemotron-3-nano-30b-a3b:free | nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free |
+| nvidia/nemotron-3-super-120b-a12b | nvidia/nemotron-3-super-120b-a12b:free | nvidia/nemotron-3-ultra-550b-a55b | nvidia/nemotron-3-ultra-550b-a55b:batch |
+| nvidia/nemotron-3-ultra-550b-a55b:free | nvidia/nemotron-3.5-content-safety:free | nvidia/nemotron-3.5-lightning | nvidia/nemotron-3.5-lightning:free |
+| nvidia/nemotron-nano-12b-v2-vl:free | nvidia/nemotron-nano-9b-v2:free | ~openai/gpt-latest | ~openai/gpt-mini-latest |
+| openai/gpt-audio | openai/gpt-audio-mini | openai/gpt-chat-latest | openai/gpt-3.5-turbo |
+| openai/gpt-3.5-turbo:batch | openai/gpt-3.5-turbo-0613 | openai/gpt-3.5-turbo-16k | openai/gpt-3.5-turbo-instruct |
+| openai/gpt-4 | openai/gpt-4-turbo | openai/gpt-4-turbo:batch | openai/gpt-4-turbo-preview |
+| openai/gpt-4.1 | openai/gpt-4.1:batch | openai/gpt-4.1-mini | openai/gpt-4.1-mini:batch |
+| openai/gpt-4.1-nano | openai/gpt-4.1-nano:batch | openai/gpt-4o | openai/gpt-4o-2024-05-13 |
+| openai/gpt-4o-2024-08-06 | openai/gpt-4o-2024-11-20 | openai/gpt-4o:batch | openai/gpt-4o-mini |
+| openai/gpt-4o-mini-2024-07-18 | openai/gpt-4o-mini:batch | openai/gpt-5 | openai/gpt-5:batch |
+| openai/gpt-5-codex:batch | openai/gpt-5-image | openai/gpt-5-image-mini | openai/gpt-5-mini |
+| openai/gpt-5-mini:batch | openai/gpt-5-nano | openai/gpt-5-nano:batch | openai/gpt-5-pro |
+| openai/gpt-5-pro:batch | openai/gpt-5.1 | openai/gpt-5.1:batch | openai/gpt-5.1-codex |
+| openai/gpt-5.1-codex-max | openai/gpt-5.1-codex-mini | openai/gpt-5.2 | openai/gpt-5.2:batch |
+| openai/gpt-5.2-chat | openai/gpt-5.2-pro | openai/gpt-5.2-pro:batch | openai/gpt-5.2-codex |
+| openai/gpt-5.3-codex | openai/gpt-5.4 | openai/gpt-5.4:batch | openai/gpt-5.4-image-2 |
+| openai/gpt-5.4-mini | openai/gpt-5.4-mini:batch | openai/gpt-5.4-nano | openai/gpt-5.4-nano:batch |
+| openai/gpt-5.4-pro | openai/gpt-5.4-pro:batch | openai/gpt-5.5 | openai/gpt-5.5:batch |
+| openai/gpt-5.5-pro | openai/gpt-5.5-pro:batch | openai/gpt-5.6-luna | openai/gpt-5.6-luna:batch |
+| openai/gpt-5.6-luna-pro | openai/gpt-5.6-luna-pro:batch | openai/gpt-5.6-sol | openai/gpt-5.6-sol:batch |
+| openai/gpt-5.6-sol-pro | openai/gpt-5.6-sol-pro:batch | openai/gpt-5.6-terra | openai/gpt-5.6-terra:batch |
+| openai/gpt-5.6-terra-pro | openai/gpt-5.6-terra-pro:batch | openai/gpt-oss-120b | openai/gpt-oss-20b |
 | openai/gpt-oss-safeguard-20b | openai/o1 | openai/o1:batch | openai/o1-pro |
 | openai/o1-pro:batch | openai/o3 | openai/o3:batch | openai/o3-mini |
 | openai/o3-mini:batch | openai/o3-mini-high | openai/o3-mini-high:batch | openai/o3-pro |
@@ -576,12 +576,13 @@ yarn dll:serve
 | x-ai/grok-build-0.1 | stepfun/step-3.5-flash | stepfun/step-3.7-flash | tencent/hunyuan-a13b-instruct |
 | tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy3 | tencent/hy3-preview |
 | thedrummer/cydonia-24b-v4.1 | thedrummer/rocinante-12b | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b |
-| thinkingmachines/inkling | thinkingmachines/inkling:batch | thinkingmachines/inkling-small | upstage/solar-pro-3 |
-| upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
-| ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 |
-| z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v |
-| z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo |
-| z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.2:batch | z-ai/glm-5.2:free |
-| z-ai/glm-5.3 | z-ai/glm-5v-turbo | ~z-ai/glm-latest |  |
+| thinkingmachines/inkling | thinkingmachines/inkling:batch | thinkingmachines/inkling:free | thinkingmachines/inkling-small |
+| thinkingmachines/inkling-small:free | upstage/solar-pro-3 | upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition |
+| microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 |
+| xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v |
+| z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash |
+| z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 |
+| z-ai/glm-5.2:batch | z-ai/glm-5.2:free | z-ai/glm-5.3 | z-ai/glm-5v-turbo |
+| ~z-ai/glm-latest |  |  |  |
 
 <!-- END_MODEL_TABLE -->

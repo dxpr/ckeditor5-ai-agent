@@ -16,6 +16,7 @@
     "gemini-flash-latest",
     "gemini-3.7-flash",
     "gemini-3.6-flash",
+    "gemini-3.5-transcribe",
     "gemini-3.5-flash-lite",
     "gemini-3.5-flash",
     "gemini-3.1-pro-preview-customtools",
@@ -136,6 +137,7 @@
     "voxtral-small-latest"
   ],
   "groq": [
+    "qwen/qwen3.8-27b",
     "qwen/qwen3.6-27b",
     "canopylabs/orpheus-v1-english",
     "canopylabs/orpheus-arabic-saudi",
@@ -453,7 +455,6 @@
     "openai/o4-mini-high",
     "openai/o4-mini-high:batch",
     "openrouter/fusion",
-    "stealth/ox-alpha",
     "openrouter/pareto-code",
     "perceptron/perceptron-mk1",
     "perplexity/sonar",
@@ -512,6 +513,7 @@
     "qwen/qwen3.7-plus",
     "qwen/qwen3.8-2.4t-a95b",
     "qwen/qwen3.8-27b",
+    "qwen/qwen3.8-flash",
     "qwen/qwen3.8-max",
     "qwen/qwen-2.5-72b-instruct",
     "qwen/qwen-2.5-coder-32b-instruct",
@@ -567,9 +569,9 @@
     "z-ai/glm-5-turbo",
     "z-ai/glm-5.1",
     "z-ai/glm-5.2",
-    "z-ai/glm-5.2:batch",
     "z-ai/glm-5.2:free",
     "z-ai/glm-5.3",
+    "z-ai/glm-5.3-flash",
     "z-ai/glm-5v-turbo",
     "~z-ai/glm-latest"
   ]

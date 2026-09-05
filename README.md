@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->569<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->574<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -424,25 +424,25 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| gpt-5.6-luna | gpt-5.6-terra | gpt-5.6-sol | chat-latest |
-| gpt-5.5-pro-2026-04-23 | gpt-5.5-pro | gpt-5.5-2026-04-23 | gpt-5.5 |
-| gpt-5.4-mini | gpt-5.4-mini-2026-03-17 | gpt-5.4-nano | gpt-5.4-nano-2026-03-17 |
-| gpt-5.4 | gpt-5.4-pro-2026-03-05 | gpt-5.4-pro | gpt-5.4-2026-03-05 |
-| gpt-5.3-chat-latest | gpt-5.3-codex | gpt-5.2-codex | gpt-5.2-chat-latest |
-| gpt-5.2-pro | gpt-5.2-pro-2025-12-11 | gpt-5.2 | gpt-5.2-2025-12-11 |
-| gpt-5.1-codex-max | gpt-5.1-codex-mini | gpt-5.1-codex | gpt-5.1 |
-| gpt-5.1-2025-11-13 | gpt-5.1-chat-latest | gpt-5-pro | gpt-5-pro-2025-10-06 |
-| gpt-5-codex | gpt-5-nano | gpt-5-nano-2025-08-07 | gpt-5-mini |
-| gpt-5-mini-2025-08-07 | gpt-5 | gpt-5-2025-08-07 | gpt-5-chat-latest |
-| o3-pro-2025-06-10 | o3-pro | gpt-4.1-nano | gpt-4.1-nano-2025-04-14 |
-| gpt-4.1-mini | gpt-4.1-mini-2025-04-14 | gpt-4.1 | gpt-4.1-2025-04-14 |
-| o4-mini | o3 | o4-mini-2025-04-16 | o3-2025-04-16 |
-| o1-pro | o1-pro-2025-03-19 | gpt-4o-2024-11-20 | o3-mini-2025-01-31 |
-| o3-mini | o1 | o1-2024-12-17 | gpt-4o-2024-08-06 |
-| gpt-4o-mini | gpt-4o-mini-2024-07-18 | gpt-4o-2024-05-13 | gpt-4o |
-| gpt-4-turbo-2024-04-09 | gpt-4-turbo | gpt-3.5-turbo-0125 | gpt-3.5-turbo-1106 |
-| gpt-3.5-turbo-instruct-0914 | gpt-3.5-turbo-instruct | gpt-4 | gpt-4-0613 |
-| gpt-3.5-turbo-16k | gpt-3.5-turbo |  |  |
+| gpt-6-astra | gpt-5.6-luna | gpt-5.6-terra | gpt-5.6-sol |
+| chat-latest | gpt-5.5-pro-2026-04-23 | gpt-5.5-pro | gpt-5.5-2026-04-23 |
+| gpt-5.5 | gpt-5.4-mini | gpt-5.4-mini-2026-03-17 | gpt-5.4-nano |
+| gpt-5.4-nano-2026-03-17 | gpt-5.4 | gpt-5.4-pro-2026-03-05 | gpt-5.4-pro |
+| gpt-5.4-2026-03-05 | gpt-5.3-chat-latest | gpt-5.3-codex | gpt-5.2-codex |
+| gpt-5.2-chat-latest | gpt-5.2-pro | gpt-5.2-pro-2025-12-11 | gpt-5.2 |
+| gpt-5.2-2025-12-11 | gpt-5.1-codex-max | gpt-5.1-codex-mini | gpt-5.1-codex |
+| gpt-5.1 | gpt-5.1-2025-11-13 | gpt-5.1-chat-latest | gpt-5-pro |
+| gpt-5-pro-2025-10-06 | gpt-5-codex | gpt-5-nano | gpt-5-nano-2025-08-07 |
+| gpt-5-mini | gpt-5-mini-2025-08-07 | gpt-5 | gpt-5-2025-08-07 |
+| gpt-5-chat-latest | o3-pro-2025-06-10 | o3-pro | gpt-4.1-nano |
+| gpt-4.1-nano-2025-04-14 | gpt-4.1-mini | gpt-4.1-mini-2025-04-14 | gpt-4.1 |
+| gpt-4.1-2025-04-14 | o4-mini | o3 | o4-mini-2025-04-16 |
+| o3-2025-04-16 | o1-pro | o1-pro-2025-03-19 | gpt-4o-2024-11-20 |
+| o3-mini-2025-01-31 | o3-mini | o1 | o1-2024-12-17 |
+| gpt-4o-2024-08-06 | gpt-4o-mini | gpt-4o-mini-2024-07-18 | gpt-4o-2024-05-13 |
+| gpt-4o | gpt-4-turbo-2024-04-09 | gpt-4-turbo | gpt-3.5-turbo-0125 |
+| gpt-3.5-turbo-1106 | gpt-3.5-turbo-instruct-0914 | gpt-3.5-turbo-instruct | gpt-4 |
+| gpt-4-0613 | gpt-3.5-turbo-16k | gpt-3.5-turbo |  |
 
 #### Anthropic
 
@@ -509,9 +509,9 @@ yarn dll:serve
 | google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:batch |
 | google/gemma-4-31b-it:free | google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image |
 | google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image | google/gemini-3-pro-image-preview |
-| google/gemini-3-pro-image | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.1-8b | ibm-granite/granite-4.2-8b |
-| inception/mercury-2 | inception/mercury-2.5-preview | kwaipilot/kat-coder-pro-v2 | kwaipilot/kat-coder-pro-v2.5 |
-| inclusionai/ling-3.0-flash-fin | inclusionai/ling-3.0-flash-fin:free | inclusionai/ling-3.0-flash | liquid/lfm-2.5-2.6b:free |
+| google/gemini-3-pro-image | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.2-8b | inception/mercury-2 |
+| inception/mercury-2.5-preview | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-fin | inclusionai/ling-3.0-flash-fin:free |
+| inclusionai/ling-3.0-flash-sante:free | kwaipilot/kat-coder-pro-v2 | kwaipilot/kat-coder-pro-v2.5 | liquid/lfm-2.5-2.6b:free |
 | anthracite-org/magnum-v4-72b | mancer/weaver | meituan/longcat-2.0 | meta-llama/llama-3.1-70b-instruct |
 | meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct |
 | meta-llama/llama-4-maverick | meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b | meta/muse-glimmer-30b |
@@ -550,7 +550,8 @@ yarn dll:serve
 | openai/gpt-5.5-pro:batch | openai/gpt-5.6-luna | openai/gpt-5.6-luna:batch | openai/gpt-5.6-luna-pro |
 | openai/gpt-5.6-luna-pro:batch | openai/gpt-5.6-sol | openai/gpt-5.6-sol:batch | openai/gpt-5.6-sol-pro |
 | openai/gpt-5.6-sol-pro:batch | openai/gpt-5.6-terra | openai/gpt-5.6-terra:batch | openai/gpt-5.6-terra-pro |
-| openai/gpt-5.6-terra-pro:batch | openai/gpt-oss-120b | openai/gpt-oss-120b:batch | openai/gpt-oss-20b |
+| openai/gpt-5.6-terra-pro:batch | openai/gpt-6-astra | openai/gpt-6-astra:batch | openai/gpt-6-astra-pro |
+| openai/gpt-6-astra-pro:batch | openai/gpt-oss-120b | openai/gpt-oss-120b:batch | openai/gpt-oss-20b |
 | openai/gpt-oss-20b:batch | openai/gpt-oss-safeguard-20b | openai/o1 | openai/o1-pro |
 | openai/o3 | openai/o3:batch | openai/o3-mini | openai/o3-mini:batch |
 | openai/o3-mini-high | openai/o3-pro | openai/o4-mini | openai/o4-mini:batch |

@@ -570,7 +570,7 @@ yarn dll:serve
 | qwen/qwen3.5-9b | qwen/qwen3.5-9b:batch | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b |
 | qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-max-preview | qwen/qwen3.6-plus |
 | qwen/qwen3.7-flash | qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen3.8-2.4t-a95b |
-| qwen/qwen3.8-2.4t-a95b:batch | qwen/qwen3.8-27b | qwen/qwen3.8-flash | qwen/qwen3.8-max |
+| qwen/qwen3.8-2.4t-a95b:batch | qwen/qwen3.8-27b | qwen/qwen3.8-flash | qwen/qwen3.8-max-0902 |
 | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 |
 | relace/relace-apply-3 | relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-ultra |
 | sakana/sakana-namazu | sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b |

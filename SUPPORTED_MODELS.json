@@ -133,6 +133,7 @@
     "ministral-3b-latest",
     "ministral-8b-latest",
     "mistral-large-latest",
+    "mistral-medium-latest",
     "mistral-small-2603",
     "voxtral-small-latest"
   ],
@@ -314,10 +315,8 @@
     "minimax/minimax-m2.1",
     "minimax/minimax-m2.5",
     "minimax/minimax-m2.7",
-    "minimax/minimax-m2.7:free",
     "minimax/minimax-m3",
     "minimax/minimax-m3:batch",
-    "minimax/minimax-m3:free",
     "minimax/minimax-01",
     "mistralai/mistral-large",
     "mistralai/mistral-large-2407",

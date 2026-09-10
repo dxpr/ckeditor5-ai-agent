@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->575<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->579<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -520,15 +520,16 @@ yarn dll:serve
 | minimax/minimax-m1 | minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 |
 | minimax/minimax-m2.5 | minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-m3:batch |
 | minimax/minimax-01 | mistralai/mistral-large | mistralai/mistral-large-2407 | mistralai/codestral-2508 |
-| mistralai/devstral-2512 | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 |
-| mistralai/mistral-large-2512 | mistralai/mistral-medium-3 | mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 |
+| mistralai/codestral-2508:batch | mistralai/devstral-2512 | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 |
+| mistralai/ministral-8b-2512 | mistralai/ministral-8b-2512:batch | mistralai/mistral-large-2512 | mistralai/mistral-large-2512:batch |
+| mistralai/mistral-medium-3 | mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3.1:batch | mistralai/mistral-medium-3-5 |
 | mistralai/mistral-medium-3-5:batch | mistralai/mistral-nemo | mistralai/mistral-small-24b-instruct-2501 | mistralai/mistral-small-3.1-24b-instruct |
-| mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 | mistralai/mixtral-8x22b-instruct | mistralai/mistral-saba |
-| mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest | moonshotai/kimi-k2 | moonshotai/kimi-k2-0905 |
-| moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 | moonshotai/kimi-k2.7-code |
-| moonshotai/kimi-k3 | moonshotai/kimi-k3:batch | morph/morph-v3-fast | morph/morph-v3-large |
-| gryphe/mythomax-l2-13b | nex-agi/nex-n2.5-mini:free | nex-agi/nex-n2.5-pro:free | nousresearch/hermes-3-llama-3.1-405b |
-| nousresearch/hermes-3-llama-3.1-70b | nousresearch/hermes-4-405b | nousresearch/hermes-4-70b | nvidia/nemotron-3-nano-30b-a3b |
+| mistralai/mistral-small-3.2-24b-instruct | mistralai/mistral-small-2603 | mistralai/mistral-small-2603:batch | mistralai/mixtral-8x22b-instruct |
+| mistralai/mistral-saba | mistralai/voxtral-small-24b-2507 | ~moonshotai/kimi-latest | moonshotai/kimi-k2 |
+| moonshotai/kimi-k2-0905 | moonshotai/kimi-k2-thinking | moonshotai/kimi-k2.5 | moonshotai/kimi-k2.6 |
+| moonshotai/kimi-k2.7-code | moonshotai/kimi-k3 | moonshotai/kimi-k3:batch | morph/morph-v3-fast |
+| morph/morph-v3-large | gryphe/mythomax-l2-13b | nex-agi/nex-n2.5-mini:free | nex-agi/nex-n2.5-pro:free |
+| nousresearch/hermes-3-llama-3.1-405b | nousresearch/hermes-3-llama-3.1-70b | nousresearch/hermes-4-405b | nvidia/nemotron-3-nano-30b-a3b |
 | nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free | nvidia/nemotron-3-super-120b-a12b | nvidia/nemotron-3-super-120b-a12b:free | nvidia/nemotron-3-ultra-550b-a55b |
 | nvidia/nemotron-3-ultra-550b-a55b:free | nvidia/nemotron-3.5-content-safety | nvidia/nemotron-3.5-content-safety:free | nvidia/nemotron-3.5-lightning |
 | nvidia/nemotron-3.5-lightning:free | ~openai/gpt-latest | ~openai/gpt-mini-latest | openai/gpt-audio |

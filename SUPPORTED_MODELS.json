@@ -33,7 +33,7 @@
     "deep-research-pro-preview-12-2025",
     "deep-research-preview-04-2026",
     "deep-research-max-preview-04-2026",
-    "antigravity-preview-05-2026"
+    "antigravity-preview-09-2026"
   ],
   "openai": [
     "gpt-live-1",
@@ -216,6 +216,8 @@
     "cohere/command-r-plus-08-2024",
     "cohere/command-r7b-12-2024",
     "cohere/north-mini-code:free",
+    "~deepseek/deepseek-flash-latest",
+    "~deepseek/deepseek-pro-latest",
     "deepseek/deepseek-chat",
     "deepseek/deepseek-chat-v3-0324",
     "deepseek/deepseek-chat-v3.1",
@@ -243,7 +245,6 @@
     "google/gemini-2.5-flash-lite:batch",
     "google/gemini-2.5-pro",
     "google/gemini-2.5-pro:batch",
-    "google/gemini-2.5-pro-preview-05-06",
     "google/gemini-2.5-pro-preview",
     "google/gemini-3-flash-preview",
     "google/gemini-3-flash-preview:batch",
@@ -393,7 +394,6 @@
     "openai/gpt-4",
     "openai/gpt-4-turbo",
     "openai/gpt-4-turbo:batch",
-    "openai/gpt-4-turbo-preview",
     "openai/gpt-4.1",
     "openai/gpt-4.1:batch",
     "openai/gpt-4.1-mini",

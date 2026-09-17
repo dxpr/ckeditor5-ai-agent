@@ -136,7 +136,8 @@
     "mistral-large-latest",
     "mistral-medium-latest",
     "mistral-small-2603",
-    "voxtral-small-latest"
+    "voxtral-small-latest",
+    "zai-glm-latest"
   ],
   "groq": [
     "qwen/qwen3.8-27b",
@@ -573,6 +574,7 @@
     "thinkingmachines/inkling:free",
     "thinkingmachines/inkling-small",
     "thinkingmachines/inkling-small:free",
+    "stealth/union-alpha",
     "upstage/solar-pro-3",
     "upstage/solar-pro4",
     "cognitivecomputations/dolphin-mistral-24b-venice-edition",

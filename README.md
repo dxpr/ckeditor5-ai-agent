@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->587<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->589<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -458,7 +458,7 @@ yarn dll:serve
 |---|---|---|---|
 | codestral-2508 | glm-5-2 | labs-leanstral-1-5-1 | ministral-14b-latest |
 | ministral-3b-latest | ministral-8b-latest | mistral-large-latest | mistral-medium-latest |
-| mistral-small-2603 | voxtral-small-latest |  |  |
+| mistral-small-2603 | voxtral-small-latest | zai-glm-latest |  |
 
 #### Groq
 
@@ -581,13 +581,13 @@ yarn dll:serve
 | tencent/hunyuan-a13b-instruct | tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b |
 | tencent/hy3 | tencent/hy3-preview | tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 |
 | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling:batch |
-| thinkingmachines/inkling:free | thinkingmachines/inkling-small | thinkingmachines/inkling-small:free | upstage/solar-pro-3 |
-| upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
-| ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | z-ai/glm-4.5 |
-| z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v |
-| z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo |
-| z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.2:batch | z-ai/glm-5.2:free |
-| z-ai/glm-5.3 | z-ai/glm-5.3:batch | z-ai/glm-5.3-flash | z-ai/glm-5.3-flash:batch |
-| z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest | ~z-ai/glm-latest |  |
+| thinkingmachines/inkling:free | thinkingmachines/inkling-small | thinkingmachines/inkling-small:free | stealth/union-alpha |
+| upstage/solar-pro-3 | upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b |
+| writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro |
+| z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 |
+| z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
+| z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.2:batch |
+| z-ai/glm-5.2:free | z-ai/glm-5.3 | z-ai/glm-5.3:batch | z-ai/glm-5.3-flash |
+| z-ai/glm-5.3-flash:batch | z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest | ~z-ai/glm-latest |
 
 <!-- END_MODEL_TABLE -->

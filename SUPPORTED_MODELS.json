@@ -602,6 +602,7 @@
     "z-ai/glm-5.3:batch",
     "z-ai/glm-5.3-flash",
     "z-ai/glm-5.3-flash:batch",
+    "z-ai/glm-5.3-flashx",
     "z-ai/glm-5v-turbo",
     "~z-ai/glm-flash-latest",
     "~z-ai/glm-latest"

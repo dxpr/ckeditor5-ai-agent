@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->616<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->614<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -577,25 +577,24 @@ yarn dll:serve
 | qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b |
 | qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-max-preview | qwen/qwen3.6-plus |
 | qwen/qwen3.7-flash | qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen3.8-2.4t-a95b |
-| qwen/qwen3.8-27b | qwen/qwen3.8-27b:free | qwen/qwen3.8-flash | qwen/qwen3.8-max-0902 |
-| qwen/qwen3.8-max-prime | qwen/qwen3.8-omni-flash | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct |
-| rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 | relace/relace-search |
-| undi95/remm-slerp-l2-13b | sakana/fugu-max | sakana/fugu-ultra | sakana/fugu-ultra-v2 |
-| sakana/sakana-namazu | sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b |
-| stealth/space-bunny-alpha | x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 |
-| x-ai/grok-4.3:batch | x-ai/grok-4.5 | x-ai/grok-4.6 | x-ai/grok-4.7 |
-| x-ai/grok-build-0.1 | stepfun/step-3.5-flash | stepfun/step-3.7-flash | tencent/hunyuan-a13b-instruct |
-| tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b | tencent/hy3 |
-| tencent/hy3-preview | tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/skyfall-36b-v2 |
-| thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling:free | thinkingmachines/inkling-small |
-| thinkingmachines/inkling-small:free | typesafe/jev-router | upstage/solar-mini4 | upstage/solar-pro-3 |
-| upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
-| ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | xiaomi/mimo-v2.6-flash |
-| xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed | z-ai/glm-4.5 | z-ai/glm-4.5-air |
-| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
-| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
-| z-ai/glm-5.2 | z-ai/glm-5.3 | z-ai/glm-5.3:batch | z-ai/glm-5.3-flash |
-| z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx | z-ai/glm-5.3-prime | z-ai/glm-5v-turbo |
-| ~z-ai/glm-flash-latest | ~z-ai/glm-latest |  |  |
+| qwen/qwen3.8-27b | qwen/qwen3.8-flash | qwen/qwen3.8-max-0902 | qwen/qwen3.8-max-prime |
+| qwen/qwen3.8-omni-flash | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge |
+| rekaai/reka-flash-3 | relace/relace-apply-3 | relace/relace-search | undi95/remm-slerp-l2-13b |
+| sakana/fugu-max | sakana/fugu-ultra | sakana/fugu-ultra-v2 | sakana/sakana-namazu |
+| sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | x-ai/grok-4.20 |
+| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.3:batch | x-ai/grok-4.5 |
+| x-ai/grok-4.6 | x-ai/grok-4.7 | x-ai/grok-build-0.1 | stepfun/step-3.5-flash |
+| stepfun/step-3.7-flash | tencent/hunyuan-a13b-instruct | tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b |
+| tencent/hy-mt2-7b | tencent/hy3 | tencent/hy3-preview | tencent/hy4-preview |
+| thedrummer/cydonia-24b-v4.1 | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling |
+| thinkingmachines/inkling:free | thinkingmachines/inkling-small | thinkingmachines/inkling-small:free | typesafe/jev-router |
+| upstage/solar-mini4 | upstage/solar-pro-3 | upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition |
+| microsoft/wizardlm-2-8x22b | writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 |
+| xiaomi/mimo-v2.5-pro | xiaomi/mimo-v2.6-flash | xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed |
+| z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 |
+| z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 |
+| z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.3 |
+| z-ai/glm-5.3:batch | z-ai/glm-5.3-flash | z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx |
+| z-ai/glm-5.3-prime | z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest | ~z-ai/glm-latest |
 
 <!-- END_MODEL_TABLE -->

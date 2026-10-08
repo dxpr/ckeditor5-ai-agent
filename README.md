@@ -160,6 +160,7 @@ The AiAgent plugin can be configured through the EditorConfig interface. Here ar
 | `moderationDisableFlags` | `Array<ModerationFlagsTypes>?` | - | Array of moderation flags to disable |
 | `commandsDropdown` | `Array<{ title: string; items: Array<{ title: string; command: string; }>; }>?` | Default menu with tone adjustment, content enhancement, and fix/improve commands | Specifies the commands available in the dropdown menu |
 | `tonesDropdown` | `Array<{ label: string; tone: string; }>?` | - | Specifies the available tones for content generation, allowing users to select the desired tone for the AI's responses. Each tone can be associated with a specific instruction to adjust the AI's output style. |
+| `defaultToneOfVoice` | `string \| number?` | - | Key or term ID of the tone that "Default tone" uses, for users who have not picked a tone. Matches a `tonesDropdown` item by its `tid`, or by its label in lowercase with underscores; without `tonesDropdown`, matches a built-in tone such as `professional`. |
 | `contentScope` | `string?` | - | CSS selector that extends context gathering to include content from other CKEditor 5 instances found within the first matching ancestor element |
 | `writesPerSecond` | `WritesPerSecond?` | 10 | Specifies the maximum number of writes the AI Agent can perform per second. This setting helps control the rate of content generation, allowing for smoother performance and better resource management during high-load scenarios. |
 | `aiOutputSecurity` | `object?` | `{}` | Security settings to mitigate prompt injection data exfiltration attacks ([CVE-2025-32711](https://nvd.nist.gov/vuln/detail/CVE-2025-32711)) |
@@ -319,6 +320,15 @@ ClassicEditor
     .catch( error => {
         console.error( error );
     } );
+```
+
+To give users a default tone until they pick one, set `defaultToneOfVoice` to the tone's key: its `tid`, or its label in lowercase with underscores. The "Default tone" entry then shows the tone's name, for example "Default tone (Technical)", and uses its instruction:
+
+```typescript
+aiAgent: {
+    tonesDropdown: [ /* as above */ ],
+    defaultToneOfVoice: 'technical'
+}
 ```
 
 ### Configuring Command Dropdown

@@ -1,9 +1,8 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import { STORAGE_PREFIX } from './const.js';
-import { getDefaultAiAgentToneDropdownMenu } from './util/translations.js';
+import { getToneForKey } from './util/tones.js';
 export default class AiAgentToneCommand extends Command {
 	private readonly STORAGE_KEY = 'tone';
-	private availableTones: Array<{ label: string; key: string; tone: string; tid?: number }> = [];
 	private debugMode: boolean = false;
 
 	/**
@@ -12,21 +11,10 @@ export default class AiAgentToneCommand extends Command {
 	constructor( editor: Editor ) {
 		super( editor );
 
-		// Store available tones for validation when loading from storage
 		const config = editor.config.get( 'aiAgent' );
 		this.debugMode = !!config?.debugMode;
-		const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
-		const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
-			label: item.label,
-			key: item.tid ? String( item.tid ) : item.label.toLowerCase().replace( / /g, '_' ),
-			tone: item.tone,
-			tid: item.tid
-		} ) );
-		this.availableTones = configTonesDropdown ?
-			[ defaultTones[ 0 ], ...configTonesDropdown ] :
-			defaultTones;
 
-		// Initialize with the stored tone or default to empty string
+		// Initialize with the stored tone, else the default tone
 		this.value = this.loadToneSelection() || '';
 	}
 
@@ -50,12 +38,6 @@ export default class AiAgentToneCommand extends Command {
 
 	private loadToneSelection(): string | null {
 		const key = `${ STORAGE_PREFIX }:${ this.STORAGE_KEY }`;
-		const storedToneKey = localStorage.getItem( key );
-
-		if ( !storedToneKey ) {
-			return null;
-		}
-		const matchingTone = this.availableTones.find( item => item.key === storedToneKey );
-		return matchingTone ? matchingTone.tone : null;
+		return getToneForKey( this.editor, localStorage.getItem( key ) );
 	}
 }

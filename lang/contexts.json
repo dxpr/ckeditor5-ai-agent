@@ -88,6 +88,7 @@
 	"Tone of voice": "Label for the tone of voice dropdown menu",
 	"Tone": "Fixed header label for the tone dropdown menu",
 	"Default tone": "Default tone",
+	"Default tone (%0)": "Label of the default tone entry in the tone of voice menu; %0 is the name of the tone it uses.",
 	"Professional": "Professional",
 	"Educational": "Educational",
 	"Persuasive": "Persuasive",

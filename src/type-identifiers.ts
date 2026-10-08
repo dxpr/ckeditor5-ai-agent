@@ -90,6 +90,7 @@ export interface AiAgentConfig {
         tone: string;
         tid?: number;
     }>;
+    defaultToneOfVoice?: string | number;
     contentScope?: string;
     writesPerSecond?: WritesPerSecond;
 }

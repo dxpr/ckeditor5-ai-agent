@@ -10,23 +10,12 @@ import {
 } from 'ckeditor5/src/ui.js';
 import aiAgentToneIcon from '../../theme/icons/ai-agent-tone.svg';
 import checkIcon from '../../theme/icons/check.svg';
-import { getDefaultAiAgentToneDropdownMenu } from './translations.js';
+import { getAvailableTones } from './tones.js';
 import { STORAGE_PREFIX } from '../const.js';
 
 export function addAiAgentToneButton( editor: Editor ): void {
 	const t = editor.t;
-	const config = editor.config.get( 'aiAgent' );
-	const defaultTones = getDefaultAiAgentToneDropdownMenu( editor );
-	const configTonesDropdown = config?.tonesDropdown?.map( item => ( {
-		label: item.label,
-		key: item.tid ? String( item.tid ) : item.label.toLowerCase().replace( / /g, '_' ),
-		tone: item.tone,
-		tid: item.tid
-	} ) );
-
-	const tonesDropdown = configTonesDropdown ?
-		[ defaultTones[ 0 ], ...configTonesDropdown ] :
-		defaultTones;
+	const tonesDropdown = getAvailableTones( editor );
 
 	editor.ui.componentFactory.add( 'aiAgentToneButton', locale => {
 		const dropdownView = createDropdown( locale );
@@ -101,7 +90,7 @@ export function addAiAgentToneButton( editor: Editor ): void {
 		// Update checkmarks from localStorage when dropdown opens
 		dropdownView.on( 'change:isOpen', () => {
 			if ( dropdownView.isOpen ) {
-				const storedToneKey = localStorage.getItem( `${ STORAGE_PREFIX }:tone` );
+				const storedToneKey = localStorage.getItem( `${ STORAGE_PREFIX }:tone` ) || 'default_tone';
 
 				toneItems.forEach( item => {
 					item.checkIcon.isVisible = item.key === storedToneKey;

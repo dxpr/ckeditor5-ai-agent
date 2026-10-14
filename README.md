@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->611<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->615<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -421,14 +421,14 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| gemma-4-31b-it | gemma-4-26b-a4b-it | gemini-pro-latest | gemini-omni-1.1-flash |
-| gemini-flash-lite-latest | gemini-flash-latest | gemini-3.8-flash | gemini-3.7-flash |
-| gemini-3.6-flash | lyria-3.5 | lyria-3-pro-preview | lyria-3-clip-preview |
-| gemini-robotics-er-2-preview | gemini-omni-flash-preview | gemini-3.5-transcribe | gemini-3.5-flash-lite |
-| gemini-3.5-flash | gemini-3.1-pro-preview-customtools | gemini-3.1-pro-preview | gemini-3.1-flash-tts-preview |
-| gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite | gemini-3-flash-preview | gemini-2.5-pro |
-| gemini-2.5-flash-lite | gemini-2.5-flash | deep-research-pro-preview-12-2025 | deep-research-preview-04-2026 |
-| deep-research-max-preview-04-2026 | antigravity-preview-latest | antigravity-preview-09-2026 |  |
+| gemma-4-31b-it | gemma-4-26b-a4b-it | gemini-pro-latest | gemini-omni-flash-preview |
+| gemini-omni-1.1-flash | gemini-flash-lite-latest | gemini-flash-latest | gemini-4-argon |
+| gemini-3.8-flash | gemini-3.7-flash | lyria-3.5 | lyria-3-pro-preview |
+| lyria-3-clip-preview | gemini-robotics-er-2-preview | gemini-3.6-flash | gemini-3.5-transcribe |
+| gemini-3.5-flash-lite | gemini-3.5-flash | gemini-3.1-pro-preview-customtools | gemini-3.1-pro-preview |
+| gemini-3.1-flash-tts-preview | gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite | gemini-3-flash-preview |
+| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | deep-research-pro-preview-12-2025 |
+| deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-latest | antigravity-preview-09-2026 |
 
 #### OpenAI
 
@@ -501,31 +501,31 @@ yarn dll:serve
 | anthropic/claude-opus-5:batch | anthropic/claude-opus-5.5 | anthropic/claude-opus-5.5:batch | ~anthropic/claude-opus-latest |
 | anthropic/claude-sonnet-4 | anthropic/claude-sonnet-4.5 | anthropic/claude-sonnet-4.5:batch | anthropic/claude-sonnet-4.6 |
 | anthropic/claude-sonnet-4.6:batch | anthropic/claude-sonnet-5 | anthropic/claude-sonnet-5:batch | anthropic/claude-sonnet-5.5 |
-| anthropic/claude-sonnet-5.5:batch | ~anthropic/claude-sonnet-latest | apodex/apodex-1.1-mini:free | arcee-ai/trinity-large-thinking |
-| openrouter/auto | openrouter/auto-beta | openrouter/bodybuilder | bytedance-seed/seed-1.6 |
-| bytedance-seed/seed-1.6-flash | bytedance-seed/seed-2-1-turbo | bytedance-seed/seed-2.0-code | bytedance-seed/seed-2.0-lite |
-| bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b | cohere/command-a | cohere/command-a-plus |
-| cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | cohere/north-mini-code:free |
-| ~deepseek/deepseek-flash-latest | ~deepseek/deepseek-pro-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 |
-| deepseek/deepseek-chat-v3.1 | deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp |
-| deepseek/deepseek-v4-flash | deepseek/deepseek-v4-flash-0731 | ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-v4-flash-vision-exp |
-| deepseek/deepseek-v4-pro | deepseek/deepseek-v4-pro-0813 | deepseek/deepseek-v4.1-flash | deepseek/deepseek-v4.1-flash:batch |
-| deepseek/deepseek-r1 | deepseek/deepseek-r1-0528 | dots-studio/dots-3-note-preview:free | fireworks/ember-1 |
-| openrouter/free | google/gemini-2.5-flash | google/gemini-2.5-flash:batch | google/gemini-2.5-flash-lite |
-| google/gemini-2.5-flash-lite:batch | google/gemini-2.5-pro | google/gemini-2.5-pro:batch | google/gemini-2.5-pro-preview |
-| google/gemini-3-flash-preview | google/gemini-3-flash-preview:batch | google/gemini-3.1-flash-lite | google/gemini-3.1-flash-lite:batch |
-| google/gemini-3.1-flash-lite-preview | google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview:batch | google/gemini-3.1-pro-preview-customtools |
-| google/gemini-3.5-flash | google/gemini-3.5-flash:batch | google/gemini-3.5-flash-lite | google/gemini-3.5-flash-lite:batch |
-| google/gemini-3.6-flash | google/gemini-3.6-flash:batch | google/gemini-3.7-flash | google/gemini-3.7-flash:batch |
-| google/gemini-3.8-flash | google/gemini-3.8-flash:batch | ~google/gemini-flash-latest | ~google/gemini-pro-latest |
-| google/gemma-2-27b-it | google/gemma-3-12b-it | google/gemma-3-27b-it | google/gemma-3-4b-it |
-| google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:free |
-| google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview |
-| google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image | google/gemini-nano-banana-2.1 | google/gemini-3-pro-image-preview |
-| google/gemini-3-pro-image | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.2-8b | inception/mercury-2 |
-| inception/mercury-2.5 | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-fin | inclusionai/ling-3.0-flash-sante |
-| inclusionai/ling-3.0-flash-vl | inclusionai/ling-3.1-flash | inference-net/schematron-v2-small | inference-net/schematron-v2-turbo |
-| liquid/lfm-2.5-2.6b:free | anthracite-org/magnum-v4-72b | mancer/weaver | meituan/longcat-2.0 |
+| anthropic/claude-sonnet-5.5:batch | ~anthropic/claude-sonnet-latest | arcee-ai/trinity-large-thinking | openrouter/auto |
+| openrouter/auto-beta | openrouter/bodybuilder | bytedance-seed/seed-1.6 | bytedance-seed/seed-1.6-flash |
+| bytedance-seed/seed-2-1-turbo | bytedance-seed/seed-2.0-code | bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini |
+| bytedance/ui-tars-1.5-7b | cohere/command-a | cohere/command-a-plus | cohere/command-r-08-2024 |
+| cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | cohere/north-mini-code:free | ~deepseek/deepseek-flash-latest |
+| ~deepseek/deepseek-pro-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 | deepseek/deepseek-chat-v3.1 |
+| deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp | deepseek/deepseek-v4-flash |
+| deepseek/deepseek-v4-flash-0731 | ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-v4-flash-vision-exp | deepseek/deepseek-v4-pro |
+| deepseek/deepseek-v4-pro-0813 | deepseek/deepseek-v4.1-flash | deepseek/deepseek-v4.1-flash:batch | deepseek/deepseek-r1 |
+| deepseek/deepseek-r1-0528 | dots-studio/dots-3-note-preview:free | fireworks/ember-1 | openrouter/free |
+| google/gemini-2.5-flash | google/gemini-2.5-flash:batch | google/gemini-2.5-flash-lite | google/gemini-2.5-flash-lite:batch |
+| google/gemini-2.5-pro | google/gemini-2.5-pro:batch | google/gemini-2.5-pro-preview | google/gemini-3-flash-preview |
+| google/gemini-3-flash-preview:batch | google/gemini-3.1-flash-lite | google/gemini-3.1-flash-lite:batch | google/gemini-3.1-flash-lite-preview |
+| google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview:batch | google/gemini-3.1-pro-preview-customtools | google/gemini-3.5-flash |
+| google/gemini-3.5-flash:batch | google/gemini-3.5-flash-lite | google/gemini-3.5-flash-lite:batch | google/gemini-3.6-flash |
+| google/gemini-3.6-flash:batch | google/gemini-3.7-flash | google/gemini-3.7-flash:batch | google/gemini-3.8-flash |
+| google/gemini-3.8-flash:batch | google/gemini-4-argon | google/gemini-4-argon:batch | ~google/gemini-flash-latest |
+| ~google/gemini-pro-latest | google/gemma-2-27b-it | google/gemma-3-12b-it | google/gemma-3-27b-it |
+| google/gemma-3-4b-it | google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it |
+| google/gemma-4-31b-it:free | google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image |
+| google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image | google/gemini-nano-banana-2.1 |
+| google/gemini-3-pro-image-preview | google/gemini-3-pro-image | ibm-granite/granite-4.0-h-micro | ibm-granite/granite-4.2-8b |
+| inception/mercury-2 | inception/mercury-2.5 | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-vl |
+| inclusionai/ling-3.1-flash | inference-net/schematron-v2-small | inference-net/schematron-v2-turbo | liquid/lfm-2.5-2.6b:free |
+| liquid/lfm-2.5-24b-a2b | anthracite-org/magnum-v4-72b | mancer/weaver | meituan/longcat-2.0 |
 | meta-llama/llama-3.1-70b-instruct | meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct |
 | meta-llama/llama-3.3-70b-instruct | meta-llama/llama-4-maverick | meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b |
 | meta/muse-glimmer-30b | meta/muse-spark-1.1 | meta/muse-spark-1.2 | meta/muse-spark-1.2-contributor |
@@ -573,37 +573,38 @@ yarn dll:serve
 | openai/o1 | openai/o1-pro | openai/o3 | openai/o3:batch |
 | openai/o3-mini | openai/o3-mini:batch | openai/o3-mini-high | openai/o3-pro |
 | openai/o4-mini | openai/o4-mini:batch | openai/o4-mini-high | openrouter/fusion |
-| unbiased/pareto | unbiased/pareto-26.10-preview | openrouter/pareto-code | perceptron/perceptron-mk1 |
-| perceptron/perceptron-mk1.5 | perplexity/sonar | perplexity/sonar-deep-research | perplexity/sonar-pro |
-| perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro | poolside/laguna-s-2.1 | poolside/laguna-s-2.1:free |
-| poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free | prism-ml/ternary-bonsai-2-27b | qwen/qwen-plus |
-| qwen/qwen-2.5-7b-instruct | qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b | qwen/qwen3-235b-a22b-2507 |
-| qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-32b |
-| qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder | qwen/qwen3-coder-flash | qwen/qwen3-coder-next |
-| qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-next-80b-a3b-thinking | qwen/qwen3-vl-235b-a22b-instruct | qwen/qwen3-vl-30b-a3b-instruct |
-| qwen/qwen3-vl-30b-a3b-thinking | qwen/qwen3-vl-8b-instruct | qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 |
-| qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b | qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b |
-| qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b |
-| qwen/qwen3.6-flash | qwen/qwen3.6-plus | qwen/qwen3.7-flash | qwen/qwen3.7-max |
-| qwen/qwen3.7-plus | qwen/qwen3.8-2.4t-a95b | qwen/qwen3.8-27b | qwen/qwen3.8-flash |
-| qwen/qwen3.8-max-0902 | qwen/qwen3.8-max-prime | qwen/qwen3.8-omni-flash | qwen/qwen-2.5-72b-instruct |
-| qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 |
-| relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-max | sakana/fugu-ultra |
-| sakana/fugu-ultra-v2 | sakana/sakana-namazu | sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b |
-| sao10k/l3.3-euryale-70b | x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 |
-| x-ai/grok-4.3:batch | x-ai/grok-4.5 | x-ai/grok-4.6 | x-ai/grok-4.7 |
-| x-ai/grok-build-0.1 | stepfun/step-3.5-flash | stepfun/step-3.7-flash | stepfun/step-5-preview |
-| tencent/hunyuan-a13b-instruct | tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b |
-| tencent/hy3 | tencent/hy3-preview | tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 |
-| thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling:free |
-| thinkingmachines/inkling-small | thinkingmachines/inkling-small:free | typesafe/jev-router | upstage/solar-mini4 |
-| upstage/solar-pro-3 | upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b |
-| writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro |
-| xiaomi/mimo-v2.6-flash | xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed | z-ai/glm-4.5 |
-| z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v |
-| z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo |
-| z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.3 | z-ai/glm-5.3:batch |
-| z-ai/glm-5.3-flash | z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx | z-ai/glm-5.3-prime |
-| z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest | ~z-ai/glm-latest |  |
+| unbiased/pareto-26.10-preview | unbiased/pareto-26.9 | openrouter/pareto-code | ~unbiased/pareto-latest |
+| perceptron/perceptron-mk1 | perceptron/perceptron-mk1.5 | perplexity/sonar | perplexity/sonar-deep-research |
+| perplexity/sonar-pro | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro | poolside/laguna-s-2.1 |
+| poolside/laguna-s-2.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free | prism-ml/ternary-bonsai-2-27b |
+| qwen/qwen-plus | qwen/qwen-2.5-7b-instruct | qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b |
+| qwen/qwen3-235b-a22b-2507 | qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 |
+| qwen/qwen3-32b | qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder | qwen/qwen3-coder-flash |
+| qwen/qwen3-coder-next | qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-next-80b-a3b-thinking | qwen/qwen3-vl-235b-a22b-instruct |
+| qwen/qwen3-vl-30b-a3b-instruct | qwen/qwen3-vl-30b-a3b-thinking | qwen/qwen3-vl-8b-instruct | qwen/qwen3.5-397b-a17b |
+| qwen/qwen3.5-plus-02-15 | qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b | qwen/qwen3.5-27b |
+| qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b |
+| qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-plus | qwen/qwen3.7-flash |
+| qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen3.8-2.4t-a95b | qwen/qwen3.8-27b |
+| qwen/qwen3.8-flash | qwen/qwen3.8-max-0902 | qwen/qwen3.8-max-prime | qwen/qwen3.8-omni-flash |
+| qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | rekaai/reka-edge | rekaai/reka-flash-3 |
+| relace/relace-apply-3 | relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-max |
+| sakana/fugu-ultra | sakana/fugu-ultra-v2 | sakana/sakana-namazu | sao10k/l3-lunaris-8b |
+| sao10k/l3.1-euryale-70b | sao10k/l3.3-euryale-70b | scaledown/extract | scaledown/summarize |
+| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.3:batch |
+| x-ai/grok-4.5 | x-ai/grok-4.6 | x-ai/grok-4.7 | x-ai/grok-build-0.1 |
+| stepfun/step-3.5-flash | stepfun/step-3.7-flash | stepfun/step-5-preview | tencent/hunyuan-a13b-instruct |
+| tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b | tencent/hy3 |
+| tencent/hy3-preview | tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/skyfall-36b-v2 |
+| thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling:free | thinkingmachines/inkling-small |
+| thinkingmachines/inkling-small:free | typesafe/jev-router | upstage/solar-mini4 | upstage/solar-pro-3 |
+| upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | microsoft/wizardlm-2-8x22b | writer/palmyra-x5 |
+| ~x-ai/grok-latest | xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | xiaomi/mimo-v2.6-flash |
+| xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed | z-ai/glm-4.5 | z-ai/glm-4.5-air |
+| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
+| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
+| z-ai/glm-5.2 | z-ai/glm-5.3 | z-ai/glm-5.3:batch | z-ai/glm-5.3-flash |
+| z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx | z-ai/glm-5.3-prime | z-ai/glm-5v-turbo |
+| ~z-ai/glm-flash-latest | ~z-ai/glm-latest |  |  |
 
 <!-- END_MODEL_TABLE -->

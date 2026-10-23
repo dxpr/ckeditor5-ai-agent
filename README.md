@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->621<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->622<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -470,7 +470,8 @@ yarn dll:serve
 |---|---|---|---|
 | codestral-2508 | glm-5-2 | labs-leanstral-1-5-1 | ministral-14b-latest |
 | ministral-3b-latest | ministral-8b-latest | mistral-large-4 | mistral-large-latest |
-| mistral-medium-latest | mistral-small-2603 | voxtral-small-latest | zai-glm-latest |
+| mistral-medium-latest | mistral-small-2603 | voxtral-small-latest | zai-glm-5-3-flash |
+| zai-glm-latest |  |  |  |
 
 #### Groq
 
@@ -531,7 +532,7 @@ yarn dll:serve
 | meta/muse-spark-1.2 | meta/muse-spark-1.2-contributor | meta/muse-spark-1.3 | meta/muse-spark-1.3-contributor |
 | meta/muse-spark-open | meta/muse-wonder | microsoft/phi-4 | minimax/minimax-m1 |
 | minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 | minimax/minimax-m2.5 |
-| minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-m3.1-flash:free | minimax/minimax-01 |
+| minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-m3.1-flash | minimax/minimax-01 |
 | mistralai/mistral-large | mistralai/mistral-large-2407 | mistralai/codestral-2508 | mistralai/codestral-2508:batch |
 | mistralai/devstral-2512 | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 |
 | mistralai/ministral-8b-2512:batch | mistralai/mistral-large-2512 | mistralai/mistral-large-2512:batch | mistralai/mistral-large-4-0 |

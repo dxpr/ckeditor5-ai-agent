@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->612<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->608<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -575,7 +575,6 @@ yarn dll:serve
 | unbiased/pareto-26.10 | unbiased/pareto-26.9 | openrouter/pareto-code | ~unbiased/pareto-latest |
 | particle-ai/particle-1 | perceptron/perceptron-mk1 | perceptron/perceptron-mk1.5 | perplexity/sonar |
 | perplexity/sonar-deep-research | perplexity/sonar-pro | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro |
-| poolside/laguna-s-2.1 | poolside/laguna-s-2.1:free | poolside/laguna-xs-2.1 | poolside/laguna-xs-2.1:free |
 | prism-ml/ternary-bonsai-2-27b | prism-ml/ternary-bonsai-2-9b | qwen/qwen-plus | qwen/qwen-2.5-7b-instruct |
 | qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b | qwen/qwen3-235b-a22b-2507 | qwen/qwen3-235b-a22b-thinking-2507 |
 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-32b | qwen/qwen3-coder-30b-a3b-instruct |

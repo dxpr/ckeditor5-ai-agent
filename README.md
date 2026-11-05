@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->611<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->580<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -439,21 +439,14 @@ yarn dll:serve
 | gpt-5.6-sol | chat-latest | gpt-5.5-pro-2026-04-23 | gpt-5.5-pro |
 | gpt-5.5-2026-04-23 | gpt-5.5 | gpt-5.4-mini | gpt-5.4-mini-2026-03-17 |
 | gpt-5.4-nano | gpt-5.4-nano-2026-03-17 | gpt-5.4 | gpt-5.4-pro-2026-03-05 |
-| gpt-5.4-pro | gpt-5.4-2026-03-05 | gpt-5.3-chat-latest | gpt-5.3-codex |
-| gpt-5.2-codex | gpt-5.2-chat-latest | gpt-5.2-pro | gpt-5.2-pro-2025-12-11 |
-| gpt-5.2 | gpt-5.2-2025-12-11 | gpt-5.1-codex-max | gpt-5.1-codex-mini |
-| gpt-5.1-codex | gpt-5.1 | gpt-5.1-2025-11-13 | gpt-5.1-chat-latest |
-| gpt-5-pro | gpt-5-pro-2025-10-06 | gpt-5-codex | gpt-5-nano |
+| gpt-5.4-pro | gpt-5.4-2026-03-05 | gpt-5.3-codex | gpt-5.2-pro |
+| gpt-5.2-pro-2025-12-11 | gpt-5.2 | gpt-5.2-2025-12-11 | gpt-5.1 |
+| gpt-5.1-2025-11-13 | gpt-5-pro | gpt-5-pro-2025-10-06 | gpt-5-nano |
 | gpt-5-nano-2025-08-07 | gpt-5-mini | gpt-5-mini-2025-08-07 | gpt-5 |
-| gpt-5-2025-08-07 | gpt-5-chat-latest | o3-pro-2025-06-10 | o3-pro |
-| gpt-4.1-nano | gpt-4.1-nano-2025-04-14 | gpt-4.1-mini | gpt-4.1-mini-2025-04-14 |
-| gpt-4.1 | gpt-4.1-2025-04-14 | o4-mini | o3 |
-| o4-mini-2025-04-16 | o3-2025-04-16 | o1-pro | o1-pro-2025-03-19 |
-| gpt-4o-2024-11-20 | o3-mini-2025-01-31 | o3-mini | o1 |
-| o1-2024-12-17 | gpt-4o-2024-08-06 | gpt-4o-mini | gpt-4o-mini-2024-07-18 |
-| gpt-4o-2024-05-13 | gpt-4o | gpt-4-turbo-2024-04-09 | gpt-4-turbo |
-| gpt-3.5-turbo-0125 | gpt-3.5-turbo-1106 | gpt-3.5-turbo-instruct-0914 | gpt-3.5-turbo-instruct |
-| gpt-4 | gpt-4-0613 | gpt-3.5-turbo-16k | gpt-3.5-turbo |
+| gpt-5-2025-08-07 | o3-pro-2025-06-10 | o3-pro | gpt-4.1-mini |
+| gpt-4.1-mini-2025-04-14 | gpt-4.1 | gpt-4.1-2025-04-14 | o3 |
+| o3-2025-04-16 | gpt-4o-2024-11-20 | gpt-4o-2024-08-06 | gpt-4o-mini |
+| gpt-4o-mini-2024-07-18 | gpt-4o |  |  |
 
 #### Anthropic
 
@@ -587,23 +580,23 @@ yarn dll:serve
 | qwen/qwen3.8-27b | qwen/qwen3.8-flash | qwen/qwen3.8-max-0902 | qwen/qwen3.8-max-prime |
 | qwen/qwen3.8-omni-flash | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | recursive/flint-v1.0:free |
 | reflection/beam-1.0-501b-a23b | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 |
-| relace/relace-search | undi95/remm-slerp-l2-13b | sakana/fugu-max | sakana/fugu-ultra |
-| sakana/fugu-ultra-v2 | sakana/sakana-namazu | sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b |
-| scaledown/extract | scaledown/summarize | x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent |
-| x-ai/grok-4.3 | x-ai/grok-4.3:batch | x-ai/grok-4.5 | x-ai/grok-4.6 |
-| x-ai/grok-4.6:batch | x-ai/grok-4.7 | x-ai/grok-4.7:batch | x-ai/grok-build-0.1 |
-| stepfun/step-3.5-flash | stepfun/step-3.7-flash | stepfun/step-5-preview | tencent/hunyuan-a13b-instruct |
-| tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b | tencent/hy3 |
-| tencent/hy3-preview | tencent/hy4 | tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 |
-| thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling:free |
-| thinkingmachines/inkling-small | thinkingmachines/inkling-small:free | typesafe/jev-router | upstage/solar-mini4 |
-| upstage/solar-pro4 | cognitivecomputations/dolphin-mistral-24b-venice-edition | writer/palmyra-x5 | ~x-ai/grok-latest |
-| xiaomi/mimo-v2.5 | xiaomi/mimo-v2.5-pro | xiaomi/mimo-v2.6-flash | xiaomi/mimo-v2.6-pro |
-| xiaomi/mimo-v2.6-pro-ultraspeed | xingchen-agi/xing4.0-29b-a4b:free | z-ai/glm-4.5 | z-ai/glm-4.5-air |
-| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
-| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
-| z-ai/glm-5.2 | z-ai/glm-5.3 | z-ai/glm-5.3:batch | z-ai/glm-5.3-flash |
-| z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx | z-ai/glm-5.3-flashx-legal | z-ai/glm-5.3-prime |
-| z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest | ~z-ai/glm-latest |  |
+| relace/relace-search | undi95/remm-slerp-l2-13b | ricursiveai/ripple-65b-preview | sakana/fugu-max |
+| sakana/fugu-ultra | sakana/fugu-ultra-v2 | sakana/sakana-namazu | sao10k/l3-lunaris-8b |
+| sao10k/l3.1-euryale-70b | scaledown/extract | scaledown/summarize | x-ai/grok-4.20 |
+| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.3:batch | x-ai/grok-4.5 |
+| x-ai/grok-4.6 | x-ai/grok-4.6:batch | x-ai/grok-4.7 | x-ai/grok-4.7:batch |
+| x-ai/grok-build-0.1 | stepfun/step-3.5-flash | stepfun/step-3.7-flash | stepfun/step-5-preview |
+| tencent/hunyuan-a13b-instruct | tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b |
+| tencent/hy3 | tencent/hy3-preview | tencent/hy4 | tencent/hy4-preview |
+| thedrummer/cydonia-24b-v4.1 | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b | thinkingmachines/inkling |
+| thinkingmachines/inkling-small | typesafe/jev-router | upstage/solar-mini4 | upstage/solar-pro4 |
+| cognitivecomputations/dolphin-mistral-24b-venice-edition | writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.5 |
+| xiaomi/mimo-v2.5-pro | xiaomi/mimo-v2.6-flash | xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed |
+| xingchen-agi/xing4.0-29b-a4b:free | z-ai/glm-4.5 | z-ai/glm-4.5-air | z-ai/glm-4.5v |
+| z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 | z-ai/glm-4.7-flash |
+| z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 | z-ai/glm-5.2 |
+| z-ai/glm-5.3 | z-ai/glm-5.3:batch | z-ai/glm-5.3-flash | z-ai/glm-5.3-flash:batch |
+| z-ai/glm-5.3-flashx | z-ai/glm-5.3-flashx-legal | z-ai/glm-5.3-prime | z-ai/glm-5v-turbo |
+| ~z-ai/glm-flash-latest | ~z-ai/glm-latest |  |  |
 
 <!-- END_MODEL_TABLE -->

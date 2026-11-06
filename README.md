@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->580<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->581<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -421,14 +421,15 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| gemma-4-31b-it | gemma-4-26b-a4b-it | gemini-pro-latest | gemini-omni-flash-preview |
+| gemma-4-31b-it | gemma-4-26b-a4b-it | gemini-pro-latest | gemini-omni-1.2-flash |
 | gemini-omni-1.1-flash | gemini-flash-lite-latest | gemini-flash-latest | gemini-4-argon |
 | gemini-3.8-flash | gemini-3.7-flash | lyria-3.5 | lyria-3-pro-preview |
-| lyria-3-clip-preview | gemini-robotics-er-2-preview | gemini-3.6-flash | gemini-3.5-transcribe |
-| gemini-3.5-flash-lite | gemini-3.5-flash | gemini-3.1-pro-preview-customtools | gemini-3.1-pro-preview |
-| gemini-3.1-flash-tts-preview | gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite | gemini-3-flash-preview |
-| gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash | deep-research-pro-preview-12-2025 |
-| deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-latest | antigravity-preview-09-2026 |
+| lyria-3-clip-preview | gemini-robotics-er-2-preview | gemini-omni-flash-preview | gemini-3.6-flash |
+| gemini-3.5-transcribe | gemini-3.5-flash-lite | gemini-3.5-flash | gemini-3.1-pro-preview-customtools |
+| gemini-3.1-pro-preview | gemini-3.1-flash-tts-preview | gemini-3.1-flash-lite-preview | gemini-3.1-flash-lite |
+| gemini-3-flash-preview | gemini-2.5-pro | gemini-2.5-flash-lite | gemini-2.5-flash |
+| deep-research-pro-preview-12-2025 | deep-research-preview-04-2026 | deep-research-max-preview-04-2026 | antigravity-preview-latest |
+| antigravity-preview-09-2026 |  |  |  |
 
 #### OpenAI
 
@@ -495,37 +496,37 @@ yarn dll:serve
 | anthropic/claude-opus-5:batch | anthropic/claude-opus-5.5 | anthropic/claude-opus-5.5:batch | ~anthropic/claude-opus-latest |
 | anthropic/claude-sonnet-4.5 | anthropic/claude-sonnet-4.5:batch | anthropic/claude-sonnet-4.6 | anthropic/claude-sonnet-4.6:batch |
 | anthropic/claude-sonnet-5 | anthropic/claude-sonnet-5:batch | anthropic/claude-sonnet-5.5 | anthropic/claude-sonnet-5.5:batch |
-| ~anthropic/claude-sonnet-latest | openrouter/auto | openrouter/auto-beta | openrouter/bodybuilder |
-| bytedance-seed/seed-1.6 | bytedance-seed/seed-1.6-flash | bytedance-seed/seed-2-1-turbo | bytedance-seed/seed-2.0-code |
-| bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b | cohere/command-a |
-| cohere/command-a-plus | cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 |
-| cohere/north-mini-code:free | stealth/crouton-alpha | ~deepseek/deepseek-flash-latest | ~deepseek/deepseek-pro-latest |
-| deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 | deepseek/deepseek-chat-v3.1 | deepseek/deepseek-v3.1-terminus |
-| deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp | deepseek/deepseek-v4-flash | deepseek/deepseek-v4-flash-0731 |
-| ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-v4-flash-vision-exp | deepseek/deepseek-v4-pro | deepseek/deepseek-v4-pro-0813 |
-| deepseek/deepseek-v4.1-flash | deepseek/deepseek-v4.1-flash:batch | deepseek/deepseek-v4.1-flash-1017 | deepseek/deepseek-r1-0528 |
-| dots-studio/dots-3-note-preview:free | elorian/glimpse | fireworks/ember-1 | openrouter/free |
-| google/gemini-2.5-flash | google/gemini-2.5-flash-lite | google/gemini-2.5-pro | google/gemini-2.5-pro-preview |
-| google/gemini-3-flash-preview | google/gemini-3-flash-preview:batch | google/gemini-3.1-flash-lite | google/gemini-3.1-flash-lite:batch |
-| google/gemini-3.1-flash-lite-preview | google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview:batch | google/gemini-3.1-pro-preview-customtools |
-| google/gemini-3.5-flash | google/gemini-3.5-flash:batch | google/gemini-3.5-flash-lite | google/gemini-3.5-flash-lite:batch |
-| google/gemini-3.6-flash | google/gemini-3.6-flash:batch | google/gemini-3.7-flash | google/gemini-3.7-flash:batch |
-| google/gemini-3.8-flash | google/gemini-3.8-flash:batch | google/gemini-4-argon | google/gemini-4-argon:batch |
-| ~google/gemini-flash-latest | ~google/gemini-pro-latest | google/gemma-2-27b-it | google/gemma-3-12b-it |
-| google/gemma-3-27b-it | google/gemma-3-4b-it | google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free |
-| google/gemma-4-31b-it | google/gemma-4-31b-it:free | google/lyria-3-clip-preview | google/lyria-3-pro-preview |
-| google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image |
-| google/gemini-nano-banana-2.1 | google/gemini-3-pro-image-preview | google/gemini-3-pro-image | ibm-granite/granite-4.2-8b |
-| inception/mercury-2 | inception/mercury-2.5 | inception/mercury-3 | inclusionai/ling-3.0-flash |
-| inclusionai/ling-3.0-flash-vl | inclusionai/ling-3.1-flash | inference-net/schematron-v2-small | inference-net/schematron-v2-turbo |
+| ~anthropic/claude-sonnet-latest | openrouter/auto-code | openrouter/auto | openrouter/auto-beta |
+| openrouter/bodybuilder | bytedance-seed/seed-1.6 | bytedance-seed/seed-1.6-flash | bytedance-seed/seed-2-1-turbo |
+| bytedance-seed/seed-2.0-code | bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b |
+| cohere/command-a | cohere/command-a-plus | cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 |
+| cohere/command-r7b-12-2024 | cohere/north-mini-code:free | stealth/crouton-alpha | ~deepseek/deepseek-flash-latest |
+| ~deepseek/deepseek-pro-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 | deepseek/deepseek-chat-v3.1 |
+| deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp | deepseek/deepseek-v4-flash |
+| deepseek/deepseek-v4-flash-0731 | ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-v4-flash-vision-exp | deepseek/deepseek-v4-pro |
+| deepseek/deepseek-v4-pro-0813 | deepseek/deepseek-v4.1-flash | deepseek/deepseek-v4.1-flash:batch | deepseek/deepseek-v4.1-flash-1017 |
+| deepseek/deepseek-r1-0528 | dots-studio/dots-3-note-preview:free | elorian/glimpse | fireworks/ember-1 |
+| openrouter/free | google/gemini-2.5-flash | google/gemini-2.5-flash-lite | google/gemini-2.5-pro |
+| google/gemini-2.5-pro-preview | google/gemini-3-flash-preview | google/gemini-3-flash-preview:batch | google/gemini-3.1-flash-lite |
+| google/gemini-3.1-flash-lite:batch | google/gemini-3.1-flash-lite-preview | google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview:batch |
+| google/gemini-3.1-pro-preview-customtools | google/gemini-3.5-flash | google/gemini-3.5-flash:batch | google/gemini-3.5-flash-lite |
+| google/gemini-3.5-flash-lite:batch | google/gemini-3.6-flash | google/gemini-3.6-flash:batch | google/gemini-3.7-flash |
+| google/gemini-3.7-flash:batch | google/gemini-3.8-flash | google/gemini-3.8-flash:batch | google/gemini-4-argon |
+| google/gemini-4-argon:batch | ~google/gemini-flash-latest | google/gemini-omni-1.1-flash | google/gemini-omni-1.2-flash |
+| ~google/gemini-pro-latest | google/gemma-2-27b-it | google/gemma-3-12b-it | google/gemma-3-27b-it |
+| google/gemma-3-4b-it | google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it |
+| google/gemma-4-31b-it:free | google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image |
+| google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image | google/gemini-nano-banana-2.1 |
+| google/gemini-3-pro-image-preview | google/gemini-3-pro-image | ibm-granite/granite-4.2-8b | inception/mercury-2 |
+| inception/mercury-2.5 | inception/mercury-3 | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-vl |
+| inclusionai/ling-3.0-tiny | inclusionai/ling-3.1-flash | inference-net/schematron-v2-small | inference-net/schematron-v2-turbo |
 | liquid/lfm-2.5-2.6b | liquid/lfm-2.5-2.6b:free | liquid/lfm-2.5-24b-a2b | anthracite-org/magnum-v4-72b |
 | mancer/weaver | meituan/longcat-2.0 | meta-llama/llama-3.1-70b-instruct | meta-llama/llama-3.1-8b-instruct |
 | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct | meta-llama/llama-4-maverick |
 | meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b | meta/muse-glimmer-30b | meta/muse-spark-1.1 |
 | meta/muse-spark-1.2 | meta/muse-spark-1.2-contributor | meta/muse-spark-1.3 | meta/muse-spark-1.3-contributor |
 | meta/muse-spark-open | meta/muse-wonder | microsoft/phi-4 | minimax/minimax-m1 |
-| minimax/minimax-m2 | minimax/minimax-m2-her | minimax/minimax-m2.1 | minimax/minimax-m2.5 |
-| minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-m3.1-flash | minimax/minimax-01 |
+| minimax/minimax-m2.5 | minimax/minimax-m2.7 | minimax/minimax-m3 | minimax/minimax-m3.1-flash |
 | mistralai/mistral-large | mistralai/mistral-large-2407 | mistralai/codestral-2508 | mistralai/devstral-2512 |
 | mistralai/ministral-14b-2512 | mistralai/ministral-3b-2512 | mistralai/ministral-8b-2512 | mistralai/mistral-large-2512 |
 | mistralai/mistral-large-4-0 | mistralai/mistral-medium-3 | mistralai/mistral-medium-3.1 | mistralai/mistral-medium-3-5 |

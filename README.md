@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->605<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->601<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -496,33 +496,32 @@ yarn dll:serve
 | anthropic/claude-opus-4.8:batch | anthropic/claude-opus-5 | anthropic/claude-opus-5:batch | anthropic/claude-opus-5.5 |
 | anthropic/claude-opus-5.5:batch | ~anthropic/claude-opus-latest | anthropic/claude-sonnet-4.5 | anthropic/claude-sonnet-4.5:batch |
 | anthropic/claude-sonnet-4.6 | anthropic/claude-sonnet-4.6:batch | anthropic/claude-sonnet-5 | anthropic/claude-sonnet-5:batch |
-| anthropic/claude-sonnet-5.5 | anthropic/claude-sonnet-5.5:batch | ~anthropic/claude-sonnet-latest | apodex/apodex-1.1-mini:free |
-| openrouter/auto-code | openrouter/auto | openrouter/auto-beta | baidu/ernie-5.5-flash-preview:free |
-| baidu/ernie-light-dt-1.0-intl | openrouter/bodybuilder | bytedance-seed/seed-2-1-turbo | bytedance-seed/seed-2.0-lite |
-| bytedance-seed/seed-2.0-mini | bytedance/ui-tars-1.5-7b | cohere/command-a | cohere/command-a-plus |
-| cohere/command-r-08-2024 | cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | cohere/north-mini-code:free |
-| ~deepseek/deepseek-flash-latest | ~deepseek/deepseek-pro-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 |
-| deepseek/deepseek-chat-v3.1 | deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp |
-| deepseek/deepseek-v4-flash | deepseek/deepseek-v4-flash-0731 | deepseek/deepseek-v4-flash-0731:batch | ~deepseek/deepseek-v4-flash-latest |
-| deepseek/deepseek-v4-flash-vision-exp | deepseek/deepseek-v4-pro | deepseek/deepseek-v4-pro-0813 | deepseek/deepseek-v4.1-flash |
-| deepseek/deepseek-v4.1-flash:batch | deepseek/deepseek-v4.1-flash-1017 | deepseek/deepseek-v4.1-flash-1017:batch | deepseek/deepseek-r1-0528 |
-| dots-studio/dots-3-note-preview:free | elorian/glimpse | fireworks/ember-1 | openrouter/free |
-| google/gemini-2.5-flash | google/gemini-2.5-flash-lite | google/gemini-2.5-pro | google/gemini-2.5-pro-preview |
-| google/gemini-3-flash-preview | google/gemini-3-flash-preview:batch | google/gemini-3.1-flash-lite | google/gemini-3.1-flash-lite:batch |
-| google/gemini-3.1-flash-lite-preview | google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview:batch | google/gemini-3.1-pro-preview-customtools |
-| google/gemini-3.5-flash | google/gemini-3.5-flash:batch | google/gemini-3.5-flash-lite | google/gemini-3.5-flash-lite:batch |
-| google/gemini-3.6-flash | google/gemini-3.6-flash:batch | google/gemini-3.7-flash | google/gemini-3.7-flash:batch |
-| google/gemini-3.8-flash | google/gemini-3.8-flash:batch | google/gemini-4-argon | google/gemini-4-argon:batch |
-| google/gemini-4-carbon | google/gemini-4-carbon:batch | google/gemini-4-hydrogen | google/gemini-4-hydrogen:batch |
-| ~google/gemini-flash-latest | google/gemini-omni-1.1-flash | google/gemini-omni-1.2-flash | ~google/gemini-pro-latest |
-| google/gemma-2-27b-it | google/gemma-3-12b-it | google/gemma-3-27b-it | google/gemma-3-4b-it |
-| google/gemma-4-26b-a4b-it | google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:free |
-| google/lyria-3-clip-preview | google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview |
-| google/gemini-3.1-flash-image | google/gemini-3.1-flash-lite-image | google/gemini-nano-banana-2.1 | google/gemini-3-pro-image-preview |
-| google/gemini-3-pro-image | ibm-granite/granite-4.2-8b | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-fin |
-| inclusionai/ling-3.0-flash-sante | inclusionai/ling-3.0-flash-vl | inclusionai/ling-3.0-tiny | inclusionai/ling-3.1-flash |
-| inference-net/schematron-v2-small | inference-net/schematron-v2-turbo | kt/midm-k-3.0-pro | liquid/lfm-2.5-2.6b |
-| liquid/lfm-2.5-2.6b:free | liquid/lfm-2.5-24b-a2b | liquid/lfm-3-1.7b | liquid/lfm-3-1.7b:free |
+| anthropic/claude-sonnet-5.5 | anthropic/claude-sonnet-5.5:batch | ~anthropic/claude-sonnet-latest | openrouter/auto-code |
+| openrouter/auto | openrouter/auto-beta | baidu/ernie-5.5-flash-preview:free | baidu/ernie-light-dt-1.0-intl |
+| openrouter/bodybuilder | bytedance-seed/seed-2-1-turbo | bytedance-seed/seed-2.0-lite | bytedance-seed/seed-2.0-mini |
+| bytedance/ui-tars-1.5-7b | cohere/command-a | cohere/command-a-plus | cohere/command-r-08-2024 |
+| cohere/command-r-plus-08-2024 | cohere/command-r7b-12-2024 | cohere/north-mini-code:free | ~deepseek/deepseek-flash-latest |
+| ~deepseek/deepseek-pro-latest | deepseek/deepseek-chat | deepseek/deepseek-chat-v3-0324 | deepseek/deepseek-chat-v3.1 |
+| deepseek/deepseek-v3.1-terminus | deepseek/deepseek-v3.2 | deepseek/deepseek-v3.2-exp | deepseek/deepseek-v4-flash |
+| deepseek/deepseek-v4-flash-0731 | deepseek/deepseek-v4-flash-0731:batch | ~deepseek/deepseek-v4-flash-latest | deepseek/deepseek-v4-flash-vision-exp |
+| deepseek/deepseek-v4-pro | deepseek/deepseek-v4-pro-0813 | deepseek/deepseek-v4.1-flash | deepseek/deepseek-v4.1-flash:batch |
+| deepseek/deepseek-v4.1-flash-1017 | deepseek/deepseek-v4.1-flash-1017:batch | deepseek/deepseek-r1-0528 | dots-studio/dots-3-note-preview:free |
+| elorian/glimpse | fireworks/ember-1 | openrouter/free | google/gemini-2.5-flash |
+| google/gemini-2.5-flash-lite | google/gemini-2.5-pro | google/gemini-2.5-pro-preview | google/gemini-3-flash-preview |
+| google/gemini-3-flash-preview:batch | google/gemini-3.1-flash-lite | google/gemini-3.1-flash-lite:batch | google/gemini-3.1-flash-lite-preview |
+| google/gemini-3.1-pro-preview | google/gemini-3.1-pro-preview:batch | google/gemini-3.1-pro-preview-customtools | google/gemini-3.5-flash |
+| google/gemini-3.5-flash:batch | google/gemini-3.5-flash-lite | google/gemini-3.5-flash-lite:batch | google/gemini-3.6-flash |
+| google/gemini-3.6-flash:batch | google/gemini-3.7-flash | google/gemini-3.7-flash:batch | google/gemini-3.8-flash |
+| google/gemini-3.8-flash:batch | google/gemini-4-argon | google/gemini-4-argon:batch | google/gemini-4-carbon |
+| google/gemini-4-carbon:batch | google/gemini-4-hydrogen | google/gemini-4-hydrogen:batch | ~google/gemini-flash-latest |
+| google/gemini-omni-1.1-flash | google/gemini-omni-1.2-flash | ~google/gemini-pro-latest | google/gemma-2-27b-it |
+| google/gemma-3-12b-it | google/gemma-3-27b-it | google/gemma-3-4b-it | google/gemma-4-26b-a4b-it |
+| google/gemma-4-26b-a4b-it:free | google/gemma-4-31b-it | google/gemma-4-31b-it:free | google/lyria-3-clip-preview |
+| google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image |
+| google/gemini-3.1-flash-lite-image | google/gemini-nano-banana-2.1 | google/gemini-3-pro-image-preview | google/gemini-3-pro-image |
+| ibm-granite/granite-4.2-8b | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-vl | inclusionai/ling-3.0-tiny |
+| inclusionai/ling-3.1-flash | inclusionai/ling-3.2-flash:free | inference-net/schematron-v2-small | inference-net/schematron-v2-turbo |
+| kt/midm-k-3.0-pro | liquid/lfm-2.5-24b-a2b | liquid/lfm-3-1.7b | liquid/lfm-3-1.7b:free |
 | anthracite-org/magnum-v4-72b | mancer/weaver | meituan/longcat-2.0 | meta-llama/llama-3.1-70b-instruct |
 | meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-1b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct |
 | meta-llama/llama-4-maverick | meta-llama/llama-4-scout | meta-llama/llama-guard-4-12b | meta/muse-ember |

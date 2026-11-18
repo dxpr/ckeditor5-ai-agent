@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->600<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->609<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -435,19 +435,19 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| gpt-6.1-terra | gpt-6.1-sol | gpt-6-luna | gpt-6-sol |
-| gpt-live-1 | gpt-6-astra | gpt-5.6-luna | gpt-5.6-terra |
-| gpt-5.6-sol | chat-latest | gpt-5.5-pro-2026-04-23 | gpt-5.5-pro |
-| gpt-5.5-2026-04-23 | gpt-5.5 | gpt-5.4-mini | gpt-5.4-mini-2026-03-17 |
-| gpt-5.4-nano | gpt-5.4-nano-2026-03-17 | gpt-5.4 | gpt-5.4-pro-2026-03-05 |
-| gpt-5.4-pro | gpt-5.4-2026-03-05 | gpt-5.3-codex | gpt-5.2-pro |
-| gpt-5.2-pro-2025-12-11 | gpt-5.2 | gpt-5.2-2025-12-11 | gpt-5.1 |
-| gpt-5.1-2025-11-13 | gpt-5-pro | gpt-5-pro-2025-10-06 | gpt-5-nano |
-| gpt-5-nano-2025-08-07 | gpt-5-mini | gpt-5-mini-2025-08-07 | gpt-5 |
-| gpt-5-2025-08-07 | o3-pro-2025-06-10 | o3-pro | gpt-4.1-mini |
-| gpt-4.1-mini-2025-04-14 | gpt-4.1 | gpt-4.1-2025-04-14 | o3 |
-| o3-2025-04-16 | gpt-4o-2024-11-20 | gpt-4o-2024-08-06 | gpt-4o-mini |
-| gpt-4o-mini-2024-07-18 | gpt-4o |  |  |
+| gpt-6.2-sol | gpt-6.2-astra | gpt-6.1-terra | gpt-6.1-sol |
+| gpt-6-luna | gpt-6-sol | gpt-live-1 | gpt-6-astra |
+| gpt-5.6-luna | gpt-5.6-terra | gpt-5.6-sol | chat-latest |
+| gpt-5.5-pro-2026-04-23 | gpt-5.5-pro | gpt-5.5-2026-04-23 | gpt-5.5 |
+| gpt-5.4-mini | gpt-5.4-mini-2026-03-17 | gpt-5.4-nano | gpt-5.4-nano-2026-03-17 |
+| gpt-5.4 | gpt-5.4-pro-2026-03-05 | gpt-5.4-pro | gpt-5.4-2026-03-05 |
+| gpt-5.3-codex | gpt-5.2-pro | gpt-5.2-pro-2025-12-11 | gpt-5.2 |
+| gpt-5.2-2025-12-11 | gpt-5.1 | gpt-5.1-2025-11-13 | gpt-5-pro |
+| gpt-5-pro-2025-10-06 | gpt-5-nano | gpt-5-nano-2025-08-07 | gpt-5-mini |
+| gpt-5-mini-2025-08-07 | gpt-5 | gpt-5-2025-08-07 | o3-pro-2025-06-10 |
+| o3-pro | gpt-4.1-mini | gpt-4.1-mini-2025-04-14 | gpt-4.1 |
+| gpt-4.1-2025-04-14 | o3 | o3-2025-04-16 | gpt-4o-2024-11-20 |
+| gpt-4o-2024-08-06 | gpt-4o-mini | gpt-4o-mini-2024-07-18 | gpt-4o |
 
 #### Anthropic
 
@@ -462,10 +462,10 @@ yarn dll:serve
 
 | | | | |
 |---|---|---|---|
-| codestral-2508 | deepseek-v4-1-flash-1017 | glm-5-2 | labs-leanstral-1-5-1 |
-| ministral-14b-latest | ministral-3b-latest | ministral-8b-latest | mistral-large-2512 |
-| mistral-large-latest | mistral-medium-latest | mistral-small-2603 | voxtral-small-latest |
-| zai-glm-5-3-flash | zai-glm-latest |  |  |
+| codestral-2508 | deepseek-v4-1-flash-1017 | glm-5-2 | ministral-14b-latest |
+| ministral-3b-latest | ministral-8b-latest | mistral-large-2512 | mistral-large-latest |
+| mistral-medium-latest | mistral-small-2603 | voxtral-small-latest | zai-glm-5-3-flash |
+| zai-glm-latest |  |  |  |
 
 #### Groq
 
@@ -565,7 +565,9 @@ yarn dll:serve
 | openai/gpt-6-luna:batch | openai/gpt-6-luna-pro | openai/gpt-6-luna-pro:batch | openai/gpt-6-sol |
 | openai/gpt-6-sol:batch | openai/gpt-6-sol-pro | openai/gpt-6-sol-pro:batch | openai/gpt-6.1-sol |
 | openai/gpt-6.1-sol:batch | openai/gpt-6.1-sol-pro | openai/gpt-6.1-sol-pro:batch | openai/gpt-6.1-terra |
-| openai/gpt-6.1-terra:batch | openai/gpt-6.1-terra-pro | openai/gpt-6.1-terra-pro:batch | openai/gpt-oss-120b |
+| openai/gpt-6.1-terra:batch | openai/gpt-6.1-terra-pro | openai/gpt-6.1-terra-pro:batch | openai/gpt-6.2-astra |
+| openai/gpt-6.2-astra:batch | openai/gpt-6.2-astra-pro | openai/gpt-6.2-astra-pro:batch | openai/gpt-6.2-sol |
+| openai/gpt-6.2-sol:batch | openai/gpt-6.2-sol-pro | openai/gpt-6.2-sol-pro:batch | openai/gpt-oss-120b |
 | openai/gpt-oss-120b:batch | openai/gpt-oss-20b | openai/gpt-oss-20b:batch | openai/gpt-oss-safeguard-20b |
 | openai/o3 | openai/o3:batch | openai/o3-mini:batch | openai/o3-pro |
 | openai/o4-mini:batch | openrouter/fusion | unbiased/pareto-26.10 | unbiased/pareto-26.10-preview |

@@ -20,7 +20,7 @@ note: This project is not part of CKEditor premium, it is a free plugin created 
 
 🌐 `AI Agent` uses **retrieval-augmented generation (RAG)** and in-context learning to seamlessly integrate external web content into prompts.
 
-🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->612<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
+🤖 Natively supports <!-- BEGIN_MODEL_COUNT -->611<!-- END_MODEL_COUNT --> models, with additional support for any self-hosted model via Ollama.
 
 ![image](https://github.com/dxpr/ckeditor5-ai-agent/blob/1.x/sample/images/toolbar-switching.gif)
 Video of AI Agent returning optimal HTML structure based on what is available in the toolbar, when a user prompt is "incorrect". After switching the editor configuration from "Full HTML" to "Basic HTML," an unordered list is generated instead of a table, using bold and normal-weight text to simulate some table-like structure.
@@ -522,7 +522,7 @@ yarn dll:serve
 | google/lyria-3-pro-preview | google/gemini-2.5-flash-image | google/gemini-3.1-flash-image-preview | google/gemini-3.1-flash-image |
 | google/gemini-3.1-flash-lite-image | google/gemini-nano-banana-2.1 | google/gemini-3-pro-image-preview | google/gemini-3-pro-image |
 | ibm-granite/granite-4.2-8b | inclusionai/ling-3.0-flash | inclusionai/ling-3.0-flash-vl | inclusionai/ling-3.0-tiny |
-| inclusionai/ling-3.1-flash | inclusionai/ling-3.2-flash:free | inclusionai/lingsante-3.1-air-vl | inference-net/schematron-v2-small |
+| inclusionai/ling-3.1-flash | inclusionai/ling-3.2-flash | inclusionai/lingsante-3.1-air-vl | inference-net/schematron-v2-small |
 | inference-net/schematron-v2-turbo | kt/midm-k-3.0-pro | liquid/lfm-2.5-24b-a2b | liquid/lfm-3-1.7b |
 | liquid/lfm-3-1.7b:free | anthracite-org/magnum-v4-72b | mancer/weaver | meta-llama/llama-3.1-70b-instruct |
 | meta-llama/llama-3.1-8b-instruct | meta-llama/llama-3.2-3b-instruct | meta-llama/llama-3.3-70b-instruct | meta-llama/llama-4-maverick |
@@ -577,35 +577,34 @@ yarn dll:serve
 | perceptron/perceptron-mk1.5 | perplexity/sonar | perplexity/sonar-deep-research | perplexity/sonar-pro |
 | perplexity/sonar-pro-search | perplexity/sonar-reasoning-pro | prism-ml/ternary-bonsai-2-27b | prism-ml/ternary-bonsai-2-9b |
 | qwen/qwen-plus | qwen/qwen2.5-vl-72b-instruct | qwen/qwen3-14b | qwen/qwen3-235b-a22b-2507 |
-| qwen/qwen3-235b-a22b-thinking-2507 | qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-32b |
-| qwen/qwen3-coder-30b-a3b-instruct | qwen/qwen3-coder | qwen/qwen3-coder-flash | qwen/qwen3-coder-next |
-| qwen/qwen3-next-80b-a3b-instruct | qwen/qwen3-vl-235b-a22b-instruct | qwen/qwen3-vl-30b-a3b-instruct | qwen/qwen3-vl-8b-instruct |
-| qwen/qwen3.5-397b-a17b | qwen/qwen3.5-plus-02-15 | qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b |
-| qwen/qwen3.5-27b | qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 |
-| qwen/qwen3.6-27b | qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-plus |
-| qwen/qwen3.7-flash | qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen3.7-plus:batch |
-| qwen/qwen3.8-2.4t-a95b | qwen/qwen3.8-27b | qwen/qwen3.8-27b:batch | qwen/qwen3.8-flash |
-| qwen/qwen3.8-max-0902 | qwen/qwen3.8-max-0902:batch | qwen/qwen3.8-max-prime | qwen/qwen3.8-omni-flash |
-| qwen/qwen4-max | qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | radixark/daisyrose-27b |
-| recursive/flint-v1.0:free | reflection/beam-1.0-501b-a23b | rekaai/reka-edge | rekaai/reka-flash-3 |
-| relace/relace-apply-3 | relace/relace-search | undi95/remm-slerp-l2-13b | ricursiveai/ripple-65b-preview |
-| sakana/fugu-max | sakana/fugu-ultra | sakana/fugu-ultra-v2 | sakana/sakana-namazu |
-| sao10k/l3-lunaris-8b | sao10k/l3.1-euryale-70b | scaledown/extract | scaledown/summarize |
-| x-ai/grok-4.20 | x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.3:batch |
-| x-ai/grok-4.5 | x-ai/grok-4.6 | x-ai/grok-4.6:batch | x-ai/grok-4.7 |
-| x-ai/grok-4.7:batch | stepfun/step-3.7-flash | stepfun/step-5-preview | tencent/hy-mt2-1.8b |
-| tencent/hy-mt2-30b-a3b | tencent/hy-mt2-7b | tencent/hy3 | tencent/hy4 |
-| tencent/hy4-flash | tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/skyfall-36b-v2 |
-| thedrummer/unslopnemo-12b | thinkingmachines/inkling | thinkingmachines/inkling-2-mini | thinkingmachines/inkling-2-small |
-| thinkingmachines/inkling-small | thinkingmachines/inkling-small:batch | tngtech/deepseek-r1t2-chimera | typesafe/jev-router |
-| upstage/solar-mini4 | upstage/solar-mini-4-5 | upstage/solar-pro4 | upstage/solar-pro-4-contributor |
-| cognitivecomputations/dolphin-mistral-24b-venice-edition | writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.6-flash |
-| xiaomi/mimo-v2.6-flash-mopd | xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed | z-ai/glm-4.5 |
-| z-ai/glm-4.5-air | z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v |
-| z-ai/glm-4.7 | z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo |
-| z-ai/glm-5.1 | z-ai/glm-5.2 | z-ai/glm-5.2:batch | z-ai/glm-5.3 |
-| z-ai/glm-5.3:batch | z-ai/glm-5.3-flash | z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx |
-| z-ai/glm-5.3-flashx-legal | z-ai/glm-5.3-prime | z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest |
-| ~z-ai/glm-latest |  |  |  |
+| qwen/qwen3-30b-a3b | qwen/qwen3-30b-a3b-instruct-2507 | qwen/qwen3-32b | qwen/qwen3-coder-30b-a3b-instruct |
+| qwen/qwen3-coder | qwen/qwen3-coder-flash | qwen/qwen3-coder-next | qwen/qwen3-next-80b-a3b-instruct |
+| qwen/qwen3-vl-235b-a22b-instruct | qwen/qwen3-vl-30b-a3b-instruct | qwen/qwen3-vl-8b-instruct | qwen/qwen3.5-397b-a17b |
+| qwen/qwen3.5-plus-02-15 | qwen/qwen3.5-plus-20260420 | qwen/qwen3.5-122b-a10b | qwen/qwen3.5-27b |
+| qwen/qwen3.5-35b-a3b | qwen/qwen3.5-9b | qwen/qwen3.5-flash-02-23 | qwen/qwen3.6-27b |
+| qwen/qwen3.6-35b-a3b | qwen/qwen3.6-flash | qwen/qwen3.6-plus | qwen/qwen3.7-flash |
+| qwen/qwen3.7-max | qwen/qwen3.7-plus | qwen/qwen3.7-plus:batch | qwen/qwen3.8-2.4t-a95b |
+| qwen/qwen3.8-27b | qwen/qwen3.8-27b:batch | qwen/qwen3.8-flash | qwen/qwen3.8-max-0902 |
+| qwen/qwen3.8-max-0902:batch | qwen/qwen3.8-max-prime | qwen/qwen3.8-omni-flash | qwen/qwen4-max |
+| qwen/qwen-2.5-72b-instruct | qwen/qwen-2.5-coder-32b-instruct | radixark/daisyrose-27b | recursive/flint-v1.0:free |
+| reflection/beam-1.0-501b-a23b | rekaai/reka-edge | rekaai/reka-flash-3 | relace/relace-apply-3 |
+| relace/relace-search | undi95/remm-slerp-l2-13b | ricursiveai/ripple-65b-preview | sakana/fugu-max |
+| sakana/fugu-ultra | sakana/fugu-ultra-v2 | sakana/sakana-namazu | sao10k/l3-lunaris-8b |
+| sao10k/l3.1-euryale-70b | scaledown/extract | scaledown/summarize | x-ai/grok-4.20 |
+| x-ai/grok-4.20-multi-agent | x-ai/grok-4.3 | x-ai/grok-4.3:batch | x-ai/grok-4.5 |
+| x-ai/grok-4.6 | x-ai/grok-4.6:batch | x-ai/grok-4.7 | x-ai/grok-4.7:batch |
+| stepfun/step-3.7-flash | stepfun/step-5-preview | tencent/hy-mt2-1.8b | tencent/hy-mt2-30b-a3b |
+| tencent/hy-mt2-7b | tencent/hy3 | tencent/hy4 | tencent/hy4-flash |
+| tencent/hy4-preview | thedrummer/cydonia-24b-v4.1 | thedrummer/skyfall-36b-v2 | thedrummer/unslopnemo-12b |
+| thinkingmachines/inkling | thinkingmachines/inkling-2-mini | thinkingmachines/inkling-2-small | thinkingmachines/inkling-small |
+| thinkingmachines/inkling-small:batch | tngtech/deepseek-r1t2-chimera | typesafe/jev-router | upstage/solar-mini4 |
+| upstage/solar-mini-4-5 | upstage/solar-pro4 | upstage/solar-pro-4-contributor | cognitivecomputations/dolphin-mistral-24b-venice-edition |
+| writer/palmyra-x5 | ~x-ai/grok-latest | xiaomi/mimo-v2.6-flash | xiaomi/mimo-v2.6-flash-mopd |
+| xiaomi/mimo-v2.6-pro | xiaomi/mimo-v2.6-pro-ultraspeed | z-ai/glm-4.5 | z-ai/glm-4.5-air |
+| z-ai/glm-4.5v | z-ai/glm-4.6 | z-ai/glm-4.6v | z-ai/glm-4.7 |
+| z-ai/glm-4.7-flash | z-ai/glm-5 | z-ai/glm-5-turbo | z-ai/glm-5.1 |
+| z-ai/glm-5.2 | z-ai/glm-5.2:batch | z-ai/glm-5.3 | z-ai/glm-5.3:batch |
+| z-ai/glm-5.3-flash | z-ai/glm-5.3-flash:batch | z-ai/glm-5.3-flashx | z-ai/glm-5.3-flashx-legal |
+| z-ai/glm-5.3-prime | z-ai/glm-5v-turbo | ~z-ai/glm-flash-latest | ~z-ai/glm-latest |
 
 <!-- END_MODEL_TABLE -->
